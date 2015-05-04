@@ -1,0 +1,172 @@
+# Item Name
+item-name: '&aLodeStar'
+item-name-plural: '&aLodeStars'
+inventory-item-name: '&aLodeStar: %destination%'
+
+# Spawn Display Name
+spawn-display-name: 'Spawn'
+
+# Home Display Name
+home-display-name: 'Home'
+
+# Item Lore
+item-lore:
+  - '&eUse to teleport'
+  - '&eto %destination%'
+
+# Custom Messages
+#
+# Variable substitutions:
+# %itemname%            Item name as defined in messages (this file)
+# %playername%          Player's name
+# %playernickname%      Player's nickname
+# %playerdisplayname%   Player's display name, including prefix/suffix
+# %worldname%           World name that player is in
+# %timeremaining%		seconds remaining in cooldown (valid in cooldown message only)
+# %warmuptime%			seconds until teleport (valid in warmup message only)
+# %quantity%			number of items (valid in give command message only)
+# %destination%			display name of teleport destination
+
+# %ITEMNAME%            Item name with no color codes
+# %WORLDNAME%           World name that player is in, with no color codes
+# %DESTINATION%			display name of teleport destination, with no color codes
+
+
+# repeat-delay is the number of seconds to wait before
+# displaying a message again (only used on appropriate messages)
+
+messages:
+  command-fail-args-count-over:
+    enabled: true
+    string: '&3[LodeStar]&c Too many arguments!'
+  command-fail-args-count-under:
+    enabled: true
+    string: '&3[LodeStar]&c Too few arguments!'
+  command-fail-console:
+    enabled: true
+    string: '&3[LodeStar]&c You must be in game to use this command!'
+  command-fail-delete-reserved:
+    enabled: true
+    string: '&3[LodeStar]&c Destination &6%destination&c cannot be deleted!'
+  command-fail-give-inventory-full:
+    enabled: true
+    string: '&3Could not give %itemname% to %playername% because their inventory is full.'
+  command-fail-invalid-command:
+    enabled: true
+    string: '&3[LodeStar]&c That is not a valid command!'
+  command-fail-invalid-destination:
+    enabled: true
+    string: '&3[LodeStar]&c That is not a valid destination!'
+  command-fail-invalid-item:
+    enabled: true
+    string: '&3[LodeStar]&c The item you are holding is not a %itemname%!'
+  command-fail-invalid-quantity:
+    enabled: true
+    string: '&3[LodeStar]&c Invalid quantity!'
+  command-fail-player-not-found:
+    enabled: true
+    string: '&3That player could not be found.'
+  command-fail-player-not-online:
+    enabled: true
+    string: '&3That player is not online.'
+  command-fail-set-overwrite:
+    enabled: true
+    string: '&3[LodeStar]&c Destination cannot be overwritten!'
+  command-fail-set-reserved:
+    enabled: true
+    string: '&3[LodeStar]&c Destination &6%destination&c cannot be set!'
+
+  command-success-bind:
+    enabled: true
+    string: '&3[LodeStar]&b Item in hand now linked to &2%destination%&b.'
+  command-success-delete:
+    enabled: true
+    string: '&3[LodeStar]&c %destination% removed!'
+  command-success-destroy:
+    enabled: true
+    string: '&3[LodeStar]&c %itemname% destroyed!'
+  command-success-give:
+    enabled: true
+    string: '&3You gave %quantity% %itemname%&3 to %playername%.'
+  command-success-reload:
+    enabled: true
+    string: '&3[LodeStar]&b configuration reloaded.'
+  command-success-set:
+    enabled: true
+    string: '&3[LodeStar]&b Destination &2%destination%&b set.'
+
+  permission-denied-bind:
+    enabled: true
+    string: '&cYou do not have permission to bind LodeStar items to locations!'
+  permission-denied-delete:
+    enabled: true
+    string: '&cYou do not have permission to delete LodeStar locations!'
+  permission-denied-destroy:
+    enabled: true
+    string: '&cYou do not have permission to destroy LodeStar items!'
+  permission-denied-give:
+    enabled: true
+    string: '&cYou do not have permission to give LodeStar items!'
+  permission-denied-list:
+    enabled: true
+    string: '&cYou do not have permission to list LodeStar locations!'
+  permission-denied-overwrite:
+     enabled: true
+     string: '&cYou do not have permission to overwrite LodeStar locations!'
+  permission-denied-reload:
+    enabled: true
+    string: '&cYou do not have permission to reload the configuration!'
+  permission-denied-set:
+    enabled: true
+    string: '&cYou do not have permission to set LodeStar locations!'
+  permission-denied-status:
+    enabled: true
+    string: '&cYou do not have permission to view LodeStar settings!'
+  permission-denied-use:
+    enabled: true
+    repeat-delay: 1
+    string: '&cYou do not have permission to use &b%itemname%&r&3 in %worldname%&r&3.'
+
+  teleport-cancelled-damage:
+    enabled: true
+    string: '&cTeleport cancelled by damage!'
+  teleport-cancelled-interaction:
+    enabled: true
+    string: '&cTeleport cancelled by interaction!'
+  teleport-cancelled-movement:
+    enabled: true
+    string: '&cTeleport cancelled by movement!'
+  teleport-cancelled-no-item:
+    enabled: true
+    string: '&cYou no longer have a LodeStar item!'
+  teleport-cooldown:
+    enabled: true
+    repeat-delay: 1
+    string: '&3You need to wait &b%timeremaining%&3 seconds to use another %itemname%&r&3.'
+
+  teleport-fail-invalid-destination:
+    enabled: true
+    repeat-delay: 1
+    string: '&cThat destination does not exist!'
+  teleport-fail-proximity:
+    enabled: true
+    repeat-delay: 1
+    string: '&3You are too close to %destination%&r&3 to use a %itemname%.'
+
+  teleport-success:
+    enabled: true
+    string: '&3Successfully teleported to &b%destination%&r&3.'
+  teleport-success-spawn:
+    enabled: true
+    string: '&3Returned to &b%worldname%&3 spawn.'
+  teleport-warmup:
+    enabled: true
+    string: '&3Teleporting to &b%destination%&3 in &b%warmuptime%&3 seconds...'
+  teleport-warmup-spawn:
+    enabled: true
+    string: '&3Teleporting to &b%worldname%&3 spawn in &b%warmuptime%&3 seconds...'
+
+  usage-shift-click:
+    enabled: true
+    repeat-delay: 5
+    string: '&3You must shift-click to use a %itemname%.'

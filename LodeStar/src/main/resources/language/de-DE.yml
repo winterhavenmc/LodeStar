@@ -1,0 +1,104 @@
+# Item Name
+item-name: '&aLaichen Stern'
+item-name-plural: '&aLaichen Sterne'
+
+# Item Lore
+item-lore:
+  - '&eVerwenden Sie zum Ursprung'
+  - '&eder Welt zurück'
+
+# Custom Messages
+#
+# Variable substitutions:
+# %itemname%            Item name as defined in messages (this file)
+# %playername%          Player's name
+# %playernickname%      Player's nickname
+# %playerdisplayname%   Player's display name, including prefix/suffix
+# %worldname%           World name that player is in
+# %timeremaining%		seconds remaining in cooldown (valid in cooldown message only)
+# %warmuptime%			seconds until teleport (valid in warmup message only)
+# %quantity%			number of items (valid in give command message only)
+
+# repeat-delay is the number of seconds to wait before
+# displaying a message again (only used on appropriate messages)
+
+messages:
+  command-fail-args-count-over:
+    enabled: true
+    string: '&3[SpawnStar]&c Zu viele Parameter!'
+  command-fail-args-count-under:
+    enabled: true
+    string: '&3[SpawnStar]&c Zu wenig Parameter!'
+  command-fail-destroy-console:
+    enabled: true
+    string: '&3[SpawnStar]&c Du musst Spiel SpawnStar Elemente zu zerstören!'
+  command-fail-destroy-no-match:
+    enabled: true
+    string: '&3[SpawnStar]&c Der Artikel Sie halten ist kein SpawnStar Artikel!'
+  command-fail-give-inventory-full:
+    enabled: true
+    string: '&3Nicht geben konnte %itemname% zu %playername% weil ihr Inventar voll ist.'
+  command-fail-player-not-found:
+    enabled: true
+    string: '&3Dieser Spieler konnte nicht gefunden werden.'
+  command-fail-player-not-online:
+    enabled: true
+    string: '&3Dieser Spieler ist nicht online.'
+  command-fail-quantity-invalid:
+    enabled: true
+    string: '&3[SpawnStar]&c &cUngültige Anzahl!'
+  command-success-destroy:
+    enabled: true
+    string: '&3[SpawnStar]&c %itemname% zerstört!'
+  command-success-give:
+    enabled: true
+    string: '&3Du hast %quantity% %itemname%, um %playername%.'
+  command-success-reload:
+    enabled: true
+    string: '&3[SpawnStar]&b Konfiguration neu geladen.'
+  permission-denied-give:
+    enabled: true
+    string: '&cSie sind nicht berechtigt, Laichen Sterne geben!'
+  permission-denied-reload:
+    enabled: true
+    string: '&cSie haben keine Berechtigung, die Konfiguration neu zu laden!'
+  permission-denied-status:
+    enabled: true
+    string: '&cSie haben keine Berechtigung, um die Einstellungen zu sehen!'
+  permission-denied-use:
+    enabled: true
+    repeat-delay: 1
+    string: '&cSie haben nicht die Erlaubnis, eine &b%itemname%&3 in %worldname% verwenden.'
+  teleport-cancelled-damage:
+    enabled: true
+    string: '&cTeleportation durch Beschädigung aufgehoben!'
+  teleport-cancelled-interaction:
+    enabled: true
+    string: '&cTeleportation unterbrochen durch Interaktion!'
+  teleport-cancelled-movement:
+    enabled: true
+    string: '&cTeleportation durch Bewegung abgebrochen!'
+  teleport-cancelled-no-item:
+    enabled: true
+    string: '&cSie müssen nicht mehr eine %itemname%!'
+  teleport-cooldown:
+    enabled: true
+    repeat-delay: 1
+    string: '&3Sie müssen bis &b%timeremaining%&3 Sekunden warten, um einen anderen %itemname% verwenden.'
+  teleport-min-distance:
+    enabled: true
+    repeat-delay: 1
+    string: '&3Sie sind zu nahe für die Verwendung einer %itemname% laichen.'
+  teleport-success:
+    enabled: true
+    string: '&3Rückkehr zu laichen &b%worldname%&3.'
+  teleport-warmup:
+    enabled: true
+    string: '&3Teleportieren, um in &b%warmuptime%&3 Sekunden laichen...'
+  usage-shift-click:
+    enabled: true
+    repeat-delay: 1
+    string: '&3Sie müssen halten Sie die Umschalttaste gedrückt, während Sie auf %itemname% verwenden.'
+    
+    Sie müssen nicht mehr eine SpawnStar!
+    
