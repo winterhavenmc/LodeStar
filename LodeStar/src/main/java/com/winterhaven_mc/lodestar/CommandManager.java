@@ -141,9 +141,6 @@ public class CommandManager implements CommandExecutor {
 				return true;
 			}
 			
-			// get current language setting
-			String originalLanguage = plugin.getConfig().getString("language");
-			
 			// get current datastore type
 			DataStoreType originalType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
 			if (originalType == null) {
@@ -156,13 +153,8 @@ public class CommandManager implements CommandExecutor {
 			// update enabledWorlds list
 			updateEnabledWorlds();
 			
-			// if language setting has changed, instantiate new message manager with new language file
-			if (!originalLanguage.equals(plugin.getConfig().getString("language"))) {
-				plugin.messageManager = new MessageManager(plugin);
-			}
-			else {
-				plugin.messageManager.reloadMessages();
-			}
+			// reload messages file to take up any changed settings or change of language
+			plugin.messageManager.reloadMessages();
 			
 			// if datastore type has changed, create new datastore and convert records from existing datastore
 			DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
@@ -642,7 +634,7 @@ public class CommandManager implements CommandExecutor {
 		/*
 		 * delete command
 		 */
-		if (subcmd.equalsIgnoreCase("delete")) {
+		if (subcmd.equalsIgnoreCase("delete") || subcmd.equalsIgnoreCase("unset")) {
 			
 			if (!sender.hasPermission("lodestar.delete")) {
 				plugin.messageManager.sendPlayerMessage(sender, "permission-denied-delete");
@@ -930,35 +922,44 @@ public class CommandManager implements CommandExecutor {
 		if (command.isEmpty()) {
 			command = "help";
 		}
-		if ((command.equalsIgnoreCase("status")	|| command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("status")	
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.status")) {
 			sender.sendMessage(usageColor + "/lodestar status");
 		}
-		if ((command.equalsIgnoreCase("reload") || command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("reload") 
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.reload")) {
 			sender.sendMessage(usageColor + "/lodestar reload");
 		}
-		if ((command.equalsIgnoreCase("destroy") || command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("destroy") 
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.destroy")) {
 			sender.sendMessage(usageColor + "/lodestar destroy");
 		}
-		if ((command.equalsIgnoreCase("set") || command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("set") 
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.set")) {
 			sender.sendMessage(usageColor + "/lodestar set <name>");
 		}
-		if ((command.equalsIgnoreCase("delete") || command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("delete") 
+				|| command.equalsIgnoreCase("unset") 
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.delete")) {
 			sender.sendMessage(usageColor + "/lodestar delete <name>");
 		}
-		if ((command.equalsIgnoreCase("list") || command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("list") 
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.list")) {
 			sender.sendMessage(usageColor + "/lodestar list");
 		}
-		if ((command.equalsIgnoreCase("bind") || command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("bind") 
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.bind")) {
 			sender.sendMessage(usageColor + "/lodestar bind <destination>");
 		}
-		if ((command.equalsIgnoreCase("give") || command.equalsIgnoreCase("help"))
+		if ((command.equalsIgnoreCase("give") 
+				|| command.equalsIgnoreCase("help"))
 				&& sender.hasPermission("lodestar.give")) {
 			sender.sendMessage(usageColor + "/lodestar give <player> [<destination> [material][:data]] [amount]");
 		}
