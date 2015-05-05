@@ -145,7 +145,10 @@ public class CommandManager implements CommandExecutor {
 			String originalLanguage = plugin.getConfig().getString("language");
 			
 			// get current datastore type
-			DataStoreType originalType = DataStoreType.match(plugin.getConfig().getString("datastore-type"));
+			DataStoreType originalType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
+			if (originalType == null) {
+				originalType = DataStoreType.SQLITE;
+			}
 
 			// reload config.yml
 			plugin.reloadConfig();
@@ -162,7 +165,11 @@ public class CommandManager implements CommandExecutor {
 			}
 			
 			// if datastore type has changed, create new datastore and convert records from existing datastore
-			DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("datastore-type"));
+			DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
+			if (newType == null) {
+				newType = DataStoreType.SQLITE;
+			}
+			
 			if (!originalType.equals(newType)) {
 				
 				// create new data store
@@ -336,6 +343,12 @@ public class CommandManager implements CommandExecutor {
 					return true;
 				}
 				
+				// get destination key
+				String key = Destination.deriveKey(destinationName);
+				
+				// get formatted destination name
+				destinationName = plugin.utilities.getDestinationName(key);
+				
 				Material material = null;
 				byte materialDataByte = 0;
 
@@ -367,10 +380,9 @@ public class CommandManager implements CommandExecutor {
 					else {
 						materialDataByte = (byte) 0;
 					}
-
 				}
 				
-				// if no material given try to default material
+				// if no material matched try to match default material
 				if (material == null) {
 					material = Material.matchMaterial(plugin.getConfig().getString("default-material"));
 				}
@@ -413,18 +425,29 @@ public class CommandManager implements CommandExecutor {
 					playDeniedSound(sender);
 					return true;
 				}
+				
+				// get destination key
+				String key = Destination.deriveKey(destinationName);
+				
+				// get formatted destination name
+				destinationName = plugin.utilities.getDestinationName(key);
 
-				// not an integer, must be item material
+				// args[3] must be item material
 				String[] materialElements = args[3].split("\\s*:\\s*");
 
 				// try to match material
 				Material material = Material.matchMaterial(materialElements[0]);
 
-				// if no match default to nether star
+				// if no material matched try to match default material
+				if (material == null) {
+					material = Material.matchMaterial(plugin.getConfig().getString("default-material"));
+				}
+				
+				// is still no match set to nether star
 				if (material == null) {
 					material = Material.NETHER_STAR;
 				}
-
+				
 				// parse material data from config file if present
 				byte materialDataByte;
 
@@ -449,7 +472,7 @@ public class CommandManager implements CommandExecutor {
 				catch (NumberFormatException e) {
 					
 					// send invalid quantity message to player
-					plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-item");
+					plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-quantity");
 					playDeniedSound(sender);
 					return true;
 				}

@@ -2,15 +2,17 @@ package com.winterhaven_mc.lodestar;
 
 public enum DataStoreType {
 
-	YAML("yaml",null),
-	SQLITE("sqlite",YAML);
+	YAML("yaml"),
+	SQLITE("sqlite");
 
 	private String name;
-	private DataStoreType fallback;
 
-	private DataStoreType(String name, DataStoreType fallback) {
+	/**
+	 * Class constructor
+	 * @param name
+	 */
+	private DataStoreType(String name) {
 		this.setName(name);
-		this.setFallback(fallback);
 	}
 	
 	public String getName() {
@@ -21,14 +23,6 @@ public enum DataStoreType {
 		this.name = name;
 	}
 	
-	public DataStoreType getFallback() {
-		return fallback;
-	}
-	
-	public void setFallback(DataStoreType fallback) {
-		this.fallback = fallback;
-	}
-	
 	public static DataStoreType match(String name) {
 		for (DataStoreType type : DataStoreType.values()) {
 			if (type.getName().equalsIgnoreCase(name)) {
@@ -36,5 +30,7 @@ public enum DataStoreType {
 			}
 		}
 		return null;
+		// no match; return default type
+		//return SQLITE;
 	}
 }

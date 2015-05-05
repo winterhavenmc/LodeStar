@@ -8,11 +8,13 @@ storage-type: sqlite
 
 # Note: use only one enabled/disabled list, and comment out or remove the other
 # enabled worlds list (use this list for a default-deny world policy)
+
 #enabled-worlds:
 #  - enabled_world1
 #  - enabled_world2
 
 # disabled worlds list (use this list for a default-allow world policy)
+
 disabled-worlds:
   - disabled_world1
   - disabled_world2
@@ -21,7 +23,7 @@ disabled-worlds:
 # invalid item data may be reset, so use only valid item data values for a given material
 default-material: NETHER_STAR
 
-# minimum distance from spawn
+# minimum distance from destination to use
 minimum-distance: 10
 
 # cooldown time in seconds
@@ -36,11 +38,14 @@ particle-effects: true
 # play sound effects
 sound-effects: true
 
+# lightning strike at spawn location on use
+lightning: true
+
 # require shift-click to use LodeStar item
 shift-click: true
 
 # remove item from inventory ( on-use | on-success | never )
-remove-from-inventory: on-use
+remove-from-inventory: on-success
 
 # allow LodeStar items to be used in crafting recipes
 allow-in-recipes: false
@@ -62,9 +67,6 @@ from-nether: true
 
 # if player is in end world, try to respawn in matching overworld
 from-end: true
-
-# lightning strike at spawn location on use
-lightning: true
 
 # write log entry on use
 log-use: true

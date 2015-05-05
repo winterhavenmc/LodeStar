@@ -60,10 +60,10 @@ public interface LodeStarAPI {
 	int getWarmupTime();
 	
 	/**
-	 * Minimum distance from spawn to use a LodeStar item
+	 * Minimum distance from destination to use a LodeStar item
 	 * @return int
 	 */
-	int getMinSpawnDistance();
+	int getMinDistance();
 	
 	/**
 	 * Is teleport cancellation on player damage during warmup configured

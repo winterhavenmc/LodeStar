@@ -59,10 +59,10 @@ class DelayedTeleportTask extends BukkitRunnable {
 				}
 			}
 			
-			// if remove-from-inventory is configured on-success, take one spawn star item from inventory now
+			// if remove-from-inventory is configured on-success, take one LodeStar item from inventory now
 			if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-success")) {
 				
-				// try to remove one spawn star item from player inventory
+				// try to remove one LodeStar item from player inventory
 				//HashMap<Integer,ItemStack> notRemoved = new HashMap<Integer,ItemStack>();
 				boolean notRemoved = true;
 				for (ItemStack itemStack : player.getInventory()) {
@@ -75,7 +75,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 					}
 				}
 				
-				// if one spawn star item could not be removed from inventory, send message, set cooldown and return
+				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
 				if (notRemoved) {
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-no-item");
 					if (plugin.getConfig().getBoolean("sound-effects")) {

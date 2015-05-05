@@ -135,7 +135,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	
 	/**
-	 * Check if itemStack is a spawn star item
+	 * Check if itemStack is a LodeStar item
 	 * @param itemStack
 	 * @return boolean
 	 */
@@ -288,7 +288,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 
 
 	@Override
-	public int getMinSpawnDistance() {
+	public int getMinDistance() {
 		return plugin.getConfig().getInt("minimum-distance");
 	}
 

@@ -41,7 +41,7 @@ public final class LodeStarMain extends JavaPlugin {
 		saveDefaultConfig();
 		
 		// get data store type from config
-		DataStoreType dataStoreType = DataStoreType.match(getConfig().getString("datastore-type"));
+		DataStoreType dataStoreType = DataStoreType.match(getConfig().getString("storage-type"));
 		if (dataStoreType == null) {
 			dataStoreType = DataStoreType.SQLITE;
 		}

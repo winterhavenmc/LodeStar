@@ -230,7 +230,7 @@ class PlayerEventListener implements Listener {
 			plugin.getServer().getWorld(worldName).getChunkAt(location).load();
 		}
 		
-		// if remove-from-inventory is configured on-use, take one spawn star item from inventory now
+		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
 		if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-use")) {
 			ItemStack removeItem = playerItem;
 			removeItem.setAmount(playerItem.getAmount() - 1);

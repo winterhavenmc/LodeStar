@@ -33,7 +33,7 @@ class MessageManager {
 		this.plugin = plugin;
 
 		// install localization files
-		String[] localization_files = {"en-US", "es-ES", "de-DE"};
+		String[] localization_files = {"en-US"};
         installLocalizationFiles(localization_files);
 		
 		// get configured language
@@ -150,9 +150,10 @@ class MessageManager {
 	        Integer warmupTime = plugin.getConfig().getInt("teleport-warmup");
 	        
 			// if destination is spawn...
-	        // TODO: check this for matching custom spawn name
-			if (destinationName.equals(plugin.messageManager.getSpawnDisplayName()) 
-					|| destinationName.equals("spawn") ) {
+	        String key = Destination.deriveKey(destinationName);
+	        
+			if (key.equals(Destination.deriveKey("spawn"))
+					|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName())) ) {
 
 				String overworldname = worldName.replaceFirst("(_nether|_the_end)$", "");
 				
@@ -174,6 +175,12 @@ class MessageManager {
 				
 				// set destination string to spawn display name from messages file
 				destinationName = getSpawnDisplayName();
+			}
+			
+			// if destination is home, get home display name from language file
+			if (key.equals(Destination.deriveKey("home"))
+					|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
+				destinationName = getHomeDisplayName();
 			}
 			
 			// if Multiverse is installed, use Multiverse world alias for world name
@@ -230,8 +237,12 @@ class MessageManager {
 
 		for (String filename : filelist) {
 			if (!new File(plugin.getDataFolder() + "/language/" + filename + ".yml").exists()) {
-				this.plugin.saveResource("language/" + filename + ".yml",false);
-				plugin.getLogger().info("Installed localization files for " + filename + ".");
+				try {
+					this.plugin.saveResource("language/" + filename + ".yml",false);
+					plugin.getLogger().info("Installed localization files for " + filename + ".");
+				} catch (Exception e) {
+					plugin.getLogger().warning(e.getLocalizedMessage());
+				}
 			}
 		}
 	}
