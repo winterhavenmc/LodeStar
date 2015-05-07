@@ -549,9 +549,8 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		//TODO: paging not implemented yet, but page number argument dealt with
-		@SuppressWarnings("unused")
 		int page = 1;
+		
 		if (args.length == 2) {
 			try {
 				page = Integer.parseInt(args[1]);
@@ -559,9 +558,23 @@ public class CommandManager implements CommandExecutor {
 				// second argument not a page number, let default of 1 stand
 			}
 		}
+		page = Math.max(1, page);
+
+		int itemsPerPage = 20;
 		
 		List<String> displayNames = plugin.dataStore.getAllKeys();
-		sender.sendMessage(displayNames.toString());
+		
+		int pageCount = (displayNames.size() / itemsPerPage) + 1;
+		if (page > pageCount) {
+			page = pageCount;
+		}
+		int startIndex = ((page - 1) * itemsPerPage);
+		int endIndex = Math.min((page*itemsPerPage),displayNames.size());
+		
+		List<String> displayRange = displayNames.subList(startIndex, endIndex);
+		
+		sender.sendMessage(ChatColor.DARK_AQUA + "page " + page + " of " + pageCount);
+		sender.sendMessage(ChatColor.AQUA + displayRange.toString().substring(1, displayRange.toString().length() - 1));
 		return true;
 	}
 	
@@ -1080,12 +1093,12 @@ public class CommandManager implements CommandExecutor {
 		if ((command.equalsIgnoreCase("help") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.use")) {
-			sender.sendMessage(usageColor + "/lodestar help <command>");
+			sender.sendMessage(usageColor + "/lodestar help [command]");
 		}
 		if ((command.equalsIgnoreCase("list") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.list")) {
-			sender.sendMessage(usageColor + "/lodestar list");
+			sender.sendMessage(usageColor + "/lodestar list [page]");
 		}
 		if ((command.equalsIgnoreCase("bind") 
 				|| command.equalsIgnoreCase("all"))
