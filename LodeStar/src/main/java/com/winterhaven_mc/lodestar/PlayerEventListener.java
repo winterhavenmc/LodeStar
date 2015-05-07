@@ -1,7 +1,7 @@
 package com.winterhaven_mc.lodestar;
 
 import org.bukkit.Location;
-import org.bukkit.Sound;
+//import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,7 +33,6 @@ class PlayerEventListener implements Listener {
 	
 	/**
 	 * constructor method for <code>PlayerEventListener</code> class
-	 * 
 	 * @param	plugin		A reference to this plugin's main class
 	 */
 	PlayerEventListener(LodeStarMain plugin) {
@@ -46,9 +45,12 @@ class PlayerEventListener implements Listener {
 		
 	}
 
-	
+
 	/**
-	 * Player interact event listener
+	 * Event listener for PlayerInteractEvent<br>
+	 * detects LodeStar use, or cancels teleport
+	 * if cancel-on-interaction configured
+	 * @param event
 	 */
 	@EventHandler
 	void onPlayerUse(PlayerInteractEvent event) {
@@ -68,9 +70,7 @@ class PlayerEventListener implements Listener {
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-interaction");
 
 					// play sound effects if enabled
-					if (plugin.getConfig().getBoolean("sound-effects")) {
-							player.playSound(player.getLocation(), Sound.FIZZ, 1, 1);
-					}
+					plugin.messageManager.playerSound(player, "teleport-fail");
 					return;
 				}
 			}
@@ -97,6 +97,7 @@ class PlayerEventListener implements Listener {
 		// if player does not have LodeStar.use permission, send message and return
 		if (!player.hasPermission("lodestar.use")) {
 			plugin.messageManager.sendPlayerMessage(player, "permission-denied-use");
+			plugin.messageManager.playerSound(player, "teleport-denied-permission");
 			return;
 		}
 		
@@ -126,13 +127,14 @@ class PlayerEventListener implements Listener {
 		Destination destination = null;
 		
 		// if destination key equals home, get player bed spawn location
-		if (key.equalsIgnoreCase("home")) {
+		if (key.equalsIgnoreCase("home") 
+				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
 			
 			location = player.getBedSpawnLocation();
 			
 			// if bedspawn location is not null, create destination with bed spawn location
 			if (location != null) {
-				destination = new Destination("home", "Home", location);
+				destination = new Destination("home", plugin.messageManager.getHomeDisplayName(), location);
 				if (plugin.debug) {
 					plugin.getLogger().info("destination is home. Location: " + location.toString());
 				}
@@ -144,7 +146,8 @@ class PlayerEventListener implements Listener {
 		}
 		
 		// if destination is spawn, get spawn location
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
+		if (key.equalsIgnoreCase("spawn") 
+				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
 			
 			World playerWorld = player.getWorld();
 			String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
@@ -249,9 +252,7 @@ class PlayerEventListener implements Listener {
 				plugin.messageManager.sendPlayerMessage(player, "teleport-warmup", destination.getDisplayName());
 			}
 			// if enabled, play sound effect
-			if (plugin.getConfig().getBoolean("sound-effects")) {
-				player.getWorld().playSound(player.getLocation(), Sound.PORTAL_TRAVEL, 0.3F, 1);
-			}
+			plugin.messageManager.playerSound(player, "teleport-warmup");
 		}
 		
 		// initiate delayed teleport for player to destination
@@ -277,6 +278,11 @@ class PlayerEventListener implements Listener {
 	}
 	
 	
+	/**
+	 * Event listener for PlayerDeathEvent<br>
+	 * removes player from warmup hashmap
+	 * @param event
+	 */
 	@EventHandler
 	void onPlayerDeath(PlayerDeathEvent event) {
 		
@@ -288,6 +294,11 @@ class PlayerEventListener implements Listener {
 	}
 
 	
+	/**
+	 * Event listener for PlayerQuitEvent<br>
+	 * removes player from warmup or cooldown hashmap
+	 * @param event
+	 */
 	@EventHandler
 	void onPlayerQuit(PlayerQuitEvent event) {
 		
@@ -303,6 +314,7 @@ class PlayerEventListener implements Listener {
 	
 	
 	/**
+	 * Event listener for PrepareItemCraftEvent<br>
 	 * Prevent LodeStar items from being used in crafting recipes if configured
 	 * @param event
 	 */
@@ -326,7 +338,7 @@ class PlayerEventListener implements Listener {
 	
 	/**
 	 * Event listener for EntityDamageByEntity event<br>
-	 * Cancels pending teleport if player takes damage
+	 * Cancels pending teleport if cancel-on-damage configured
 	 * @param event
 	 */
 	@EventHandler
@@ -351,16 +363,18 @@ class PlayerEventListener implements Listener {
 				if (plugin.warmupManager.isWarmingUp(player)) {
 					plugin.warmupManager.cancelTeleport(player);
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-damage");
-					// play sound effects if enabled
-					if (plugin.getConfig().getBoolean("sound-effects")) {
-							player.playSound(player.getLocation(), Sound.FIZZ, 1, 1);
-					}
-				}				
+					plugin.messageManager.playerSound(player, "teleport-cancelled");
+				}
 			}
 		}
 	}
 	
 	
+	/**
+	 * Event listener for player movement event<br>
+	 * cancels player teleport if cancel-on-movement configured
+	 * @param event
+	 */
 	@EventHandler
 	void onPlayerMovement(PlayerMoveEvent event) {
 				
@@ -378,11 +392,7 @@ class PlayerEventListener implements Listener {
 			if (event.getFrom().distance(event.getTo()) > 0) {
 				plugin.warmupManager.cancelTeleport(player);
 				plugin.messageManager.sendPlayerMessage(player,"teleport-cancelled-movement");
-				
-				// play sound effects if enabled
-				if (plugin.getConfig().getBoolean("sound-effects")) {
-						player.playSound(player.getLocation(), Sound.FIZZ, 1, 1);
-				}
+				plugin.messageManager.playerSound(player, "teleport-cancelled");
 			}
 		}
 	}

@@ -3,6 +3,7 @@ package com.winterhaven_mc.lodestar;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Public API to access LodeStar attributes 
@@ -12,34 +13,16 @@ import org.bukkit.entity.Player;
 public interface LodeStarAPI {
 
 	/**
-	 * Get ItemStack containing one LodeStar
-	 * @return
+	 * Create an itemStack with default material and data from config
+	 * @return ItemStack
 	 */
-//	ItemStack getItem();
+	ItemStack getDefaultItem();
 	
-	/**
-	 * Get material type of LodeStar
-	 * @return Material
-	 */
-//	Material getItemMaterial();
-	
-	/**
-	 * Get material data of LodeStar
-	 * @return
-	 */
-//	MaterialData getItemData();
-
 	/**
 	 * Get display name of LodeStar with formatting intact
 	 * @return String
 	 */
 	String getItemName();
-	
-	/**
-	 * Get lore of LodeStar with formatting intact
-	 * @return List of Strings
-	 */
-//	List<String> getItemLore();
 	
 	/**
 	 * check if LodeStar items are allowed in crafting recipes

@@ -62,4 +62,9 @@ permissions:
       lodestar.set: true
       lodestar.set.overwrite: true
       lodestar.status: true
+
+  lodestar.default-override:
+    description: Allows overriding default-item-only setting.
+    default: op
+  
       

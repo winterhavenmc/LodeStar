@@ -51,7 +51,7 @@ public final class LodeStarMain extends JavaPlugin {
 		
 		// instantiate message manager
 		messageManager = new MessageManager(this);
-
+		
 		// instantiate command manager
 		commandManager = new CommandManager(this);
 

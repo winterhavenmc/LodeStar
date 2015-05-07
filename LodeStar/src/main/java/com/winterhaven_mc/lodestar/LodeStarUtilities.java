@@ -33,39 +33,15 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @return
 	 */
 	ItemStack createItem(String destinationName, int quantity) {
-		
+
+		// validate quantity
 		quantity = Math.max(quantity, 1);
-		
-		// get material type and data from config file
-		String[] configMaterialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
-		
-		// try to match material
-		Material configMaterial = Material.matchMaterial(configMaterialElements[0]);
-		
-		// if no match default to nether star
-		if (configMaterial == null) {
-			configMaterial = Material.NETHER_STAR;
-		}
-		
-		// parse material data from config file if present
-		byte configMaterialDataByte;
-		
-		// if data set in config try to parse as byte; set to zero if it doesn't parse
-		if (configMaterialElements.length > 1) {
-			try {
-				configMaterialDataByte = Byte.parseByte(configMaterialElements[1]);
-			}
-			catch (NumberFormatException e) {
-				configMaterialDataByte = (byte) 0;
-			}
-		}
-		// if no data set in config default to zero
-		else {
-			configMaterialDataByte = (byte) 0;
-		}
-		
+
 		// create item stack with configured material and data
-		ItemStack newItem = new ItemStack(configMaterial,quantity,configMaterialDataByte);
+		ItemStack newItem = getDefaultItem();
+
+		// set quantity
+		newItem.setAmount(quantity);
 		
 		// set item display name and lore
 		setMetaData(newItem, destinationName);
@@ -163,6 +139,57 @@ public class LodeStarUtilities implements LodeStarAPI {
 
 	
 	/**
+	 * Check if itemStack is a LodeStar item
+	 * @param itemStack
+	 * @return boolean
+	 */
+	@SuppressWarnings("deprecation")
+	boolean isDefaultItem(ItemStack itemStack) {
+		
+		if (plugin.debug) {
+			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
+		}
+		
+		// if item stack is empty (null or air) return false
+		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
+			return false;
+		}
+
+		Material material = null;
+		byte materialDataByte = 0;
+		
+		// try to match default material from config
+		String[] materialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
+
+		// try to match material
+		if (materialElements.length > 0) {
+			material = Material.matchMaterial(materialElements[0]);
+		}
+
+		// try to match material data
+		if (materialElements.length > 1) {
+			try {
+				materialDataByte = Byte.parseByte(materialElements[1]);
+			}
+			catch (NumberFormatException e2) {
+				materialDataByte = (byte) 0;
+			}
+		}
+
+		// if no match set to nether star
+		if (material == null) {
+			material = Material.NETHER_STAR;
+		}
+
+		// if material and data match defaults return true
+		if (itemStack.getType().equals(material) && itemStack.getData().getData() == materialDataByte) {
+			return true;
+		}
+		return false;
+	}
+
+	
+	/**
 	 * Gets destination key from itemStack
 	 * @param itemStack
 	 * @return destination key or null if item has no key
@@ -210,9 +237,9 @@ public class LodeStarUtilities implements LodeStarAPI {
 	/**
 	 * Check if destination name is a reserved name
 	 * @param destinationName
-	 * @return
+	 * @return boolean
 	 */
-	boolean nameReserved(String destinationName) {
+	boolean isNameReserved(String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
 		if (key.equals("spawn") 
@@ -264,10 +291,32 @@ public class LodeStarUtilities implements LodeStarAPI {
 			destinationName = key;
 		}
 		
-		if (plugin.debug) {
-			plugin.getLogger().info("[getDestinationName] name: " + destinationName);
+		return destinationName;
+	}
+	
+	public String getDestinationName(ItemStack itemStack) {
+		
+		String key = getKey(itemStack);
+		String destinationName = null;
+		
+		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
+			destinationName = plugin.messageManager.getSpawnDisplayName();
 		}
-
+		else if (key.equals("home") 
+				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
+			destinationName = plugin.messageManager.getHomeDisplayName();
+		}
+		else {
+			Destination destination = plugin.dataStore.getRecord(key);
+			if (destination != null) {
+				destinationName = destination.getDisplayName();
+			}
+		}
+		
+		if (destinationName == null) {
+			destinationName = key;
+		}
+		
 		return destinationName;
 	}
 	
@@ -333,6 +382,48 @@ public class LodeStarUtilities implements LodeStarAPI {
 	@Override
 	public void cancelTeleport(Player player) {
 		plugin.warmupManager.cancelTeleport(player);
+	}
+
+	
+	/**
+	 * Create an itemStack with default material and data from config
+	 * @return ItemStack
+	 */
+	@Override
+	public ItemStack getDefaultItem() {
+		
+		// get material type and data from config file
+		String[] configMaterialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
+		
+		// try to match material
+		Material configMaterial = Material.matchMaterial(configMaterialElements[0]);
+		
+		// if no match default to nether star
+		if (configMaterial == null) {
+			configMaterial = Material.NETHER_STAR;
+		}
+		
+		// parse material data from config file if present
+		byte configMaterialDataByte;
+		
+		// if data set in config try to parse as byte; set to zero if it doesn't parse
+		if (configMaterialElements.length > 1) {
+			try {
+				configMaterialDataByte = Byte.parseByte(configMaterialElements[1]);
+			}
+			catch (NumberFormatException e) {
+				configMaterialDataByte = (byte) 0;
+			}
+		}
+		// if no data set in config default to zero
+		else {
+			configMaterialDataByte = (byte) 0;
+		}
+		
+		// create item stack with configured material and data
+		ItemStack newItem = new ItemStack(configMaterial,1,configMaterialDataByte);
+		
+		return newItem;
 	}
 
 }

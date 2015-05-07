@@ -1,7 +1,7 @@
 package com.winterhaven_mc.lodestar;
 
 import org.bukkit.Location;
-import org.bukkit.Sound;
+//import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -78,17 +78,13 @@ class DelayedTeleportTask extends BukkitRunnable {
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
 				if (notRemoved) {
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-no-item");
-					if (plugin.getConfig().getBoolean("sound-effects")) {
-						player.playSound(player.getLocation(), Sound.DONKEY_ANGRY, 1, 1);
-					}
+					plugin.messageManager.playerSound(player, "teleport-cancelled-no-item");
 					plugin.cooldownManager.setPlayerCooldown(player);
 					return;
 				}
 			}
 			// play pre-teleport sound if sound effects are enabled
-			if (plugin.getConfig().getBoolean("sound-effects")) {
-				player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
-			}
+			plugin.messageManager.playerSound(player, "teleport-success-departure");
 
 			// teleport player to location
 			player.teleport(location);
@@ -102,9 +98,8 @@ class DelayedTeleportTask extends BukkitRunnable {
 				plugin.messageManager.sendPlayerMessage(player, "teleport-success", destination.getDisplayName());
 			}
 			// play post-teleport sound if sound effects are enabled
-			if (plugin.getConfig().getBoolean("sound-effects")) {
-				player.getWorld().playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
-			}
+			plugin.messageManager.playerSound(player, "teleport-success-arrival");
+
 			// if lightning is enabled in config, strike lightning at teleport destination
 			if (plugin.getConfig().getBoolean("lightning")) {
 				player.getWorld().strikeLightningEffect(location);

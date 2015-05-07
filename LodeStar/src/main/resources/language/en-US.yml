@@ -26,10 +26,14 @@ item-lore:
 # %warmuptime%			seconds until teleport (valid in warmup message only)
 # %quantity%			number of items (valid in give command message only)
 # %destination%			display name of teleport destination
-
-# %ITEMNAME%            Item name with no color codes
+# %targetplayer%		Target player's name
+#
+# %ITEMNAME%            Item name, with no color codes
+# %PLAYERNAME%          Player's name, with no color codes
+# %PLAYERNICKNAME%      Player's nickname, with no color codes
 # %WORLDNAME%           World name that player is in, with no color codes
 # %DESTINATION%			display name of teleport destination, with no color codes
+# %TARGETPLAYER%		Target player's name, with no color codes
 
 
 # repeat-delay is the number of seconds to wait before
@@ -50,7 +54,7 @@ messages:
     string: '&3[LodeStar]&c Destination &6%destination&c cannot be deleted!'
   command-fail-give-inventory-full:
     enabled: true
-    string: '&3Could not give %itemname% to %playername% because their inventory is full.'
+    string: '&3Could not give %ITEMNAME% to %PLAYERNAME% because their inventory is full.'
   command-fail-invalid-command:
     enabled: true
     string: '&3[LodeStar]&c That is not a valid command!'
@@ -59,7 +63,7 @@ messages:
     string: '&3[LodeStar]&c That is not a valid destination!'
   command-fail-invalid-item:
     enabled: true
-    string: '&3[LodeStar]&c The item you are holding is not a %itemname%!'
+    string: '&3[LodeStar]&c The item you are holding is not a %ITEMNAME%!'
   command-fail-invalid-quantity:
     enabled: true
     string: '&3[LodeStar]&c Invalid quantity!'
@@ -84,10 +88,14 @@ messages:
     string: '&3[LodeStar]&c %destination% removed!'
   command-success-destroy:
     enabled: true
-    string: '&3[LodeStar]&c %itemname% destroyed!'
+    string: '&3[LodeStar]&c %ITEMNAME% destroyed!'
   command-success-give:
     enabled: true
-    string: '&3You gave %quantity% %itemname%&3 to %playername%.'
+    string: '&3You gave %quantity% %ITEMNAME% to %TARGETPLAYER%.'
+#NOTE: target player refers to item giver in below message!
+  command-success-give-target:
+    enabled: true
+    string: '&3%TARGETPLAYER% gave you %quantity% %ITEMNAME%.'
   command-success-reload:
     enabled: true
     string: '&3[LodeStar]&b configuration reloaded.'
@@ -125,7 +133,7 @@ messages:
   permission-denied-use:
     enabled: true
     repeat-delay: 1
-    string: '&cYou do not have permission to use &b%itemname%&r&3 in %worldname%&r&3.'
+    string: '&cYou do not have permission to use a &b%ITEMNAME%&r&3 in %worldname%.'
 
   teleport-cancelled-damage:
     enabled: true
@@ -138,11 +146,11 @@ messages:
     string: '&cTeleport cancelled by movement!'
   teleport-cancelled-no-item:
     enabled: true
-    string: '&cYou no longer have a LodeStar item!'
+    string: '&cYou no longer have a %ITEMNAME%!'
   teleport-cooldown:
     enabled: true
     repeat-delay: 1
-    string: '&3You need to wait &b%timeremaining%&3 seconds to use another %itemname%&r&3.'
+    string: '&3You need to wait &b%timeremaining%&3 seconds to use another %ITEMNAME%.'
 
   teleport-fail-invalid-destination:
     enabled: true
@@ -151,7 +159,7 @@ messages:
   teleport-fail-proximity:
     enabled: true
     repeat-delay: 1
-    string: '&3You are too close to %destination%&r&3 to use a %itemname%.'
+    string: '&3You are too close to %destination%&r&3 to use a %ITEMNAME%.'
 
   teleport-success:
     enabled: true
@@ -169,4 +177,4 @@ messages:
   usage-shift-click:
     enabled: true
     repeat-delay: 5
-    string: '&3You must shift-click to use a %itemname%.'
+    string: '&3You must shift-click to use a %ITEMNAME%.'

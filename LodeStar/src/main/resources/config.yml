@@ -38,7 +38,7 @@ particle-effects: true
 # play sound effects
 sound-effects: true
 
-# lightning strike at spawn location on use
+# lightning strike at destination on use
 lightning: true
 
 # require shift-click to use LodeStar item
@@ -49,6 +49,9 @@ remove-from-inventory: on-success
 
 # allow LodeStar items to be used in crafting recipes
 allow-in-recipes: false
+
+# allow giving and binding with items of default material only
+default-item-only: false
 
 # cancel teleport if player takes damage
 cancel-on-damage: false
@@ -70,3 +73,96 @@ from-end: true
 
 # write log entry on use
 log-use: true
+
+# sound configuration
+sounds:
+  command-fail:
+    enabled: true
+    player-only: true
+    sound: VILLAGER_NO
+    volume: 1
+    pitch: 1
+    
+  command-success-give-sender:
+    enabled: true
+    player-only: true
+    sound: SHOOT_ARROW
+    volume: 1
+    pitch: 0.5
+
+  command-success-give-target:
+    enabled: true
+    player-only: true
+    sound: ITEM_PICKUP
+    volume: 1
+    pitch: 1
+
+  command-success-delete:
+    enabled: true
+    player-only: true
+    sound: IRONGOLEM_HIT
+    volume: 1
+    pitch: 1
+
+  command-success-destroy:
+    enabled: true
+    player-only: true
+    sound: ITEM_BREAK
+    volume: 1
+    pitch: 1
+    
+  command-success-set:
+    enabled: true
+    player-only: true
+    sound: LEVEL_UP
+    volume: 1
+    pitch: 1.5
+    
+  command-success-bind:
+    enabled: true
+    player-only: true
+    sound: ANVIL_LAND
+    volume: 1
+    pitch: 1.75
+
+  teleport-denied-permission:
+    enabled: true
+    player-only: true
+    sound: FIZZ
+    volume: 1
+    pitch: 1
+    
+  teleport-cancelled:
+    enabled: true
+    player-only: false
+    sound: FIZZ
+    volume: 1
+    pitch: 1
+    
+  teleport-cancelled-no-item:
+    enabled: true
+    player-only: false
+    sound: ANGRY_DONKEY
+    volume: 1
+    pitch: 1
+  
+  teleport-warmup:
+    enabled: true
+    player-only: false
+    sound: PORTAL_TRAVEL
+    volume: 0.3
+    pitch: 1
+    
+  teleport-success-departure:
+     enabled: true
+     player-only: false
+     sound: ENDERMAN_TELEPORT
+     volume: 1
+     pitch: 1
+  
+  teleport-success-arrival:
+     enabled: true
+     player-only: false
+     sound: ENDERMAN_TELEPORT
+     volume: 1
+     pitch: 1
