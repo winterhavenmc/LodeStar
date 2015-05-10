@@ -29,8 +29,7 @@ public enum DataStoreType {
 				return type;
 			}
 		}
-		return null;
 		// no match; return default type
-		//return SQLITE;
+		return DataStoreType.SQLITE;
 	}
 }

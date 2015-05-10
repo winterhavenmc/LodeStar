@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitRunnable;
 
 
 public class DataStoreSQLite extends DataStore {
@@ -190,33 +191,38 @@ public class DataStoreSQLite extends DataStore {
 				+ "pitch) "
 				+ "values(?,?,?,?,?,?,?,?)";
 
-		try {
-			// create prepared statement
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertDestination);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					// create prepared statement
+					PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertDestination);
 
-			preparedStatement.setString(1, key);
-			preparedStatement.setString(2, displayName);
-			preparedStatement.setString(3, worldName);
-			preparedStatement.setDouble(4, location.getX());
-			preparedStatement.setDouble(5, location.getY());
-			preparedStatement.setDouble(6, location.getZ());
-			preparedStatement.setFloat(7, location.getYaw());
-			preparedStatement.setFloat(8, location.getPitch());
+					preparedStatement.setString(1, key);
+					preparedStatement.setString(2, displayName);
+					preparedStatement.setString(3, worldName);
+					preparedStatement.setDouble(4, location.getX());
+					preparedStatement.setDouble(5, location.getY());
+					preparedStatement.setDouble(6, location.getZ());
+					preparedStatement.setFloat(7, location.getYaw());
+					preparedStatement.setFloat(8, location.getPitch());
 
-			// execute prepared statement
-			preparedStatement.executeUpdate();
-		}
-		catch (Exception e) {
+					// execute prepared statement
+					preparedStatement.executeUpdate();
+				}
+				catch (Exception e) {
 
-			// output simple error message
-			plugin.getLogger().warning("An error occured while inserting a destination into the SQLite database.");
-			plugin.getLogger().warning(e.getLocalizedMessage());
+					// output simple error message
+					plugin.getLogger().warning("An error occured while inserting a destination into the SQLite database.");
+					plugin.getLogger().warning(e.getLocalizedMessage());
 
-			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
-				e.getStackTrace();
+					// if debugging is enabled, output stack trace
+					if (plugin.debug) {
+						e.getStackTrace();
+					}
+				}
 			}
-		}
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	@Override
@@ -298,7 +304,7 @@ public class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning("An error occurred while trying to fetch all records from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
-			// if debugging is enabled, output sql error message
+			// if debugging is enabled, output stack trace
 			if (plugin.debug) {
 				e.getStackTrace();
 			}
@@ -346,7 +352,7 @@ public class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning("An error occurred while attempting to delete a destination from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
-			// if debugging is enabled, output sql error message
+			// if debugging is enabled, output stack trace
 			if (plugin.debug) {
 				e.getStackTrace();
 			}
@@ -367,7 +373,7 @@ public class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning("An error occured while closing the SQLite database connection.");
 			plugin.getLogger().warning(e.getMessage());
 
-			// if debugging is enabled, output sql error message
+			// if debugging is enabled, output stack trace
 			if (plugin.debug) {
 				e.getStackTrace();
 			}

@@ -33,9 +33,6 @@ public class DataStoreYAML extends DataStore {
 		
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
-			if (plugin.debug) {
-				plugin.getLogger().info("yaml datastore already initialized.");
-			}
 			return;
 		}
 		
