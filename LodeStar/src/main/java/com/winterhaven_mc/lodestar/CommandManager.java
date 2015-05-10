@@ -129,12 +129,12 @@ public class CommandManager implements CommandExecutor {
 
 		// output config settings
 		String versionString = this.plugin.getDescription().getVersion();
-		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + "Version: " + ChatColor.RESET + versionString);
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + " Version: " + ChatColor.RESET + versionString);
 		if (plugin.debug) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
+		sender.sendMessage(ChatColor.GREEN + "Language: " + ChatColor.RESET + plugin.messageManager.getLanguage());
 		sender.sendMessage(ChatColor.GREEN + "Storage type: " + ChatColor.RESET + plugin.dataStore.getName());
-		sender.sendMessage(ChatColor.GREEN + "Language: " + ChatColor.RESET + plugin.getConfig().getString("language"));
 		sender.sendMessage(ChatColor.GREEN + "Default material: " + ChatColor.RESET + plugin.getConfig().getString("default-material"));
 		sender.sendMessage(ChatColor.GREEN + "Minimum distance: " + ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
 		sender.sendMessage(ChatColor.GREEN + "Warmup: " + ChatColor.RESET + plugin.getConfig().getInt("teleport-warmup") + " seconds");
@@ -189,38 +189,22 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// get original configured datastore type
-		DataStoreType oldDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-		if (oldDataStoreType == null) {
-			oldDataStoreType = DataStoreType.SQLITE;
-		}
-
-		// reload config.yml
+		// reload main configuration
 		plugin.reloadConfig();
 
 		// update enabledWorlds list
 		updateEnabledWorlds();
 		
-		// reload messages file to take up any changed settings or change of language
-		plugin.messageManager.reloadMessages();
+		// reload messages
+		plugin.messageManager.reload();
 
-		// get current configured datastore type
-		DataStoreType newDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-		
-		// if datastore type has changed, create new datastore and convert records from existing datastore
-		if (!oldDataStoreType.equals(newDataStoreType)) {
-			
-			// create new data store
-			DataStore newDataStore = DataStoreFactory.create(newDataStoreType,plugin.dataStore);
-		
-			// set plugin.dataStore to reference new data store
-			plugin.dataStore = newDataStore;
-		}
+		// reload datastore
+		DataStoreFactory.reload();
 		
 		// set debug field
 		plugin.debug = plugin.getConfig().getBoolean("debug");
 		
-		// send reloaded message to command sender
+		// send reloaded message
 		plugin.messageManager.sendPlayerMessage(sender,"command-success-reload");
 		return true;
 	}
