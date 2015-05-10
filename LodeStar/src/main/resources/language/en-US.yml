@@ -78,7 +78,7 @@ messages:
     string: '&3[LodeStar]&c Destination cannot be overwritten!'
   command-fail-set-reserved:
     enabled: true
-    string: '&3[LodeStar]&c Destination &6%destination&c cannot be set!'
+    string: '&3[LodeStar]&c Destination &6%destination%&c is reserved and cannot be set!'
 
   command-success-bind:
     enabled: true

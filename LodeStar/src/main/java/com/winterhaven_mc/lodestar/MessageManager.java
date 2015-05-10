@@ -15,6 +15,7 @@ import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+
 /**
  * Implements message manager for <code>LodeStar</code>.
  * 
@@ -45,17 +46,18 @@ class MessageManager {
 		String language = plugin.getConfig().getString("language");
 
 		// check if localization file for configured language exists, if not then fallback to en-US
-		if (!new File(plugin.getDataFolder() + "/language/" + language + ".yml").exists()) {
+		if (!new File(plugin.getDataFolder() 
+				+ File.separator + "language" 
+				+ File.separator + language + ".yml").exists()) {
             plugin.getLogger().info("Language file for " + language + " not found. Defaulting to en-US.");
             language = "en-US";
         }
 		
-		// instantiate custom configuration manager
-		messages = new ConfigAccessor(plugin, "language/" + language + ".yml");
-		
+		// instantiate custom configuration manager for language file
+		messages = new ConfigAccessor(plugin, "language" + File.separator + language + ".yml");
+
 		// initialize messageCooldownMap
 		messageCooldownMap = new ConcurrentHashMap<UUID,ConcurrentHashMap<String,Long>>();
-
     }
 
 
@@ -343,7 +345,7 @@ class MessageManager {
 					break;
 				}
 				String name = e.getName();
-				if (name.startsWith("language" + File.separator) && name.endsWith(".yml")) {
+				if (name.startsWith("language" + '/') && name.endsWith(".yml")) {
 					filelist.add(name);
 				}
 			}
@@ -353,6 +355,7 @@ class MessageManager {
 
 		// iterate over list of language files and install from jar if not already present
 		for (String filename : filelist) {
+			// this check prevents a warning message when files are already installed
 			if (new File(plugin.getDataFolder() + File.separator + filename).exists()) {
 				continue;
 			}

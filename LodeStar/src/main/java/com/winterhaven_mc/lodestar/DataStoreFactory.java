@@ -1,13 +1,29 @@
 package com.winterhaven_mc.lodestar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-
 public class DataStoreFactory {
-	
+
 	static LodeStarMain plugin = LodeStarMain.instance;
 
+
+	/**
+	 * Create new data store of given type.<br>
+	 * Single parameter version used when no current datastore exists
+	 * @return new datastore of configured type
+	 */
+	static DataStore create() {
+		
+		// get data store type from config
+		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
+		if (dataStoreType == null) {
+			dataStoreType = DataStoreType.SQLITE;
+		}
+		return create(dataStoreType, null);
+	}
+	
 	/**
 	 * Create new data store of given type.<br>
 	 * Single parameter version used when no current datastore exists
@@ -45,7 +61,7 @@ public class DataStoreFactory {
 			convertDataStore(oldDataStore, newDataStore);
 		}
 		else {
-			convertAny(newDataStore);
+			convertAll(newDataStore);
 		}
 		// return initialized data store
 		return newDataStore;
@@ -134,7 +150,8 @@ public class DataStoreFactory {
 				try {
 					oldDataStore.initialize();
 				} catch (Exception e) {
-					plugin.getLogger().warning("Could not initialize " + oldDataStore.getName() + " datastore!");
+					plugin.getLogger().warning("Could not initialize " 
+							+ oldDataStore.getName() + " datastore for conversion.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 					return;
 				}
@@ -154,7 +171,7 @@ public class DataStoreFactory {
 				newDataStore.putRecord(record);
 				count++;
 			}
-			plugin.getLogger().info(count + " records converted to new datastore.");
+			plugin.getLogger().info(count + " records converted to " + newDataStore.getName() + " datastore.");
 			
 			newDataStore.save();
 			
@@ -162,30 +179,36 @@ public class DataStoreFactory {
 			oldDataStore.delete();
 		}
 	}
+
 	
 	/**
-	 * convert any existing data store to new data store
+	 * convert all existing data stores to new data store
 	 * @param newDataStore
 	 */
-	static void convertAny(DataStore newDataStore) {
+	static void convertAll(DataStore newDataStore) {
 		
-		if (newDataStore.getType().equals(DataStoreType.YAML)) {
+		// get array list of all data store types
+		ArrayList<DataStoreType> dataStores = new ArrayList<DataStoreType>(Arrays.asList(DataStoreType.values()));
+		
+		// remove newDataStore from list of types to convert
+		dataStores.remove(newDataStore);
+		
+		for (DataStoreType type : dataStores) {
+
+			// create oldDataStore holder
+			DataStore oldDataStore = null;
 			
-			if (plugin.debug) {
-				plugin.getLogger().info("Attempting to convert existing datastore to yaml...");
+			if (type.equals(DataStoreType.YAML)) {
+				oldDataStore = new DataStoreYAML(plugin);
 			}
-			
-			DataStore oldDataStore = new DataStoreSQLite(plugin);
-			convertDataStore(oldDataStore, newDataStore);
-		}
-		else if (newDataStore.getType().equals(DataStoreType.SQLITE)) {
-			
-			if (plugin.debug) {
-				plugin.getLogger().info("Attempting to convert existing datastore to sqlite...");
+			else if (type.equals(DataStoreType.SQLITE)) {
+				oldDataStore = new DataStoreSQLite(plugin);
 			}
+			// add additional datastore types here as they become available
 			
-			DataStore oldDataStore = new DataStoreYAML(plugin);
-			convertDataStore(oldDataStore, newDataStore);
+			if (oldDataStore != null) {
+				convertDataStore(oldDataStore, newDataStore);
+			}
 		}
 	}
 	

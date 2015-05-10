@@ -189,10 +189,10 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// get current datastore type
-		DataStoreType originalType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-		if (originalType == null) {
-			originalType = DataStoreType.SQLITE;
+		// get original configured datastore type
+		DataStoreType oldDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
+		if (oldDataStoreType == null) {
+			oldDataStoreType = DataStoreType.SQLITE;
 		}
 
 		// reload config.yml
@@ -203,17 +203,15 @@ public class CommandManager implements CommandExecutor {
 		
 		// reload messages file to take up any changed settings or change of language
 		plugin.messageManager.reloadMessages();
+
+		// get current configured datastore type
+		DataStoreType newDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
 		
 		// if datastore type has changed, create new datastore and convert records from existing datastore
-		DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-		if (newType == null) {
-			newType = DataStoreType.SQLITE;
-		}
-		
-		if (!originalType.equals(newType)) {
+		if (!oldDataStoreType.equals(newDataStoreType)) {
 			
 			// create new data store
-			DataStore newDataStore = DataStoreFactory.create(newType,plugin.dataStore);
+			DataStore newDataStore = DataStoreFactory.create(newDataStoreType,plugin.dataStore);
 		
 			// set plugin.dataStore to reference new data store
 			plugin.dataStore = newDataStore;
@@ -327,9 +325,10 @@ public class CommandManager implements CommandExecutor {
 		}
 		
 		Player player = (Player) sender;
-		Location location = player.getLocation().clone();
+		Location location = player.getLocation();
 		
-		String destinationName = args[1];
+		// set destinationName to passed argument with underscores replaced by spaces
+		String destinationName = args[1].replace('_', ' ');
 
 		// check if destination name is a reserved name
 		if (plugin.utilities.isNameReserved(destinationName)) {
@@ -346,7 +345,7 @@ public class CommandManager implements CommandExecutor {
 			isInteger = false;
 		}
 		
-		// send invalid destination if name parses to an integer
+		// send invalid destination error message if name parses to an integer
 		if (isInteger) {
 			plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-destination",destinationName);
 			plugin.messageManager.playerSound(sender, "command-fail");

@@ -78,8 +78,7 @@ messages:
     string: '&3[LodeStar]&c ¡Destino no se puede sobrescribir!'
   command-fail-set-reserved:
     enabled: true
-    string: '&3[LodeStar]&c Destino %destination% no se puede ajustar!'
-
+    string: '&3[LodeStar]&c ¡Destino %destination% está reservado y no se puede ajustar!'
   command-success-bind:
     enabled: true
     string: '&3[LodeStar]&bArtículo en la mano ahora vinculado a %destination%.'

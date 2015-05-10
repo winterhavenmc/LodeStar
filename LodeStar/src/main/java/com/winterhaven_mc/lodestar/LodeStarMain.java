@@ -40,14 +40,8 @@ public final class LodeStarMain extends JavaPlugin {
 		// install default config.yml if not present  
 		saveDefaultConfig();
 		
-		// get data store type from config
-		DataStoreType dataStoreType = DataStoreType.match(getConfig().getString("storage-type"));
-		if (dataStoreType == null) {
-			dataStoreType = DataStoreType.SQLITE;
-		}
-
 		// get initialized destination storage object
-		dataStore = DataStoreFactory.create(dataStoreType);
+		dataStore = DataStoreFactory.create();
 		
 		// instantiate message manager
 		messageManager = new MessageManager(this);
