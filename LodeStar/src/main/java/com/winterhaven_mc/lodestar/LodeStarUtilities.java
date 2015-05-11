@@ -266,27 +266,26 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	public String getDestinationName(String key) {
 		
-		if (plugin.debug) {
-			plugin.getLogger().info("[getDestinationName] key: " + key);
-		}
-		
 		key = Destination.deriveKey(key);
 		String destinationName = null;
 		
+		// if destination is spawn get spawn display name from messages files
 		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
 			destinationName = plugin.messageManager.getSpawnDisplayName();
 		}
+		// if destination is home get home display name from messages file
 		else if (key.equals("home") 
 				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
 			destinationName = plugin.messageManager.getHomeDisplayName();
 		}
+		// else get destination name from datastore
 		else {
 			Destination destination = plugin.dataStore.getRecord(key);
 			if (destination != null) {
 				destinationName = destination.getDisplayName();
 			}
 		}
-		
+		// if no destination name found, use key for name
 		if (destinationName == null) {
 			destinationName = key;
 		}
@@ -299,24 +298,26 @@ public class LodeStarUtilities implements LodeStarAPI {
 		String key = getKey(itemStack);
 		String destinationName = null;
 		
+		// if destination is spawn get spawn display name from messages files
 		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
 			destinationName = plugin.messageManager.getSpawnDisplayName();
 		}
+		// if destination is home get home display name from messages file
 		else if (key.equals("home") 
 				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
 			destinationName = plugin.messageManager.getHomeDisplayName();
 		}
+		// else get destination name from datastore
 		else {
 			Destination destination = plugin.dataStore.getRecord(key);
 			if (destination != null) {
 				destinationName = destination.getDisplayName();
 			}
 		}
-		
+		// if no destination name found, use key for name
 		if (destinationName == null) {
 			destinationName = key;
-		}
-		
+		}		
 		return destinationName;
 	}
 	
