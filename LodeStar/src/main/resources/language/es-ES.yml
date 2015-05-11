@@ -73,6 +73,9 @@ messages:
   command-fail-player-not-online:
     enabled: true
     string: '&3Ese jugador no está conectado.'
+  command-fail-set-args-count-over:
+    enabled: true
+    string: '&3[LodeStar]&c Uso de relieve en lugar de espacios para el nombre de destino.'
   command-fail-set-overwrite:
     enabled: true
     string: '&3[LodeStar]&c ¡Destino no se puede sobrescribir!'

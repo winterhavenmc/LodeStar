@@ -217,6 +217,9 @@ class MessageManager {
 			itemName = getItemNamePlural();
 		}
 
+		// replace underscores with spaces in destination name
+		destinationName = destinationName.replace('_', ' ');
+		
 		// do variable substitutions
 		message = message.replace("%itemname%", itemName);
 		message = message.replace("%playername%", playerName);

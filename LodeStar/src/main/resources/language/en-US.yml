@@ -73,6 +73,9 @@ messages:
   command-fail-player-not-online:
     enabled: true
     string: '&3That player is not online.'
+  command-fail-set-args-count-over:
+    enabled: true
+    string: '&3[LodeStar]&c Use underscores in place of spaces for destination name.'
   command-fail-set-overwrite:
     enabled: true
     string: '&3[LodeStar]&c Destination cannot be overwritten!'

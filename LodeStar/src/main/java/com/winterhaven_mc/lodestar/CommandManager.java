@@ -129,7 +129,7 @@ public class CommandManager implements CommandExecutor {
 		}
 
 		// output config settings
-		String versionString = this.plugin.getDescription().getVersion();
+		String versionString = plugin.getDescription().getVersion();
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + "Version: " + ChatColor.RESET + versionString);
 		if (plugin.debug) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
@@ -303,7 +303,7 @@ public class CommandManager implements CommandExecutor {
 		
 		// check max arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-set-args-count-over");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -312,9 +312,9 @@ public class CommandManager implements CommandExecutor {
 		Player player = (Player) sender;
 		Location location = player.getLocation();
 		
-		// set destinationName to passed argument with underscores replaced by spaces
-		String destinationName = args[1].replace('_', ' ');
-
+		// set destinationName to passed argument
+		String destinationName = args[1];
+		
 		// check if destination name is a reserved name
 		if (plugin.utilities.isNameReserved(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,"command-fail-set-reserved",destinationName);
@@ -337,10 +337,10 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// check if warp name exists and if so if player has overwrite permission
+		// check if destination name exists and if so if player has overwrite permission
 		Destination destination = plugin.dataStore.getRecord(destinationName);
 
-		// check for overwrite permission destination already exists
+		// check for overwrite permission if destination already exists
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
 			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-overwrite",destinationName);
 			plugin.messageManager.playerSound(sender, "command-fail");
@@ -1114,4 +1114,5 @@ public class CommandManager implements CommandExecutor {
 			}
 		}
 	}
+	
 }
