@@ -54,7 +54,7 @@ public class Destination {
 	}
 	
 	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+		this.displayName = displayName.replace('_', ' ');
 	}
 	
 	public Location getLocation() {
