@@ -303,7 +303,7 @@ public class CommandManager implements CommandExecutor {
 		
 		// check max arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-set-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -391,7 +391,7 @@ public class CommandManager implements CommandExecutor {
 
 		// check max arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
 			displayUsage(sender, subcmd);
 			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
@@ -452,7 +452,7 @@ public class CommandManager implements CommandExecutor {
 		
 		// check minimum arguments
 		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-args-count-under");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -460,7 +460,7 @@ public class CommandManager implements CommandExecutor {
 		
 		// check maximum arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -534,7 +534,7 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender, "command-fail-args-count-over");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -1080,13 +1080,13 @@ public class CommandManager implements CommandExecutor {
 		if ((command.equalsIgnoreCase("set") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.set")) {
-			sender.sendMessage(usageColor + "/lodestar set <destination>");
+			sender.sendMessage(usageColor + "/lodestar set <destination_name>");
 		}
 		if ((command.equalsIgnoreCase("delete") 
 				|| command.equalsIgnoreCase("unset") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.delete")) {
-			sender.sendMessage(usageColor + "/lodestar delete <destination>");
+			sender.sendMessage(usageColor + "/lodestar delete <destination_name>");
 		}
 		if ((command.equalsIgnoreCase("help") 
 				|| command.equalsIgnoreCase("all"))
@@ -1101,16 +1101,16 @@ public class CommandManager implements CommandExecutor {
 		if ((command.equalsIgnoreCase("bind") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.bind")) {
-			sender.sendMessage(usageColor + "/lodestar bind <destination>");
+			sender.sendMessage(usageColor + "/lodestar bind <destination_name>");
 		}
 		if ((command.equalsIgnoreCase("give") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.give")) {
 			if (plugin.getConfig().getBoolean("default-item-only")) {
-				sender.sendMessage(usageColor + "/lodestar give <player> [destination] [amount]");				
+				sender.sendMessage(usageColor + "/lodestar give <player> [destination_name] [amount]");				
 			}
 			else {
-				sender.sendMessage(usageColor + "/lodestar give <player> [<destination> [material][:data]] [amount]");
+				sender.sendMessage(usageColor + "/lodestar give <player> [<destination_name> [material][:data]] [amount]");
 			}
 		}
 	}

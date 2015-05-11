@@ -40,12 +40,15 @@ item-lore:
 # displaying a message again (only used on appropriate messages)
 
 messages:
-  command-fail-args-count-over:
-    enabled: true
-    string: '&3[LodeStar]&c Too many arguments!'
   command-fail-args-count-under:
     enabled: true
     string: '&3[LodeStar]&c Too few arguments!'
+  command-fail-args-count-over:
+    enabled: true
+    string: '&3[LodeStar]&c Too many arguments!'
+  command-fail-args-count-over-spaces:
+    enabled: true
+    string: '&3[LodeStar]&c Use underscores in place of spaces for destination name.'
   command-fail-console:
     enabled: true
     string: '&3[LodeStar]&c You must be in game to use this command!'
@@ -73,9 +76,6 @@ messages:
   command-fail-player-not-online:
     enabled: true
     string: '&3That player is not online.'
-  command-fail-set-args-count-over:
-    enabled: true
-    string: '&3[LodeStar]&c Use underscores in place of spaces for destination name.'
   command-fail-set-overwrite:
     enabled: true
     string: '&3[LodeStar]&c Destination cannot be overwritten!'
