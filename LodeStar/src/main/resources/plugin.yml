@@ -18,6 +18,10 @@ permissions:
     description: List all LodeStar locations.
     default: true
 
+  lodestar.help:
+    description: Display help for LodeStar commands.
+    default: true
+
   lodestar.status:
     description: Allows display of config settings.
     default: op

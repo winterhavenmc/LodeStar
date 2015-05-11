@@ -124,6 +124,7 @@ public class CommandManager implements CommandExecutor {
 		// if command sender does not have permission to view status, output error message and return true
 		if (!sender.hasPermission("lodestar.status")) {
 			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-status");
+			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
 		}
 
@@ -514,6 +515,13 @@ public class CommandManager implements CommandExecutor {
 	 */
 	boolean listCommand(CommandSender sender,String args[]) {
 		
+		// if command sender does not have permission to list destinations, output error message and return true
+		if (!sender.hasPermission("lodestar.list")) {
+			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-list");
+			plugin.messageManager.playerSound(sender, "command-fail");
+			return true;
+		}
+
 		String subcmd = args[0];
 		// argument limits
 		int minArgs = 1;
@@ -1075,7 +1083,7 @@ public class CommandManager implements CommandExecutor {
 		}
 		if ((command.equalsIgnoreCase("help") 
 				|| command.equalsIgnoreCase("all"))
-				&& sender.hasPermission("lodestar.use")) {
+				&& sender.hasPermission("lodestar.help")) {
 			sender.sendMessage(usageColor + "/lodestar help [command]");
 		}
 		if ((command.equalsIgnoreCase("list") 
