@@ -112,6 +112,9 @@ messages:
   permission-denied-give:
     enabled: true
     string: '&c¡Usted no tiene permiso para dar elementos LodeStar!'
+  permission-denied-help:
+    enabled: true
+    string: '&c¡Usted no tiene permiso para ver LodeStar ayuda!!'
   permission-denied-list:
     enabled: true
     string: '&c¡Usted no tiene permiso para ver la lista de ubicaciones LodeStar!'

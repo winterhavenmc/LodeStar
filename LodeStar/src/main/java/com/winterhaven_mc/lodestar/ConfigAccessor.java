@@ -23,7 +23,7 @@ package com.winterhaven_mc.lodestar;
 */
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,14 +38,14 @@ public class ConfigAccessor {
     private File configFile;
     private FileConfiguration fileConfiguration;
 
-	public ConfigAccessor(JavaPlugin plugin, String fileName) {
+    public ConfigAccessor(JavaPlugin plugin, String fileName) {
         if (plugin == null)
-            throw new IllegalArgumentException("plugin cannot be null");
+            throw new IllegalArgumentException("plugin cannot be null.");
         this.plugin = plugin;
         this.fileName = fileName;
         File dataFolder = plugin.getDataFolder();
         if (dataFolder == null)
-            throw new IllegalStateException();
+            throw new IllegalStateException("Cannot access plugin data folder.");
         this.configFile = new File(plugin.getDataFolder(), fileName);
     }
 
@@ -53,10 +53,9 @@ public class ConfigAccessor {
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
 
         // Look for defaults in the jar
-        InputStream defConfigStream = plugin.getResource(fileName);
-        if (defConfigStream != null) {
-			@SuppressWarnings("deprecation")
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+        InputStreamReader defConfigReader = new InputStreamReader(plugin.getResource(fileName));
+        if (defConfigReader != null) {
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigReader);
             fileConfiguration.setDefaults(defConfig);
         }
     }

@@ -56,7 +56,7 @@ public class CommandManager implements CommandExecutor {
 		if (args.length > 0) {
 			subcmd = args[0];
 		}
-		// if no arguments, display usage
+		// if no arguments, display usage for all commands
 		else {
 			displayUsage(sender,"all");
 			return true;
@@ -577,6 +577,13 @@ public class CommandManager implements CommandExecutor {
 	 * @return
 	 */
 	boolean helpCommand(CommandSender sender, String args[]) {
+
+		// if command sender does not have permission to display help, output error message and return true
+		if (!sender.hasPermission("lodestar.help")) {
+			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-help");
+			plugin.messageManager.playerSound(sender, "command-fail");
+			return true;
+		}
 
 		String command = "help";
 		

@@ -115,6 +115,9 @@ messages:
   permission-denied-give:
     enabled: true
     string: '&cYou do not have permission to give LodeStar items!'
+  permission-denied-help:
+    enabled: true
+    string: '&cYou do not have permission to view LodeStar help!'
   permission-denied-list:
     enabled: true
     string: '&cYou do not have permission to list LodeStar locations!'
