@@ -130,7 +130,7 @@ public class CommandManager implements CommandExecutor {
 
 		// output config settings
 		String versionString = this.plugin.getDescription().getVersion();
-		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + " Version: " + ChatColor.RESET + versionString);
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + "Version: " + ChatColor.RESET + versionString);
 		if (plugin.debug) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
