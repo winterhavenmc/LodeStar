@@ -382,7 +382,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 	
 	@Override
-	void save() {
+	void sync() {
 	
 		// no action necessary for this storage type
 		

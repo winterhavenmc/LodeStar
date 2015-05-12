@@ -40,12 +40,15 @@ item-lore:
 # displaying a message again (only used on appropriate messages)
 
 messages:
-  command-fail-args-count-over:
-    enabled: true
-    string: '&3[LodeStar]&c Too many arguments!'
   command-fail-args-count-under:
     enabled: true
     string: '&3[LodeStar]&c Too few arguments!'
+  command-fail-args-count-over:
+    enabled: true
+    string: '&3[LodeStar]&c Too many arguments!'
+  command-fail-args-count-over-spaces:
+    enabled: true
+    string: '&3[LodeStar]&c Use underscores in place of spaces for destination name.'
   command-fail-console:
     enabled: true
     string: '&3[LodeStar]&c You must be in game to use this command!'
@@ -115,6 +118,9 @@ messages:
   permission-denied-give:
     enabled: true
     string: '&cYou do not have permission to give LodeStar items!'
+  permission-denied-help:
+    enabled: true
+    string: '&cYou do not have permission to view LodeStar help!'
   permission-denied-list:
     enabled: true
     string: '&cYou do not have permission to list LodeStar locations!'

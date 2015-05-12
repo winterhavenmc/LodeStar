@@ -40,12 +40,15 @@ item-lore:
 # displaying a message again (only used on appropriate messages)
 
 messages:
-  command-fail-args-count-over:
-    enabled: true
-    string: '&3[LodeStar]&c ¡Demasiados parámetros!'
   command-fail-args-count-under:
     enabled: true
     string: '&3[LodeStar]&c ¡No hay suficientes parámetros!'
+  command-fail-args-count-over:
+    enabled: true
+    string: '&3[LodeStar]&c ¡Demasiados parámetros!'
+  command-fail-args-count-over-spaces:
+    enabled: true
+    string: '&3[LodeStar]&c Uso de relieve en lugar de espacios para el nombre de destino.'
   command-fail-delete-reserved:
     enabled: true
     string: '&3[LodeStar]&c Destino %destination% no se puede eliminar!'
@@ -112,6 +115,9 @@ messages:
   permission-denied-give:
     enabled: true
     string: '&c¡Usted no tiene permiso para dar elementos LodeStar!'
+  permission-denied-help:
+    enabled: true
+    string: '&c¡Usted no tiene permiso para ver LodeStar ayuda!!'
   permission-denied-list:
     enabled: true
     string: '&c¡Usted no tiene permiso para ver la lista de ubicaciones LodeStar!'

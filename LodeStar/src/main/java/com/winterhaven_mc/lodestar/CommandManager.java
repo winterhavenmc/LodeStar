@@ -56,7 +56,7 @@ public class CommandManager implements CommandExecutor {
 		if (args.length > 0) {
 			subcmd = args[0];
 		}
-		// if no arguments, display usage
+		// if no arguments, display usage for all commands
 		else {
 			displayUsage(sender,"all");
 			return true;
@@ -124,17 +124,18 @@ public class CommandManager implements CommandExecutor {
 		// if command sender does not have permission to view status, output error message and return true
 		if (!sender.hasPermission("lodestar.status")) {
 			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-status");
+			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
 		}
 
 		// output config settings
-		String versionString = this.plugin.getDescription().getVersion();
+		String versionString = plugin.getDescription().getVersion();
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + "Version: " + ChatColor.RESET + versionString);
 		if (plugin.debug) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
+		sender.sendMessage(ChatColor.GREEN + "Language: " + ChatColor.RESET + plugin.messageManager.getLanguage());
 		sender.sendMessage(ChatColor.GREEN + "Storage type: " + ChatColor.RESET + plugin.dataStore.getName());
-		sender.sendMessage(ChatColor.GREEN + "Language: " + ChatColor.RESET + plugin.getConfig().getString("language"));
 		sender.sendMessage(ChatColor.GREEN + "Default material: " + ChatColor.RESET + plugin.getConfig().getString("default-material"));
 		sender.sendMessage(ChatColor.GREEN + "Minimum distance: " + ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
 		sender.sendMessage(ChatColor.GREEN + "Warmup: " + ChatColor.RESET + plugin.getConfig().getInt("teleport-warmup") + " seconds");
@@ -189,38 +190,22 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// get original configured datastore type
-		DataStoreType oldDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-		if (oldDataStoreType == null) {
-			oldDataStoreType = DataStoreType.SQLITE;
-		}
-
-		// reload config.yml
+		// reload main configuration
 		plugin.reloadConfig();
 
 		// update enabledWorlds list
 		updateEnabledWorlds();
 		
-		// reload messages file to take up any changed settings or change of language
-		plugin.messageManager.reloadMessages();
+		// reload messages
+		plugin.messageManager.reload();
 
-		// get current configured datastore type
-		DataStoreType newDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-		
-		// if datastore type has changed, create new datastore and convert records from existing datastore
-		if (!oldDataStoreType.equals(newDataStoreType)) {
-			
-			// create new data store
-			DataStore newDataStore = DataStoreFactory.create(newDataStoreType,plugin.dataStore);
-		
-			// set plugin.dataStore to reference new data store
-			plugin.dataStore = newDataStore;
-		}
+		// reload datastore
+		DataStoreFactory.reload();
 		
 		// set debug field
 		plugin.debug = plugin.getConfig().getBoolean("debug");
 		
-		// send reloaded message to command sender
+		// send reloaded message
 		plugin.messageManager.sendPlayerMessage(sender,"command-success-reload");
 		return true;
 	}
@@ -318,7 +303,7 @@ public class CommandManager implements CommandExecutor {
 		
 		// check max arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -327,9 +312,9 @@ public class CommandManager implements CommandExecutor {
 		Player player = (Player) sender;
 		Location location = player.getLocation();
 		
-		// set destinationName to passed argument with underscores replaced by spaces
-		String destinationName = args[1].replace('_', ' ');
-
+		// set destinationName to passed argument
+		String destinationName = args[1];
+		
 		// check if destination name is a reserved name
 		if (plugin.utilities.isNameReserved(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,"command-fail-set-reserved",destinationName);
@@ -352,10 +337,10 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// check if warp name exists and if so if player has overwrite permission
+		// check if destination name exists and if so if player has overwrite permission
 		Destination destination = plugin.dataStore.getRecord(destinationName);
 
-		// check for overwrite permission destination already exists
+		// check for overwrite permission if destination already exists
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
 			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-overwrite",destinationName);
 			plugin.messageManager.playerSound(sender, "command-fail");
@@ -406,7 +391,7 @@ public class CommandManager implements CommandExecutor {
 
 		// check max arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
 			displayUsage(sender, subcmd);
 			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
@@ -467,7 +452,7 @@ public class CommandManager implements CommandExecutor {
 		
 		// check minimum arguments
 		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-args-count-under");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -475,7 +460,7 @@ public class CommandManager implements CommandExecutor {
 		
 		// check maximum arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -530,6 +515,13 @@ public class CommandManager implements CommandExecutor {
 	 */
 	boolean listCommand(CommandSender sender,String args[]) {
 		
+		// if command sender does not have permission to list destinations, output error message and return true
+		if (!sender.hasPermission("lodestar.list")) {
+			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-list");
+			plugin.messageManager.playerSound(sender, "command-fail");
+			return true;
+		}
+
 		String subcmd = args[0];
 		// argument limits
 		int minArgs = 1;
@@ -542,7 +534,7 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender, "command-fail-args-count-over");
 			plugin.messageManager.playerSound(sender, "command-fail");
 			displayUsage(sender, subcmd);
 			return true;
@@ -585,6 +577,13 @@ public class CommandManager implements CommandExecutor {
 	 * @return
 	 */
 	boolean helpCommand(CommandSender sender, String args[]) {
+
+		// if command sender does not have permission to display help, output error message and return true
+		if (!sender.hasPermission("lodestar.help")) {
+			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-help");
+			plugin.messageManager.playerSound(sender, "command-fail");
+			return true;
+		}
 
 		String command = "help";
 		
@@ -1081,17 +1080,17 @@ public class CommandManager implements CommandExecutor {
 		if ((command.equalsIgnoreCase("set") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.set")) {
-			sender.sendMessage(usageColor + "/lodestar set <destination>");
+			sender.sendMessage(usageColor + "/lodestar set <destination_name>");
 		}
 		if ((command.equalsIgnoreCase("delete") 
 				|| command.equalsIgnoreCase("unset") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.delete")) {
-			sender.sendMessage(usageColor + "/lodestar delete <destination>");
+			sender.sendMessage(usageColor + "/lodestar delete <destination_name>");
 		}
 		if ((command.equalsIgnoreCase("help") 
 				|| command.equalsIgnoreCase("all"))
-				&& sender.hasPermission("lodestar.use")) {
+				&& sender.hasPermission("lodestar.help")) {
 			sender.sendMessage(usageColor + "/lodestar help [command]");
 		}
 		if ((command.equalsIgnoreCase("list") 
@@ -1102,17 +1101,18 @@ public class CommandManager implements CommandExecutor {
 		if ((command.equalsIgnoreCase("bind") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.bind")) {
-			sender.sendMessage(usageColor + "/lodestar bind <destination>");
+			sender.sendMessage(usageColor + "/lodestar bind <destination_name>");
 		}
 		if ((command.equalsIgnoreCase("give") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.give")) {
 			if (plugin.getConfig().getBoolean("default-item-only")) {
-				sender.sendMessage(usageColor + "/lodestar give <player> [destination] [amount]");				
+				sender.sendMessage(usageColor + "/lodestar give <player> [destination_name] [amount]");				
 			}
 			else {
-				sender.sendMessage(usageColor + "/lodestar give <player> [<destination> [material][:data]] [amount]");
+				sender.sendMessage(usageColor + "/lodestar give <player> [<destination_name> [material][:data]] [amount]");
 			}
 		}
 	}
+	
 }

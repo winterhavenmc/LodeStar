@@ -208,7 +208,7 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	void save() {
+	void sync() {
 		destinationFile.saveConfig();
 	}
 	
