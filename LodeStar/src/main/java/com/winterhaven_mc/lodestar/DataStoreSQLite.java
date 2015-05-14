@@ -19,31 +19,34 @@ public class DataStoreSQLite extends DataStore {
 
 	// reference to main class
 	private final LodeStarMain plugin;
-	
+
 	// database connection object
 	private Connection connection;
-	
-	// data store file name
-	private static final String FILENAME = "destinations.db";
 
-	// data store type
-	private static final DataStoreType TYPE = DataStoreType.SQLITE;
-	
+
+	/**
+	 * Class constructor
+	 * @param plugin
+	 */
 	DataStoreSQLite (LodeStarMain plugin) {
 
 		// reference to main class
-		this.plugin = plugin;	
+		this.plugin = plugin;
+
+		// set datastore type
+		this.type = DataStoreType.SQLITE;
+
+		// set datastore filename
+		this.filename = "destinations.db";
 	}
-	
-	
+
+
 	@Override
 	void initialize() throws SQLException, ClassNotFoundException {
-		
+
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
-			if (plugin.debug) {
-				plugin.getLogger().info("sqlite datastore already initialized.");
-			}
+			plugin.getLogger().info(this.getName() + " datastore already initialized.");
 			return;
 		}
 
@@ -60,11 +63,11 @@ public class DataStoreSQLite extends DataStore {
 
 		// register the driver 
 		final String jdbcDriverName = "org.sqlite.JDBC";
-		
+
 		Class.forName(jdbcDriverName);
 
 		// create database url
-		String destinationsDb = plugin.getDataFolder() + File.separator + FILENAME;
+		String destinationsDb = plugin.getDataFolder() + File.separator + filename;
 		String jdbc = "jdbc:sqlite";
 		String dbUrl = jdbc + ":" + destinationsDb;
 
@@ -74,11 +77,11 @@ public class DataStoreSQLite extends DataStore {
 
 		// execute table creation statement
 		statement.executeUpdate(createDestinationTable);
-		
+
 		// set initialized true
 		setInitialized(true);
 		if (plugin.debug) {
-			plugin.getLogger().info("sqlite datastore initialized.");
+			plugin.getLogger().info(this.getName() + " datastore initialized.");
 		}
 
 	}
@@ -86,23 +89,23 @@ public class DataStoreSQLite extends DataStore {
 
 	@Override
 	Destination getRecord(String key) {
-		
+
 		// if key is null return null record
 		if (key == null) {
 			return null;
 		}
-		
+
 		// derive key in case destination name was passed
 		key = Destination.deriveKey(key);
-		
+
 		Destination destination = null;
 		World world = null;
-		
+
 		final String sqlGetDestination = "SELECT * FROM destinations WHERE key = ?";
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlGetDestination);
-			
+
 			preparedStatement.setString(1, key);
 
 			// execute sql query
@@ -110,13 +113,13 @@ public class DataStoreSQLite extends DataStore {
 
 			// only zero or one record can match the unique key
 			if (rs.next()) {
-			
+
 				// get stored displayName
 				String displayName = rs.getString("displayname");
 				if (displayName == null || displayName.isEmpty()) {
 					displayName = key;
 				}
-				
+
 				// get stored world and coordinates
 				String worldName = rs.getString("worldname");
 				Double x = rs.getDouble("x");
@@ -124,7 +127,7 @@ public class DataStoreSQLite extends DataStore {
 				Double z = rs.getDouble("z");
 				Float yaw = rs.getFloat("yaw");
 				Float pitch = rs.getFloat("pitch");
-				
+
 				if (plugin.getServer().getWorld(worldName) == null) {
 					plugin.getLogger().warning("Stored destination world not found!");
 					return null;
@@ -139,7 +142,7 @@ public class DataStoreSQLite extends DataStore {
 			// output simple error message
 			plugin.getLogger().warning("An error occured while fetching a destination from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
-			
+
 			// if debugging is enabled, output stack trace
 			if (plugin.debug) {
 				e.getStackTrace();
@@ -148,24 +151,24 @@ public class DataStoreSQLite extends DataStore {
 		}
 		return destination;
 	}
-	
+
 	@Override
 	void putRecord(Destination destination) {
-		
+
 		// if destination is null do nothing and return
 		if (destination == null) {
 			return;
 		}
-		
+
 		// get key
 		final String key = destination.getKey();
-		
+
 		// get display name
 		final String displayName = destination.getDisplayName();
-		
+
 		// get location
 		final Location location = destination.getLocation();
-		
+
 		// get world name
 		String testWorldName = null;
 
@@ -174,11 +177,11 @@ public class DataStoreSQLite extends DataStore {
 			testWorldName = location.getWorld().getName();
 		} catch (Exception e) {
 			plugin.getLogger().warning("An error occured while inserting"
-					+ " a destination in the SQLite database. World invalid!");
+					+ " a destination in the " + this.getName() + " datastore. World invalid!");
 			return;
 		}
 		final String worldName = testWorldName;
-		
+
 		// sql statement to insert or replace record
 		final String sqlInsertDestination = "INSERT OR REPLACE INTO destinations ("
 				+ "key, "
@@ -213,7 +216,8 @@ public class DataStoreSQLite extends DataStore {
 				catch (Exception e) {
 
 					// output simple error message
-					plugin.getLogger().warning("An error occured while inserting a destination into the SQLite database.");
+					plugin.getLogger().warning("An error occured while inserting a destination "
+							+ "into the SQLite datastore.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
@@ -224,21 +228,21 @@ public class DataStoreSQLite extends DataStore {
 			}
 		}.runTaskAsynchronously(plugin);
 	}
-	
+
 	@Override
 	List<String> getAllKeys() {
-		
+
 		List<String> returnList = new ArrayList<String>();
 
 		// sql statement to retrieve all display names
 		final String sqlSelectAllKeys = "SELECT key FROM destinations ORDER BY key";
-		
+
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlSelectAllKeys);
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
-			
+
 			while (rs.next()) {
 				returnList.add(rs.getString("key"));
 			}
@@ -246,7 +250,8 @@ public class DataStoreSQLite extends DataStore {
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occurred while trying to fetch all records from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while trying to "
+					+ "fetch all records from the SQLite datastore.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
@@ -258,14 +263,14 @@ public class DataStoreSQLite extends DataStore {
 		// return results
 		return returnList;
 	}
-	
+
 	List<Destination> getAllRecords() {
-		
+
 		List<Destination> returnList = new ArrayList<Destination>();
 
 		// sql statement to retrieve all display names
 		final String sqlSelectAllRecords = "SELECT * FROM destinations ORDER BY key";
-		
+
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlSelectAllRecords);
 
@@ -282,9 +287,9 @@ public class DataStoreSQLite extends DataStore {
 				Double z = rs.getDouble("z");
 				Float yaw = rs.getFloat("yaw");
 				Float pitch = rs.getFloat("pitch");
-				
+
 				World world;
-				
+
 				try {
 					world = plugin.getServer().getWorld(worldName);
 				} catch (Exception e) {
@@ -292,7 +297,7 @@ public class DataStoreSQLite extends DataStore {
 							+ worldName + ". Skipping record.");
 					continue;
 				}
-				
+
 				Location location = new Location(world,x,y,z,yaw,pitch);				
 				Destination destination = new Destination(key, displayName, location);
 				returnList.add(destination);
@@ -301,7 +306,8 @@ public class DataStoreSQLite extends DataStore {
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occurred while trying to fetch all records from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while trying to "
+					+ "fetch all records from the SQLite datastore.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
@@ -312,12 +318,12 @@ public class DataStoreSQLite extends DataStore {
 
 		// return results
 		return returnList;
-		
+
 	}
-	
+
 	@Override
 	Destination deleteRecord(String key) {
-		
+
 		// if key is null return null record
 		if (key == null) {
 			return null;
@@ -325,13 +331,12 @@ public class DataStoreSQLite extends DataStore {
 
 		// derive key in case destination name was passed
 		key = Destination.deriveKey(key);
-		
+
 		// get destination record to be deleted, for return
 		Destination destination = this.getRecord(key);
 
-		final String sqlDeleteDestination = "DELETE FROM destinations "
-				+ "WHERE key = ?";
-		
+		final String sqlDeleteDestination = "DELETE FROM destinations WHERE key = ?";
+
 		try {
 			// create prepared statement
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlDeleteDestination);
@@ -340,7 +345,7 @@ public class DataStoreSQLite extends DataStore {
 
 			// execute prepared statement
 			int rowsAffected = preparedStatement.executeUpdate();
-			
+
 			// output debugging information
 			if (plugin.debug) {
 				plugin.getLogger().info(rowsAffected + " rows deleted.");
@@ -349,7 +354,8 @@ public class DataStoreSQLite extends DataStore {
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occurred while attempting to delete a destination from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while attempting to "
+					+ "delete a destination from the SQLite datastore.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
@@ -365,12 +371,12 @@ public class DataStoreSQLite extends DataStore {
 
 		try {
 			connection.close();
-			plugin.getLogger().info("SQLite database connection closed.");		
+			plugin.getLogger().info("SQLite datastore connection closed.");
 		}
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occured while closing the SQLite database connection.");
+			plugin.getLogger().warning("An error occured while closing the SQLite datastore.");
 			plugin.getLogger().warning(e.getMessage());
 
 			// if debugging is enabled, output stack trace
@@ -380,40 +386,29 @@ public class DataStoreSQLite extends DataStore {
 		}
 		setInitialized(false);
 	}
-	
+
 	@Override
 	void sync() {
-	
+
 		// no action necessary for this storage type
-		
+
 	}
-	
+
 	@Override
 	void delete() {
-		
+
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		if (dataStoreFile.exists()) {
 			dataStoreFile.delete();
 		}
 	}
-	
+
 	@Override
 	boolean exists() {
-		
-		// get path name to old data store file
+
+		// get path name to data store file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
-
-	}
-	
-	@Override
-	String getFilename() {
-		return FILENAME;
-	}
-	
-	@Override
-	DataStoreType getType() {
-		return TYPE;
 	}
 
 }

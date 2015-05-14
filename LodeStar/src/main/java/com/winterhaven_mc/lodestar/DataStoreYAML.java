@@ -14,17 +14,21 @@ public class DataStoreYAML extends DataStore {
 	private final LodeStarMain plugin; // reference to main class
 	private ConfigAccessor destinationFile;
 	
-	// data store filename
-	private static final String FILENAME = "destinations.yml";
-	
-	// data store type
-	private static final DataStoreType TYPE = DataStoreType.YAML;
-	
 
+	/**
+	 * Class constructor
+	 * @param plugin
+	 */
 	DataStoreYAML (LodeStarMain plugin) {
 		
 		// reference to main class
-		this.plugin = plugin;	
+		this.plugin = plugin;
+		
+		// set datastore type
+		this.type = DataStoreType.YAML;
+		
+		// set datastore filename
+		this.filename = "destinations.yml";
 	}
 	
 	
@@ -33,20 +37,19 @@ public class DataStoreYAML extends DataStore {
 		
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
+			plugin.getLogger().info("yaml datastore already initialized.");
 			return;
 		}
 		
 		// create new ConfigAccessor object
-		destinationFile = new ConfigAccessor(plugin, FILENAME);
+		destinationFile = new ConfigAccessor(plugin, filename);
 		
 		// copy embedded default file if necessary
 		destinationFile.saveDefaultConfig();
 		
 		// set initialized true
 		setInitialized(true);
-		if (plugin.debug) {
-			plugin.getLogger().info("yaml datastore initialized.");
-		}
+		plugin.getLogger().info("yaml datastore initialized.");
 	}
 
 
@@ -198,23 +201,28 @@ public class DataStoreYAML extends DataStore {
 		// save in memory destination file to disk
 		destinationFile.saveConfig();
 		
+		// return deleted destination
 		return destination;
 	}
 
 	@Override
 	void close() {
+		// save data to file
 		destinationFile.saveConfig();
+
+		// set initialized to false
 		setInitialized(false);
 	}
 	
 	@Override
 	void sync() {
+		// save data to file
 		destinationFile.saveConfig();
 	}
 	
 	@Override
 	void delete() {
-		
+		// delete this datastore file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		if (dataStoreFile.exists()) {
 			dataStoreFile.delete();
@@ -223,23 +231,9 @@ public class DataStoreYAML extends DataStore {
 	
 	@Override
 	boolean exists() {
-		
 		// get path name to this data store file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
-
 	}
-
-
-	@Override
-	String getFilename() {
-		return FILENAME;
-	}
-	
-	@Override
-	DataStoreType getType() {
-		return TYPE;
-	}
-
 
 }

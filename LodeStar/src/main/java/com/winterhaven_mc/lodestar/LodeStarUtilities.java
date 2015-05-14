@@ -61,15 +61,8 @@ public class LodeStarUtilities implements LodeStarAPI {
 		// get key from destination name parameter
 		String key = Destination.deriveKey(destinationName);
 		
-		// if key equals 'spawn' set destinationName to spawn name from language file
-		if (key.equals("spawn") 
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			destinationName = plugin.messageManager.getSpawnDisplayName();
-		}
-		else if (key.equalsIgnoreCase("home")
-				|| key.equalsIgnoreCase(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			destinationName = plugin.messageManager.getSpawnDisplayName();
-		}
+		// get formatted destination name
+		destinationName = getDestinationName(key);
 		
 		// retrieve item name and lore from language file file
 		String displayName = plugin.messageManager.getInventoryItemName();
@@ -221,13 +214,13 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 */
 	boolean isValidDestination(String destinationName) {
 		
+		if (destinationName == null || destinationName.isEmpty()) {
+			return false;
+		}
+		
 		String key = Destination.deriveKey(destinationName);
 		
-		if (key.equals("spawn")
-				|| key.equals("home")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))
-				|| plugin.dataStore.getRecord(key) != null) {
+		if (isReservedName(destinationName)	|| plugin.dataStore.getRecord(key) != null) {
 			return true;
 		}
 		return false;
@@ -239,18 +232,39 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param destinationName
 	 * @return boolean
 	 */
-	boolean isNameReserved(String destinationName) {
+	boolean isReservedName(String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
-		if (key.equals("spawn") 
-				|| key.equals("home")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))
+		if (isSpawnName(key) || isHomeName(key)) {
+			return true;
+		}
+		return false;
+	}
+
+	
+	boolean isHomeName(String destinationName) {
+		
+		String key = Destination.deriveKey(destinationName);
+		if (key.equals("home")
 				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
 			return true;
 		}
 		return false;
 	}
 
+	
+	boolean isSpawnName(String destinationName) {
+		
+		String key = Destination.deriveKey(destinationName);
+		if (key.equals("spawn") 
+				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
+			return true;
+		}
+		return false;
+	}
+
+	
+	
 	String hiddenString(String s) {
 		String hidden = "";
 		for (char c : s.toCharArray())

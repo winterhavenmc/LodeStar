@@ -1,6 +1,7 @@
 package com.winterhaven_mc.lodestar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -281,10 +282,16 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		String subcmd = args[0];
+		// convert args list to ArrayList so we can remove elements as we parse them
+		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+
+		// get subcmd from arguments ArrayList
+		String subcmd = arguments.get(0);
 		
+		// remove subcmd from ArrayList
+		arguments.remove(0);
+
 		int minArgs = 2;
-		int maxArgs = 2;
 		
 		// check for permission
 		if (!sender.hasPermission("lodestar.set")) {
@@ -301,22 +308,14 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// check max arguments
-		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
-			plugin.messageManager.playerSound(sender, "command-fail");
-			displayUsage(sender, subcmd);
-			return true;
-		}
-		
 		Player player = (Player) sender;
 		Location location = player.getLocation();
 		
 		// set destinationName to passed argument
-		String destinationName = args[1];
+		String destinationName = join(arguments);
 		
 		// check if destination name is a reserved name
-		if (plugin.utilities.isNameReserved(destinationName)) {
+		if (plugin.utilities.isReservedName(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,"command-fail-set-reserved",destinationName);
 			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
@@ -376,10 +375,16 @@ public class CommandManager implements CommandExecutor {
 			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
 		}
+		// convert args list to ArrayList so we can remove elements as we parse them
+		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+
+		// get subcmd from arguments ArrayList
+		String subcmd = arguments.get(0);
 		
-		String subcmd = args[0];
+		// remove subcmd from ArrayList
+		arguments.remove(0);
+
 		int minArgs = 2;
-		int maxArgs = 2;
 
 		// check min arguments
 		if (args.length < minArgs) {
@@ -389,19 +394,11 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 
-		// check max arguments
-		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
-			displayUsage(sender, subcmd);
-			plugin.messageManager.playerSound(sender, "command-fail");
-			return true;
-		}
-		
-		String destinationName = args[1];
+		String destinationName = join(arguments);
 		String key = Destination.deriveKey(destinationName);
 		
 		// test that destination name is not reserved name
-		if (plugin.utilities.isNameReserved(destinationName)) {
+		if (plugin.utilities.isReservedName(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,"command-fail-delete-reserved",destinationName);
 			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
@@ -446,9 +443,16 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		String subcmd = args[0];
+		// convert args list to ArrayList so we can remove elements as we parse them
+		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+
+		// get subcmd from arguments ArrayList
+		String subcmd = arguments.get(0);
+		
+		// remove subcmd from ArrayList
+		arguments.remove(0);
+
 		int minArgs = 2;
-		int maxArgs = 2;
 		
 		// check minimum arguments
 		if (args.length < minArgs) {
@@ -458,16 +462,8 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// check maximum arguments
-		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over-spaces");
-			plugin.messageManager.playerSound(sender, "command-fail");
-			displayUsage(sender, subcmd);
-			return true;
-		}
-		
 		Player player = (Player) sender;
-		String destinationName = args[1];
+		String destinationName = join(arguments);
 		
 		// test that destination name is valid
 		if (!plugin.utilities.isValidDestination(destinationName)) {
@@ -480,7 +476,7 @@ public class CommandManager implements CommandExecutor {
 		ItemStack playerItem = player.getItemInHand();
 		
 		// if default-item-only configured true, check that item in hand has default material and data 
-		if (plugin.getConfig().getBoolean("default-item-only")
+		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!plugin.utilities.isDefaultItem(playerItem)) {
 				plugin.messageManager.sendPlayerMessage(sender,"command-fail-invalid-item",destinationName);
@@ -632,6 +628,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param args
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	boolean giveCommand(CommandSender sender, String args[]) {
 		
 		// if command sender does not have permission to give LodeStars, output error message and return true
@@ -640,13 +637,19 @@ public class CommandManager implements CommandExecutor {
 			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
 		}
-	
-		String subcmd = args[0];
+
+		// convert args list to ArrayList so we can remove elements as we parse them
+		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+
+		// get subcmd from arguments ArrayList
+		String subcmd = arguments.get(0);
 		
+		// remove subcmd from ArrayList
+		arguments.remove(0);
+
 		// argument limits
 		int minArgs = 2;
-		int maxArgs = 5;
-	
+
 		// if too few arguments, send error and usage message
 		if (args.length < minArgs) {
 			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
@@ -655,17 +658,11 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// if too many arguments, send error and usage message
-		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over");
-			plugin.messageManager.playerSound(sender, "command-fail");
-			displayUsage(sender, subcmd);
-			return true;				
-		}
-		
 		// get required argument target player name
-		String targetPlayerName = args[1];
-		int quantity = 1;
+		String targetPlayerName = arguments.get(0);
+		
+		// remove targetPlayerName from ArrayList
+		arguments.remove(0);
 	
 		// try to match target player name to currently online player
 		Player targetPlayer = matchPlayer(sender, targetPlayerName);
@@ -675,258 +672,163 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// if only two arguments, give 1 of item in hand to target player if item is LodeStar
-		// or if item in hand is not a LodeStar item, give 1 default LodeStar item with destination spawn 
-		if (args.length == 2) {
-			
-			ItemStack itemStack = null;
-			
-			// if sender is player, clone item in hand to itemStack
-			if (sender instanceof Player) {
-				Player player = (Player) sender;
-				itemStack = player.getItemInHand().clone();
-				itemStack.setAmount(quantity);
+		// set destinationName to empty string
+		String destinationName = "";
+		
+		// set default quantity
+		int quantity = 1;
+		
+		Material material = null;
+		byte materialDataByte = 0;
+
+		// try to parse all arguments as destinationName
+		if (!arguments.isEmpty()) {
+			String testName = join(arguments);
+
+			// if resulting name is valid destination, set to destinationName
+			if (plugin.utilities.isValidDestination(testName)) {
+				destinationName = testName;
+
+				// set arguments to empty list
+				arguments.clear();
 			}
-	
-			// if itemStack is not a LodeStar item, create new default item with destination spawn
-			if (!plugin.utilities.isLodeStar(itemStack)) {
-				itemStack = plugin.utilities.createItem("spawn",quantity);
-			}
-			
-			// give item stack to target player
-			giveItem(sender, targetPlayer, itemStack);
-			
-			// play sounds to giver and receiver
-			plugin.messageManager.playerSound(sender,"command-success-give-sender");
-			plugin.messageManager.playerSound(targetPlayer,"command-success-give-target");
-			return true;				
 		}
 		
-		// if three arguments given, check if third argument is a quantity
-		if (args.length == 3) {
-			
-			// try to parse arg[2] as integer	
+		// try to parse last argument in list as integer quantity
+		if (!arguments.isEmpty()) {
 			try {
-				quantity = Integer.parseInt(args[2]);
+				quantity = Integer.parseInt(arguments.get(arguments.size() - 1));
+				
+				// remove last argument if no exception thrown
+				arguments.remove(arguments.size() - 1);
 			}
 			catch (NumberFormatException e) {
-				
-				// not an integer, must be destination
-				String key = Destination.deriveKey(args[2]);
-				String destinationName = plugin.utilities.getDestinationName(key);
-	
-				// check that destination name is valid
-				if (!plugin.utilities.isValidDestination(key)) {
-					plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-destination", args[2]);
-					plugin.messageManager.playerSound(sender, "command-fail");
-					return true;
-				}
-				
-				// create default item stack with amount 1 to give to target player
-				ItemStack itemStack = plugin.utilities.createItem(destinationName, 1);
-				
-				// give item stack to target player
-				giveItem(sender, targetPlayer, itemStack);
+				// not an integer, do nothing
+			}
+		}
+		
+		// if no remaining arguments and no destination, check if item in hand is LodeStar item
+		if (arguments.isEmpty() && destinationName.isEmpty()) {
+			
+			// if sender is not player, send args-count-under error message
+			if (!(sender instanceof Player)) {
+				plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
+				displayUsage(sender, subcmd);
 				return true;
 			}
 			
-			// third arg IS quantity; send target player item in hand with quantity
+			Player player = (Player) sender;			
+			ItemStack playerItem = player.getItemInHand().clone();
 			
-			ItemStack itemStack = null;
-			
-			// if sender is a player clone item in hand to itemStack
-			if (sender instanceof Player) {
-				Player player = (Player) sender;
-				itemStack = player.getItemInHand().clone();
-				itemStack.setAmount(quantity);
-			}
-			
-			// if itemStack is not a LodeStar item, create default item with destination spawn
-			if (!plugin.utilities.isLodeStar(itemStack)) {
-				itemStack = plugin.utilities.createItem("spawn", quantity);
-			}
-			
-			// give item stack to target player
-			giveItem(sender, targetPlayer, itemStack);
-			
-			return true;				
+			// if item in hand is a LodeStar item, set destination and material from item
+			if (plugin.utilities.isLodeStar(playerItem)) {
+				
+				destinationName = plugin.utilities.getDestinationName(playerItem);
+				material = playerItem.getType();
+				materialDataByte = playerItem.getData().getData();
+			}			
 		}
 		
-		// if four arguments, args[2] must be destination, args[3] may be quantity or item material
-		if (args.length == 4) {
+		// try to parse all remaining arguments as destinationName
+		if (!arguments.isEmpty()) {
 			
-			String destinationName = args[2];
-	
-			// check that destination name is valid
-			if (!plugin.utilities.isValidDestination(destinationName)) {
-				plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-destination", destinationName);
+			String testName = join(arguments);
+
+			// if resulting name is valid destination, set to destinationName
+			if (plugin.utilities.isValidDestination(testName)) {
+				destinationName = testName;
+
+				// set arguments to empty list
+				arguments.clear();
+			}
+		}
+
+		// try to parse last argument in list as material
+		if (!arguments.isEmpty()) {
+			
+			String materialElements[] = arguments.get(arguments.size() - 1).split("\\s*:\\s*");
+			
+			// try to match material
+			if (materialElements.length > 0) {
+				material = Material.matchMaterial(materialElements[0]);
+			}
+		
+			// if data set, try to parse as byte; set to zero if it doesn't parse
+			if (materialElements.length > 1) {
+				try {
+					materialDataByte = Byte.parseByte(materialElements[1]);
+				}
+				catch (NumberFormatException e2) {
+					materialDataByte = (byte) 0;
+				}
+			}
+			// if material matched, remove argument from list
+			arguments.remove(arguments.size() - 1);
+		}
+		
+		// try to parse all remaining arguments to destination name
+		if (!arguments.isEmpty()) {
+			
+			String testName = join(arguments);
+			
+			// if resulting name is valid destination, set to destinationName
+			if (plugin.utilities.isValidDestination(testName)) {
+				destinationName = testName;
+
+				// set arguments to empty list
+				arguments.clear();
+			}
+			// else given destination is invalid (but not blank), so send error message
+			else {
+				plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-destination", testName);
 				plugin.messageManager.playerSound(sender, "command-fail");
 				return true;
 			}
-			
-			// get destination key
-			String key = Destination.deriveKey(destinationName);
-			
-			// get formatted destination name
-			destinationName = plugin.utilities.getDestinationName(key);
-			
-			Material material = null;
-			byte materialDataByte = 0;
-	
-			// try to parse arg[3] as integer	
-			try {
-				quantity = Integer.parseInt(args[3]);
-			}
-			catch (NumberFormatException e) {
-
-				// arg[3] not an integer, must be item material
-
-				// set quantity to one
-				quantity = 1;
-
-				// if default-item-only is configured true, skip material argument
-				if (!plugin.getConfig().getBoolean("default-item-only")) {
-
-					// get argument and optional data from args[3]
-					String[] materialElements = args[3].split("\\s*:\\s*");
-
-					// try to match material
-					if (materialElements.length > 0) {
-						material = Material.matchMaterial(materialElements[0]);
-					}
-					
-					// if data set in args[3] try to parse as byte; set to zero if it doesn't parse
-					if (materialElements.length > 1) {
-						try {
-							materialDataByte = Byte.parseByte(materialElements[1]);
-						}
-						catch (NumberFormatException e2) {
-							materialDataByte = (byte) 0;
-						}
-					}
-				}
-			}
-			
-			// if no material matched try to match default material
-			if (material == null) {
-				material = Material.matchMaterial(plugin.getConfig().getString("default-material"));
-			}
-			
-			// is still no match set to nether star
-			if (material == null) {
-				material = Material.NETHER_STAR;
-			}
-			
-			// create item stack with configured material and data
-			ItemStack itemStack = new ItemStack(material,quantity,materialDataByte);
-	
-			// set item meta data
-			plugin.utilities.setMetaData(itemStack, destinationName);
-	
-			itemStack.setAmount(quantity);
-	
-			// give item stack to target player
-			giveItem(sender, targetPlayer, itemStack);
-			return true;
+		}		
+		
+		// if no destination name set, set destination to spawn
+		if (destinationName.isEmpty()) {
+				destinationName = "spawn";
 		}
+		
+		// if no material set or default-material-only configured true, try to parse material from config
+		if (material == null || plugin.getConfig().getBoolean("default-material-only")) {
 			
-		// if five args, args[2] must be destination, args[3] must be material, args[4] must be quantity
-		if (args.length == 5) {
-	
-			String destinationName = args[2];
-	
-			// check that destination name is valid
-			if (!plugin.utilities.isValidDestination(destinationName)) {
-				plugin.messageManager.sendPlayerMessage(sender,"command-fail-invalid-destination",destinationName);
-				plugin.messageManager.playerSound(sender,"command-fail");
-				return true;
+			String materialElements[] = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
+
+			// try to match material
+			if (materialElements.length > 0) {
+				material = Material.matchMaterial(materialElements[0]);
 			}
-			
-			// get destination key
-			String key = Destination.deriveKey(destinationName);
-			
-			// get formatted destination name
-			destinationName = plugin.utilities.getDestinationName(key);
-	
-			// args[3] must be item material
 
-			Material material = null;
-			byte materialDataByte = 0;
-			
-			// if default-item-only is configured true, skip material argument
-			if (!plugin.getConfig().getBoolean("default-item-only")) {
-
-				// get argument and optional data from args[3]
-				String[] materialElements = args[3].split("\\s*:\\s*");
-
-				// try to match material
-				if (materialElements.length > 0) {
-					material = Material.matchMaterial(materialElements[0]);
+			// if data set, try to parse as byte; set to zero if it doesn't parse
+			if (materialElements.length > 1) {
+				try {
+					materialDataByte = Byte.parseByte(materialElements[1]);
 				}
-				
-				// if data set in args[3] try to parse as byte; set to zero if it doesn't parse
-				if (materialElements.length > 1) {
-					try {
-						materialDataByte = Byte.parseByte(materialElements[1]);
-					}
-					catch (NumberFormatException e2) {
-						materialDataByte = (byte) 0;
-					}
+				catch (NumberFormatException e2) {
+					materialDataByte = (byte) 0;
 				}
 			}
-
-			// if no material matched try to match default material from config
-			if (material == null) {
-				String[] materialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
-			
-				// try to match material
-				if (materialElements.length > 0) {
-					material = Material.matchMaterial(materialElements[0]);
-				}
-				
-				// try to match material data
-				if (materialElements.length > 1) {
-					try {
-						materialDataByte = Byte.parseByte(materialElements[1]);
-					}
-					catch (NumberFormatException e2) {
-						materialDataByte = (byte) 0;
-					}
-				}
-			}
-
-			// if still no match set to nether star
-			if (material == null) {
-				material = Material.NETHER_STAR;
-			}
-
-			// try to parse arg[4] as integer	
-			try {
-				quantity = Integer.parseInt(args[4]);
-			}
-			catch (NumberFormatException e) {
-				
-				// send invalid quantity message to player
-				plugin.messageManager.sendPlayerMessage(sender,"command-fail-invalid-quantity");
-				plugin.messageManager.playerSound(sender, "command-fail");
-				return true;
-			}
-	
-			// create item stack with configured material and data
-			ItemStack itemStack = new ItemStack(material,quantity,materialDataByte);
-	
-			// set item meta data
-			plugin.utilities.setMetaData(itemStack, destinationName);
-	
-			itemStack.setAmount(quantity);
-	
-			// try to give item stack to target player
-			giveItem(sender, targetPlayer, itemStack);
 		}
+		// if still no material match, set to nether star
+		if (material == null) {
+			material = Material.NETHER_STAR;
+		}
+
+		// create item stack with material, quantity and data		
+		ItemStack itemStack = new ItemStack(material, quantity, (short) 0, materialDataByte);
+
+		// set item metadata on item stack
+		plugin.utilities.setMetaData(itemStack, destinationName);
+		
+		// give item stack to target player
+		giveItem(sender, targetPlayer, itemStack);
+		
 		return true;
 	}
 
-
+	
 	/**
 	 * Helper method for give command
 	 * @param giver
@@ -938,11 +840,17 @@ public class CommandManager implements CommandExecutor {
 	
 		String key = plugin.utilities.getKey(itemStack);
 		int quantity = itemStack.getAmount();
-	
+		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
+		
+		// check quantity against configured max give amount
+		if (maxGiveAmount >= 0) {
+			quantity = Math.min(maxGiveAmount, quantity);
+			itemStack.setAmount(quantity);
+		}
+		
 		// test that item is a LodeStar item
 		if (!plugin.utilities.isLodeStar(itemStack)) {
-			String destinationName = plugin.utilities.getDestinationName(key);
-			plugin.messageManager.sendPlayerMessage(giver,"command-fail-invalid-item",destinationName);
+			plugin.messageManager.sendPlayerMessage(giver,"command-fail-invalid-item");
 			plugin.messageManager.playerSound(giver, "command-fail");
 			return true;
 		}
@@ -1110,9 +1018,24 @@ public class CommandManager implements CommandExecutor {
 				sender.sendMessage(usageColor + "/lodestar give <player> [destination_name] [amount]");				
 			}
 			else {
-				sender.sendMessage(usageColor + "/lodestar give <player> [<destination_name> [material][:data]] [amount]");
+				sender.sendMessage(usageColor + "/lodestar give <player> [destination_name] [material][:data] [amount]");
 			}
 		}
+	}
+
+
+	/**
+	 * Join list of strings into one string with spaces
+	 * @param stringList
+	 * @return
+	 */
+	private String join(List<String> stringList) {
+		
+		String returnString = "";
+		for (String string : stringList) {
+			returnString = returnString + " " + string;
+		}
+		return returnString.trim();
 	}
 	
 }

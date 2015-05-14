@@ -23,6 +23,9 @@ disabled-worlds:
 # invalid item data may be reset, so use only valid item data values for a given material
 default-material: NETHER_STAR
 
+# allow giving and binding with items of default material only
+default-material-only: false
+
 # minimum distance from destination to use
 minimum-distance: 10
 
@@ -49,9 +52,6 @@ remove-from-inventory: on-success
 
 # allow LodeStar items to be used in crafting recipes
 allow-in-recipes: false
-
-# allow giving and binding with items of default material only
-default-item-only: false
 
 # cancel teleport if player takes damage
 cancel-on-damage: false
