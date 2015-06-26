@@ -321,21 +321,6 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		// check if destination name parses to an integer
-		boolean isInteger = true;
-		try {
-			Integer.parseInt(Destination.deriveKey(destinationName));
-		} catch (NumberFormatException e) {
-			isInteger = false;
-		}
-		
-		// send invalid destination error message if name parses to an integer
-		if (isInteger) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-destination",destinationName);
-			plugin.messageManager.playerSound(sender, "command-fail");
-			return true;
-		}
-		
 		// check if destination name exists and if so if player has overwrite permission
 		Destination destination = plugin.dataStore.getRecord(destinationName);
 
@@ -344,6 +329,11 @@ public class CommandManager implements CommandExecutor {
 			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-overwrite",destinationName);
 			plugin.messageManager.playerSound(sender, "command-fail");
 			return true;
+		}
+		
+		// send warning message if name begins with a number
+		if (Destination.deriveKey(destinationName).matches("^\\d*_.*")) {
+			plugin.messageManager.sendPlayerMessage(sender, "command-warn-set-numeric-prefix",destinationName);
 		}
 		
 		// create destination object
@@ -672,6 +662,8 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
+		//------------------------
+		
 		// set destinationName to empty string
 		String destinationName = "";
 		
@@ -681,34 +673,21 @@ public class CommandManager implements CommandExecutor {
 		Material material = null;
 		byte materialDataByte = 0;
 
-		// try to parse all arguments as destinationName
-		if (!arguments.isEmpty()) {
-			String testName = join(arguments);
-
-			// if resulting name is valid destination, set to destinationName
-			if (plugin.utilities.isValidDestination(testName)) {
-				destinationName = testName;
-
-				// set arguments to empty list
-				arguments.clear();
-			}
-		}
-		
-		// try to parse last argument in list as integer quantity
+		// try to parse first argument as integer quantity
 		if (!arguments.isEmpty()) {
 			try {
-				quantity = Integer.parseInt(arguments.get(arguments.size() - 1));
+				quantity = Integer.parseInt(arguments.get(0));
 				
-				// remove last argument if no exception thrown
-				arguments.remove(arguments.size() - 1);
+				// remove argument if no exception thrown
+				arguments.remove(0);
 			}
 			catch (NumberFormatException e) {
 				// not an integer, do nothing
 			}
 		}
 		
-		// if no remaining arguments and no destination, check if item in hand is LodeStar item
-		if (arguments.isEmpty() && destinationName.isEmpty()) {
+		// if no remaining arguments, check if item in hand is LodeStar item
+		if (arguments.isEmpty()) {
 			
 			// if sender is not player, send args-count-under error message
 			if (!(sender instanceof Player)) {
@@ -728,10 +707,10 @@ public class CommandManager implements CommandExecutor {
 				materialDataByte = playerItem.getData().getData();
 			}			
 		}
-		
+
 		// try to parse all remaining arguments as destinationName
 		if (!arguments.isEmpty()) {
-			
+
 			String testName = join(arguments);
 
 			// if resulting name is valid destination, set to destinationName
@@ -742,17 +721,16 @@ public class CommandManager implements CommandExecutor {
 				arguments.clear();
 			}
 		}
-
-		// try to parse last argument in list as material
+		
+		// try to parse next argument as material
 		if (!arguments.isEmpty()) {
-			
-			String materialElements[] = arguments.get(arguments.size() - 1).split("\\s*:\\s*");
-			
+			String materialElements[] = arguments.get(0).split("\\s*:\\s*");
+
 			// try to match material
 			if (materialElements.length > 0) {
 				material = Material.matchMaterial(materialElements[0]);
 			}
-		
+
 			// if data set, try to parse as byte; set to zero if it doesn't parse
 			if (materialElements.length > 1) {
 				try {
@@ -763,14 +741,15 @@ public class CommandManager implements CommandExecutor {
 				}
 			}
 			// if material matched, remove argument from list
-			arguments.remove(arguments.size() - 1);
+			if (material != null) {
+				arguments.remove(0);
+			}
 		}
 		
-		// try to parse all remaining arguments to destination name
+		// try to parse all remaining arguments as destinationName
 		if (!arguments.isEmpty()) {
-			
 			String testName = join(arguments);
-			
+
 			// if resulting name is valid destination, set to destinationName
 			if (plugin.utilities.isValidDestination(testName)) {
 				destinationName = testName;
@@ -1015,10 +994,10 @@ public class CommandManager implements CommandExecutor {
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.give")) {
 			if (plugin.getConfig().getBoolean("default-item-only")) {
-				sender.sendMessage(usageColor + "/lodestar give <player> [destination_name] [amount]");				
+				sender.sendMessage(usageColor + "/lodestar give <player> [quantity] [destination_name]");				
 			}
 			else {
-				sender.sendMessage(usageColor + "/lodestar give <player> [destination_name] [material][:data] [amount]");
+				sender.sendMessage(usageColor + "/lodestar give <player> [quantity] [material][:data] [destination_name]");
 			}
 		}
 	}

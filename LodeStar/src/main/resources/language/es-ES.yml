@@ -102,6 +102,9 @@ messages:
     enabled: true
     string: '&3[LodeStar] configuración vuelve a cargar.'
  
+  command-warn-set-numeric-prefix:
+    enabled: true
+    string: '&3[LodeStar]&c Advertencia: Destino comienza con una cantidad válida. Tenga en cuenta cuando se utiliza con el comando &ogive.'
 
   permission-denied-bind:
     enabled: true

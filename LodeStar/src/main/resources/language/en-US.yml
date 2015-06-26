@@ -106,6 +106,10 @@ messages:
     enabled: true
     string: '&3[LodeStar]&b Destination &2%destination%&b set.'
 
+  command-warn-set-numeric-prefix:
+    enabled: true
+    string: '&3[LodeStar]&c Warning: Destination name begins with a valid quantity. Be mindful when using with the &ogive&r&c command!'
+
   permission-denied-bind:
     enabled: true
     string: '&cYou do not have permission to bind LodeStar items to locations!'

@@ -228,6 +228,28 @@ public class LodeStarUtilities implements LodeStarAPI {
 
 	
 	/**
+	 * Check if destination is an allowable string
+	 * @param destinationName
+	 * @return
+	 */
+	boolean isAllowedName(String destinationName) {
+		
+		// destination name cannot be null
+		// destination name cannot be empty
+		// destination name cannot start with a digit
+		// destination name cannot contain a colon
+		
+		if (destinationName == null 
+				|| destinationName.isEmpty()
+				|| destinationName.matches("^\\d.*")
+				|| destinationName.matches(".*:.*")) {
+			return false;
+		}
+		return true;
+	}
+
+	
+	/**
 	 * Check if destination name is a reserved name
 	 * @param destinationName
 	 * @return boolean
