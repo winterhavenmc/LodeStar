@@ -300,6 +300,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 		return plugin.messageManager.getItemName();
 	}
 	
+	
 	public String getDestinationName(String key) {
 		
 		key = Destination.deriveKey(key);

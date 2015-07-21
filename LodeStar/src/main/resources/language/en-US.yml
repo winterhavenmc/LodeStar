@@ -166,6 +166,10 @@ messages:
     enabled: true
     repeat-delay: 1
     string: '&cThat destination does not exist!'
+  teleport-fail-no-bedspawn:
+    enabled: true
+    repeat-delay: 1
+    string: '&3You do not have a bed home set!'
   teleport-fail-proximity:
     enabled: true
     repeat-delay: 1

@@ -162,6 +162,10 @@ messages:
     enabled: true
     repeat-delay: 1
     string: '&c¡Ese destino no existe!'
+  teleport-fail-no-bedspawn:
+    enabled: true
+    repeat-delay: 1
+    string: '&3¡Usted no tiene un conjunto de posiciones base!'
   teleport-fail-proximity:
     enabled: true
     repeat-delay: 1

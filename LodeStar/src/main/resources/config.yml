@@ -44,8 +44,14 @@ sound-effects: true
 # lightning strike at destination on use
 lightning: true
 
+# Allow left-click to use
+left-click: false
+
 # require shift-click to use LodeStar item
 shift-click: true
+
+# send player to world spawn if they do not have a home bed spawn set
+bedspawn-fallback: true
 
 # remove item from inventory ( on-use | on-success | never )
 remove-from-inventory: on-success

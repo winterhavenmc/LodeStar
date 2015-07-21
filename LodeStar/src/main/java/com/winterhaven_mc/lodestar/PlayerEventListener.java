@@ -84,9 +84,13 @@ class PlayerEventListener implements Listener {
 			return;
 		}
 		
-		// if event action is not a left or right click, do nothing and return
-		if (event.getAction() == Action.PHYSICAL) {
-			return;
+		// if event action is not a right click, or not a left click if configured, do nothing and return
+		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) 
+				|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+				|| (plugin.getConfig().getBoolean("left-click") 
+				&& !(event.getAction().equals(Action.LEFT_CLICK_AIR)
+				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)))) {
+				return;
 		}
 		
 		// if players current world is not enabled in config, do nothing and return
@@ -139,9 +143,15 @@ class PlayerEventListener implements Listener {
 					plugin.getLogger().info("destination is home. Location: " + location.toString());
 				}
 			}
-			// otherwise set key to spawn
-			else {
+			// otherwise if bedspawn-fallback is true in config, set key to spawn
+			else if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
 				key = "spawn";
+			}
+			// if bedspawn location is null and bedspawn-fallback is false, send message and return
+			else {
+				plugin.messageManager.sendPlayerMessage(player, "teleport-fail-no-bedspawn");
+				plugin.messageManager.playerSound(player, "teleport-fail");
+				return;
 			}
 		}
 		
@@ -332,7 +342,6 @@ class PlayerEventListener implements Listener {
 				event.getInventory().setResult(null);
 			}
 		}
-		
 	}
 	
 	
