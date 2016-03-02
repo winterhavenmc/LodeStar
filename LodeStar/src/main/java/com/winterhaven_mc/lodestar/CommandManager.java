@@ -256,7 +256,7 @@ public class CommandManager implements CommandExecutor {
 		}
 		
 		Player player = (Player) sender;
-		ItemStack playerItem = player.getItemInHand();
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
 		
 		// check that player is holding a LodeStar item
 		if (!plugin.utilities.isLodeStar(playerItem)) {
@@ -267,7 +267,7 @@ public class CommandManager implements CommandExecutor {
 		int quantity = playerItem.getAmount();
 		String destinationName = plugin.utilities.getDestinationName(playerItem);
 		playerItem.setAmount(0);
-		player.setItemInHand(playerItem);
+		player.getInventory().setItemInMainHand(playerItem);
 		plugin.messageManager.sendPlayerMessage(sender,"command-success-destroy",quantity,destinationName);
 		plugin.messageManager.playerSound(player,"command-success-destroy");
 		return true;
@@ -463,7 +463,7 @@ public class CommandManager implements CommandExecutor {
 		}
 		
 		// get player item in hand
-		ItemStack playerItem = player.getItemInHand();
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
 		
 		// if default-item-only configured true, check that item in hand has default material and data 
 		if (plugin.getConfig().getBoolean("default-material-only")
