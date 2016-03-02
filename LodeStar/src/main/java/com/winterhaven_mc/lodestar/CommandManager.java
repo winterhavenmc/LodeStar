@@ -909,6 +909,7 @@ public class CommandManager implements CommandExecutor {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	Player matchPlayer(CommandSender sender, String targetPlayerName) {
 
 		// check all known players for a match
