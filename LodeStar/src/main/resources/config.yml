@@ -162,13 +162,13 @@ sounds:
   teleport-success-departure:
      enabled: true
      player-only: false
-     sound: ENTITY_ENDERMAN_TELEPORT
+     sound: ENTITY_ENDERMEN_TELEPORT
      volume: 1
      pitch: 1
   
   teleport-success-arrival:
      enabled: true
      player-only: false
-     sound: ENTITY_ENDERMAN_TELEPORT
+     sound: ENTITY_ENDERMEN_TELEPORT
      volume: 1
      pitch: 1

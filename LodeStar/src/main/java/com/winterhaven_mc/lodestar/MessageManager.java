@@ -258,13 +258,13 @@ class MessageManager {
     }
 	
 	
-    /**
-     * Play sound effect for action
-     * @param sender
-     * @param soundId
-     */
+	/**
+	 * Play sound effect for action
+	 * @param sender
+	 * @param soundId
+	 */
 	void playerSound(CommandSender sender, String soundId) {
-	
+
 		if (sender instanceof Player) {
 			playerSound((Player)sender,soundId);
 		}
@@ -277,39 +277,44 @@ class MessageManager {
 	 * @param soundId
 	 */
 	void playerSound(Player player, String soundId) {
-		
+
 		// if sound effects are disabled in config, do nothing and return
 		if (!plugin.getConfig().getBoolean("sound-effects")) {
 			return;
 		}
 		
-		// if sound is set to enabled in messages file
+		// if sound is set to enabled in config file
 		if (plugin.getConfig().getBoolean("sounds." + soundId + ".enabled")) {
-			
+
 			// get player only setting from config file
 			boolean playerOnly = plugin.getConfig().getBoolean("sounds." + soundId + ".player-only");
-	
+
 			// get sound name from config file
 			String soundName = plugin.getConfig().getString("sounds." + soundId + ".sound");
-	
+
 			// get sound volume from config file
 			float volume = (float) plugin.getConfig().getDouble("sounds." + soundId + ".volume");
-			
+
 			// get sound pitch from config file
 			float pitch = (float) plugin.getConfig().getDouble("sounds." + soundId + ".pitch");
-	
-			// if sound is set player only, use player.playSound()
-			if (playerOnly) {
-				player.playSound(player.getLocation(), Sound.valueOf(soundName), volume, pitch);
-			}
-			// else use world.playSound() so other players in vicinity can hear
-			else {
-				player.getWorld().playSound(player.getLocation(), Sound.valueOf(soundName), volume, pitch);
+			
+			try {
+				// if sound is set player only, use player.playSound()
+				if (playerOnly) {
+					player.playSound(player.getLocation(), Sound.valueOf(soundName), volume, pitch);
+				}
+				// else use world.playSound() so other players in vicinity can hear
+				else {
+					player.getWorld().playSound(player.getLocation(), Sound.valueOf(soundName), volume, pitch);
+				}
+			} catch (IllegalArgumentException e) {
+				plugin.getLogger().warning("An error occured while trying to play the sound '" + soundName 
+						+ "'. You probably need to update the sound name in your config.yml file.");
 			}
 		}
 	}
 
-	
+
 	/**
 	 * Add entry to message cooldown map
 	 * @param player

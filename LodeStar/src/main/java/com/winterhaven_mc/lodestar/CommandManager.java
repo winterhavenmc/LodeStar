@@ -3,6 +3,7 @@ package com.winterhaven_mc.lodestar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -697,7 +698,7 @@ public class CommandManager implements CommandExecutor {
 			}
 			
 			Player player = (Player) sender;			
-			ItemStack playerItem = player.getItemInHand().clone();
+			ItemStack playerItem = player.getInventory().getItemInMainHand().clone();
 			
 			// if item in hand is a LodeStar item, set destination and material from item
 			if (plugin.utilities.isLodeStar(playerItem)) {
@@ -911,32 +912,42 @@ public class CommandManager implements CommandExecutor {
 
 	@SuppressWarnings("deprecation")
 	Player matchPlayer(CommandSender sender, String targetPlayerName) {
+		
+		Player targetPlayer = null;
 
-		// check all known players for a match
-		OfflinePlayer[] offlinePlayers = plugin.getServer().getOfflinePlayers();
-		for (OfflinePlayer offlinePlayer : offlinePlayers) {
-			if (targetPlayerName.equalsIgnoreCase(offlinePlayer.getName())) {
-				if (!offlinePlayer.isOnline()) {
-					plugin.messageManager.sendPlayerMessage(sender, "command-fail-player-not-online");
-					return null;
-				}
+		// check exact match first
+		targetPlayer = plugin.getServer().getPlayer(targetPlayerName);
+		
+		// if no match, try substring match
+		if (targetPlayer == null) {
+			List<Player> playerList = plugin.getServer().matchPlayer(targetPlayerName);
+			
+			// if only one matching player, use it, otherwise send error message (no match or more than 1 match)
+			if (playerList.size() == 1) {
+				targetPlayer = playerList.get(0);
 			}
 		}
 
-		// try to match a player from given string
-		List<Player> playerList = plugin.getServer().matchPlayer(targetPlayerName);
-		Player targetPlayer = null;
-
-		// if only one matching player, use it, otherwise send error message (no match or more than 1 match)
-		if (playerList.size() == 1) {
-			targetPlayer = playerList.get(0);
+		// if match found, return target player object
+		if (targetPlayer != null) {
+			return targetPlayer;
 		}
-		else {
-			// if unique matching player is not found, send player-not-found message to sender
+		
+		// check if name matches known offline player
+		HashSet<OfflinePlayer> matchedPlayers = new HashSet<OfflinePlayer>();
+		for (OfflinePlayer offlinePlayer : plugin.getServer().getOfflinePlayers()) {
+			if (targetPlayerName.equalsIgnoreCase(offlinePlayer.getName())) {
+				matchedPlayers.add(offlinePlayer);
+			}
+		}
+		if (matchedPlayers.isEmpty()) {
 			plugin.messageManager.sendPlayerMessage(sender, "command-fail-player-not-found");
 			return null;
 		}
-		return targetPlayer;
+		else {
+			plugin.messageManager.sendPlayerMessage(sender, "command-fail-player-not-online");
+			return null;
+		}
 	}
 
 
