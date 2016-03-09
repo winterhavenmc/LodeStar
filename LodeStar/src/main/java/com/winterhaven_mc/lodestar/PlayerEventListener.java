@@ -52,6 +52,7 @@ class PlayerEventListener implements Listener {
 	 * if cancel-on-interaction configured
 	 * @param event
 	 */
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	void onPlayerUse(PlayerInteractEvent event) {
 
@@ -95,6 +96,7 @@ class PlayerEventListener implements Listener {
 		
 		// cancel event
 		event.setCancelled(true);
+		player.updateInventory();
 		
 		// if players current world is not enabled in config, do nothing and return
 		if (!playerWorldEnabled(player)) {
