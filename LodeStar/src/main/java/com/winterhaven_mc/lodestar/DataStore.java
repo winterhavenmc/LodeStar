@@ -2,10 +2,15 @@ package com.winterhaven_mc.lodestar;
 
 import java.util.List;
 
+
 public abstract class DataStore {
 
 	protected boolean initialized;
 	
+	protected DataStoreType type;
+
+	protected String filename;
+
 	/**
 	 * Initialize storage
 	 * @throws Exception
@@ -69,12 +74,16 @@ public abstract class DataStore {
 	 * Get datastore filename or equivalent
 	 * @return
 	 */
-	abstract String getFilename();
+	String getFilename() {
+		return this.filename;
+	}
 
 	/**
 	 * Get datastore type
 	 */
-	abstract DataStoreType getType();
+	DataStoreType getType() {
+		return this.type;
+	}
 	
 	/**
 	 * Get datastore name

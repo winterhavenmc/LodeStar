@@ -102,6 +102,9 @@ messages:
     enabled: true
     string: '&3[LodeStar] configuración vuelve a cargar.'
  
+  command-warn-set-numeric-prefix:
+    enabled: true
+    string: '&3[LodeStar]&c Advertencia: Destino comienza con una cantidad válida. Tenga en cuenta cuando se utiliza con el comando &ogive.'
 
   permission-denied-bind:
     enabled: true
@@ -159,6 +162,10 @@ messages:
     enabled: true
     repeat-delay: 1
     string: '&c¡Ese destino no existe!'
+  teleport-fail-no-bedspawn:
+    enabled: true
+    repeat-delay: 1
+    string: '&3¡Usted no tiene un conjunto de posiciones base!'
   teleport-fail-proximity:
     enabled: true
     repeat-delay: 1

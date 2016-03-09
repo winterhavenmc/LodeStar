@@ -52,6 +52,7 @@ class PlayerEventListener implements Listener {
 	 * if cancel-on-interaction configured
 	 * @param event
 	 */
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	void onPlayerUse(PlayerInteractEvent event) {
 
@@ -77,17 +78,25 @@ class PlayerEventListener implements Listener {
 		}
 		
 		// get players item in hand
-		ItemStack playerItem = player.getItemInHand();
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// if item used is not a LodeStar, do nothing and return
 		if (!plugin.utilities.isLodeStar(playerItem)) {
 			return;
 		}
 		
-		// if event action is not a left or right click, do nothing and return
-		if (event.getAction() == Action.PHYSICAL) {
-			return;
+		// if event action is not a right click, or not a left click if configured, do nothing and return
+		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) 
+				|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+				|| (plugin.getConfig().getBoolean("left-click") 
+				&& !(event.getAction().equals(Action.LEFT_CLICK_AIR)
+				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)))) {
+				return;
 		}
+		
+		// cancel event
+		event.setCancelled(true);
+		player.updateInventory();
 		
 		// if players current world is not enabled in config, do nothing and return
 		if (!playerWorldEnabled(player)) {
@@ -106,9 +115,6 @@ class PlayerEventListener implements Listener {
 			plugin.messageManager.sendPlayerMessage(player, "usage-shift-click");
 			return;
 		}
-		
-		// cancel event
-		event.setCancelled(true);
 		
 		// if player cooldown has not expired, send player cooldown message and return
 		if (plugin.cooldownManager.getTimeRemaining(player) > 0) {
@@ -139,9 +145,15 @@ class PlayerEventListener implements Listener {
 					plugin.getLogger().info("destination is home. Location: " + location.toString());
 				}
 			}
-			// otherwise set key to spawn
-			else {
+			// otherwise if bedspawn-fallback is true in config, set key to spawn
+			else if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
 				key = "spawn";
+			}
+			// if bedspawn location is null and bedspawn-fallback is false, send message and return
+			else {
+				plugin.messageManager.sendPlayerMessage(player, "teleport-fail-no-bedspawn");
+				plugin.messageManager.playerSound(player, "teleport-fail");
+				return;
 			}
 		}
 		
@@ -237,7 +249,7 @@ class PlayerEventListener implements Listener {
 		if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-use")) {
 			ItemStack removeItem = playerItem;
 			removeItem.setAmount(playerItem.getAmount() - 1);
-			player.setItemInHand(removeItem);
+			player.getInventory().setItemInMainHand(removeItem);
 		}
 		
 		// if warmup setting is greater than zero, send warmup message
@@ -332,7 +344,6 @@ class PlayerEventListener implements Listener {
 				event.getInventory().setResult(null);
 			}
 		}
-		
 	}
 	
 	

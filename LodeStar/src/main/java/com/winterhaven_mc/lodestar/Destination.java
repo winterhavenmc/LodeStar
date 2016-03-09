@@ -128,4 +128,5 @@ public class Destination {
 		key = key.toLowerCase().replaceAll("[&" + ChatColor.COLOR_CHAR + "][0-9a-zA-Zk-oK-OrR]", "");
 		return key;
 	}
+	
 }
