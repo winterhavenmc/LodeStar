@@ -33,7 +33,7 @@ public class DataStoreFactory {
 	 * @param dataStoreType
 	 * @return
 	 */
-	static DataStore create(DataStoreType dataStoreType) {
+	static DataStore create(final DataStoreType dataStoreType) {
 		return create(dataStoreType, null);
 	}
 
@@ -77,7 +77,7 @@ public class DataStoreFactory {
 	 * @param oldDataStore
 	 * @param newDataStore
 	 */
-	private static void convertDataStore(DataStore oldDataStore, DataStore newDataStore) {
+	private static void convertDataStore(final DataStore oldDataStore, final DataStore newDataStore) {
 
 		// if datastores are same type, do not convert
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
@@ -134,7 +134,7 @@ public class DataStoreFactory {
 	 * convert all existing data stores to new data store
 	 * @param newDataStore
 	 */
-	private static void convertAll(DataStore newDataStore) {
+	private static void convertAll(final DataStore newDataStore) {
 		
 		// get array list of all data store types
 		ArrayList<DataStoreType> dataStores = new ArrayList<DataStoreType>(Arrays.asList(DataStoreType.values()));

@@ -35,7 +35,7 @@ class PlayerEventListener implements Listener {
 	 * constructor method for <code>PlayerEventListener</code> class
 	 * @param	plugin		A reference to this plugin's main class
 	 */
-	PlayerEventListener(LodeStarMain plugin) {
+	PlayerEventListener(final LodeStarMain plugin) {
 		
 		// reference to main
 		this.plugin = plugin;
@@ -54,7 +54,7 @@ class PlayerEventListener implements Listener {
 	 */
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	void onPlayerUse(PlayerInteractEvent event) {
+	void onPlayerUse(final PlayerInteractEvent event) {
 
 		// get player
 		final Player player = event.getPlayer();
@@ -296,7 +296,7 @@ class PlayerEventListener implements Listener {
 	 * @param event
 	 */
 	@EventHandler
-	void onPlayerDeath(PlayerDeathEvent event) {
+	void onPlayerDeath(final PlayerDeathEvent event) {
 		
 		Player player = (Player)event.getEntity();
 		
@@ -312,7 +312,7 @@ class PlayerEventListener implements Listener {
 	 * @param event
 	 */
 	@EventHandler
-	void onPlayerQuit(PlayerQuitEvent event) {
+	void onPlayerQuit(final PlayerQuitEvent event) {
 		
 		Player player = event.getPlayer();
 		
@@ -331,7 +331,7 @@ class PlayerEventListener implements Listener {
 	 * @param event
 	 */
 	@EventHandler
-	void onCraftPrepare(PrepareItemCraftEvent event) {
+	void onCraftPrepare(final PrepareItemCraftEvent event) {
 
 		// if allow-in-recipes is true in configuration, do nothing and return
 		if (plugin.getConfig().getBoolean("allow-in-recipes")) {
@@ -353,7 +353,7 @@ class PlayerEventListener implements Listener {
 	 * @param event
 	 */
 	@EventHandler
-	void onEntityDamage(EntityDamageEvent event) {
+	void onEntityDamage(final EntityDamageEvent event) {
 		
 		// if event is already cancelled, do nothing and return
 		if (event.isCancelled()) {
@@ -387,7 +387,7 @@ class PlayerEventListener implements Listener {
 	 * @param event
 	 */
 	@EventHandler
-	void onPlayerMovement(PlayerMoveEvent event) {
+	void onPlayerMovement(final PlayerMoveEvent event) {
 				
 		// if cancel-on-movement configuration is false, do nothing and return
 		if (!plugin.getConfig().getBoolean("cancel-on-movement")) {
@@ -414,7 +414,7 @@ class PlayerEventListener implements Listener {
 	 * @param player
 	 * @return
 	 */
-	private boolean playerWorldEnabled(Player player) {
+	private boolean playerWorldEnabled(final Player player) {
 		
 		// if player world is in list of enabled worlds, return true
 		if (plugin.commandManager.getEnabledWorlds().contains(player.getWorld().getName())) {

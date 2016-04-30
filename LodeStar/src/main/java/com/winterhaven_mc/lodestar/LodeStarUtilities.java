@@ -32,10 +32,10 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param quantity
 	 * @return
 	 */
-	ItemStack createItem(String destinationName, int quantity) {
+	ItemStack createItem(final String destinationName, final int qty) {
 
 		// validate quantity
-		quantity = Math.max(quantity, 1);
+		int quantity = Math.max(qty, 1);
 
 		// create item stack with configured material and data
 		ItemStack newItem = getDefaultItem();
@@ -54,23 +54,23 @@ public class LodeStarUtilities implements LodeStarAPI {
 	/**
 	 * Encode hidden destination key in item lore
 	 * @param itemStack
-	 * @param destinationName
+	 * @param formattedName
 	 */
-	void setMetaData(ItemStack itemStack, String destinationName) {
+	void setMetaData(final ItemStack itemStack, final String destinationName) {
 		
 		// get key from destination name parameter
 		String key = Destination.deriveKey(destinationName);
 		
 		// get formatted destination name
-		destinationName = getDestinationName(key);
+		String formattedName = getDestinationName(key);
 		
 		// retrieve item name and lore from language file file
 		String displayName = plugin.messageManager.getInventoryItemName();
 		List<String> configLore = plugin.messageManager.getItemLore();
 
 		// substitute %destination% variable in display name
-		displayName = displayName.replaceAll("%destination%", destinationName);
-		displayName = displayName.replaceAll("%DESTINATION%", ChatColor.stripColor(destinationName));
+		displayName = displayName.replaceAll("%destination%", formattedName);
+		displayName = displayName.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
 
 		// allow for '&' character for color codes in name and lore
 		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
@@ -78,8 +78,8 @@ public class LodeStarUtilities implements LodeStarAPI {
 		ArrayList<String> coloredLore = new ArrayList<String>();
 		
 		for (String line : configLore) {
-			line = line.replaceAll("%destination%", destinationName);
-			line = line.replaceAll("%DESTINATION%", ChatColor.stripColor(destinationName));
+			line = line.replaceAll("%destination%", formattedName);
+			line = line.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
 			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		
@@ -108,7 +108,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param itemStack
 	 * @return boolean
 	 */
-	boolean isLodeStar(ItemStack itemStack) {
+	boolean isLodeStar(final ItemStack itemStack) {
 		
 		// if item stack is empty (null or air) return false
 		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
@@ -137,7 +137,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @return boolean
 	 */
 	@SuppressWarnings("deprecation")
-	boolean isDefaultItem(ItemStack itemStack) {
+	boolean isDefaultItem(final ItemStack itemStack) {
 		
 		if (plugin.debug) {
 			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
@@ -187,7 +187,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param itemStack
 	 * @return destination key or null if item has no key
 	 */
-	String getKey(ItemStack itemStack) {
+	String getKey(final ItemStack itemStack) {
 		
 		String destinationKey = null;
 		
@@ -212,7 +212,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param destinationName
 	 * @return
 	 */
-	boolean isValidDestination(String destinationName) {
+	boolean isValidDestination(final String destinationName) {
 		
 		if (destinationName == null || destinationName.isEmpty()) {
 			return false;
@@ -232,7 +232,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param destinationName
 	 * @return
 	 */
-	boolean isAllowedName(String destinationName) {
+	boolean isAllowedName(final String destinationName) {
 		
 		// destination name cannot be null
 		// destination name cannot be empty
@@ -254,7 +254,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param destinationName
 	 * @return boolean
 	 */
-	boolean isReservedName(String destinationName) {
+	boolean isReservedName(final String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
 		if (isSpawnName(key) || isHomeName(key)) {
@@ -264,7 +264,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	}
 
 	
-	boolean isHomeName(String destinationName) {
+	boolean isHomeName(final String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
 		if (key.equals("home")
@@ -275,7 +275,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	}
 
 	
-	boolean isSpawnName(String destinationName) {
+	boolean isSpawnName(final String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
 		if (key.equals("spawn") 
@@ -287,7 +287,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 
 	
 	
-	String hiddenString(String s) {
+	String hiddenString(final String s) {
 		String hidden = "";
 		for (char c : s.toCharArray())
 			hidden += ChatColor.COLOR_CHAR + "" + c;
@@ -301,36 +301,40 @@ public class LodeStarUtilities implements LodeStarAPI {
 	}
 	
 	
-	public String getDestinationName(String key) {
-		
-		key = Destination.deriveKey(key);
-		String destinationName = null;
+	public String getDestinationName(final String key) {
+
+		String returnName = key;
+		String derivedKey = Destination.deriveKey(key);
 		
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			destinationName = plugin.messageManager.getSpawnDisplayName();
-		}
-		// if destination is home get home display name from messages file
-		else if (key.equals("home") 
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			destinationName = plugin.messageManager.getHomeDisplayName();
-		}
-		// else get destination name from datastore
-		else {
-			Destination destination = plugin.dataStore.getRecord(key);
-			if (destination != null) {
-				destinationName = destination.getDisplayName();
-			}
-		}
-		// if no destination name found, use key for name
-		if (destinationName == null) {
-			destinationName = key;
+		if (derivedKey.equals("spawn") 
+				|| derivedKey.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
+			returnName = plugin.messageManager.getSpawnDisplayName();
 		}
 		
-		return destinationName;
+		// if destination is home get home display name from messages file
+		else if (derivedKey.equals("home") 
+				|| derivedKey.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
+			returnName = plugin.messageManager.getHomeDisplayName();
+		}
+		
+		// else get destination name from datastore
+		else {
+			Destination destination = plugin.dataStore.getRecord(derivedKey);
+			if (destination != null) {
+				returnName = destination.getDisplayName();
+			}
+		}
+		
+		// if no destination name found, use derived key for name
+		if (returnName == null) {
+			returnName = derivedKey;
+		}		
+		
+		return returnName;
 	}
 	
-	public String getDestinationName(ItemStack itemStack) {
+	public String getDestinationName(final ItemStack itemStack) {
 		
 		String key = getKey(itemStack);
 		String destinationName = null;
@@ -398,17 +402,17 @@ public class LodeStarUtilities implements LodeStarAPI {
 	}
 	
 	@Override
-	public Boolean isWarmingUp(Player player) {
+	public Boolean isWarmingUp(final Player player) {
 		return plugin.warmupManager.isWarmingUp(player);
 	}
 	
 	@Override
-	public Boolean isCoolingDown(Player player) {
+	public Boolean isCoolingDown(final Player player) {
 		return plugin.cooldownManager.getTimeRemaining(player) > 0;
 	}
 	
 	@Override
-	public long cooldownTimeRemaining(Player player) {
+	public long cooldownTimeRemaining(final Player player) {
 		return plugin.cooldownManager.getTimeRemaining(player);
 	}
 	
@@ -418,7 +422,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	}
 	
 	@Override
-	public void cancelTeleport(Player player) {
+	public void cancelTeleport(final Player player) {
 		plugin.warmupManager.cancelTeleport(player);
 	}
 

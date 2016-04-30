@@ -14,7 +14,10 @@ import org.bukkit.entity.Player;
  */
 class WarmupManager {
 	
-	final LodeStarMain plugin;		// reference to main class
+	// reference to main class
+	private final LodeStarMain plugin;
+	
+	// HashMap of player UUIDs and warmup times
 	private ConcurrentHashMap<UUID,Integer> warmupMap;
 
 	
@@ -23,8 +26,12 @@ class WarmupManager {
 	 * 
 	 * @param	plugin		A reference to this plugin's main class
 	 */
-	WarmupManager(LodeStarMain plugin) {
+	WarmupManager(final LodeStarMain plugin) {
+		
+		// set reference to main class
 		this.plugin = plugin;
+		
+		// initialize warmup HashMap
 		warmupMap = new ConcurrentHashMap<UUID,Integer>();
 	}
 

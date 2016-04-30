@@ -34,7 +34,7 @@ public enum DataStoreType {
 	 * Class constructor
 	 * @param displayName
 	 */
-	private DataStoreType(String displayName) {
+	private DataStoreType(final String displayName) {
 		this.setDisplayName(displayName);
 	}
 	
@@ -47,11 +47,11 @@ public enum DataStoreType {
 		return displayName;
 	}
 
-	public void setDisplayName(String displayName) {
+	public void setDisplayName(final String displayName) {
 		this.displayName = displayName;
 	}
 	
-	public static DataStoreType match(String displayName) {
+	public static DataStoreType match(final String displayName) {
 		for (DataStoreType type : DataStoreType.values()) {
 			if (type.toString().equalsIgnoreCase(displayName)) {
 				return type;

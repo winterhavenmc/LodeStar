@@ -15,8 +15,11 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 class CooldownManager {
 	
-	private final LodeStarMain plugin;		// reference to main class
-	private ConcurrentHashMap<UUID, Long> cooldown;	// private hashmap to store player uuids and cooldown expire times
+	// reference to main class
+	private final LodeStarMain plugin;
+	
+	// hashmap to store player uuids and cooldown expire times
+	private ConcurrentHashMap<UUID, Long> cooldownMap;
 
 	
 	/**
@@ -24,9 +27,13 @@ class CooldownManager {
 	 * 
 	 * @param	plugin		A reference to this plugin's main class
 	 */
-CooldownManager(LodeStarMain plugin) {
+	CooldownManager(final LodeStarMain plugin) {
+		
+		// set reference to main
 		this.plugin = plugin;
-		cooldown = new ConcurrentHashMap<UUID, Long>();
+		
+		// initialize cooldown map
+		cooldownMap = new ConcurrentHashMap<UUID, Long>();
 	}
 
 	
@@ -40,11 +47,11 @@ CooldownManager(LodeStarMain plugin) {
 		int cooldown_seconds = plugin.getConfig().getInt("teleport-cooldown");
 
 		Long expiretime = System.currentTimeMillis() + (cooldown_seconds * 1000);
-		cooldown.put(player.getUniqueId(), expiretime);
+		cooldownMap.put(player.getUniqueId(), expiretime);
 		new BukkitRunnable(){
 
 			public void run() {
-				cooldown.remove(player.getUniqueId());
+				cooldownMap.remove(player.getUniqueId());
 			}
 		}.runTaskLater(plugin, (cooldown_seconds * 20));
 	}
@@ -55,10 +62,10 @@ CooldownManager(LodeStarMain plugin) {
 	 * @param player
 	 * @return long remainingtime
 	 */
-	long getTimeRemaining(Player player) {
+	long getTimeRemaining(final Player player) {
 		long remainingtime = 0;
-		if (cooldown.containsKey(player.getUniqueId())) {
-			remainingtime = (cooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000;
+		if (cooldownMap.containsKey(player.getUniqueId())) {
+			remainingtime = (cooldownMap.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000;
 		}
 		return remainingtime;
 	}

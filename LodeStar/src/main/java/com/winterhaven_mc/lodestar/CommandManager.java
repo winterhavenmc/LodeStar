@@ -38,10 +38,15 @@ public class CommandManager implements CommandExecutor {
 	 * 
 	 * @param plugin reference to main class
 	 */
-	CommandManager(LodeStarMain plugin) {
+	CommandManager(final LodeStarMain plugin) {
 		
+		// set reference to main class
 		this.plugin = plugin;
+		
+		// register this class as command executor
 		plugin.getCommand("lodestar").setExecutor(this);
+		
+		// update enabled worlds list
 		updateEnabledWorlds();
 	}
 
@@ -50,7 +55,8 @@ public class CommandManager implements CommandExecutor {
 	 * 
 	 */
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command cmd, 
+			final String label, final String[] args) {
 		
 		String subcmd = "";
 		
@@ -121,7 +127,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param sender
 	 * @return boolean
 	 */
-	boolean statusCommand (CommandSender sender) {
+	boolean statusCommand (final CommandSender sender) {
 		
 		// if command sender does not have permission to view status, output error message and return true
 		if (!sender.hasPermission("lodestar.status")) {
@@ -163,7 +169,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param args
 	 * @return boolean
 	 */
-	boolean reloadCommand(CommandSender sender, String args[]) {
+	boolean reloadCommand(final CommandSender sender, final String args[]) {
 		
 		// if sender does not have permission to reload config, send error message and return true
 		if (!sender.hasPermission("lodestar.reload")) {
@@ -219,7 +225,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param args
 	 * @return boolean
 	 */
-	boolean destroyCommand(CommandSender sender, String args[]) {
+	boolean destroyCommand(final CommandSender sender, final String args[]) {
 		
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
@@ -275,7 +281,7 @@ public class CommandManager implements CommandExecutor {
 	}
 	
 	
-	boolean setCommand(CommandSender sender, String args[]) {
+	boolean setCommand(final CommandSender sender, final String args[]) {
 		
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
@@ -358,7 +364,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param args
 	 * @return
 	 */
-	boolean deleteCommand(CommandSender sender,String args[]) {
+	boolean deleteCommand(final CommandSender sender, final String args[]) {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.delete")) {
@@ -419,7 +425,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param args
 	 * @return
 	 */
-	boolean bindCommand(CommandSender sender,String args[]) {
+	boolean bindCommand(final CommandSender sender, final String args[]) {
 		
 		// command sender must be player
 		if (!(sender instanceof Player)) {
@@ -500,7 +506,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param args
 	 * @return
 	 */
-	boolean listCommand(CommandSender sender,String args[]) {
+	boolean listCommand(final CommandSender sender, final String args[]) {
 		
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission("lodestar.list")) {
@@ -563,7 +569,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param args
 	 * @return
 	 */
-	boolean helpCommand(CommandSender sender, String args[]) {
+	boolean helpCommand(final CommandSender sender, final String args[]) {
 
 		// if command sender does not have permission to display help, output error message and return true
 		if (!sender.hasPermission("lodestar.help")) {
@@ -620,7 +626,7 @@ public class CommandManager implements CommandExecutor {
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	boolean giveCommand(CommandSender sender, String args[]) {
+	boolean giveCommand(final CommandSender sender, final String args[]) {
 		
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
@@ -816,7 +822,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param itemStack
 	 * @return
 	 */
-	boolean giveItem(CommandSender giver, Player targetPlayer, ItemStack itemStack) {
+	boolean giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack) {
 	
 		String key = plugin.utilities.getKey(itemStack);
 		int quantity = itemStack.getAmount();
@@ -911,7 +917,7 @@ public class CommandManager implements CommandExecutor {
 
 
 	@SuppressWarnings("deprecation")
-	Player matchPlayer(CommandSender sender, String targetPlayerName) {
+	Player matchPlayer(final CommandSender sender, final String targetPlayerName) {
 		
 		Player targetPlayer = null;
 
@@ -956,8 +962,8 @@ public class CommandManager implements CommandExecutor {
 	 * @param sender
 	 * @param command
 	 */
-	void displayUsage(CommandSender sender, String command) {
-	
+	void displayUsage(final CommandSender sender, String command) {
+		
 		if (command.isEmpty() || command.equalsIgnoreCase("help")) {
 			command = "all";
 		}
@@ -1020,7 +1026,7 @@ public class CommandManager implements CommandExecutor {
 	 * @param stringList
 	 * @return
 	 */
-	private String join(List<String> stringList) {
+	private String join(final List<String> stringList) {
 		
 		String returnString = "";
 		for (String string : stringList) {

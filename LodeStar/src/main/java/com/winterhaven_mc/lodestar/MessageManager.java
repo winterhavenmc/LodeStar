@@ -35,7 +35,7 @@ class MessageManager {
 	 * 
 	 * @param plugin
 	 */
-	MessageManager(LodeStarMain plugin) {
+	MessageManager(final LodeStarMain plugin) {
 		
 		// create pointer to main class
 		this.plugin = plugin;
@@ -60,7 +60,7 @@ class MessageManager {
 	 * @param sender			player receiving message
 	 * @param messageId			message identifier in messages file
 	 */
-    void sendPlayerMessage(CommandSender sender, String messageId) {
+    void sendPlayerMessage(final CommandSender sender, final String messageId) {
 		this.sendPlayerMessage(sender, messageId, 1, "", "");
 	}
 
@@ -71,7 +71,7 @@ class MessageManager {
      * @param messageId			message identifier in messages file
      * @param quantity			number of items
      */
-    void sendPlayerMessage(CommandSender sender, String messageId, Integer quantity) {
+    void sendPlayerMessage(final CommandSender sender, final String messageId, final Integer quantity) {
 		this.sendPlayerMessage(sender, messageId, quantity, "", "");
 	}
 
@@ -82,7 +82,7 @@ class MessageManager {
      * @param messageId			message identifier in messages file
      * @param destinationName	name of destination
      */
-    void sendPlayerMessage(CommandSender sender, String messageId, String destinationName) {
+    void sendPlayerMessage(final CommandSender sender, final String messageId, final String destinationName) {
 		this.sendPlayerMessage(sender, messageId, 1, destinationName,"");
 	}
 
@@ -94,7 +94,8 @@ class MessageManager {
      * @param quantity			number of items
      * @param destinationName	name of destination
      */
-    void sendPlayerMessage(CommandSender sender, String messageId, Integer quantity, String destinationName) {
+    void sendPlayerMessage(final CommandSender sender, final String messageId, 
+    		final Integer quantity, final String destinationName) {
 		this.sendPlayerMessage(sender, messageId, quantity, destinationName,"");
     }
 
@@ -106,11 +107,11 @@ class MessageManager {
 	 * @param destinationName	name of destination
 	 * @param targetPlayerName	name of player targeted
 	 */	
-    void sendPlayerMessage(CommandSender sender,
-    		String messageId,
-    		Integer quantity,
-    		String destinationName,
-    		String targetPlayerName) {
+    void sendPlayerMessage(final CommandSender sender,
+    		final String messageId,
+    		final Integer quantity,
+    		final String passedDestinationName,
+    		final String passedTargetPlayerName) {
     	
 		// if message is not enabled in messages file, do nothing and return
 		if (!messages.getConfig().getBoolean("messages." + messageId + ".enabled")) {
@@ -122,10 +123,16 @@ class MessageManager {
 		String playerNickname = "console";
 		String playerDisplayName = "console";
 		String worldName = "world";
+		String targetPlayerName = "player";
+		String destinationName = "unknown";
 		Long remainingTime = 0L;
 
-		if (targetPlayerName == null || targetPlayerName.isEmpty()) {
-			targetPlayerName = "player";
+		if (passedTargetPlayerName != null && !passedTargetPlayerName.isEmpty()) {
+			targetPlayerName = passedTargetPlayerName;
+		}
+		
+		if (passedDestinationName != null && !passedDestinationName.isEmpty()) {
+			destinationName = passedDestinationName;
 		}
 
 		// if sender is a player...
@@ -263,7 +270,7 @@ class MessageManager {
 	 * @param sender
 	 * @param soundId
 	 */
-	void playerSound(CommandSender sender, String soundId) {
+	void playerSound(final CommandSender sender, final String soundId) {
 
 		if (sender instanceof Player) {
 			playerSound((Player)sender,soundId);
@@ -276,7 +283,7 @@ class MessageManager {
 	 * @param player
 	 * @param soundId
 	 */
-	void playerSound(Player player, String soundId) {
+	void playerSound(final Player player, final String soundId) {
 
 		// if sound effects are disabled in config, do nothing and return
 		if (!plugin.getConfig().getBoolean("sound-effects")) {
@@ -320,7 +327,7 @@ class MessageManager {
 	 * @param player
 	 * @param messageId
 	 */
-	private void putMessageCooldown(Player player, String messageId) {
+	private void putMessageCooldown(final Player player, final String messageId) {
 		
     	ConcurrentHashMap<String, Long> tempMap = new ConcurrentHashMap<String, Long>();
     	tempMap.put(messageId, System.currentTimeMillis());
@@ -334,7 +341,7 @@ class MessageManager {
 	 * @param messageId
 	 * @return cooldown expire time
 	 */
-	private long getMessageCooldown(Player player, String messageId) {
+	private long getMessageCooldown(final Player player, final String messageId) {
 		
 		// check if player is in message cooldown hashmap
 		if (messageCooldownMap.containsKey(player.getUniqueId())) {
@@ -354,7 +361,7 @@ class MessageManager {
 	 * Remove player from message cooldown map
 	 * @param player
 	 */
-	void removePlayerCooldown(Player player) {
+	void removePlayerCooldown(final Player player) {
 		messageCooldownMap.remove(player.getUniqueId());
 	}
 
@@ -419,7 +426,7 @@ class MessageManager {
 	}
 
 
-	private String languageFileExists(String language) {
+	private String languageFileExists(final String language) {
 		
 		// check if localization file for configured language exists, if not then fallback to en-US
 		File languageFile = new File(plugin.getDataFolder() 

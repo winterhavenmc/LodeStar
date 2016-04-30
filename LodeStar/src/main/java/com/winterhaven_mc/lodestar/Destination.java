@@ -17,7 +17,7 @@ public class Destination {
 	 * @param displayName
 	 * @param location
 	 */
-	Destination(String displayName, Location location) {
+	Destination(final String displayName, final Location location) {
 		this.setKey(displayName);
 		this.setDisplayName(displayName);
 		this.setLocation(location);
@@ -30,7 +30,7 @@ public class Destination {
 	 * @param displayName
 	 * @param location
 	 */
-	Destination(String key, String displayName, Location location) {
+	Destination(final String key, final String displayName, final Location location) {
 		this.setKey(key);
 		this.setDisplayName(displayName);
 		this.setLocation(location);
@@ -76,7 +76,7 @@ public class Destination {
 	 * Setter for destination key field
 	 * @param key
 	 */
-	public void setKey(String key) {
+	public void setKey(final String key) {
 		this.key = deriveKey(key);
 	}
 	
@@ -94,7 +94,7 @@ public class Destination {
 	 * Setter for destination displayName field
 	 * @param displayName
 	 */
-	public void setDisplayName(String displayName) {
+	public void setDisplayName(final String displayName) {
 		this.displayName = displayName.replace('_', ' ');
 	}
 	
@@ -112,7 +112,7 @@ public class Destination {
 	 * Setter for destination location field
 	 * @param location
 	 */
-	public void setLocation(Location location) {
+	public void setLocation(final Location location) {
 		this.location = location;
 	}
 	
@@ -120,13 +120,16 @@ public class Destination {
 	/**
 	 * Derive key from destination display name<br>
 	 * replaces spaces with underscores, strips color codes and folds to lower case
-	 * @param key
+	 * @param derivedKey
 	 * @return
 	 */
-	public static String deriveKey(String key) {
-		key = key.replace(' ', '_');
-		key = key.toLowerCase().replaceAll("[&" + ChatColor.COLOR_CHAR + "][0-9a-zA-Zk-oK-OrR]", "");
-		return key;
+	public static String deriveKey(final String key) {
+		
+		String derivedKey = key;
+		
+		derivedKey = derivedKey.replace(' ', '_');
+		derivedKey = derivedKey.toLowerCase().replaceAll("[&" + ChatColor.COLOR_CHAR + "][0-9a-zA-Zk-oK-OrR]", "");
+		return derivedKey;
 	}
 	
 }

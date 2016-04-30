@@ -19,16 +19,16 @@ public abstract class DataStore {
 	
 	/**
 	 * Get record
-	 * @param warpName
-	 * @return warp object or null if no matching record
+	 * @param destinationName
+	 * @return destination object or null if no matching record
 	 */
-	abstract Destination getRecord(String warpName);
+	abstract Destination getRecord(final String destinationName);
 	
 	/**
 	 * Store record
 	 * @param destination
 	 */
-	abstract void putRecord(Destination destination);
+	abstract void putRecord(final Destination destination);
 
 	/**
 	 * get all display names
@@ -44,10 +44,10 @@ public abstract class DataStore {
 
 	/**
 	 * Delete record
-	 * @param warpName
+	 * @param destinationName
 	 * @return 
 	 */	
-	abstract Destination deleteRecord(String warpName);
+	abstract Destination deleteRecord(final String destinationName);
 	
 	/**
 	 * Close storage
@@ -105,7 +105,7 @@ public abstract class DataStore {
 	 * Set initialized field
 	 * @param initialized
 	 */
-	void setInitialized(boolean initialized) {
+	void setInitialized(final boolean initialized) {
 		this.initialized = initialized;
 	}
 	

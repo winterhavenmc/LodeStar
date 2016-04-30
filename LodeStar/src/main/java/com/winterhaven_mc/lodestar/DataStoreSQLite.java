@@ -28,7 +28,7 @@ public class DataStoreSQLite extends DataStore {
 	 * Class constructor
 	 * @param plugin
 	 */
-	DataStoreSQLite (LodeStarMain plugin) {
+	DataStoreSQLite (final LodeStarMain plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
@@ -88,15 +88,17 @@ public class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	Destination getRecord(String key) {
+	Destination getRecord(final String key) {
+		
+		String derivedKey = key;
 
 		// if key is null return null record
-		if (key == null) {
+		if (derivedKey == null) {
 			return null;
 		}
 
 		// derive key in case destination name was passed
-		key = Destination.deriveKey(key);
+		derivedKey = Destination.deriveKey(derivedKey);
 
 		Destination destination = null;
 		World world = null;
@@ -106,7 +108,7 @@ public class DataStoreSQLite extends DataStore {
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlGetDestination);
 
-			preparedStatement.setString(1, key);
+			preparedStatement.setString(1, derivedKey);
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
@@ -117,7 +119,7 @@ public class DataStoreSQLite extends DataStore {
 				// get stored displayName
 				String displayName = rs.getString("displayname");
 				if (displayName == null || displayName.isEmpty()) {
-					displayName = key;
+					displayName = derivedKey;
 				}
 
 				// get stored world and coordinates
@@ -134,7 +136,7 @@ public class DataStoreSQLite extends DataStore {
 				}
 				world = plugin.getServer().getWorld(worldName);
 				Location location = new Location(world,x,y,z,yaw,pitch);
-				destination = new Destination(key,displayName,location);
+				destination = new Destination(derivedKey,displayName,location);
 			}
 		}
 		catch (SQLException e) {
@@ -153,7 +155,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void putRecord(Destination destination) {
+	void putRecord(final Destination destination) {
 
 		// if destination is null do nothing and return
 		if (destination == null) {
@@ -177,7 +179,7 @@ public class DataStoreSQLite extends DataStore {
 			testWorldName = location.getWorld().getName();
 		} catch (Exception e) {
 			plugin.getLogger().warning("An error occured while inserting"
-					+ " a destination in the " + this.getName() + " datastore. World invalid!");
+					+ " a destination in the " + toString() + " datastore. World invalid!");
 			return;
 		}
 		final String worldName = testWorldName;
@@ -217,7 +219,7 @@ public class DataStoreSQLite extends DataStore {
 
 					// output simple error message
 					plugin.getLogger().warning("An error occured while inserting a destination "
-							+ "into the SQLite datastore.");
+							+ "into the "  + toString() + " datastore.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
