@@ -90,7 +90,7 @@ public abstract class DataStore {
 	 * @return
 	 */
 	String getName() {
-		return this.getType().getName();
+		return this.getType().toString();
 	}
 
 	/**

@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class DataStoreFactory {
 
-	static LodeStarMain plugin = LodeStarMain.instance;
-
+	private final static LodeStarMain plugin = LodeStarMain.instance;
 
 	/**
 	 * Create new data store of given type.<br>
-	 * Single parameter version used when no current datastore exists
+	 * No parameter version used when no current datastore exists
+	 * and datastore type should be read from configuration
 	 * @return new datastore of configured type
 	 */
 	static DataStore create() {
@@ -19,41 +20,44 @@ public class DataStoreFactory {
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
 		if (dataStoreType == null) {
-			dataStoreType = DataStoreType.SQLITE;
+			dataStoreType = DataStoreType.getDefaultType();
 		}
 		return create(dataStoreType, null);
 	}
+
 	
 	/**
 	 * Create new data store of given type.<br>
 	 * Single parameter version used when no current datastore exists
+	 * but the required datastore type is known
 	 * @param dataStoreType
 	 * @return
 	 */
 	static DataStore create(DataStoreType dataStoreType) {
 		return create(dataStoreType, null);
 	}
+
 	
 	/**
 	 * Create new data store of given type and convert old data store.<br>
 	 * Two parameter version used when a datastore instance already exists
-	 * @param dataStoreType
-	 * @param oldDataStore
+	 * @param dataStoreType		new datastore type
+	 * @param oldDataStore		existing datastore reference
 	 * @return
 	 */
-	static DataStore create(DataStoreType dataStoreType, DataStore oldDataStore) {
+	static DataStore create(final DataStoreType dataStoreType, final DataStore oldDataStore) {
 	
-		DataStore newDataStore = null;
-		
-		// if file storage type yaml is specified
-		if (dataStoreType.equals(DataStoreType.YAML)) {
-			
-			// get initialized yaml data store
-			newDataStore = createYaml();
-		}
-		else {
-			// get initialized sqlite data store
-			newDataStore = createSqlite();
+		// get new data store of specified type
+		DataStore newDataStore = dataStoreType.create();
+
+		// initialize new data store
+		try {
+			newDataStore.initialize();
+		} catch (Exception e) {
+			plugin.getLogger().severe("Could not initialize " + newDataStore.toString() + " datastore!");
+			if (plugin.debug) {
+				e.printStackTrace();
+			}
 		}
 		
 		// if old data store was passed, convert to new data store
@@ -67,64 +71,19 @@ public class DataStoreFactory {
 		return newDataStore;
 	}
 	
-	/**
-	 * try to create new yaml datastore; disable plugin on failure
-	 * @return
-	 */
-	static DataStore createYaml() {
-
-		// create new yaml datastore object
-		DataStore newDataStore = new DataStoreYAML(plugin);
-
-		// initialize yaml datastore
-		try {
-			newDataStore.initialize();
-		}
-		catch (Exception e) {
-			// error initializing yaml datastore, so disable plugin.
-			plugin.getLogger().severe("An error occurred while trying to initialize the yaml datastore.");
-			plugin.getLogger().severe(e.getLocalizedMessage());
-			plugin.getLogger().severe("Disabling plugin.");
-			plugin.getPluginLoader().disablePlugin(plugin);
-			return null;
-		}
-		return newDataStore;
-	}
-
-	/**
-	 * try to create new sqlite data store; create yaml data store on failure
-	 * @return
-	 */
-	static DataStore createSqlite() {
-
-		// create new sqlite datastore object
-		DataStore newDataStore = new DataStoreSQLite(plugin);
-
-		try {
-			newDataStore.initialize();
-		}
-		catch (Exception e) {
-			// error initializing sqlite datastore, so try yaml as fallback
-			plugin.getLogger().warning("An error occurred while trying to initialize the sqlite datastore.");
-			plugin.getLogger().warning(e.getLocalizedMessage());
-			plugin.getLogger().warning("Trying yaml datastore as fallback...");
-			newDataStore = createYaml();
-		}
-		return newDataStore;
-	}
-
+	
 	/**
 	 * convert old data store to new data store
 	 * @param oldDataStore
 	 * @param newDataStore
 	 */
-	static void convertDataStore(DataStore oldDataStore, DataStore newDataStore) {
+	private static void convertDataStore(DataStore oldDataStore, DataStore newDataStore) {
 
 		// if datastores are same type, do not convert
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
 			if (plugin.debug) {
 				plugin.getLogger().info("Old and new datastore both " 
-						+ newDataStore.getName() + ". No conversion necessary.");
+						+ newDataStore.toString() + ". No conversion necessary.");
 			}
 			return;
 		}
@@ -132,8 +91,8 @@ public class DataStoreFactory {
 		// if old datastore file exists, attempt to read all records
 		if (oldDataStore.exists()) {
 			
-			plugin.getLogger().info("Converting existing " + oldDataStore.getName() + " datastore to "
-					+ newDataStore.getName() + " datastore...");
+			plugin.getLogger().info("Converting existing " + oldDataStore.toString() + " datastore to "
+					+ newDataStore.toString() + " datastore...");
 			
 			// initialize old datastore if necessary
 			if (!oldDataStore.isInitialized()) {
@@ -175,7 +134,7 @@ public class DataStoreFactory {
 	 * convert all existing data stores to new data store
 	 * @param newDataStore
 	 */
-	static void convertAll(DataStore newDataStore) {
+	private static void convertAll(DataStore newDataStore) {
 		
 		// get array list of all data store types
 		ArrayList<DataStoreType> dataStores = new ArrayList<DataStoreType>(Arrays.asList(DataStoreType.values()));
@@ -204,7 +163,7 @@ public class DataStoreFactory {
 	}
 	
 	
-	static void reload() {
+	public static void reload() {
 		
 		// get current datastore type
 		DataStoreType currentType = plugin.dataStore.getType();
