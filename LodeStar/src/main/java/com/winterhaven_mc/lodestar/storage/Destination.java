@@ -1,5 +1,6 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
 
+import com.winterhaven_mc.lodestar.PluginMain;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
@@ -17,7 +18,7 @@ public class Destination {
 	 * @param displayName
 	 * @param location
 	 */
-	Destination(final String displayName, final Location location) {
+	public Destination(final String displayName, final Location location) {
 		this.setKey(displayName);
 		this.setDisplayName(displayName);
 		this.setLocation(location);
@@ -30,7 +31,7 @@ public class Destination {
 	 * @param displayName
 	 * @param location
 	 */
-	Destination(final String key, final String displayName, final Location location) {
+	public Destination(final String key, final String displayName, final Location location) {
 		this.setKey(key);
 		this.setDisplayName(displayName);
 		this.setLocation(location);

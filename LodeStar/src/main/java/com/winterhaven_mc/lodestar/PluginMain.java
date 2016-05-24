@@ -1,9 +1,13 @@
 package com.winterhaven_mc.lodestar;
 
+import com.winterhaven_mc.lodestar.commands.CommandManager;
+import com.winterhaven_mc.lodestar.listeners.PlayerEventListener;
+import com.winterhaven_mc.lodestar.storage.DataStore;
+import com.winterhaven_mc.lodestar.storage.DataStoreFactory;
+import com.winterhaven_mc.lodestar.teleport.TeleportManager;
+import com.winterhaven_mc.util.WorldManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.winterhaven_mc.util.WorldManager;
 
 /**
  * Bukkit plugin to create items that return player to
@@ -16,22 +20,17 @@ import com.winterhaven_mc.util.WorldManager;
 public final class PluginMain extends JavaPlugin {
 	
 	// static reference to main class
-	static PluginMain instance;
+	public static PluginMain instance;
 
-	Boolean debug = getConfig().getBoolean("debug");
+	public Boolean debug = getConfig().getBoolean("debug");
 	
-	DataStore dataStore;
-	CooldownManager cooldownManager;
-	WarmupManager warmupManager;
-	MessageManager messageManager;
-	CommandManager commandManager;
-	PlayerEventListener playerEventListener;
-	LodeStarUtilities utilities;
+	public DataStore dataStore;
+	public TeleportManager teleportManager;
+	public MessageManager messageManager;
+	public CommandManager commandManager;
+	public PlayerEventListener playerEventListener;
+	public LodeStarUtilities utilities;
 	public WorldManager worldManager;
-
-	MultiverseCore mvCore;
-	Boolean mvEnabled = false;
-
 
 	@Override
 	public void onEnable() {
@@ -44,32 +43,24 @@ public final class PluginMain extends JavaPlugin {
 		
 		// get initialized destination storage object
 		dataStore = DataStoreFactory.create();
-		
+
+		// instantiate world manager
+		worldManager = new WorldManager(this);
+
 		// instantiate message manager
 		messageManager = new MessageManager(this);
 		
 		// instantiate command manager
 		commandManager = new CommandManager(this);
 
-		// instantiate cooldown manager
-		cooldownManager = new CooldownManager(this);
-		
-		// instantiate warmup manager
-		warmupManager = new WarmupManager(this);
+		// instantiate teleport manager
+		teleportManager = new TeleportManager(this);
 		
 		// instantiate player listener
 		playerEventListener = new PlayerEventListener(this);
 		
 		// instantiate utilities class
 		utilities = new LodeStarUtilities(this);
-		
-		// get reference to Multiverse-Core if installed
-		mvCore = (MultiverseCore) this.getServer().getPluginManager().getPlugin("Multiverse-Core");
-		if (mvCore != null && mvCore.isEnabled()) {
-			this.getLogger().info("Multiverse-Core detected.");
-			this.mvEnabled = true;
-		}
-
 	}
 	
 	@Override

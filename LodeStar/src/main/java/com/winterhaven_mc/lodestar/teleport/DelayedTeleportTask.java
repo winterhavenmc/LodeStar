@@ -1,5 +1,7 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.teleport;
 
+import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.Location;
 //import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -7,19 +9,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-class DelayedTeleportTask extends BukkitRunnable {
+public class DelayedTeleportTask extends BukkitRunnable {
 
-	PluginMain plugin;
-	Player player;
-	Location location;
-	BukkitTask particleTask;
-	Destination destination;
-	ItemStack playerItem;
+	private final PluginMain plugin;
+	private final Player player;
+	private Location location;
+	private BukkitTask particleTask;
+	private Destination destination;
+	private ItemStack playerItem;
+
 
 	/**
 	 * Class constructor method
 	 */
-	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
+	public DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 		
 		this.plugin = PluginMain.instance;
 		this.player = player;
@@ -44,21 +47,16 @@ class DelayedTeleportTask extends BukkitRunnable {
 		particleTask.cancel();
 		
 		// if player is in warmup hashmap
-		if (plugin.warmupManager.isWarmingUp(player)) {
+		if (plugin.teleportManager.isWarmingUp(player)) {
 
 			// remove player from warmup hashmap
-			plugin.warmupManager.removePlayer(player);
+			plugin.teleportManager.removePlayer(player);
 		
-			// if destination is spawn, check if multiverse enabled
+			// if destination is spawn, get spawn location from world manager
 			if (destination.isSpawn()) {
-				
-				// if multiverse is not enabled, copy pitch and yaw from player
-				if (!plugin.mvEnabled) {
-					location.setPitch(player.getLocation().getPitch());
-					location.setYaw(player.getLocation().getYaw());
-				}
+				location = plugin.worldManager.getSpawnLocation(location.getWorld());
 			}
-			
+
 			// if remove-from-inventory is configured on-success, take one LodeStar item from inventory now
 			if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-success")) {
 				
@@ -79,7 +77,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 				if (notRemoved) {
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-no-item");
 					plugin.messageManager.playerSound(player, "teleport-cancelled-no-item");
-					plugin.cooldownManager.setPlayerCooldown(player);
+					plugin.teleportManager.setPlayerCooldown(player);
 					return;
 				}
 			}
@@ -106,7 +104,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 			}
 			
 			// set player cooldown
-			plugin.cooldownManager.setPlayerCooldown(player);
+			plugin.teleportManager.setPlayerCooldown(player);
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
 
 import java.util.List;
 
@@ -22,19 +22,19 @@ public abstract class DataStore {
 	 * @param destinationName
 	 * @return destination object or null if no matching record
 	 */
-	abstract Destination getRecord(final String destinationName);
+	public abstract Destination getRecord(final String destinationName);
 	
 	/**
 	 * Store record
 	 * @param destination
 	 */
-	abstract void putRecord(final Destination destination);
+	public abstract void putRecord(final Destination destination);
 
 	/**
 	 * get all display names
 	 * @return
 	 */
-	abstract List<String> getAllKeys();
+	public abstract List<String> getAllKeys();
 	
 	/**
 	 * get all records
@@ -47,12 +47,12 @@ public abstract class DataStore {
 	 * @param destinationName
 	 * @return 
 	 */	
-	abstract Destination deleteRecord(final String destinationName);
+	public abstract Destination deleteRecord(final String destinationName);
 	
 	/**
 	 * Close storage
 	 */
-	abstract void close();
+	public abstract void close();
 
 	/**
 	 * Sync datastore to disk if supported
@@ -89,7 +89,7 @@ public abstract class DataStore {
 	 * Get datastore name
 	 * @return
 	 */
-	String getName() {
+	public String getName() {
 		return this.getType().toString();
 	}
 

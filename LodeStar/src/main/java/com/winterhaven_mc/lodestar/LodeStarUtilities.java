@@ -1,8 +1,6 @@
 package com.winterhaven_mc.lodestar;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +8,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implements LodeStarAPI.
@@ -31,7 +32,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	/**
 	 * Create an item stack with encoded destination and quantity
 	 * @param destinationName
-	 * @param quantity
+	 * @param qty
 	 * @return
 	 */
 	ItemStack createItem(final String destinationName, final int qty) {
@@ -56,9 +57,9 @@ public class LodeStarUtilities implements LodeStarAPI {
 	/**
 	 * Encode hidden destination key in item lore
 	 * @param itemStack
-	 * @param formattedName
+	 * @param destinationName
 	 */
-	void setMetaData(final ItemStack itemStack, final String destinationName) {
+	public void setMetaData(final ItemStack itemStack, final String destinationName) {
 		
 		// get key from destination name parameter
 		String key = Destination.deriveKey(destinationName);
@@ -110,7 +111,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param itemStack
 	 * @return boolean
 	 */
-	boolean isLodeStar(final ItemStack itemStack) {
+	public boolean isLodeStar(final ItemStack itemStack) {
 		
 		// if item stack is empty (null or air) return false
 		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
@@ -139,7 +140,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @return boolean
 	 */
 	@SuppressWarnings("deprecation")
-	boolean isDefaultItem(final ItemStack itemStack) {
+	public boolean isDefaultItem(final ItemStack itemStack) {
 		
 		if (plugin.debug) {
 			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
@@ -189,7 +190,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param itemStack
 	 * @return destination key or null if item has no key
 	 */
-	String getKey(final ItemStack itemStack) {
+	public String getKey(final ItemStack itemStack) {
 		
 		String destinationKey = null;
 		
@@ -214,7 +215,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param destinationName
 	 * @return
 	 */
-	boolean isValidDestination(final String destinationName) {
+	public boolean isValidDestination(final String destinationName) {
 		
 		if (destinationName == null || destinationName.isEmpty()) {
 			return false;
@@ -256,7 +257,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * @param destinationName
 	 * @return boolean
 	 */
-	boolean isReservedName(final String destinationName) {
+	public boolean isReservedName(final String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
 		if (isSpawnName(key) || isHomeName(key)) {
@@ -405,17 +406,17 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	@Override
 	public Boolean isWarmingUp(final Player player) {
-		return plugin.warmupManager.isWarmingUp(player);
+		return plugin.teleportManager.isWarmingUp(player);
 	}
 	
 	@Override
 	public Boolean isCoolingDown(final Player player) {
-		return plugin.cooldownManager.getTimeRemaining(player) > 0;
+		return plugin.teleportManager.getCooldownTimeRemaining(player) > 0;
 	}
 	
 	@Override
 	public long cooldownTimeRemaining(final Player player) {
-		return plugin.cooldownManager.getTimeRemaining(player);
+		return plugin.teleportManager.getCooldownTimeRemaining(player);
 	}
 	
 	@Override
@@ -425,7 +426,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	@Override
 	public void cancelTeleport(final Player player) {
-		plugin.warmupManager.cancelTeleport(player);
+		plugin.teleportManager.cancelTeleport(player);
 	}
 
 	

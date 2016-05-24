@@ -1,4 +1,6 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
+
+import com.winterhaven_mc.lodestar.PluginMain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +17,7 @@ public class DataStoreFactory {
 	 * and datastore type should be read from configuration
 	 * @return new datastore of configured type
 	 */
-	static DataStore create() {
+	public static DataStore create() {
 		
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));

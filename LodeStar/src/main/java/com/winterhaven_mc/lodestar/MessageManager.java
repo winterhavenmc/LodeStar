@@ -1,5 +1,13 @@
 package com.winterhaven_mc.lodestar;
 
+import com.winterhaven_mc.lodestar.storage.Destination;
+import com.winterhaven_mc.util.ConfigAccessor;
+import com.winterhaven_mc.util.StringUtil;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -10,14 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.winterhaven_mc.util.ConfigAccessor;
-import com.winterhaven_mc.util.StringUtil;
-
 
 /**
  * Implements message manager for <code>LodeStar</code>.
@@ -26,7 +26,7 @@ import com.winterhaven_mc.util.StringUtil;
  * @version		1.0
  *  
  */
-class MessageManager {
+public class MessageManager {
 
 	private final PluginMain plugin; // reference to main class
 	private ConfigAccessor messages;
@@ -36,7 +36,7 @@ class MessageManager {
 	/**
 	 * Constructor method for class
 	 * 
-	 * @param plugin
+	 * @param plugin reference to main class
 	 */
 	MessageManager(final PluginMain plugin) {
 
@@ -63,7 +63,7 @@ class MessageManager {
 	 * @param sender			player receiving message
 	 * @param messageId			message identifier in messages file
 	 */
-	void sendPlayerMessage(final CommandSender sender, final String messageId) {
+	public void sendPlayerMessage(final CommandSender sender, final String messageId) {
 		this.sendPlayerMessage(sender, messageId, 1, "", "");
 	}
 
@@ -74,7 +74,7 @@ class MessageManager {
 	 * @param messageId			message identifier in messages file
 	 * @param quantity			number of items
 	 */
-	void sendPlayerMessage(final CommandSender sender, final String messageId, final Integer quantity) {
+	public void sendPlayerMessage(final CommandSender sender, final String messageId, final Integer quantity) {
 		this.sendPlayerMessage(sender, messageId, quantity, "", "");
 	}
 
@@ -85,7 +85,7 @@ class MessageManager {
 	 * @param messageId			message identifier in messages file
 	 * @param destinationName	name of destination
 	 */
-	void sendPlayerMessage(final CommandSender sender, final String messageId, final String destinationName) {
+	public void sendPlayerMessage(final CommandSender sender, final String messageId, final String destinationName) {
 		this.sendPlayerMessage(sender, messageId, 1, destinationName,"");
 	}
 
@@ -97,24 +97,24 @@ class MessageManager {
 	 * @param quantity			number of items
 	 * @param destinationName	name of destination
 	 */
-	void sendPlayerMessage(final CommandSender sender, final String messageId, 
-			final Integer quantity, final String destinationName) {
+	public void sendPlayerMessage(final CommandSender sender, final String messageId,
+								  final Integer quantity, final String destinationName) {
 		this.sendPlayerMessage(sender, messageId, quantity, destinationName,"");
 	}
 
 	/** Send message to player
 	 * 
-	 * @param sender			Player receiving message
-	 * @param messageId			message identifier in messages file
-	 * @param quantity			number of items
-	 * @param destinationName	name of destination
-	 * @param targetPlayerName	name of player targeted
-	 */	
-	void sendPlayerMessage(final CommandSender sender,
-			final String messageId,
-			final Integer quantity,
-			final String passedDestinationName,
-			final String passedTargetPlayerName) {
+	 * @param sender					Player receiving message
+	 * @param messageId					message identifier in messages file
+	 * @param quantity					number of items
+	 * @param passedDestinationName		name of destination
+	 * @param passedTargetPlayerName	name of player targeted
+	 */
+	public void sendPlayerMessage(final CommandSender sender,
+								  final String messageId,
+								  final Integer quantity,
+								  final String passedDestinationName,
+								  final String passedTargetPlayerName) {
 
 		// if message is not enabled in messages file, do nothing and return
 		if (!messages.getConfig().getBoolean("messages." + messageId + ".enabled")) {
@@ -165,7 +165,7 @@ class MessageManager {
 			playerNickname = player.getPlayerListName();
 			playerDisplayName = player.getDisplayName();
 			worldName = player.getWorld().getName();
-			cooldownString = getTimeString(plugin.cooldownManager.getTimeRemaining(player));
+			cooldownString = getTimeString(plugin.teleportManager.getCooldownTimeRemaining(player));
 		}
 
 		// get message from file
@@ -213,14 +213,8 @@ class MessageManager {
 			destinationName = getHomeDisplayName();
 		}
 
-		// if Multiverse is installed, use Multiverse world alias for world name
-		if (plugin.mvEnabled && plugin.mvCore.getMVWorldManager().getMVWorld(worldName) != null) {
-
-			// if Multiverse alias is not blank, set world name to alias
-			if (!plugin.mvCore.getMVWorldManager().getMVWorld(worldName).getAlias().isEmpty()) {
-				worldName = plugin.mvCore.getMVWorldManager().getMVWorld(worldName).getAlias();
-			}
-		}
+		// get world name from WorldManager
+		worldName = plugin.worldManager.getWorldName(worldName);
 
 		// if quantity is greater than one, use plural item name
 		if (quantity > 1) {
@@ -276,7 +270,7 @@ class MessageManager {
 	 * @param sender
 	 * @param soundId
 	 */
-	void playerSound(final CommandSender sender, final String soundId) {
+	public void playerSound(final CommandSender sender, final String soundId) {
 
 		if (sender instanceof Player) {
 			playerSound((Player)sender,soundId);
@@ -367,12 +361,12 @@ class MessageManager {
 	 * Remove player from message cooldown map
 	 * @param player
 	 */
-	void removePlayerCooldown(final Player player) {
+	public void removePlayerCooldown(final Player player) {
 		messageCooldownMap.remove(player.getUniqueId());
 	}
 
 
-	void reload() {
+	public void reload() {
 
 		// reinstall message files if necessary
 		installLocalizationFiles();
@@ -452,7 +446,7 @@ class MessageManager {
 	}
 
 
-	String getItemName() {
+	public String getItemName() {
 		return messages.getConfig().getString("item-name");
 	}
 
@@ -467,12 +461,12 @@ class MessageManager {
 	}
 
 
-	String getSpawnDisplayName() {
+	public String getSpawnDisplayName() {
 		return messages.getConfig().getString("spawn-display-name");
 	}
 
 
-	String getHomeDisplayName() {
+	public String getHomeDisplayName() {
 		return messages.getConfig().getString("home-display-name");
 	}
 
@@ -484,7 +478,7 @@ class MessageManager {
 
 	/**
 	 * Format the time string with hours, minutes, seconds
-	 * @return
+	 * @return the formatted time string
 	 */
 	String getTimeString(long duration) {
 

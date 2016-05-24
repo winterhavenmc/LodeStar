@@ -1,4 +1,4 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.winterhaven_mc.lodestar.PluginMain;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -56,7 +57,7 @@ public class DataStoreYAML extends DataStore {
 
 
 	@Override
-	Destination getRecord(String key) {
+	public Destination getRecord(String key) {
 		
 		// if passed key is null return null record
 		if (key == null) {
@@ -109,7 +110,7 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	void putRecord(Destination destination) {
+	public void putRecord(Destination destination) {
 		
 		// if destination is null do nothing and return
 		if (destination == null) {
@@ -151,7 +152,7 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	List<String> getAllKeys() {
+	public List<String> getAllKeys() {
 		
 		List<String> returnKeys = new ArrayList<String>();
 		SortedSet<String> keys = new TreeSet<String>(destinationFile.getConfig().getKeys(false));
@@ -187,7 +188,7 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	Destination deleteRecord(String key) {
+	public Destination deleteRecord(String key) {
 		
 		// if key is null return null record
 		if (key == null) {
@@ -208,7 +209,7 @@ public class DataStoreYAML extends DataStore {
 	}
 
 	@Override
-	void close() {
+	public void close() {
 		// save data to file
 		destinationFile.saveConfig();
 

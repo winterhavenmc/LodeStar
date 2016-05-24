@@ -1,4 +1,6 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
+
+import com.winterhaven_mc.lodestar.PluginMain;
 
 public enum DataStoreType {
 

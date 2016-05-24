@@ -1,11 +1,8 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
+import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.storage.DataStoreFactory;
+import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +12,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
 
 /**
  * Implements command executor for <code>LodeStar</code> commands.
@@ -37,7 +36,7 @@ public class CommandManager implements CommandExecutor {
 	 * 
 	 * @param plugin reference to main class
 	 */
-	CommandManager(final PluginMain plugin) {
+	public CommandManager(final PluginMain plugin) {
 		
 		// set reference to main class
 		this.plugin = plugin;

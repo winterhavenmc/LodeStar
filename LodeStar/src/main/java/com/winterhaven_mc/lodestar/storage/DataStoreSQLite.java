@@ -1,18 +1,14 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.winterhaven_mc.lodestar.PluginMain;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.File;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DataStoreSQLite extends DataStore {
@@ -88,7 +84,7 @@ public class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	Destination getRecord(final String key) {
+	public Destination getRecord(final String key) {
 		
 		String derivedKey = key;
 
@@ -155,7 +151,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void putRecord(final Destination destination) {
+	public void putRecord(final Destination destination) {
 
 		// if destination is null do nothing and return
 		if (destination == null) {
@@ -232,7 +228,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	List<String> getAllKeys() {
+	public List<String> getAllKeys() {
 
 		List<String> returnList = new ArrayList<String>();
 
@@ -324,7 +320,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	Destination deleteRecord(String key) {
+	public Destination deleteRecord(String key) {
 
 		// if key is null return null record
 		if (key == null) {
@@ -369,7 +365,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void close() {
+	public void close() {
 
 		try {
 			connection.close();
