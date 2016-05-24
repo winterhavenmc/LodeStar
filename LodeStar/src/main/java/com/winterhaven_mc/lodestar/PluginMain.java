@@ -3,6 +3,7 @@ package com.winterhaven_mc.lodestar;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.winterhaven_mc.util.WorldManager;
 
 /**
  * Bukkit plugin to create items that return player to
@@ -12,10 +13,10 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
  * @author      Tim Savage
  * @version		1.0
  */
-public final class LodeStarMain extends JavaPlugin {
+public final class PluginMain extends JavaPlugin {
 	
 	// static reference to main class
-	static LodeStarMain instance;
+	static PluginMain instance;
 
 	Boolean debug = getConfig().getBoolean("debug");
 	
@@ -26,6 +27,7 @@ public final class LodeStarMain extends JavaPlugin {
 	CommandManager commandManager;
 	PlayerEventListener playerEventListener;
 	LodeStarUtilities utilities;
+	public WorldManager worldManager;
 
 	MultiverseCore mvCore;
 	Boolean mvEnabled = false;

@@ -10,8 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-//import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,27 +25,25 @@ import org.bukkit.inventory.ItemStack;
  */
 public class CommandManager implements CommandExecutor {
 	
+	// reference to main class
+	private final PluginMain plugin;
+	
 	private final static ChatColor helpColor = ChatColor.YELLOW;
 	private final static ChatColor usageColor = ChatColor.GOLD;
 
-	private final LodeStarMain plugin; // reference to main class
-	private ArrayList<String> enabledWorlds;
-
+	
 	/**
 	 * constructor method for <code>CommandManager</code> class
 	 * 
 	 * @param plugin reference to main class
 	 */
-	CommandManager(final LodeStarMain plugin) {
+	CommandManager(final PluginMain plugin) {
 		
 		// set reference to main class
 		this.plugin = plugin;
 		
 		// register this class as command executor
 		plugin.getCommand("lodestar").setExecutor(this);
-		
-		// update enabled worlds list
-		updateEnabledWorlds();
 	}
 
 
@@ -142,23 +138,51 @@ public class CommandManager implements CommandExecutor {
 		if (plugin.debug) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
-		sender.sendMessage(ChatColor.GREEN + "Language: " + ChatColor.RESET + plugin.messageManager.getLanguage());
-		sender.sendMessage(ChatColor.GREEN + "Storage type: " + ChatColor.RESET + plugin.dataStore.getName());
-		sender.sendMessage(ChatColor.GREEN + "Default material: " + ChatColor.RESET + plugin.getConfig().getString("default-material"));
-		sender.sendMessage(ChatColor.GREEN + "Minimum distance: " + ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
-		sender.sendMessage(ChatColor.GREEN + "Warmup: " + ChatColor.RESET + plugin.getConfig().getInt("teleport-warmup") + " seconds");
-		sender.sendMessage(ChatColor.GREEN + "Cooldown: " + ChatColor.RESET + plugin.getConfig().getInt("teleport-cooldown") + " seconds");
-		sender.sendMessage(ChatColor.GREEN + "Shift-click required: " + ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));
-		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: " + ChatColor.RESET + "[ "
+		sender.sendMessage(ChatColor.GREEN + "Language: " 
+				+ ChatColor.RESET + plugin.messageManager.getLanguage());
+		
+		sender.sendMessage(ChatColor.GREEN + "Storage type: " 
+				+ ChatColor.RESET + plugin.dataStore.getName());
+		
+		sender.sendMessage(ChatColor.GREEN + "Default material: " 
+				+ ChatColor.RESET + plugin.getConfig().getString("default-material"));
+		
+		sender.sendMessage(ChatColor.GREEN + "Minimum distance: " 
+				+ ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
+		
+		sender.sendMessage(ChatColor.GREEN + "Warmup: " 
+				+ ChatColor.RESET + plugin.getConfig().getInt("teleport-warmup") + " seconds");
+		
+		sender.sendMessage(ChatColor.GREEN + "Cooldown: " 
+				+ ChatColor.RESET + plugin.getConfig().getInt("teleport-cooldown") + " seconds");
+		
+		sender.sendMessage(ChatColor.GREEN + "Shift-click required: " 
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));
+		
+		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: " 
+				+ ChatColor.RESET + "[ "
 				+ plugin.getConfig().getBoolean("cancel-on-damage") + "/"
 				+ plugin.getConfig().getBoolean("cancel-on-movement") + "/"
 				+ plugin.getConfig().getBoolean("cancel-on-interaction") + " ]");
-		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: " + ChatColor.RESET + plugin.getConfig().getString("remove-from-inventory"));
-		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET + plugin.getConfig().getBoolean("allow-in-recipes"));
-		sender.sendMessage(ChatColor.GREEN + "From nether: " + ChatColor.RESET + plugin.getConfig().getBoolean("from-nether"));
-		sender.sendMessage(ChatColor.GREEN + "From end: " + ChatColor.RESET + plugin.getConfig().getBoolean("from-end"));
-		sender.sendMessage(ChatColor.GREEN + "Lightning: " + ChatColor.RESET + plugin.getConfig().getBoolean("lightning"));
-		sender.sendMessage(ChatColor.GREEN + "Enabled Words: " + ChatColor.RESET + getEnabledWorlds().toString());
+		
+		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: " 
+				+ ChatColor.RESET + plugin.getConfig().getString("remove-from-inventory"));
+		
+		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET 
+				+ plugin.getConfig().getBoolean("allow-in-recipes"));
+		
+		sender.sendMessage(ChatColor.GREEN + "From nether: " 
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-nether"));
+		
+		sender.sendMessage(ChatColor.GREEN + "From end: " 
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-end"));
+		
+		sender.sendMessage(ChatColor.GREEN + "Lightning: " 
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("lightning"));
+		
+		sender.sendMessage(ChatColor.GREEN + "Enabled Words: " 
+				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString());
+		
 		return true;
 	}
 	
@@ -202,7 +226,7 @@ public class CommandManager implements CommandExecutor {
 		plugin.reloadConfig();
 
 		// update enabledWorlds list
-		updateEnabledWorlds();
+		plugin.worldManager.reload();
 		
 		// reload messages
 		plugin.messageManager.reload();
@@ -882,37 +906,6 @@ public class CommandManager implements CommandExecutor {
 		// play sound to target player
 		plugin.messageManager.playerSound(targetPlayer, "command-success-give-target");
 		return true;
-	}
-
-
-	/**
-	 * get list of enabled worlds
-	 * @return ArrayList of String enabledWorlds
-	 */
-	ArrayList<String> getEnabledWorlds() {
-		return this.enabledWorlds;
-	}
-
-
-	/**
-	 * update enabledWorlds ArrayList field from config file settings
-	 */
-	void updateEnabledWorlds() {
-
-		// copy list of enabled worlds from config into enabledWorlds ArrayList field
-		this.enabledWorlds = new ArrayList<String>(plugin.getConfig().getStringList("enabled-worlds"));
-
-		// if enabledWorlds ArrayList is empty, add all worlds to ArrayList
-		if (this.enabledWorlds.isEmpty()) {
-			for (World world : plugin.getServer().getWorlds()) {
-				enabledWorlds.add(world.getName());
-			}
-		}
-
-		// remove each disabled world from enabled worlds field
-		for (String disabledWorld : plugin.getConfig().getStringList("disabled-worlds")) {
-			this.enabledWorlds.remove(disabledWorld);
-		}
 	}
 
 

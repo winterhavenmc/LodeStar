@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DataStoreFactory {
 
-	private final static LodeStarMain plugin = LodeStarMain.instance;
+	private final static PluginMain plugin = PluginMain.instance;
 
 	/**
 	 * Create new data store of given type.<br>

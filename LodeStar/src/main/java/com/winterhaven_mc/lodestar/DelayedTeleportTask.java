@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 class DelayedTeleportTask extends BukkitRunnable {
 
-	LodeStarMain plugin;
+	PluginMain plugin;
 	Player player;
 	Location location;
 	BukkitTask particleTask;
@@ -21,7 +21,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 	 */
 	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 		
-		this.plugin = LodeStarMain.instance;
+		this.plugin = PluginMain.instance;
 		this.player = player;
 		this.destination = destination;
 		this.playerItem = playerItem;
@@ -107,26 +107,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 			
 			// set player cooldown
 			plugin.cooldownManager.setPlayerCooldown(player);
-
-			// try to prevent player spawning inside block and suffocating
-			preventSuffocation(player, location);
 		}
 	}
-
 	
-	private void preventSuffocation(final Player player, final Location spawnLoc) {
-		
-		final int spawnAir = player.getRemainingAir();
-		
-		new BukkitRunnable(){
-
-			public void run() {
-				if (player.getRemainingAir() < spawnAir) {
-					player.teleport(spawnLoc.add(0,1,0));
-					player.setRemainingAir(spawnAir);
-				}
-			}
-		}.runTaskLater(plugin, 20);		
-	}
-
 }

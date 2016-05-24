@@ -24,7 +24,7 @@ public enum DataStoreType {
 
 	private String displayName;
 
-	private final static LodeStarMain plugin = LodeStarMain.instance;
+	private final static PluginMain plugin = PluginMain.instance;
 	
 	private final static DataStoreType defaultType = DataStoreType.SQLITE;
 	

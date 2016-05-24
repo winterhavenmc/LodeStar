@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,10 +20,10 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class LodeStarUtilities implements LodeStarAPI {
 
-	private final LodeStarMain plugin;
+	private final PluginMain plugin;
 	private final String itemTag = hiddenString("SSv2");
 	
-	LodeStarUtilities(LodeStarMain plugin) {
+	LodeStarUtilities(PluginMain plugin) {
 		this.plugin = plugin;
 	}
 
@@ -418,7 +420,7 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	@Override
 	public List<String> getEnabledWorlds() {
-		return plugin.commandManager.getEnabledWorlds();
+		return plugin.worldManager.getEnabledWorldNames();
 	}
 	
 	@Override
@@ -466,6 +468,21 @@ public class LodeStarUtilities implements LodeStarAPI {
 		ItemStack newItem = new ItemStack(configMaterial,1,configMaterialDataByte);
 		
 		return newItem;
+	}
+
+	
+	Location getBlockCenteredLocation(final Location location) {
+		
+		// if location is null, return null
+		if (location == null) {
+			return null;
+		}
+		
+		final World world = location.getWorld();
+		int x = location.getBlockX();
+		int y = (int)Math.round(location.getY());
+		int z = location.getBlockZ();
+		return new Location(world, x + 0.5, y, z + 0.5, location.getYaw(), location.getPitch());
 	}
 
 }

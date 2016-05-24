@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 class ParticleTask extends BukkitRunnable {
 
-	LodeStarMain plugin;
+	PluginMain plugin;
 	Player player;
 
 	/**
@@ -21,7 +21,7 @@ class ParticleTask extends BukkitRunnable {
 	 */
 	ParticleTask(final Player player) {
 		
-		this.plugin = LodeStarMain.instance;
+		this.plugin = PluginMain.instance;
 		this.player = player;
 		
 	}

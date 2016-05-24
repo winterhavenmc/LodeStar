@@ -5,7 +5,7 @@ import org.bukkit.Location;
 
 public class Destination {
 	
-	private static final LodeStarMain plugin = LodeStarMain.instance;
+	private static final PluginMain plugin = PluginMain.instance;
 
 	private String key;
 	private String displayName;

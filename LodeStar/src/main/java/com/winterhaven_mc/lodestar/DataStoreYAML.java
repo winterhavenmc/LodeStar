@@ -9,9 +9,11 @@ import java.util.TreeSet;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import com.winterhaven_mc.util.ConfigAccessor;
+
 public class DataStoreYAML extends DataStore {
 
-	private final LodeStarMain plugin; // reference to main class
+	private final PluginMain plugin; // reference to main class
 	private ConfigAccessor destinationFile;
 	
 
@@ -19,7 +21,7 @@ public class DataStoreYAML extends DataStore {
 	 * Class constructor
 	 * @param plugin
 	 */
-	DataStoreYAML (LodeStarMain plugin) {
+	DataStoreYAML (PluginMain plugin) {
 		
 		// reference to main class
 		this.plugin = plugin;

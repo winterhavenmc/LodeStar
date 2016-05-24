@@ -28,14 +28,14 @@ import org.bukkit.scheduler.BukkitTask;
 class PlayerEventListener implements Listener {
 
 	// reference to main class
-	private final LodeStarMain plugin;
+	private final PluginMain plugin;
 	
 	
 	/**
 	 * constructor method for <code>PlayerEventListener</code> class
 	 * @param	plugin		A reference to this plugin's main class
 	 */
-	PlayerEventListener(final LodeStarMain plugin) {
+	PlayerEventListener(final PluginMain plugin) {
 		
 		// reference to main
 		this.plugin = plugin;
@@ -98,8 +98,8 @@ class PlayerEventListener implements Listener {
 		event.setCancelled(true);
 		player.updateInventory();
 		
-		// if players current world is not enabled in config, do nothing and return
-		if (!playerWorldEnabled(player)) {
+		// if player current world is not enabled in config, do nothing and return
+		if (!plugin.worldManager.isEnabled(player.getWorld())) {
 			return;
 		}
 		
@@ -238,7 +238,6 @@ class PlayerEventListener implements Listener {
 			plugin.getLogger().info("Teleporting to destination: " + location.toString());
 		}
 		
-		
 		// load destination chunk if not already loaded
 		String worldName = location.getWorld().getName();
 		if (!plugin.getServer().getWorld(worldName).getChunkAt(location).isLoaded()) {
@@ -286,7 +285,6 @@ class PlayerEventListener implements Listener {
 			// write message to log
 			plugin.getLogger().info(log_message);
 		}
-		
 	}
 	
 	
@@ -302,7 +300,6 @@ class PlayerEventListener implements Listener {
 		
 		// cancel any pending teleport for player
 		plugin.warmupManager.removePlayer(player);
-		
 	}
 
 	
@@ -321,7 +318,6 @@ class PlayerEventListener implements Listener {
 		
 		// remove player from message cooldown map
 		plugin.messageManager.removePlayerCooldown(player);
-		
 	}
 	
 	
@@ -406,23 +402,6 @@ class PlayerEventListener implements Listener {
 				plugin.messageManager.playerSound(player, "teleport-cancelled");
 			}
 		}
-	}
-
-	
-	/**
-	 * Test if player world is enabled in config
-	 * @param player
-	 * @return
-	 */
-	private boolean playerWorldEnabled(final Player player) {
-		
-		// if player world is in list of enabled worlds, return true
-		if (plugin.commandManager.getEnabledWorlds().contains(player.getWorld().getName())) {
-			return true;
-		}
-		
-		// otherwise return false
-		return false;
 	}
 
 }

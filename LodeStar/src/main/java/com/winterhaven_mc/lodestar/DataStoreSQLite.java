@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class DataStoreSQLite extends DataStore {
 
 	// reference to main class
-	private final LodeStarMain plugin;
+	private final PluginMain plugin;
 
 	// database connection object
 	private Connection connection;
@@ -28,7 +28,7 @@ public class DataStoreSQLite extends DataStore {
 	 * Class constructor
 	 * @param plugin
 	 */
-	DataStoreSQLite (final LodeStarMain plugin) {
+	DataStoreSQLite (final PluginMain plugin) {
 
 		// reference to main class
 		this.plugin = plugin;

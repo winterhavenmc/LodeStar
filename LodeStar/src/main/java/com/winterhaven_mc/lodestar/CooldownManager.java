@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 class CooldownManager {
 	
 	// reference to main class
-	private final LodeStarMain plugin;
+	private final PluginMain plugin;
 	
 	// hashmap to store player uuids and cooldown expire times
 	private ConcurrentHashMap<UUID, Long> cooldownMap;
@@ -27,7 +27,7 @@ class CooldownManager {
 	 * 
 	 * @param	plugin		A reference to this plugin's main class
 	 */
-	CooldownManager(final LodeStarMain plugin) {
+	CooldownManager(final PluginMain plugin) {
 		
 		// set reference to main
 		this.plugin = plugin;
