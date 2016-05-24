@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class DelayedTeleportTask extends BukkitRunnable {
+class DelayedTeleportTask extends BukkitRunnable {
 
 	private final PluginMain plugin;
 	private final Player player;
@@ -22,7 +22,7 @@ public class DelayedTeleportTask extends BukkitRunnable {
 	/**
 	 * Class constructor method
 	 */
-	public DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
+	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 		
 		this.plugin = PluginMain.instance;
 		this.player = player;
