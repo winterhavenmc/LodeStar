@@ -1,6 +1,7 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.SimpleAPI;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -59,13 +60,13 @@ public class TeleportManager {
         }
 
         // get destination from player item
-        String key = plugin.utilities.getKey(playerItem);
+        String key = SimpleAPI.getKey(playerItem);
         Location location = null;
         Destination destination = null;
 
         // if destination key equals home, get player bed spawn location
-        if (key.equalsIgnoreCase("home")
-                || key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
+        if (key != null && (key.equalsIgnoreCase("home")
+                || key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName())))) {
 
             location = player.getBedSpawnLocation();
 
@@ -89,8 +90,8 @@ public class TeleportManager {
         }
 
         // if destination is spawn, get spawn location
-        if (key.equalsIgnoreCase("spawn")
-                || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
+        if (key != null && (key.equalsIgnoreCase("spawn")
+                || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName())))) {
 
             World playerWorld = player.getWorld();
             String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
@@ -170,7 +171,7 @@ public class TeleportManager {
         // if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
         if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-use")) {
             playerItem.setAmount(playerItem.getAmount() - 1);
-            player.getInventory().setItemInMainHand(playerItem);
+            player.getInventory().setItemInHand(playerItem);
         }
 
         // if warmup setting is greater than zero, send warmup message

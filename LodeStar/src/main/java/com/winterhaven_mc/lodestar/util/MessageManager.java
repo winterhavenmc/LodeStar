@@ -1,5 +1,6 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.util;
 
+import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import com.winterhaven_mc.util.ConfigAccessor;
 import com.winterhaven_mc.util.StringUtil;
@@ -38,7 +39,7 @@ public class MessageManager {
 	 * 
 	 * @param plugin reference to main class
 	 */
-	MessageManager(final PluginMain plugin) {
+	public MessageManager(final PluginMain plugin) {
 
 		// create pointer to main class
 		this.plugin = plugin;
@@ -129,7 +130,7 @@ public class MessageManager {
 		String targetPlayerName = "player";
 		String destinationName = "unknown";
 		String cooldownString = "";
-		String warmupString = "";
+		String warmupString;
 
 		if (passedTargetPlayerName != null && !passedTargetPlayerName.isEmpty()) {
 			targetPlayerName = passedTargetPlayerName;
@@ -267,8 +268,8 @@ public class MessageManager {
 
 	/**
 	 * Play sound effect for action
-	 * @param sender
-	 * @param soundId
+	 * @param sender the player for whom to play a sound
+	 * @param soundId the sound identifier
 	 */
 	public void playerSound(final CommandSender sender, final String soundId) {
 
@@ -280,10 +281,10 @@ public class MessageManager {
 
 	/**
 	 * Play sound effect for action
-	 * @param player
-	 * @param soundId
+	 * @param player the player for whom to play a sound
+	 * @param soundId the sound identifier
 	 */
-	void playerSound(final Player player, final String soundId) {
+	public void playerSound(final Player player, final String soundId) {
 
 		// if sound effects are disabled in config, do nothing and return
 		if (!plugin.getConfig().getBoolean("sound-effects")) {
@@ -324,8 +325,8 @@ public class MessageManager {
 
 	/**
 	 * Add entry to message cooldown map
-	 * @param player
-	 * @param messageId
+	 * @param player the player to add to the message cooldown map
+	 * @param messageId the message identifier to be added to the cooldown map
 	 */
 	private void putMessageCooldown(final Player player, final String messageId) {
 
@@ -337,8 +338,8 @@ public class MessageManager {
 
 	/**
 	 * get entry from message cooldown map
-	 * @param player
-	 * @param messageId
+	 * @param player the player whose uuid to use as key to retrieve cooldown time from map
+	 * @param messageId the message identifier to use as key to retrieve cooldown time from map
 	 * @return cooldown expire time
 	 */
 	private long getMessageCooldown(final Player player, final String messageId) {
@@ -359,7 +360,7 @@ public class MessageManager {
 
 	/**
 	 * Remove player from message cooldown map
-	 * @param player
+	 * @param player the player whose uuid will be removed from the cooldown map
 	 */
 	public void removePlayerCooldown(final Player player) {
 		messageCooldownMap.remove(player.getUniqueId());
@@ -451,12 +452,13 @@ public class MessageManager {
 	}
 
 
-	String getItemNamePlural() {
+	@SuppressWarnings("WeakerAccess")
+	public String getItemNamePlural() {
 		return messages.getConfig().getString("item-name-plural");
 	}
 
 
-	String getInventoryItemName() {
+	public String getInventoryItemName() {
 		return messages.getConfig().getString("inventory-item-name");
 	}
 
@@ -471,7 +473,7 @@ public class MessageManager {
 	}
 
 
-	List<String> getItemLore() {
+	public List<String> getItemLore() {
 		return messages.getConfig().getStringList("item-lore");
 	}
 
@@ -480,7 +482,7 @@ public class MessageManager {
 	 * Format the time string with hours, minutes, seconds
 	 * @return the formatted time string
 	 */
-	String getTimeString(long duration) {
+	private String getTimeString(long duration) {
 
 		StringBuilder timeString = new StringBuilder();
 
@@ -536,4 +538,3 @@ public class MessageManager {
 	}
 
 }
-

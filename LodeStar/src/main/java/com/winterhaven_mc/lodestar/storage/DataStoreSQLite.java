@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DataStoreSQLite extends DataStore {
+class DataStoreSQLite extends DataStore {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -22,7 +22,7 @@ public class DataStoreSQLite extends DataStore {
 
 	/**
 	 * Class constructor
-	 * @param plugin
+	 * @param plugin reference to main class
 	 */
 	DataStoreSQLite (final PluginMain plugin) {
 
@@ -97,7 +97,7 @@ public class DataStoreSQLite extends DataStore {
 		derivedKey = Destination.deriveKey(derivedKey);
 
 		Destination destination = null;
-		World world = null;
+		World world;
 
 		final String sqlGetDestination = "SELECT * FROM destinations WHERE key = ?";
 
@@ -168,7 +168,7 @@ public class DataStoreSQLite extends DataStore {
 		final Location location = destination.getLocation();
 
 		// get world name
-		String testWorldName = null;
+		String testWorldName;
 
 		// test that world in destination location is valid
 		try {
@@ -393,12 +393,14 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void delete() {
+	boolean delete() {
 
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
+		Boolean result = false;
 		if (dataStoreFile.exists()) {
-			dataStoreFile.delete();
+			result = dataStoreFile.delete();
 		}
+		return result;
 	}
 
 	@Override

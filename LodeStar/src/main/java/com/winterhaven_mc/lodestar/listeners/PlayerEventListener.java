@@ -1,6 +1,7 @@
 package com.winterhaven_mc.lodestar.listeners;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.SimpleAPI;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,7 +50,7 @@ public class PlayerEventListener implements Listener {
 	 * Event listener for PlayerInteractEvent<br>
 	 * detects LodeStar use, or cancels teleport
 	 * if cancel-on-interaction configured
-	 * @param event
+	 * @param event the event being handled by this method
 	 */
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -77,10 +78,10 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// get players item in hand
-		ItemStack playerItem = player.getInventory().getItemInMainHand();
+		ItemStack playerItem = player.getInventory().getItemInHand();
 
 		// if item used is not a LodeStar, do nothing and return
-		if (!plugin.utilities.isLodeStar(playerItem)) {
+		if (!SimpleAPI.isLodeStar(playerItem)) {
 			return;
 		}
 		
@@ -123,12 +124,12 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Event listener for PlayerDeathEvent<br>
 	 * removes player from warmup hashmap
-	 * @param event
+	 * @param event the event being handled by this method
 	 */
 	@EventHandler
 	void onPlayerDeath(final PlayerDeathEvent event) {
 		
-		Player player = (Player)event.getEntity();
+		Player player = event.getEntity();
 		
 		// cancel any pending teleport for player
 		plugin.teleportManager.removePlayer(player);
@@ -138,7 +139,7 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Event listener for PlayerQuitEvent<br>
 	 * removes player from warmup or cooldown hashmap
-	 * @param event
+	 * @param event the event being handled by this method
 	 */
 	@EventHandler
 	void onPlayerQuit(final PlayerQuitEvent event) {
@@ -156,7 +157,7 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Event listener for PrepareItemCraftEvent<br>
 	 * Prevent LodeStar items from being used in crafting recipes if configured
-	 * @param event
+	 * @param event the event being handled by this method
 	 */
 	@EventHandler
 	void onCraftPrepare(final PrepareItemCraftEvent event) {
@@ -168,7 +169,7 @@ public class PlayerEventListener implements Listener {
 
 		// if crafting inventory contains LodeStar item, set result item to null
 		for(ItemStack itemStack : event.getInventory()) {
-			if (plugin.utilities.isLodeStar(itemStack)) {
+			if (SimpleAPI.isLodeStar(itemStack)) {
 				event.getInventory().setResult(null);
 			}
 		}
@@ -178,7 +179,7 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Event listener for EntityDamageByEntity event<br>
 	 * Cancels pending teleport if cancel-on-damage configured
-	 * @param event
+	 * @param event the event being handled by this method
 	 */
 	@EventHandler
 	void onEntityDamage(final EntityDamageEvent event) {
@@ -212,7 +213,7 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Event listener for player movement event<br>
 	 * cancels player teleport if cancel-on-movement configured
-	 * @param event
+	 * @param event the event being handled by this method
 	 */
 	@EventHandler
 	void onPlayerMovement(final PlayerMoveEvent event) {

@@ -5,11 +5,11 @@ import java.util.List;
 
 public abstract class DataStore {
 
-	protected boolean initialized;
+	private boolean initialized;
 	
-	protected DataStoreType type;
+	DataStoreType type;
 
-	protected String filename;
+	String filename;
 
 	/**
 	 * Initialize storage
@@ -19,33 +19,33 @@ public abstract class DataStore {
 	
 	/**
 	 * Get record
-	 * @param destinationName
+	 * @param destinationName the name string key of the destination to be retrieved from the datastore
 	 * @return destination object or null if no matching record
 	 */
 	public abstract Destination getRecord(final String destinationName);
 	
 	/**
 	 * Store record
-	 * @param destination
+	 * @param destination the destination object to be inserted in the datastore
 	 */
 	public abstract void putRecord(final Destination destination);
 
 	/**
 	 * get all display names
-	 * @return
+	 * @return List of all destination display name strings
 	 */
 	public abstract List<String> getAllKeys();
 	
 	/**
 	 * get all records
-	 * @return
+	 * @return List of all destination records
 	 */
 	abstract List<Destination> getAllRecords();
 
 	/**
 	 * Delete record
-	 * @param destinationName
-	 * @return 
+	 * @param destinationName the name key string of the destination record to be deleted
+	 * @return the destination record that was deleted
 	 */	
 	public abstract Destination deleteRecord(final String destinationName);
 	
@@ -62,7 +62,7 @@ public abstract class DataStore {
 	/**
 	 * Delete datastore
 	 */
-	abstract void delete();
+	abstract boolean delete();
 	
 	/**
 	 * Check that datastore exists
@@ -72,7 +72,7 @@ public abstract class DataStore {
 	
 	/**
 	 * Get datastore filename or equivalent
-	 * @return
+	 * @return the filename or equivalent of the current datastore
 	 */
 	String getFilename() {
 		return this.filename;
@@ -87,7 +87,7 @@ public abstract class DataStore {
 	
 	/**
 	 * Get datastore name
-	 * @return
+	 * @return the formatted display name of the current datastore
 	 */
 	public String getName() {
 		return this.getType().toString();
@@ -103,7 +103,7 @@ public abstract class DataStore {
 	
 	/**
 	 * Set initialized field
-	 * @param initialized
+	 * @param initialized the boolean value to set initialized field
 	 */
 	void setInitialized(final boolean initialized) {
 		this.initialized = initialized;

@@ -29,25 +29,13 @@ public class DataStoreFactory {
 
 	
 	/**
-	 * Create new data store of given type.<br>
-	 * Single parameter version used when no current datastore exists
-	 * but the required datastore type is known
-	 * @param dataStoreType
-	 * @return
-	 */
-	static DataStore create(final DataStoreType dataStoreType) {
-		return create(dataStoreType, null);
-	}
-
-	
-	/**
 	 * Create new data store of given type and convert old data store.<br>
 	 * Two parameter version used when a datastore instance already exists
 	 * @param dataStoreType		new datastore type
 	 * @param oldDataStore		existing datastore reference
-	 * @return
+	 * @return the initialized new datastore
 	 */
-	static DataStore create(final DataStoreType dataStoreType, final DataStore oldDataStore) {
+	private static DataStore create(final DataStoreType dataStoreType, final DataStore oldDataStore) {
 	
 		// get new data store of specified type
 		DataStore newDataStore = dataStoreType.create();
@@ -76,8 +64,8 @@ public class DataStoreFactory {
 	
 	/**
 	 * convert old data store to new data store
-	 * @param oldDataStore
-	 * @param newDataStore
+	 * @param oldDataStore the old datastore to convert from
+	 * @param newDataStore the new datastore to convert to
 	 */
 	private static void convertDataStore(final DataStore oldDataStore, final DataStore newDataStore) {
 
@@ -108,9 +96,7 @@ public class DataStoreFactory {
 				}
 			}
 			
-			List<Destination> allRecords = new ArrayList<Destination>();
-			
-			allRecords = oldDataStore.getAllRecords();
+			List<Destination> allRecords = oldDataStore.getAllRecords();
 			
 			if (plugin.debug) {
 				plugin.getLogger().info("Retrieved " + allRecords.size() 
@@ -134,7 +120,7 @@ public class DataStoreFactory {
 	
 	/**
 	 * convert all existing data stores to new data store
-	 * @param newDataStore
+	 * @param newDataStore the new datastore to convert all other datastore into
 	 */
 	private static void convertAll(final DataStore newDataStore) {
 		
@@ -142,8 +128,8 @@ public class DataStoreFactory {
 		ArrayList<DataStoreType> dataStores = new ArrayList<DataStoreType>(Arrays.asList(DataStoreType.values()));
 		
 		// remove newDataStore from list of types to convert
-		dataStores.remove(newDataStore);
-		
+		dataStores.remove(newDataStore.getType());
+
 		for (DataStoreType type : dataStores) {
 
 			// create oldDataStore holder

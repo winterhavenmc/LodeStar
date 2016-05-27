@@ -2,7 +2,7 @@ package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 
-public enum DataStoreType {
+enum DataStoreType {
 
 	YAML("yaml") {
 		
@@ -34,9 +34,9 @@ public enum DataStoreType {
 	
 	/**
 	 * Class constructor
-	 * @param displayName
+	 * @param displayName the formatted display name of the datastore type
 	 */
-	private DataStoreType(final String displayName) {
+	DataStoreType(final String displayName) {
 		this.setDisplayName(displayName);
 	}
 	

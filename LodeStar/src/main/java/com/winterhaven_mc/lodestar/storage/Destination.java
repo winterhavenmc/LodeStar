@@ -15,8 +15,8 @@ public class Destination {
 	
 	/**
 	 * Class constructor
-	 * @param displayName
-	 * @param location
+	 * @param displayName the destination display name string
+	 * @param location the destination location
 	 */
 	public Destination(final String displayName, final Location location) {
 		this.setKey(displayName);
@@ -27,9 +27,9 @@ public class Destination {
 	
 	/**
 	 * Class constructor
-	 * @param key
-	 * @param displayName
-	 * @param location
+	 * @param key the destination key value
+	 * @param displayName the destination display name string
+	 * @param location the destination location
 	 */
 	public Destination(final String key, final String displayName, final Location location) {
 		this.setKey(key);
@@ -43,11 +43,8 @@ public class Destination {
 	 * @return true if spawn, else false
 	 */
 	public boolean isSpawn() {
-		if (this.getKey().equals("spawn") 
-				|| this.getKey().equals(deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			return true;
-		}
-		return false;
+		return this.getKey().equals("spawn")
+				|| this.getKey().equals(deriveKey(plugin.messageManager.getSpawnDisplayName()));
 	}
 	
 	
@@ -55,36 +52,34 @@ public class Destination {
 	 * Check if destination is home
 	 * @return true if home, else false
 	 */
+	@SuppressWarnings("unused")
 	public boolean isHome() {
-		if (this.getKey().equals("home") 
-				|| this.getKey().equals(deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			return true;
-		}
-		return false;
+		return this.getKey().equals("home")
+				|| this.getKey().equals(deriveKey(plugin.messageManager.getHomeDisplayName()));
 	}
 	
 	
 	/**
 	 * Getter for destination key field
-	 * @return
+	 * @return the value of the key field
 	 */
-	public String getKey() {
+	String getKey() {
 		return key;
 	}
 
 	
 	/**
 	 * Setter for destination key field
-	 * @param key
+	 * @param key the value to assign to the key field
 	 */
-	public void setKey(final String key) {
+	private void setKey(final String key) {
 		this.key = deriveKey(key);
 	}
 	
 	
 	/**
 	 * Getter for destination displayName field
-	 * @return
+	 * @return the value of the displayName field
 	 */
 	public String getDisplayName() {
 		return displayName;
@@ -93,16 +88,16 @@ public class Destination {
 	
 	/**
 	 * Setter for destination displayName field
-	 * @param displayName
+	 * @param displayName the value to assign to the displayName field
 	 */
-	public void setDisplayName(final String displayName) {
+	private void setDisplayName(final String displayName) {
 		this.displayName = displayName.replace('_', ' ');
 	}
 	
 	
 	/**
 	 * Getter for destination location field
-	 * @return
+	 * @return the value of the location field
 	 */
 	public Location getLocation() {
 		return location;
@@ -111,9 +106,9 @@ public class Destination {
 	
 	/**
 	 * Setter for destination location field
-	 * @param location
+	 * @param location value to assign to location field
 	 */
-	public void setLocation(final Location location) {
+	private void setLocation(final Location location) {
 		this.location = location;
 	}
 	
@@ -121,8 +116,8 @@ public class Destination {
 	/**
 	 * Derive key from destination display name<br>
 	 * replaces spaces with underscores, strips color codes and folds to lower case
-	 * @param derivedKey
-	 * @return
+	 * @param key the destination name string to convert to a key value
+	 * @return the key value derived from the destination name
 	 */
 	public static String deriveKey(final String key) {
 		
