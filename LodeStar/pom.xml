@@ -36,6 +36,8 @@
 									<include>com.winterhaven-mc:config-accessor-lib</include>
 									<include>com.winterhaven-mc:string-util-lib</include>
 									<include>com.winterhaven-mc:world-manager-lib</include>
+									<include>com.winterhaven-mc:language-manager-lib</include>
+									<include>com.winterhaven-mc:sound-manager-lib</include>
 								</includes>
 							</artifactSet>
 						</configuration>
@@ -92,6 +94,16 @@
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>string-util-lib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>language-manager-lib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>sound-manager-lib</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>

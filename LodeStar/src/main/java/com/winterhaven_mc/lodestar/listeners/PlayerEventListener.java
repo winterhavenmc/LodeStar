@@ -71,7 +71,7 @@ public class PlayerEventListener implements Listener {
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-interaction");
 
 					// play sound effects if enabled
-					plugin.messageManager.playerSound(player, "teleport-fail");
+					plugin.soundManager.playerSound(player, "teleport-fail");
 					return;
 				}
 			}
@@ -106,7 +106,7 @@ public class PlayerEventListener implements Listener {
 		// if player does not have LodeStar.use permission, send message and return
 		if (!player.hasPermission("lodestar.use")) {
 			plugin.messageManager.sendPlayerMessage(player, "permission-denied-use");
-			plugin.messageManager.playerSound(player, "teleport-denied-permission");
+			plugin.soundManager.playerSound(player, "teleport-denied-permission");
 			return;
 		}
 		
@@ -203,7 +203,7 @@ public class PlayerEventListener implements Listener {
 				if (plugin.teleportManager.isWarmingUp(player)) {
 					plugin.teleportManager.cancelTeleport(player);
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-damage");
-					plugin.messageManager.playerSound(player, "teleport-cancelled");
+					plugin.soundManager.playerSound(player, "teleport-cancelled");
 				}
 			}
 		}
@@ -232,7 +232,7 @@ public class PlayerEventListener implements Listener {
 			if (event.getFrom().distance(event.getTo()) > 0) {
 				plugin.teleportManager.cancelTeleport(player);
 				plugin.messageManager.sendPlayerMessage(player,"teleport-cancelled-movement");
-				plugin.messageManager.playerSound(player, "teleport-cancelled");
+				plugin.soundManager.playerSound(player, "teleport-cancelled");
 			}
 		}
 	}

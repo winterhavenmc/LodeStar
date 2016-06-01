@@ -3,25 +3,19 @@ package com.winterhaven_mc.lodestar.util;
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import com.winterhaven_mc.util.ConfigAccessor;
+import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.StringUtil;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 
 /**
- * Implements message manager for <code>LodeStar</code>.
+ * Implements message manager for LodeStar
  * 
  * @author      Tim Savage
  * @version		1.0
@@ -29,10 +23,18 @@ import java.util.zip.ZipInputStream;
  */
 public class MessageManager {
 
-	private final PluginMain plugin; // reference to main class
+	// reference to main class
+	private final PluginMain plugin;
+
+	// language file manager
+	private LanguageManager languageManager;
+
+	// custom configuration for messages
 	private ConfigAccessor messages;
+
+	// message cooldown map
 	private ConcurrentHashMap<UUID, ConcurrentHashMap<String, Long>> messageCooldownMap;
-	private String language;
+
 
 	/**
 	 * Constructor method for class
@@ -41,17 +43,14 @@ public class MessageManager {
 	 */
 	public MessageManager(final PluginMain plugin) {
 
-		// create pointer to main class
+		// set reference to main class
 		this.plugin = plugin;
 
-		// install localization files
-		this.installLocalizationFiles();
-
-		// get configured language
-		this.language = languageFileExists(plugin.getConfig().getString("language"));
+		// instantiate language manager
+		this.languageManager = new LanguageManager(plugin);
 
 		// instantiate custom configuration manager for language file
-		this.messages = new ConfigAccessor(plugin, "language" + File.separator + this.language + ".yml");
+		this.messages = new ConfigAccessor(plugin, languageManager.getFileName());
 
 		// initialize messageCooldownMap
 		this.messageCooldownMap = new ConcurrentHashMap<UUID,ConcurrentHashMap<String,Long>>();
@@ -267,63 +266,6 @@ public class MessageManager {
 
 
 	/**
-	 * Play sound effect for action
-	 * @param sender the player for whom to play a sound
-	 * @param soundId the sound identifier
-	 */
-	public void playerSound(final CommandSender sender, final String soundId) {
-
-		if (sender instanceof Player) {
-			playerSound((Player)sender,soundId);
-		}
-	}
-
-
-	/**
-	 * Play sound effect for action
-	 * @param player the player for whom to play a sound
-	 * @param soundId the sound identifier
-	 */
-	public void playerSound(final Player player, final String soundId) {
-
-		// if sound effects are disabled in config, do nothing and return
-		if (!plugin.getConfig().getBoolean("sound-effects")) {
-			return;
-		}
-
-		// if sound is set to enabled in config file
-		if (plugin.getConfig().getBoolean("sounds." + soundId + ".enabled")) {
-
-			// get player only setting from config file
-			boolean playerOnly = plugin.getConfig().getBoolean("sounds." + soundId + ".player-only");
-
-			// get sound name from config file
-			String soundName = plugin.getConfig().getString("sounds." + soundId + ".sound");
-
-			// get sound volume from config file
-			float volume = (float) plugin.getConfig().getDouble("sounds." + soundId + ".volume");
-
-			// get sound pitch from config file
-			float pitch = (float) plugin.getConfig().getDouble("sounds." + soundId + ".pitch");
-
-			try {
-				// if sound is set player only, use player.playSound()
-				if (playerOnly) {
-					player.playSound(player.getLocation(), Sound.valueOf(soundName), volume, pitch);
-				}
-				// else use world.playSound() so other players in vicinity can hear
-				else {
-					player.getWorld().playSound(player.getLocation(), Sound.valueOf(soundName), volume, pitch);
-				}
-			} catch (IllegalArgumentException e) {
-				plugin.getLogger().warning("An error occured while trying to play the sound '" + soundName 
-						+ "'. You probably need to update the sound name in your config.yml file.");
-			}
-		}
-	}
-
-
-	/**
 	 * Add entry to message cooldown map
 	 * @param player the player to add to the message cooldown map
 	 * @param messageId the message identifier to be added to the cooldown map
@@ -369,83 +311,13 @@ public class MessageManager {
 
 	public void reload() {
 
-		// reinstall message files if necessary
-		installLocalizationFiles();
-
-		// get currently configured language
-		String newLanguage = languageFileExists(plugin.getConfig().getString("language"));
-
-		// if configured language has changed, instantiate new messages object
-		if (!newLanguage.equals(this.language)) {
-			this.messages = new ConfigAccessor(plugin, "language" + File.separator + newLanguage + ".yml");
-			this.language = newLanguage;
-			plugin.getLogger().info("New language " + this.language + " enabled.");
-		}
-
 		// reload language file
-		messages.reloadConfig();
+		languageManager.reload(messages);
 	}
-
-
-	/**
-	 * Install localization files from <em>language</em> directory in jar 
-	 */
-	private void installLocalizationFiles() {
-
-		List<String> filelist = new ArrayList<String>();
-
-		// get the absolute path to this plugin as URL
-		URL pluginURL = plugin.getServer().getPluginManager().getPlugin(plugin.getName()).getClass().getProtectionDomain().getCodeSource().getLocation();
-
-		// read files contained in jar, adding language/*.yml files to list
-		ZipInputStream zip;
-		try {
-			zip = new ZipInputStream(pluginURL.openStream());
-			while (true) {
-				ZipEntry e = zip.getNextEntry();
-				if (e == null) {
-					break;
-				}
-				String name = e.getName();
-				if (name.startsWith("language" + '/') && name.endsWith(".yml")) {
-					filelist.add(name);
-				}
-			}
-		} catch (IOException e1) {
-			plugin.getLogger().warning("Could not read language files from jar.");
-		}
-
-		// iterate over list of language files and install from jar if not already present
-		for (String filename : filelist) {
-			// this check prevents a warning message when files are already installed
-			if (new File(plugin.getDataFolder() + File.separator + filename).exists()) {
-				continue;
-			}
-			plugin.saveResource(filename, false);
-			plugin.getLogger().info("Installed localization file:  " + filename);
-		}
-	}
-
-
-	private String languageFileExists(final String language) {
-
-		// check if localization file for configured language exists, if not then fallback to en-US
-		File languageFile = new File(plugin.getDataFolder() 
-				+ File.separator + "language" 
-				+ File.separator + language + ".yml");
-
-		if (languageFile.exists()) {
-			return language;
-		}
-		plugin.getLogger().info("Language file " + language + ".yml does not exist. Defaulting to en-US.");
-		return "en-US";
-	}
-
 
 	public String getLanguage() {
-		return this.language;
+		return languageManager.getLanguage();
 	}
-
 
 	public String getItemName() {
 		return messages.getConfig().getString("item-name");

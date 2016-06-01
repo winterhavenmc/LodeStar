@@ -84,7 +84,7 @@ public class TeleportManager {
             // if bedspawn location is null and bedspawn-fallback is false, send message and return
             else {
                 plugin.messageManager.sendPlayerMessage(player, "teleport-fail-no-bedspawn");
-                plugin.messageManager.playerSound(player, "teleport-fail");
+                plugin.soundManager.playerSound(player, "teleport-fail");
                 return;
             }
         }
@@ -186,7 +186,7 @@ public class TeleportManager {
                 plugin.messageManager.sendPlayerMessage(player, "teleport-warmup", destination.getDisplayName());
             }
             // if enabled, play sound effect
-            plugin.messageManager.playerSound(player, "teleport-warmup");
+            plugin.soundManager.playerSound(player, "teleport-warmup");
         }
 
         // initiate delayed teleport for player to destination
