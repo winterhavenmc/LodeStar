@@ -190,10 +190,10 @@ messages:
     string: '&3Returned to &b%worldname%&3 spawn.'
   teleport-warmup:
     enabled: true
-    string: '&3Teleporting to &b%destination%&3 in &b%warmuptime...'
+    string: '&3Teleporting to &b%destination%&3 in &b%warmuptime%...'
   teleport-warmup-spawn:
     enabled: true
-    string: '&3Teleporting to &b%worldname%&3 spawn in &b%warmuptime...'
+    string: '&3Teleporting to &b%worldname%&3 spawn in &b%warmuptime%...'
 
   usage-shift-click:
     enabled: true
