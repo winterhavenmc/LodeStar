@@ -4,10 +4,10 @@ item-name-plural: '&aLodeStars'
 inventory-item-name: '&aLodeStar: %destination%'
 
 # Spawn Display Name
-spawn-display-name: 'Spawn'
+spawn-display-name: 'spawn'
 
 # Home Display Name
-home-display-name: 'Home'
+home-display-name: 'home'
 
 # Item Lore
 item-lore:
