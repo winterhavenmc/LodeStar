@@ -11,6 +11,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,15 +24,21 @@ import java.util.*;
  * @version		1.0
  *  
  */
-public class CommandManager implements CommandExecutor {
+public class CommandManager implements CommandExecutor,TabCompleter {
 	
 	// reference to main class
 	private final PluginMain plugin;
-	
+
+	// constants for chat colors
 	private final static ChatColor helpColor = ChatColor.YELLOW;
 	private final static ChatColor usageColor = ChatColor.GOLD;
 
-	
+	// constant list of subcommands
+	private final static List<String> subcommands =
+			Collections.unmodifiableList(new ArrayList<String>(
+					Arrays.asList("bind", "give", "delete", "destroy", "list", "set", "status", "reload", "help")));
+
+
 	/**
 	 * constructor method for CommandManager class
 	 * 
@@ -44,6 +51,33 @@ public class CommandManager implements CommandExecutor {
 		
 		// register this class as command executor
 		plugin.getCommand("lodestar").setExecutor(this);
+
+		// register this class as tab completer
+		plugin.getCommand("spawnstar").setTabCompleter(this);
+	}
+
+
+	/**
+	 * Tab completer for LodeStar
+	 */
+	@Override
+	public final List<String> onTabComplete(final CommandSender sender, final Command command,
+	                                        final String alias, final String[] args) {
+
+		final List<String> returnList = new ArrayList<String>();
+
+		// if first argument, return list of valid matching subcommands
+		if (args.length == 1) {
+
+			for (String subcommand : subcommands) {
+				if (sender.hasPermission("homestar." + subcommand)
+						&& subcommand.startsWith(args[0].toLowerCase())) {
+					returnList.add(subcommand);
+				}
+			}
+		}
+
+		return returnList;
 	}
 
 
@@ -54,11 +88,11 @@ public class CommandManager implements CommandExecutor {
 	public boolean onCommand(final CommandSender sender, final Command cmd, 
 			final String label, final String[] args) {
 		
-		String subcmd;
+		String subcommand;
 		
 		// get subcommand
 		if (args.length > 0) {
-			subcmd = args[0];
+			subcommand = args[0];
 		}
 		// if no arguments, display usage for all commands
 		else {
@@ -67,50 +101,51 @@ public class CommandManager implements CommandExecutor {
 		}
 		
 		// status command
-		if (subcmd.equalsIgnoreCase("status")) {
+		if (subcommand.equalsIgnoreCase("status")) {
 			return statusCommand(sender);
 		}
 
 		// reload command
-		if (subcmd.equalsIgnoreCase("reload")) {
+		if (subcommand.equalsIgnoreCase("reload")) {
 			return reloadCommand(sender,args);
 		}
 
 		// give command
-		if (subcmd.equalsIgnoreCase("give")) {
+		if (subcommand.equalsIgnoreCase("give")) {
 			return giveCommand(sender,args);
 		}
 		
 		// destroy command
-		if (subcmd.equalsIgnoreCase("destroy")) {
+		if (subcommand.equalsIgnoreCase("destroy")) {
 			return destroyCommand(sender,args);
 		}
 		
 		//set command
-		if (subcmd.equalsIgnoreCase("set")) {
+		if (subcommand.equalsIgnoreCase("set")) {
 			return setCommand(sender,args);
 		}
 		
 		// delete command
-		if (subcmd.equalsIgnoreCase("delete") || subcmd.equalsIgnoreCase("unset")) {
+		if (subcommand.equalsIgnoreCase("delete") || subcommand.equalsIgnoreCase("unset")) {
 			return deleteCommand(sender,args);
 		}
 		
 		// bind command
-		if (subcmd.equalsIgnoreCase("bind")) {
+		if (subcommand.equalsIgnoreCase("bind")) {
 			return bindCommand(sender,args);
 		}
 		
 		// list command
-		if (subcmd.equalsIgnoreCase("list")) {
+		if (subcommand.equalsIgnoreCase("list")) {
 			return listCommand(sender,args);
 		}
 		
 		// help command
-		if (subcmd.equalsIgnoreCase("help")) {
+		if (subcommand.equalsIgnoreCase("help")) {
 			return helpCommand(sender,args);
 		}
-		
+
+		// send invalid command message
 		plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-command");
 		plugin.soundManager.playerSound(sender, "command-fail");
 		displayUsage(sender,"help");
@@ -154,10 +189,12 @@ public class CommandManager implements CommandExecutor {
 				+ ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
 		
 		sender.sendMessage(ChatColor.GREEN + "Warmup: " 
-				+ ChatColor.RESET + plugin.getConfig().getInt("teleport-warmup") + " seconds");
+				+ ChatColor.RESET
+				+ plugin.messageManager.getTimeString(plugin.getConfig().getInt("teleport-warmup")));
 		
 		sender.sendMessage(ChatColor.GREEN + "Cooldown: " 
-				+ ChatColor.RESET + plugin.getConfig().getInt("teleport-cooldown") + " seconds");
+				+ ChatColor.RESET
+				+ plugin.messageManager.getTimeString(plugin.getConfig().getInt("teleport-cooldown")));
 		
 		sender.sendMessage(ChatColor.GREEN + "Shift-click required: " 
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));

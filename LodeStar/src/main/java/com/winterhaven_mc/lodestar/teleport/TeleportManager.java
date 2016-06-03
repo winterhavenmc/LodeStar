@@ -49,13 +49,13 @@ public class TeleportManager {
         final ItemStack playerItem = player.getItemInHand();
 
         // if player cooldown has not expired, send player cooldown message and return
-        if (plugin.teleportManager.getCooldownTimeRemaining(player) > 0) {
+        if (getCooldownTimeRemaining(player) > 0) {
             plugin.messageManager.sendPlayerMessage(player, "teleport-cooldown");
             return;
         }
 
         // if player is warming up, do nothing and return
-        if (plugin.teleportManager.isWarmingUp(player)) {
+        if (isWarmingUp(player)) {
             return;
         }
 
@@ -194,20 +194,21 @@ public class TeleportManager {
                 playerItem.clone()).runTaskLater(plugin, plugin.getConfig().getInt("teleport-warmup") * 20);
 
         // insert player and taskId into warmup hashmap
-        plugin.teleportManager.putPlayer(player, teleportTask.getTaskId());
+        putPlayer(player, teleportTask.getTaskId());
 
         // if log-use is enabled in config, write log entry
         if (plugin.getConfig().getBoolean("log-use")) {
 
             // construct log message
             String configItemName = plugin.messageManager.getItemName();
-            String log_message = player.getName() + " just used a " + configItemName + " in " + player.getWorld().getName() + ".";
+            String logMessage = player.getName() + " just used a "
+                    + configItemName + " in " + plugin.worldManager.getWorldName(player.getWorld()) + ".";
 
             // strip color codes from log message
-            log_message = log_message.replaceAll("&[0-9a-fA-Fk-oK-OrR]", "");
+            logMessage = logMessage.replaceAll("&[0-9a-fA-Fk-oK-OrR]", "");
 
             // write message to log
-            plugin.getLogger().info(log_message);
+            plugin.getLogger().info(logMessage);
         }
     }
 

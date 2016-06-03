@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 
 /**
- * Implements player event listener for <code>LodeStar</code> events.
+ * Implements event listener for LodeStar
  * 
  * @author      Tim Savage
  * @version		1.0
@@ -32,7 +32,7 @@ public class PlayerEventListener implements Listener {
 	
 	
 	/**
-	 * constructor method for <code>PlayerEventListener</code> class
+	 * constructor method for PlayerEventListener class
 	 * @param	plugin		A reference to this plugin's main class
 	 */
 	public PlayerEventListener(final PluginMain plugin) {
@@ -66,7 +66,8 @@ public class PlayerEventListener implements Listener {
 			if (plugin.teleportManager.isWarmingUp(player)) {
 
 				// if player is interacting with a block, cancel teleport, output message and return
-				if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {			
+				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
+						|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					plugin.teleportManager.cancelTeleport(player);
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-interaction");
 
@@ -122,8 +123,7 @@ public class PlayerEventListener implements Listener {
 	
 	
 	/**
-	 * Event listener for PlayerDeathEvent<br>
-	 * removes player from warmup hashmap
+	 * cancel any pending teleports on player death
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -137,8 +137,7 @@ public class PlayerEventListener implements Listener {
 
 	
 	/**
-	 * Event listener for PlayerQuitEvent<br>
-	 * removes player from warmup or cooldown hashmap
+	 * clean up any pending player tasks when player logs off of server
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -155,7 +154,6 @@ public class PlayerEventListener implements Listener {
 	
 	
 	/**
-	 * Event listener for PrepareItemCraftEvent<br>
 	 * Prevent LodeStar items from being used in crafting recipes if configured
 	 * @param event the event being handled by this method
 	 */
@@ -177,7 +175,6 @@ public class PlayerEventListener implements Listener {
 	
 	
 	/**
-	 * Event listener for EntityDamageByEntity event<br>
 	 * Cancels pending teleport if cancel-on-damage configured
 	 * @param event the event being handled by this method
 	 */
@@ -211,7 +208,6 @@ public class PlayerEventListener implements Listener {
 	
 	
 	/**
-	 * Event listener for player movement event<br>
 	 * cancels player teleport if cancel-on-movement configured
 	 * @param event the event being handled by this method
 	 */

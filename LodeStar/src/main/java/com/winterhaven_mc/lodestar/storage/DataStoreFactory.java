@@ -71,10 +71,6 @@ public class DataStoreFactory {
 
 		// if datastores are same type, do not convert
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
-			if (plugin.debug) {
-				plugin.getLogger().info("Old and new datastore both " 
-						+ newDataStore.toString() + ". No conversion necessary.");
-			}
 			return;
 		}
 		
@@ -95,15 +91,14 @@ public class DataStoreFactory {
 					return;
 				}
 			}
-			
+
+			// get List of all records from old datastore
 			List<Destination> allRecords = oldDataStore.getAllRecords();
-			
-			if (plugin.debug) {
-				plugin.getLogger().info("Retrieved " + allRecords.size() 
-						+ " records from " + oldDataStore.getName() + " datastore.");
-			}
-			
+
+			// initialize counter
 			int count = 0;
+
+			// insert each record into new datastore
 			for (Destination record : allRecords) {
 				newDataStore.putRecord(record);
 				count++;
@@ -154,17 +149,17 @@ public class DataStoreFactory {
 	public static void reload() {
 		
 		// get current datastore type
-		DataStoreType currentType = plugin.dataStore.getType();
+		final DataStoreType currentType = plugin.dataStore.getType();
 		
 		// get configured datastore type
-		DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-				
+		final DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
+
 		// if current datastore type does not match configured datastore type, create new datastore
 		if (!currentType.equals(newType)) {
 			
 			// create new datastore
 			plugin.dataStore = create(newType,plugin.dataStore);
 		}
-		
 	}
+
 }

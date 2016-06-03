@@ -354,7 +354,7 @@ public class MessageManager {
 	 * Format the time string with hours, minutes, seconds
 	 * @return the formatted time string
 	 */
-	private String getTimeString(long duration) {
+	public String getTimeString(long duration) {
 
 		StringBuilder timeString = new StringBuilder();
 
