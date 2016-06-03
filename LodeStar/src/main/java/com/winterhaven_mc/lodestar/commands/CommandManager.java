@@ -53,7 +53,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		plugin.getCommand("lodestar").setExecutor(this);
 
 		// register this class as tab completer
-		plugin.getCommand("spawnstar").setTabCompleter(this);
+		plugin.getCommand("lodestar").setTabCompleter(this);
 	}
 
 
