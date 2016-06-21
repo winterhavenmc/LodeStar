@@ -1,5 +1,5 @@
 name: LodeStar
-main: com.winterhaven_mc.lodestar.LodeStarMain
+main: com.winterhaven_mc.lodestar.PluginMain
 author: ${project.author}
 version: ${project.version}
 softdepend: [Multiverse-Core]

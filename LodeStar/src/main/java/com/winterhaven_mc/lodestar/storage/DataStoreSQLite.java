@@ -1,24 +1,20 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.winterhaven_mc.lodestar.PluginMain;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class DataStoreSQLite extends DataStore {
+
+class DataStoreSQLite extends DataStore {
 
 	// reference to main class
-	private final LodeStarMain plugin;
+	private final PluginMain plugin;
 
 	// database connection object
 	private Connection connection;
@@ -26,9 +22,9 @@ public class DataStoreSQLite extends DataStore {
 
 	/**
 	 * Class constructor
-	 * @param plugin
+	 * @param plugin reference to main class
 	 */
-	DataStoreSQLite (LodeStarMain plugin) {
+	DataStoreSQLite (final PluginMain plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
@@ -88,25 +84,27 @@ public class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	Destination getRecord(String key) {
+	public Destination getRecord(final String key) {
+		
+		String derivedKey = key;
 
 		// if key is null return null record
-		if (key == null) {
+		if (derivedKey == null) {
 			return null;
 		}
 
 		// derive key in case destination name was passed
-		key = Destination.deriveKey(key);
+		derivedKey = Destination.deriveKey(derivedKey);
 
 		Destination destination = null;
-		World world = null;
+		World world;
 
 		final String sqlGetDestination = "SELECT * FROM destinations WHERE key = ?";
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlGetDestination);
 
-			preparedStatement.setString(1, key);
+			preparedStatement.setString(1, derivedKey);
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
@@ -117,7 +115,7 @@ public class DataStoreSQLite extends DataStore {
 				// get stored displayName
 				String displayName = rs.getString("displayname");
 				if (displayName == null || displayName.isEmpty()) {
-					displayName = key;
+					displayName = derivedKey;
 				}
 
 				// get stored world and coordinates
@@ -134,7 +132,7 @@ public class DataStoreSQLite extends DataStore {
 				}
 				world = plugin.getServer().getWorld(worldName);
 				Location location = new Location(world,x,y,z,yaw,pitch);
-				destination = new Destination(key,displayName,location);
+				destination = new Destination(derivedKey,displayName,location);
 			}
 		}
 		catch (SQLException e) {
@@ -153,7 +151,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void putRecord(Destination destination) {
+	public void putRecord(final Destination destination) {
 
 		// if destination is null do nothing and return
 		if (destination == null) {
@@ -170,14 +168,14 @@ public class DataStoreSQLite extends DataStore {
 		final Location location = destination.getLocation();
 
 		// get world name
-		String testWorldName = null;
+		String testWorldName;
 
 		// test that world in destination location is valid
 		try {
 			testWorldName = location.getWorld().getName();
 		} catch (Exception e) {
 			plugin.getLogger().warning("An error occured while inserting"
-					+ " a destination in the " + this.getName() + " datastore. World invalid!");
+					+ " a destination in the " + toString() + " datastore. World invalid!");
 			return;
 		}
 		final String worldName = testWorldName;
@@ -217,7 +215,7 @@ public class DataStoreSQLite extends DataStore {
 
 					// output simple error message
 					plugin.getLogger().warning("An error occured while inserting a destination "
-							+ "into the SQLite datastore.");
+							+ "into the "  + toString() + " datastore.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
@@ -230,7 +228,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	List<String> getAllKeys() {
+	public List<String> getAllKeys() {
 
 		List<String> returnList = new ArrayList<String>();
 
@@ -322,7 +320,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	Destination deleteRecord(String key) {
+	public Destination deleteRecord(String key) {
 
 		// if key is null return null record
 		if (key == null) {
@@ -367,7 +365,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void close() {
+	public void close() {
 
 		try {
 			connection.close();
@@ -395,12 +393,14 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void delete() {
+	boolean delete() {
 
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
+		Boolean result = false;
 		if (dataStoreFile.exists()) {
-			dataStoreFile.delete();
+			result = dataStoreFile.delete();
 		}
+		return result;
 	}
 
 	@Override

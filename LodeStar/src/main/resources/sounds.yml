@@ -1,0 +1,92 @@
+# sound configuration
+sounds:
+  command-fail:
+    enabled: true
+    player-only: true
+    sound: ENTITY_VILLAGER_NO
+    volume: 1
+    pitch: 1
+
+  command-success-give-sender:
+    enabled: true
+    player-only: true
+    sound: ENTITY_ARROW_SHOOT
+    volume: 1
+    pitch: 0.5
+
+  command-success-give-target:
+    enabled: true
+    player-only: true
+    sound: ENTITY_ITEM_PICKUP
+    volume: 1
+    pitch: 1
+
+  command-success-delete:
+    enabled: true
+    player-only: true
+    sound: ENTITY_IRONGOLEM_HURT
+    volume: 1
+    pitch: 1
+
+  command-success-destroy:
+    enabled: true
+    player-only: true
+    sound: ENTITY_ITEM_BREAK
+    volume: 1
+    pitch: 1
+
+  command-success-set:
+    enabled: true
+    player-only: true
+    sound: ENTITY_LEVELUP
+    volume: 1
+    pitch: 1.5
+
+  command-success-bind:
+    enabled: true
+    player-only: true
+    sound: BLOCK_ANVIL_LAND
+    volume: 1
+    pitch: 1.75
+
+  teleport-denied-permission:
+    enabled: true
+    player-only: true
+    sound: ENTITY_GENERIC_EXTINGUISH_FIRE
+    volume: 1
+    pitch: 1
+
+  teleport-cancelled:
+    enabled: true
+    player-only: false
+    sound: ENTITY_GENERIC_EXTINGUISH_FIRE
+    volume: 1
+    pitch: 1
+
+  teleport-cancelled-no-item:
+    enabled: true
+    player-only: false
+    sound: ENTITY_DONKEY_ANGRY
+    volume: 1
+    pitch: 1
+
+  teleport-warmup:
+    enabled: true
+    player-only: false
+    sound: BLOCK_PORTAL_TRAVEL
+    volume: 0.3
+    pitch: 1
+
+  teleport-success-departure:
+     enabled: true
+     player-only: false
+     sound: ENTITY_ENDERMEN_TELEPORT
+     volume: 1
+     pitch: 1
+
+  teleport-success-arrival:
+     enabled: true
+     player-only: false
+     sound: ENTITY_ENDERMEN_TELEPORT
+     volume: 1
+     pitch: 1

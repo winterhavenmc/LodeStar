@@ -1,5 +1,7 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.teleport;
 
+import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.Location;
 //import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -9,19 +11,20 @@ import org.bukkit.scheduler.BukkitTask;
 
 class DelayedTeleportTask extends BukkitRunnable {
 
-	LodeStarMain plugin;
-	Player player;
-	Location location;
-	BukkitTask particleTask;
-	Destination destination;
-	ItemStack playerItem;
+	private final PluginMain plugin;
+	private final Player player;
+	private Location location;
+	private BukkitTask particleTask;
+	private Destination destination;
+	private ItemStack playerItem;
+
 
 	/**
 	 * Class constructor method
 	 */
 	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 		
-		this.plugin = LodeStarMain.instance;
+		this.plugin = PluginMain.instance;
 		this.player = player;
 		this.destination = destination;
 		this.playerItem = playerItem;
@@ -44,21 +47,16 @@ class DelayedTeleportTask extends BukkitRunnable {
 		particleTask.cancel();
 		
 		// if player is in warmup hashmap
-		if (plugin.warmupManager.isWarmingUp(player)) {
+		if (plugin.teleportManager.isWarmingUp(player)) {
 
 			// remove player from warmup hashmap
-			plugin.warmupManager.removePlayer(player);
+			plugin.teleportManager.removePlayer(player);
 		
-			// if destination is spawn, check if multiverse enabled
+			// if destination is spawn, get spawn location from world manager
 			if (destination.isSpawn()) {
-				
-				// if multiverse is not enabled, copy pitch and yaw from player
-				if (!plugin.mvEnabled) {
-					location.setPitch(player.getLocation().getPitch());
-					location.setYaw(player.getLocation().getYaw());
-				}
+				location = plugin.worldManager.getSpawnLocation(location.getWorld());
 			}
-			
+
 			// if remove-from-inventory is configured on-success, take one LodeStar item from inventory now
 			if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-success")) {
 				
@@ -78,13 +76,13 @@ class DelayedTeleportTask extends BukkitRunnable {
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
 				if (notRemoved) {
 					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-no-item");
-					plugin.messageManager.playerSound(player, "teleport-cancelled-no-item");
-					plugin.cooldownManager.setPlayerCooldown(player);
+					plugin.soundManager.playerSound(player, "teleport-cancelled-no-item");
+					plugin.teleportManager.setPlayerCooldown(player);
 					return;
 				}
 			}
 			// play pre-teleport sound if sound effects are enabled
-			plugin.messageManager.playerSound(player, "teleport-success-departure");
+			plugin.soundManager.playerSound(player, "teleport-success-departure");
 
 			// teleport player to location
 			player.teleport(location);
@@ -98,7 +96,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 				plugin.messageManager.sendPlayerMessage(player, "teleport-success", destination.getDisplayName());
 			}
 			// play post-teleport sound if sound effects are enabled
-			plugin.messageManager.playerSound(player, "teleport-success-arrival");
+			plugin.soundManager.playerSound(player, "teleport-success-arrival");
 
 			// if lightning is enabled in config, strike lightning at teleport destination
 			if (plugin.getConfig().getBoolean("lightning")) {
@@ -106,27 +104,8 @@ class DelayedTeleportTask extends BukkitRunnable {
 			}
 			
 			// set player cooldown
-			plugin.cooldownManager.setPlayerCooldown(player);
-
-			// try to prevent player spawning inside block and suffocating
-			preventSuffocation(player, location);
+			plugin.teleportManager.setPlayerCooldown(player);
 		}
 	}
-
 	
-	private void preventSuffocation(final Player player, final Location spawnLoc) {
-		
-		final int spawnAir = player.getRemainingAir();
-		
-		new BukkitRunnable(){
-
-			public void run() {
-				if (player.getRemainingAir() < spawnAir) {
-					player.teleport(spawnLoc.add(0,1,0));
-					player.setRemainingAir(spawnAir);
-				}
-			}
-		}.runTaskLater(plugin, 20);		
-	}
-
 }

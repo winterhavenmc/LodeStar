@@ -1,13 +1,16 @@
 package com.winterhaven_mc.lodestar;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implements LodeStarAPI.
@@ -16,26 +19,32 @@ import org.bukkit.inventory.meta.ItemMeta;
  * @version		1.0
  *  
  */
-public class LodeStarUtilities implements LodeStarAPI {
+@SuppressWarnings("unused")
+public final class SimpleAPI {
 
-	private final LodeStarMain plugin;
-	private final String itemTag = hiddenString("SSv2");
-	
-	LodeStarUtilities(LodeStarMain plugin) {
-		this.plugin = plugin;
+	// static reference to main class
+	private final static PluginMain plugin = PluginMain.instance;
+
+	// item tag
+	private final static String itemTag = hiddenString("SSv2");
+
+	// private constructor to prevent instantiation
+	private SimpleAPI() {
+
 	}
 
 	
 	/**
 	 * Create an item stack with encoded destination and quantity
-	 * @param destinationName
-	 * @param quantity
-	 * @return
+	 * @param destinationName the destination name
+	 * @param qty the quantity of items
+	 * @return ItemStack with destination name and quantity
 	 */
-	ItemStack createItem(String destinationName, int quantity) {
+	@SuppressWarnings("unused")
+	public static ItemStack createItem(final String destinationName, final int qty) {
 
 		// validate quantity
-		quantity = Math.max(quantity, 1);
+		int quantity = Math.max(qty, 1);
 
 		// create item stack with configured material and data
 		ItemStack newItem = getDefaultItem();
@@ -53,24 +62,24 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	/**
 	 * Encode hidden destination key in item lore
-	 * @param itemStack
-	 * @param destinationName
+	 * @param itemStack the ItemStack to encode with destination key
+	 * @param destinationName the destination name used to create the encoded key
 	 */
-	void setMetaData(ItemStack itemStack, String destinationName) {
+	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
 		
 		// get key from destination name parameter
 		String key = Destination.deriveKey(destinationName);
 		
 		// get formatted destination name
-		destinationName = getDestinationName(key);
+		String formattedName = getDestinationName(key);
 		
 		// retrieve item name and lore from language file file
 		String displayName = plugin.messageManager.getInventoryItemName();
 		List<String> configLore = plugin.messageManager.getItemLore();
 
 		// substitute %destination% variable in display name
-		displayName = displayName.replaceAll("%destination%", destinationName);
-		displayName = displayName.replaceAll("%DESTINATION%", ChatColor.stripColor(destinationName));
+		displayName = displayName.replaceAll("%destination%", formattedName);
+		displayName = displayName.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
 
 		// allow for '&' character for color codes in name and lore
 		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
@@ -78,8 +87,8 @@ public class LodeStarUtilities implements LodeStarAPI {
 		ArrayList<String> coloredLore = new ArrayList<String>();
 		
 		for (String line : configLore) {
-			line = line.replaceAll("%destination%", destinationName);
-			line = line.replaceAll("%DESTINATION%", ChatColor.stripColor(destinationName));
+			line = line.replaceAll("%destination%", formattedName);
+			line = line.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
 			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		
@@ -105,10 +114,10 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	/**
 	 * Check if itemStack is a LodeStar item
-	 * @param itemStack
-	 * @return boolean
+	 * @param itemStack the ItemStack to test if LodeStar item
+	 * @return {@code true} if ItemStack is LodeStar item, {@code false} if it is not
 	 */
-	boolean isLodeStar(ItemStack itemStack) {
+	public static boolean isLodeStar(final ItemStack itemStack) {
 		
 		// if item stack is empty (null or air) return false
 		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
@@ -124,20 +133,17 @@ public class LodeStarUtilities implements LodeStarAPI {
 		List<String> itemLore = itemStack.getItemMeta().getLore();
 		
 		// check that lore contains hidden token
-		if (!itemLore.isEmpty() && itemLore.get(0).startsWith(itemTag)) {
-			return true;
-		}
-		return false;
+		return !itemLore.isEmpty() && itemLore.get(0).startsWith(itemTag);
 	}
 
 	
 	/**
-	 * Check if itemStack is a LodeStar item
-	 * @param itemStack
-	 * @return boolean
+	 * Check if itemStack is a default LodeStar item
+	 * @param itemStack the ItemStack to test if default LodeStar item
+	 * @return {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
 	 */
 	@SuppressWarnings("deprecation")
-	boolean isDefaultItem(ItemStack itemStack) {
+	public static boolean isDefaultItem(final ItemStack itemStack) {
 		
 		if (plugin.debug) {
 			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
@@ -175,25 +181,22 @@ public class LodeStarUtilities implements LodeStarAPI {
 		}
 
 		// if material and data match defaults return true
-		if (itemStack.getType().equals(material) && itemStack.getData().getData() == materialDataByte) {
-			return true;
-		}
-		return false;
+		return itemStack.getType().equals(material) && itemStack.getData().getData() == materialDataByte;
 	}
 
 	
 	/**
 	 * Gets destination key from itemStack
-	 * @param itemStack
+	 * @param itemStack the ItemStack from which to retrieve a destination key
 	 * @return destination key or null if item has no key
 	 */
-	String getKey(ItemStack itemStack) {
+	public static String getKey(final ItemStack itemStack) {
 		
 		String destinationKey = null;
 		
 		// check that item has lore
 		if (!itemStack.getItemMeta().hasLore()) {
-			return destinationKey;
+			return null;
 		}
 		
 		List<String> itemLore = itemStack.getItemMeta().getLore();
@@ -209,85 +212,73 @@ public class LodeStarUtilities implements LodeStarAPI {
 	
 	/**
 	 * Check if destination exists in storage or is reserved name
-	 * @param destinationName
-	 * @return
+	 * @param destinationName the destination name to check
+	 * @return {@code true} if destination exists, {@code false} if it does not
 	 */
-	boolean isValidDestination(String destinationName) {
+	public static boolean isValidDestination(final String destinationName) {
 		
 		if (destinationName == null || destinationName.isEmpty()) {
 			return false;
 		}
 		
 		String key = Destination.deriveKey(destinationName);
-		
-		if (isReservedName(destinationName)	|| plugin.dataStore.getRecord(key) != null) {
-			return true;
-		}
-		return false;
+
+		return isReservedName(destinationName) || plugin.dataStore.getRecord(key) != null;
 	}
 
 	
 	/**
 	 * Check if destination is an allowable string
-	 * @param destinationName
-	 * @return
+	 * @param destinationName the destination name to test for validity
+	 * @return {@code true} if destination name is a valid name, {@code false} if it is not
 	 */
-	boolean isAllowedName(String destinationName) {
+	@SuppressWarnings("unused")
+	public static boolean isAllowedName(final String destinationName) {
 		
 		// destination name cannot be null
 		// destination name cannot be empty
 		// destination name cannot start with a digit
 		// destination name cannot contain a colon
-		
-		if (destinationName == null 
+
+		return !(destinationName == null
 				|| destinationName.isEmpty()
 				|| destinationName.matches("^\\d.*")
-				|| destinationName.matches(".*:.*")) {
-			return false;
-		}
-		return true;
+				|| destinationName.matches(".*:.*"));
 	}
 
 	
 	/**
 	 * Check if destination name is a reserved name
-	 * @param destinationName
-	 * @return boolean
+	 * @param destinationName the destination name to test for reserved name
+	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
 	 */
-	boolean isReservedName(String destinationName) {
+	static public boolean isReservedName(final String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
-		if (isSpawnName(key) || isHomeName(key)) {
-			return true;
-		}
-		return false;
+		return isSpawnName(key) || isHomeName(key);
 	}
 
 	
-	boolean isHomeName(String destinationName) {
+	@SuppressWarnings("WeakerAccess")
+	public static boolean isHomeName(final String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
-		if (key.equals("home")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			return true;
-		}
-		return false;
+		return key.equals("home")
+				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()));
 	}
 
 	
-	boolean isSpawnName(String destinationName) {
+	@SuppressWarnings("WeakerAccess")
+	public static boolean isSpawnName(final String destinationName) {
 		
 		String key = Destination.deriveKey(destinationName);
-		if (key.equals("spawn") 
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			return true;
-		}
-		return false;
+		return key.equals("spawn")
+				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()));
 	}
 
 	
 	
-	String hiddenString(String s) {
+	private static String hiddenString(final String s) {
 		String hidden = "";
 		for (char c : s.toCharArray())
 			hidden += ChatColor.COLOR_CHAR + "" + c;
@@ -295,61 +286,67 @@ public class LodeStarUtilities implements LodeStarAPI {
 	}
 	
 
-	@Override
-	public String getItemName() {
+	@SuppressWarnings("unused")
+	public static String getItemName() {
 		return plugin.messageManager.getItemName();
 	}
 	
 	
-	public String getDestinationName(String key) {
-		
-		key = Destination.deriveKey(key);
-		String destinationName = null;
+	public static String getDestinationName(final String key) {
+
+		String returnName = key;
+		String derivedKey = Destination.deriveKey(key);
 		
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			destinationName = plugin.messageManager.getSpawnDisplayName();
-		}
-		// if destination is home get home display name from messages file
-		else if (key.equals("home") 
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			destinationName = plugin.messageManager.getHomeDisplayName();
-		}
-		// else get destination name from datastore
-		else {
-			Destination destination = plugin.dataStore.getRecord(key);
-			if (destination != null) {
-				destinationName = destination.getDisplayName();
-			}
-		}
-		// if no destination name found, use key for name
-		if (destinationName == null) {
-			destinationName = key;
+		if (derivedKey.equals("spawn") 
+				|| derivedKey.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
+			returnName = plugin.messageManager.getSpawnDisplayName();
 		}
 		
-		return destinationName;
+		// if destination is home get home display name from messages file
+		else if (derivedKey.equals("home") 
+				|| derivedKey.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
+			returnName = plugin.messageManager.getHomeDisplayName();
+		}
+		
+		// else get destination name from datastore
+		else {
+			Destination destination = plugin.dataStore.getRecord(derivedKey);
+			if (destination != null) {
+				returnName = destination.getDisplayName();
+			}
+		}
+		
+		// if no destination name found, use derived key for name
+		if (returnName == null) {
+			returnName = derivedKey;
+		}		
+		
+		return returnName;
 	}
 	
-	public String getDestinationName(ItemStack itemStack) {
+	public static String getDestinationName(final ItemStack itemStack) {
 		
 		String key = getKey(itemStack);
 		String destinationName = null;
 		
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			destinationName = plugin.messageManager.getSpawnDisplayName();
-		}
-		// if destination is home get home display name from messages file
-		else if (key.equals("home") 
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			destinationName = plugin.messageManager.getHomeDisplayName();
-		}
-		// else get destination name from datastore
-		else {
-			Destination destination = plugin.dataStore.getRecord(key);
-			if (destination != null) {
-				destinationName = destination.getDisplayName();
-			}
+		if (key != null) {
+			if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
+                destinationName = plugin.messageManager.getSpawnDisplayName();
+            }
+            // if destination is home get home display name from messages file
+            else if (key.equals("home")
+                    || key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
+                destinationName = plugin.messageManager.getHomeDisplayName();
+            }
+            // else get destination name from datastore
+            else {
+                Destination destination = plugin.dataStore.getRecord(key);
+                if (destination != null) {
+                    destinationName = destination.getDisplayName();
+                }
+            }
 		}
 		// if no destination name found, use key for name
 		if (destinationName == null) {
@@ -358,68 +355,52 @@ public class LodeStarUtilities implements LodeStarAPI {
 		return destinationName;
 	}
 	
-	@Override
-	public Boolean isValidIngredient() {
+	public static Boolean isValidIngredient() {
 		return plugin.getConfig().getBoolean("allow-in-recipes");
 	}
 	
-	@Override
-	public int getCooldownTime() {
+	public static int getCooldownTime() {
 		return plugin.getConfig().getInt("cooldown-time");
 	}
 
-	@Override
-	public int getWarmupTime() {
+	public static int getWarmupTime() {
 		return plugin.getConfig().getInt("warmup-time");
 	}
 
-
-	@Override
-	public int getMinDistance() {
+	public static int getMinDistance() {
 		return plugin.getConfig().getInt("minimum-distance");
 	}
 
-
-	@Override
-	public Boolean isCancelledOnDamage() {
+	public static Boolean isCancelledOnDamage() {
 		return plugin.getConfig().getBoolean("cancel-on-damage");
 	}
 
-
-	@Override
-	public Boolean isCancelledOnMovement() {
+	public static Boolean isCancelledOnMovement() {
 		return plugin.getConfig().getBoolean("cancel-on-movement");
 	}
 
-
-	@Override
-	public Boolean isCancelledOnInteraction() {
+	public static Boolean isCancelledOnInteraction() {
 		return plugin.getConfig().getBoolean("cancel-on-interaction");
 	}
 	
-	@Override
-	public Boolean isWarmingUp(Player player) {
-		return plugin.warmupManager.isWarmingUp(player);
+	public static Boolean isWarmingUp(final Player player) {
+		return plugin.teleportManager.isWarmingUp(player);
 	}
 	
-	@Override
-	public Boolean isCoolingDown(Player player) {
-		return plugin.cooldownManager.getTimeRemaining(player) > 0;
+	public static Boolean isCoolingDown(final Player player) {
+		return plugin.teleportManager.getCooldownTimeRemaining(player) > 0;
 	}
 	
-	@Override
-	public long cooldownTimeRemaining(Player player) {
-		return plugin.cooldownManager.getTimeRemaining(player);
+	public static long cooldownTimeRemaining(final Player player) {
+		return plugin.teleportManager.getCooldownTimeRemaining(player);
 	}
 	
-	@Override
-	public List<String> getEnabledWorlds() {
-		return plugin.commandManager.getEnabledWorlds();
+	public static List<String> getEnabledWorlds() {
+		return plugin.worldManager.getEnabledWorldNames();
 	}
 	
-	@Override
-	public void cancelTeleport(Player player) {
-		plugin.warmupManager.cancelTeleport(player);
+	public static void cancelTeleport(final Player player) {
+		plugin.teleportManager.cancelTeleport(player);
 	}
 
 	
@@ -427,8 +408,8 @@ public class LodeStarUtilities implements LodeStarAPI {
 	 * Create an itemStack with default material and data from config
 	 * @return ItemStack
 	 */
-	@Override
-	public ItemStack getDefaultItem() {
+	@SuppressWarnings("WeakerAccess")
+	public static ItemStack getDefaultItem() {
 		
 		// get material type and data from config file
 		String[] configMaterialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
@@ -459,9 +440,23 @@ public class LodeStarUtilities implements LodeStarAPI {
 		}
 		
 		// create item stack with configured material and data
-		ItemStack newItem = new ItemStack(configMaterial,1,configMaterialDataByte);
+
+		return new ItemStack(configMaterial,1,configMaterialDataByte);
+	}
+
+	
+	static Location getBlockCenteredLocation(final Location location) {
 		
-		return newItem;
+		// if location is null, return null
+		if (location == null) {
+			return null;
+		}
+		
+		final World world = location.getWorld();
+		int x = location.getBlockX();
+		int y = (int)Math.round(location.getY());
+		int z = location.getBlockZ();
+		return new Location(world, x + 0.5, y, z + 0.5, location.getYaw(), location.getPitch());
 	}
 
 }

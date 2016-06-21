@@ -1,4 +1,9 @@
-package com.winterhaven_mc.lodestar;
+package com.winterhaven_mc.lodestar.storage;
+
+import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.util.ConfigAccessor;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,20 +11,17 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.bukkit.Location;
-import org.bukkit.World;
+class DataStoreYAML extends DataStore {
 
-public class DataStoreYAML extends DataStore {
-
-	private final LodeStarMain plugin; // reference to main class
+	private final PluginMain plugin; // reference to main class
 	private ConfigAccessor destinationFile;
 	
 
 	/**
 	 * Class constructor
-	 * @param plugin
+	 * @param plugin reference to main class
 	 */
-	DataStoreYAML (LodeStarMain plugin) {
+	DataStoreYAML (PluginMain plugin) {
 		
 		// reference to main class
 		this.plugin = plugin;
@@ -54,7 +56,7 @@ public class DataStoreYAML extends DataStore {
 
 
 	@Override
-	Destination getRecord(String key) {
+	public Destination getRecord(String key) {
 		
 		// if passed key is null return null record
 		if (key == null) {
@@ -107,7 +109,7 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	void putRecord(Destination destination) {
+	public void putRecord(Destination destination) {
 		
 		// if destination is null do nothing and return
 		if (destination == null) {
@@ -149,7 +151,7 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	List<String> getAllKeys() {
+	public List<String> getAllKeys() {
 		
 		List<String> returnKeys = new ArrayList<String>();
 		SortedSet<String> keys = new TreeSet<String>(destinationFile.getConfig().getKeys(false));
@@ -159,6 +161,7 @@ public class DataStoreYAML extends DataStore {
 		return returnKeys;
 	}
 	
+	@SuppressWarnings("unused")
 	List<String> getAllNames() {
 		
 		List<String> returnNames = new ArrayList<String>();
@@ -185,7 +188,7 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	Destination deleteRecord(String key) {
+	public Destination deleteRecord(String key) {
 		
 		// if key is null return null record
 		if (key == null) {
@@ -206,7 +209,7 @@ public class DataStoreYAML extends DataStore {
 	}
 
 	@Override
-	void close() {
+	public void close() {
 		// save data to file
 		destinationFile.saveConfig();
 
@@ -221,12 +224,14 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	void delete() {
+	boolean delete() {
 		// delete this datastore file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
+		boolean result = false;
 		if (dataStoreFile.exists()) {
-			dataStoreFile.delete();
+			result = dataStoreFile.delete();
 		}
+		return result;
 	}
 	
 	@Override
