@@ -1,4 +1,4 @@
-# This is the config file for LodeStar v1.0
+# Main configuration file for ${project.name} v${project.version}
 
 # localized language support
 language: en-US
@@ -6,15 +6,12 @@ language: en-US
 # data store type ( sqlite | yaml )
 storage-type: sqlite
 
-# Note: use only one enabled/disabled list, and comment out or remove the other
-# enabled worlds list (use this list for a default-deny world policy)
-
-#enabled-worlds:
+# If this list is empty, all worlds will be added to the enabled worlds list
+enabled-worlds:
 #  - enabled_world1
 #  - enabled_world2
 
-# disabled worlds list (use this list for a default-allow world policy)
-
+# These worlds will be removed from the enabled worlds list
 disabled-worlds:
   - disabled_world1
   - disabled_world2

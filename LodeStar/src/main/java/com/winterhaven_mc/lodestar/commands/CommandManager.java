@@ -261,7 +261,10 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			displayUsage(sender, subcmd);
 			return true;
 		}
-		
+
+		// reinstall main configuration if necessary
+		plugin.saveDefaultConfig();
+
 		// reload main configuration
 		plugin.reloadConfig();
 
@@ -273,6 +276,9 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// reload datastore
 		DataStoreFactory.reload();
+
+		// reload sounds
+		plugin.soundManager.reload();
 		
 		// set debug field
 		plugin.debug = plugin.getConfig().getBoolean("debug");
