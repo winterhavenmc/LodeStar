@@ -38,7 +38,7 @@ sounds:
   command-success-set:
     enabled: true
     player-only: true
-    sound: ENTITY_LEVELUP
+    sound: ENTITY_PLAYER_LEVELUP
     volume: 1
     pitch: 1.5
 
