@@ -352,6 +352,7 @@ public class MessageManager {
 
 	/**
 	 * Format the time string with hours, minutes, seconds
+	 * @param duration the time duration (in seconds) to convert to string
 	 * @return the formatted time string
 	 */
 	public String getTimeString(long duration) {
