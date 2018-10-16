@@ -2,6 +2,8 @@ package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.SimpleAPI;
+import com.winterhaven_mc.lodestar.messages.MessageId;
+import com.winterhaven_mc.lodestar.messages.SoundId;
 import com.winterhaven_mc.lodestar.storage.DataStoreFactory;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.ChatColor;
@@ -17,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+
 /**
  * Implements command executor for LodeStar commands.
  * 
@@ -25,7 +28,7 @@ import java.util.*;
  *  
  */
 public class CommandManager implements CommandExecutor,TabCompleter {
-	
+
 	// reference to main class
 	private final PluginMain plugin;
 
@@ -35,7 +38,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 	// constant list of subcommands
 	private final static List<String> subcommands =
-			Collections.unmodifiableList(new ArrayList<String>(
+			Collections.unmodifiableList(new ArrayList<>(
 					Arrays.asList("bind", "give", "delete", "destroy", "list", "set", "status", "reload", "help")));
 
 
@@ -45,10 +48,10 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param plugin reference to main class
 	 */
 	public CommandManager(final PluginMain plugin) {
-		
+
 		// set reference to main class
 		this.plugin = plugin;
-		
+
 		// register this class as command executor
 		plugin.getCommand("lodestar").setExecutor(this);
 
@@ -64,7 +67,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	public final List<String> onTabComplete(final CommandSender sender, final Command command,
 	                                        final String alias, final String[] args) {
 
-		final List<String> returnList = new ArrayList<String>();
+		final List<String> returnList = new ArrayList<>();
 
 		// if first argument, return list of valid matching subcommands
 		if (args.length == 1) {
@@ -87,9 +90,9 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, 
 			final String label, final String[] args) {
-		
+
 		String subcommand;
-		
+
 		// get subcommand
 		if (args.length > 0) {
 			subcommand = args[0];
@@ -99,7 +102,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			displayUsage(sender,"all");
 			return true;
 		}
-		
+
 		// status command
 		if (subcommand.equalsIgnoreCase("status")) {
 			return statusCommand(sender);
@@ -114,40 +117,40 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		if (subcommand.equalsIgnoreCase("give")) {
 			return giveCommand(sender,args);
 		}
-		
+
 		// destroy command
 		if (subcommand.equalsIgnoreCase("destroy")) {
 			return destroyCommand(sender,args);
 		}
-		
+
 		//set command
 		if (subcommand.equalsIgnoreCase("set")) {
 			return setCommand(sender,args);
 		}
-		
+
 		// delete command
 		if (subcommand.equalsIgnoreCase("delete") || subcommand.equalsIgnoreCase("unset")) {
 			return deleteCommand(sender,args);
 		}
-		
+
 		// bind command
 		if (subcommand.equalsIgnoreCase("bind")) {
 			return bindCommand(sender,args);
 		}
-		
+
 		// list command
 		if (subcommand.equalsIgnoreCase("list")) {
 			return listCommand(sender,args);
 		}
-		
+
 		// help command
 		if (subcommand.equalsIgnoreCase("help")) {
 			return helpCommand(sender,args);
 		}
 
 		// send invalid command message
-		plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-command");
-		plugin.soundManager.playerSound(sender, "command-fail");
+		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_COMMAND);
+		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 		displayUsage(sender,"help");
 		return true;
 	}
@@ -159,11 +162,11 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return {@code true} if command was successful, {@code false} to display usage
 	 */
 	private boolean statusCommand(final CommandSender sender) {
-		
+
 		// if command sender does not have permission to view status, output error message and return true
 		if (!sender.hasPermission("lodestar.status")) {
-			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-status");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_STATUS);
+			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -176,57 +179,57 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
 
-		sender.sendMessage(ChatColor.GREEN + "Language: " 
-				+ ChatColor.RESET + plugin.messageManager.getLanguage());
-		
-		sender.sendMessage(ChatColor.GREEN + "Storage type: " 
+		sender.sendMessage(ChatColor.GREEN + "Language: "
+				+ ChatColor.RESET + plugin.getConfig().getString("language"));
+
+		sender.sendMessage(ChatColor.GREEN + "Storage type: "
 				+ ChatColor.RESET + plugin.dataStore.getName());
-		
-		sender.sendMessage(ChatColor.GREEN + "Default material: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Default material: "
 				+ ChatColor.RESET + plugin.getConfig().getString("default-material"));
-		
-		sender.sendMessage(ChatColor.GREEN + "Minimum distance: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Minimum distance: "
 				+ ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
-		
-		sender.sendMessage(ChatColor.GREEN + "Warmup: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Warmup: "
 				+ ChatColor.RESET
 				+ plugin.messageManager.getTimeString(plugin.getConfig().getInt("teleport-warmup")));
-		
-		sender.sendMessage(ChatColor.GREEN + "Cooldown: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Cooldown: "
 				+ ChatColor.RESET
 				+ plugin.messageManager.getTimeString(plugin.getConfig().getInt("teleport-cooldown")));
-		
-		sender.sendMessage(ChatColor.GREEN + "Shift-click required: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Shift-click required: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));
-		
-		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: "
 				+ ChatColor.RESET + "[ "
 				+ plugin.getConfig().getBoolean("cancel-on-damage") + "/"
 				+ plugin.getConfig().getBoolean("cancel-on-movement") + "/"
 				+ plugin.getConfig().getBoolean("cancel-on-interaction") + " ]");
-		
-		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: "
 				+ ChatColor.RESET + plugin.getConfig().getString("remove-from-inventory"));
-		
-		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET 
+
+		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET
 				+ plugin.getConfig().getBoolean("allow-in-recipes"));
-		
-		sender.sendMessage(ChatColor.GREEN + "From nether: " 
+
+		sender.sendMessage(ChatColor.GREEN + "From nether: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-nether"));
-		
-		sender.sendMessage(ChatColor.GREEN + "From end: " 
+
+		sender.sendMessage(ChatColor.GREEN + "From end: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-end"));
-		
-		sender.sendMessage(ChatColor.GREEN + "Lightning: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Lightning: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("lightning"));
-		
-		sender.sendMessage(ChatColor.GREEN + "Enabled Words: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
 				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString());
-		
+
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Reload plugin settings
 	 * @param sender the command sender
@@ -234,30 +237,22 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
 	private boolean reloadCommand(final CommandSender sender, final String args[]) {
-		
+
 		// if sender does not have permission to reload config, send error message and return true
 		if (!sender.hasPermission("lodestar.reload")) {
-			plugin.messageManager.sendPlayerMessage(sender,"permission-denied-reload");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_RELOAD);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		String subcmd = args[0];
-		
+
 		// argument limits
-		int minArgs = 1;
 		int maxArgs = 1;
-		
-		// check min arguments
-		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
-			displayUsage(sender, subcmd);
-			return true;
-		}
 
 		// check max arguments
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_OVER);
 			displayUsage(sender, subcmd);
 			return true;
 		}
@@ -270,25 +265,22 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// update enabledWorlds list
 		plugin.worldManager.reload();
-		
+
 		// reload messages
 		plugin.messageManager.reload();
 
 		// reload datastore
 		DataStoreFactory.reload();
 
-		// reload sounds
-		plugin.soundManager.reload();
-		
 		// set debug field
 		plugin.debug = plugin.getConfig().getBoolean("debug");
-		
+
 		// send reloaded message
-		plugin.messageManager.sendPlayerMessage(sender,"command-success-reload");
+		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_RELOAD);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Destroy a LodeStar item in hand
 	 * @param sender the command sender
@@ -296,57 +288,48 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
 	private boolean destroyCommand(final CommandSender sender, final String args[]) {
-		
+
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-console");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_CONSOLE);
 			return true;
 		}
-		
+
 		// check that sender has permission
 		if (!sender.hasPermission("lodestar.destroy")) {
-			plugin.messageManager.sendPlayerMessage(sender,"permission-denied-destroy");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_DESTROY);
+			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
-		
+
 		String subcmd = args[0];
-		
+
 		// argument limits
-		int minArgs = 1;
 		int maxArgs = 1;
 
-		// if too few arguments, send error and usage message
-		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
-			plugin.soundManager.playerSound(sender, "command-fail");
-			displayUsage(sender, subcmd);
-			return true;
-		}
-		
 		// if too many arguments, send error and usage message
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-over");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_OVER);
+			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;				
 		}
-		
+
 		Player player = (Player) sender;
-		ItemStack playerItem = player.getInventory().getItemInHand();
-		
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
+
 		// check that player is holding a LodeStar item
 		if (!SimpleAPI.isLodeStar(playerItem)) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-invalid-item");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_ITEM);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 		int quantity = playerItem.getAmount();
 		String destinationName = SimpleAPI.getDestinationName(playerItem);
 		playerItem.setAmount(0);
-		player.getInventory().setItemInHand(playerItem);
-		plugin.messageManager.sendPlayerMessage(sender,"command-success-destroy",quantity,destinationName);
-		plugin.soundManager.playerSound(player,"command-success-destroy");
+		player.getInventory().setItemInMainHand(playerItem);
+		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_DESTROY,quantity,destinationName);
+		plugin.messageManager.sendPlayerSound(player,SoundId.COMMAND_SUCCESS_DESTROY);
 		return true;
 	}
 
@@ -358,82 +341,82 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
      */
 	private boolean setCommand(final CommandSender sender, final String args[]) {
-		
+
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-console");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_CONSOLE);
 			return true;
 		}
-		
+
 		// convert args list to ArrayList so we can remove elements as we parse them
-		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+		List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
 		// get subcmd from arguments ArrayList
 		String subcmd = arguments.get(0);
-		
+
 		// remove subcmd from ArrayList
 		arguments.remove(0);
 
 		int minArgs = 2;
-		
+
 		// check for permission
 		if (!sender.hasPermission("lodestar.set")) {
-			plugin.messageManager.sendPlayerMessage(sender,"permission-denied-set");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_SET);
+			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
+			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
-		
+
 		Player player = (Player) sender;
 		Location location = player.getLocation();
-		
+
 		// set destinationName to passed argument
 		String destinationName = join(arguments);
-		
+
 		// check if destination name is a reserved name
 		if (SimpleAPI.isReservedName(destinationName)) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-set-reserved",destinationName);
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_SET_RESERVED,destinationName);
+			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
-		
+
 		// check if destination name exists and if so if player has overwrite permission
 		Destination destination = plugin.dataStore.getRecord(destinationName);
 
 		// check for overwrite permission if destination already exists
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
-			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-overwrite",destinationName);
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_OVERWRITE,destinationName);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
-		
+
 		// send warning message if name begins with a number
 		if (Destination.deriveKey(destinationName).matches("^\\d*_.*")) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-warn-set-numeric-prefix",destinationName);
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX,destinationName);
 		}
-		
+
 		// create destination object
 		destination = new Destination(destinationName,location);
-		
+
 		// store destination object
 		plugin.dataStore.putRecord(destination);
 
 		// send success message to player
-		plugin.messageManager.sendPlayerMessage(sender,"command-success-set",destinationName);
-		
+		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_SET,destinationName);
+
 		// play sound effect
-		plugin.soundManager.playerSound(sender,"command-success-set");
+		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_SUCCESS_SET);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Remove named destination
 	 * @param sender the command sender
@@ -444,16 +427,16 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.delete")) {
-			plugin.messageManager.sendPlayerMessage(sender,"permission-denied-delete");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_DELETE);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 		// convert args list to ArrayList so we can remove elements as we parse them
-		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+		List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
 		// get subcmd from arguments ArrayList
 		String subcmd = arguments.get(0);
-		
+
 		// remove subcmd from ArrayList
 		arguments.remove(0);
 
@@ -461,40 +444,41 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// check min arguments
 		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
 			displayUsage(sender, subcmd);
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		String destinationName = join(arguments);
 		String key = Destination.deriveKey(destinationName);
-		
+
 		// test that destination name is not reserved name
 		if (SimpleAPI.isReservedName(destinationName)) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-delete-reserved",destinationName);
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_DELETE_RESERVED,destinationName);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
-		
+
 		// test that destination name is valid
 		if (!SimpleAPI.isValidDestination(destinationName)) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-destination",destinationName);
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_DESTINATION,destinationName);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
-		
+
 		// remove destination record from storage
 		plugin.dataStore.deleteRecord(key);
-		
+
 		// send success message to player
-		plugin.messageManager.sendPlayerMessage(sender,"command-success-delete",destinationName);
-		
+		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_DELETE,destinationName);
+
 		// play sound effect
-		plugin.soundManager.playerSound(sender, "command-success-delete");
+		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_SUCCESS_DELETE);
 		return true;
 	}
-	
+
+
 	/**
 	 * Bind item in hand to destination
 	 * @param sender the command sender
@@ -502,80 +486,80 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
 	private boolean bindCommand(final CommandSender sender, final String args[]) {
-		
+
 		// command sender must be player
 		if (!(sender instanceof Player)) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-console");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_CONSOLE);
 			return true;
 		}
-		
+
 		// check sender has permission
 		if (!sender.hasPermission("lodestar.bind")) {
-			plugin.messageManager.sendPlayerMessage(sender,"permission-denied-bind");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_BIND);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
-		
+
 		// convert args list to ArrayList so we can remove elements as we parse them
-		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+		List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
 		// get subcmd from arguments ArrayList
 		String subcmd = arguments.get(0);
-		
+
 		// remove subcmd from ArrayList
 		arguments.remove(0);
 
 		int minArgs = 2;
-		
+
 		// check minimum arguments
 		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
-		
+
 		Player player = (Player) sender;
 		String destinationName = join(arguments);
-		
+
 		// test that destination name is valid
 		if (!SimpleAPI.isValidDestination(destinationName)) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-invalid-destination",destinationName);
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_DESTINATION,destinationName);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
-		
+
 		// get player item in hand
-		ItemStack playerItem = player.getInventory().getItemInHand();
-		
-		// if default-item-only configured true, check that item in hand has default material and data 
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
+
+		// if default-item-only configured true, check that item in hand has default material and data
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!SimpleAPI.isDefaultItem(playerItem)) {
-				plugin.messageManager.sendPlayerMessage(sender,"command-fail-invalid-item",destinationName);
-				plugin.soundManager.playerSound(sender, "command-fail");
+				plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_ITEM,destinationName);
+				plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 				return true;
 			}
 		}
-		
+
 		// try to get formatted destination name from storage
 		Destination destination = plugin.dataStore.getRecord(destinationName);
 		if (destination != null) {
 			destinationName = destination.getDisplayName();
 		}
-		
+
 		// set destination in item lore
 		SimpleAPI.setMetaData(playerItem, destinationName);
-		
+
 		// send success message
-		plugin.messageManager.sendPlayerMessage(sender, "command-success-bind", destinationName);
-		
+		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_BIND, destinationName);
+
 		// play sound effect
-		plugin.soundManager.playerSound(sender, "command-success-bind");
+		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_SUCCESS_BIND);
 		return true;
 	}
 
-	
+
 	/**
 	 * List LodeStar destination names
 	 * @param sender the command sender
@@ -583,34 +567,27 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
 	private boolean listCommand(final CommandSender sender, final String args[]) {
-		
+
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission("lodestar.list")) {
-			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-list");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_LIST);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		String subcmd = args[0];
 		// argument limits
-		int minArgs = 1;
 		int maxArgs = 2;
-		
-		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-fail-args-count-under");
-			plugin.soundManager.playerSound(sender, "command-fail");
-			displayUsage(sender, subcmd);
-			return true;
-		}
+
 		if (args.length > maxArgs) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-fail-args-count-over");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_OVER);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
-		
+
 		int page = 1;
-		
+
 		if (args.length == 2) {
 			try {
 				page = Integer.parseInt(args[1]);
@@ -621,24 +598,24 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		page = Math.max(1, page);
 
 		int itemsPerPage = 20;
-		
+
 		List<String> displayNames = plugin.dataStore.getAllKeys();
-		
+
 		int pageCount = (displayNames.size() / itemsPerPage) + 1;
 		if (page > pageCount) {
 			page = pageCount;
 		}
 		int startIndex = ((page - 1) * itemsPerPage);
 		int endIndex = Math.min((page*itemsPerPage),displayNames.size());
-		
+
 		List<String> displayRange = displayNames.subList(startIndex, endIndex);
-		
+
 		sender.sendMessage(ChatColor.DARK_AQUA + "page " + page + " of " + pageCount);
 		sender.sendMessage(ChatColor.AQUA + displayRange.toString().substring(1, displayRange.toString().length() - 1));
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Display help message for commands
 	 * @param sender the command sender
@@ -649,17 +626,17 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// if command sender does not have permission to display help, output error message and return true
 		if (!sender.hasPermission("lodestar.help")) {
-			plugin.messageManager.sendPlayerMessage(sender, "permission-denied-help");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_HELP);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		String command = "help";
-		
+
 		if (args.length > 1) {
 			command = args[1]; 
 		}
-		
+
 		String helpMessage = "That is not a valid LodeStar command.";
 		
 		if (command.equalsIgnoreCase("bind")) {
@@ -693,8 +670,8 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		displayUsage(sender,command);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Give a LodeStar item to a player
 	 * @param sender the command sender
@@ -703,20 +680,20 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 */
 	@SuppressWarnings("deprecation")
 	private boolean giveCommand(final CommandSender sender, final String args[]) {
-		
+
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
-			plugin.messageManager.sendPlayerMessage(sender,"permission-denied-give");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_GIVE);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// convert args list to ArrayList so we can remove elements as we parse them
-		List<String> arguments = new ArrayList<String>(Arrays.asList(args));
+		List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
 		// get subcmd from arguments ArrayList
 		String subcmd = arguments.get(0);
-		
+
 		// remove subcmd from ArrayList
 		arguments.remove(0);
 
@@ -725,34 +702,34 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// if too few arguments, send error and usage message
 		if (args.length < minArgs) {
-			plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
-			plugin.soundManager.playerSound(sender, "command-fail");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
+			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
-		
+
 		// get required argument target player name
 		String targetPlayerName = arguments.get(0);
-		
+
 		// remove targetPlayerName from ArrayList
 		arguments.remove(0);
-	
+
 		// try to match target player name to currently online player
 		Player targetPlayer = matchPlayer(sender, targetPlayerName);
-	
+
 		// if no match, do nothing and return (message was output by matchPlayer method)
 		if (targetPlayer == null) {
 			return true;
 		}
-		
+
 		//------------------------
-		
+
 		// set destinationName to empty string
 		String destinationName = "";
-		
+
 		// set default quantity
 		int quantity = 1;
-		
+
 		Material material = null;
 		byte materialDataByte = 0;
 
@@ -760,7 +737,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		if (!arguments.isEmpty()) {
 			try {
 				quantity = Integer.parseInt(arguments.get(0));
-				
+
 				// remove argument if no exception thrown
 				arguments.remove(0);
 			}
@@ -768,23 +745,23 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 				// not an integer, do nothing
 			}
 		}
-		
+
 		// if no remaining arguments, check if item in hand is LodeStar item
 		if (arguments.isEmpty()) {
-			
+
 			// if sender is not player, send args-count-under error message
 			if (!(sender instanceof Player)) {
-				plugin.messageManager.sendPlayerMessage(sender,"command-fail-args-count-under");
+				plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
 				displayUsage(sender, subcmd);
 				return true;
 			}
-			
-			Player player = (Player) sender;			
+
+			Player player = (Player) sender;
 			ItemStack playerItem = player.getInventory().getItemInHand().clone();
-			
+
 			// if item in hand is a LodeStar item, set destination and material from item
 			if (SimpleAPI.isLodeStar(playerItem)) {
-				
+
 				destinationName = SimpleAPI.getDestinationName(playerItem);
 				material = playerItem.getType();
 				materialDataByte = playerItem.getData().getData();
@@ -804,7 +781,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 				arguments.clear();
 			}
 		}
-		
+
 		// try to parse next argument as material
 		if (!arguments.isEmpty()) {
 			String materialElements[] = arguments.get(0).split("\\s*:\\s*");
@@ -828,7 +805,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 				arguments.remove(0);
 			}
 		}
-		
+
 		// try to parse all remaining arguments as destinationName
 		if (!arguments.isEmpty()) {
 			String testName = join(arguments);
@@ -842,20 +819,20 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			}
 			// else given destination is invalid (but not blank), so send error message
 			else {
-				plugin.messageManager.sendPlayerMessage(sender, "command-fail-invalid-destination", testName);
-				plugin.soundManager.playerSound(sender, "command-fail");
+				plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_DESTINATION,testName);
+				plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
 				return true;
 			}
 		}		
-		
+
 		// if no destination name set, set destination to spawn
 		if (destinationName.isEmpty()) {
 				destinationName = "spawn";
 		}
-		
+
 		// if no material set or default-material-only configured true, try to parse material from config
 		if (material == null || plugin.getConfig().getBoolean("default-material-only")) {
-			
+
 			String materialElements[] = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
 
 			// try to match material
@@ -878,19 +855,19 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			material = Material.NETHER_STAR;
 		}
 
-		// create item stack with material, quantity and data		
+		// create item stack with material, quantity and data
 		ItemStack itemStack = new ItemStack(material, quantity, (short) 0, materialDataByte);
 
 		// set item metadata on item stack
 		SimpleAPI.setMetaData(itemStack, destinationName);
-		
+
 		// give item stack to target player
 		giveItem(sender, targetPlayer, itemStack);
-		
+
 		return true;
 	}
 
-	
+
 	/**
 	 * Helper method for give command
 	 * @param giver the player issuing the command
@@ -898,64 +875,65 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param itemStack the LodeStar item being given
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	private boolean giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack) {
-	
+
 		String key = SimpleAPI.getKey(itemStack);
 		int quantity = itemStack.getAmount();
 		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
-		
+
 		// check quantity against configured max give amount
 		if (maxGiveAmount >= 0) {
 			quantity = Math.min(maxGiveAmount, quantity);
 			itemStack.setAmount(quantity);
 		}
-		
+
 		// test that item is a LodeStar item
 		if (!SimpleAPI.isLodeStar(itemStack)) {
-			plugin.messageManager.sendPlayerMessage(giver,"command-fail-invalid-item");
-			plugin.soundManager.playerSound(giver, "command-fail");
+			plugin.messageManager.sendPlayerMessage(giver,MessageId.COMMAND_FAIL_INVALID_ITEM);
+			plugin.messageManager.sendPlayerSound(giver, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// add specified quantity of LodeStars to player inventory
 		HashMap<Integer,ItemStack> noFit = targetPlayer.getInventory().addItem(itemStack);
-	
+
 		// count items that didn't fit in inventory
 		int noFitCount = 0;
 		for (int index : noFit.keySet()) {
 			noFitCount += noFit.get(index).getAmount();
 		}
-	
+
 		// if remaining items equals quantity given, send player-inventory-full message and return
 		if (noFitCount == quantity) {
-			plugin.messageManager.sendPlayerMessage(giver,"command-fail-give-inventory-full",quantity);
+			plugin.messageManager.sendPlayerMessage(giver,MessageId.COMMAND_FAIL_GIVE_INVENTORY_FULL,quantity);
 			return false;
 		}
-	
+
 		// subtract noFitCount from quantity
 		quantity = quantity - noFitCount;
-	
+
 		// get destination display name
 		String destinationName = SimpleAPI.getDestinationName(key);
-	
+
 		// don't display messages if giving item to self
 		if (!giver.getName().equals(targetPlayer.getName())) {
-			
+
 			// send message and play sound to giver
-			plugin.messageManager.sendPlayerMessage(giver, "command-success-give",quantity, 
+			plugin.messageManager.sendPlayerMessage(giver,MessageId.COMMAND_SUCCESS_GIVE,quantity,
 					destinationName,targetPlayer.getName());
-			
+
 			// if giver is in game, play sound
 			if (giver instanceof Player) {
-				plugin.soundManager.playerSound(giver, "command-success-give-sender");
+				plugin.messageManager.sendPlayerSound(giver,SoundId.COMMAND_SUCCESS_GIVE_SENDER);
 			}
 			
 			// send message to target player
-			plugin.messageManager.sendPlayerMessage(targetPlayer, "command-success-give-target",quantity,
+			plugin.messageManager.sendPlayerMessage(targetPlayer,MessageId.COMMAND_SUCCESS_GIVE_TARGET,quantity,
 					destinationName,giver.getName());
 		}
 		// play sound to target player
-		plugin.soundManager.playerSound(targetPlayer, "command-success-give-target");
+		plugin.messageManager.sendPlayerSound(targetPlayer,SoundId.COMMAND_SUCCESS_GIVE_TARGET);
 		return true;
 	}
 
@@ -968,16 +946,16 @@ public class CommandManager implements CommandExecutor,TabCompleter {
      */
 	@SuppressWarnings("deprecation")
 	private Player matchPlayer(final CommandSender sender, final String targetPlayerName) {
-		
+
 		Player targetPlayer;
 
 		// check exact match first
 		targetPlayer = plugin.getServer().getPlayer(targetPlayerName);
-		
+
 		// if no match, try substring match
 		if (targetPlayer == null) {
 			List<Player> playerList = plugin.getServer().matchPlayer(targetPlayerName);
-			
+
 			// if only one matching player, use it, otherwise send error message (no match or more than 1 match)
 			if (playerList.size() == 1) {
 				targetPlayer = playerList.get(0);
@@ -988,20 +966,20 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		if (targetPlayer != null) {
 			return targetPlayer;
 		}
-		
+
 		// check if name matches known offline player
-		HashSet<OfflinePlayer> matchedPlayers = new HashSet<OfflinePlayer>();
+		HashSet<OfflinePlayer> matchedPlayers = new HashSet<>();
 		for (OfflinePlayer offlinePlayer : plugin.getServer().getOfflinePlayers()) {
 			if (targetPlayerName.equalsIgnoreCase(offlinePlayer.getName())) {
 				matchedPlayers.add(offlinePlayer);
 			}
 		}
 		if (matchedPlayers.isEmpty()) {
-			plugin.messageManager.sendPlayerMessage(sender, "command-fail-player-not-found");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND);
 			return null;
 		}
 		else {
-			plugin.messageManager.sendPlayerMessage(sender, "command-fail-player-not-online");
+			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_PLAYER_NOT_ONLINE);
 			return null;
 		}
 	}
@@ -1013,7 +991,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param command the command for which to display usage string
 	 */
 	private void displayUsage(final CommandSender sender, String command) {
-		
+
 		if (command.isEmpty() || command.equalsIgnoreCase("help")) {
 			command = "all";
 		}
@@ -1077,12 +1055,12 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return the resulting string
 	 */
 	private String join(final List<String> stringList) {
-		
-		String returnString = "";
+
+		StringBuilder returnString = new StringBuilder();
 		for (String string : stringList) {
-			returnString = returnString + " " + string;
+			returnString.append(" ").append(string);
 		}
-		return returnString.trim();
+		return returnString.toString().trim();
 	}
-	
+
 }

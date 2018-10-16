@@ -2,6 +2,8 @@ package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.SimpleAPI;
+import com.winterhaven_mc.lodestar.messages.MessageId;
+import com.winterhaven_mc.lodestar.messages.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -32,10 +34,10 @@ public class TeleportManager {
         this.plugin = plugin;
 
         // initialize warmup HashMap
-        warmupMap = new ConcurrentHashMap<UUID,Integer>();
+        warmupMap = new ConcurrentHashMap<>();
 
         // initialize cooldown map
-        cooldownMap = new ConcurrentHashMap<UUID, Long>();
+        cooldownMap = new ConcurrentHashMap<>();
     }
 
 
@@ -45,12 +47,11 @@ public class TeleportManager {
      */
     public final void initiateTeleport(final Player player) {
 
-        @SuppressWarnings("deprecation")
-        final ItemStack playerItem = player.getItemInHand();
+        final ItemStack playerItem = player.getInventory().getItemInMainHand();
 
         // if player cooldown has not expired, send player cooldown message and return
         if (getCooldownTimeRemaining(player) > 0) {
-            plugin.messageManager.sendPlayerMessage(player, "teleport-cooldown");
+            plugin.messageManager.sendPlayerMessage(player, MessageId.TELEPORT_COOLDOWN);
             return;
         }
 
@@ -83,8 +84,8 @@ public class TeleportManager {
             }
             // if bedspawn location is null and bedspawn-fallback is false, send message and return
             else {
-                plugin.messageManager.sendPlayerMessage(player, "teleport-fail-no-bedspawn");
-                plugin.soundManager.playerSound(player, "teleport-fail");
+                plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_FAIL_NO_BEDSPAWN);
+                plugin.messageManager.sendPlayerSound(player,SoundId.TELEPORT_CANCELLED);
                 return;
             }
         }
@@ -146,14 +147,14 @@ public class TeleportManager {
                 displayName = key;
             }
 
-            plugin.messageManager.sendPlayerMessage(player, "teleport-fail-invalid-destination", 1, displayName);
+            plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_FAIL_INVALID_DESTINATION,1, displayName);
             return;
         }
 
         // if player is less than config min-distance from destination, send player proximity message and return
         if (player.getWorld() == location.getWorld()
                 && location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
-            plugin.messageManager.sendPlayerMessage(player, "teleport-fail-proximity", 1, destination.getDisplayName());
+            plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_FAIL_PROXIMITY,1, destination.getDisplayName());
             return;
         }
 
@@ -171,7 +172,7 @@ public class TeleportManager {
         // if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
         if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-use")) {
             playerItem.setAmount(playerItem.getAmount() - 1);
-            player.getInventory().setItemInHand(playerItem);
+            player.getInventory().setItemInMainHand(playerItem);
         }
 
         // if warmup setting is greater than zero, send warmup message
@@ -179,14 +180,14 @@ public class TeleportManager {
 
             // if destination is spawn send spawn specific warmup message
             if (destination.isSpawn()) {
-                plugin.messageManager.sendPlayerMessage(player, "teleport-warmup-spawn", destination.getDisplayName());
+                plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_WARMUP_SPAWN,destination.getDisplayName());
             }
             // otherwise send regular warmup message
             else {
-                plugin.messageManager.sendPlayerMessage(player, "teleport-warmup", destination.getDisplayName());
+                plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_WARMUP,destination.getDisplayName());
             }
             // if enabled, play sound effect
-            plugin.soundManager.playerSound(player, "teleport-warmup");
+            plugin.messageManager.sendPlayerSound(player, SoundId.TELEPORT_WARMUP);
         }
 
         // initiate delayed teleport for player to destination

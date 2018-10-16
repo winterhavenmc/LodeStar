@@ -5,14 +5,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 public class Destination {
-	
+
 	private static final PluginMain plugin = PluginMain.instance;
 
 	private String key;
 	private String displayName;
 	private Location location;
 
-	
+
 	/**
 	 * Class constructor
 	 * @param displayName the destination display name string
@@ -23,8 +23,8 @@ public class Destination {
 		this.setDisplayName(displayName);
 		this.setLocation(location);
 	}
-	
-	
+
+
 	/**
 	 * Class constructor
 	 * @param key the destination key value
@@ -36,8 +36,8 @@ public class Destination {
 		this.setDisplayName(displayName);
 		this.setLocation(location);
 	}
-	
-	
+
+
 	/**
 	 * Check if destination is spawn
 	 * @return true if spawn, else false
@@ -46,8 +46,8 @@ public class Destination {
 		return this.getKey().equals("spawn")
 				|| this.getKey().equals(deriveKey(plugin.messageManager.getSpawnDisplayName()));
 	}
-	
-	
+
+
 	/**
 	 * Check if destination is home
 	 * @return true if home, else false
@@ -57,8 +57,8 @@ public class Destination {
 		return this.getKey().equals("home")
 				|| this.getKey().equals(deriveKey(plugin.messageManager.getHomeDisplayName()));
 	}
-	
-	
+
+
 	/**
 	 * Getter for destination key field
 	 * @return the value of the key field
@@ -67,7 +67,7 @@ public class Destination {
 		return key;
 	}
 
-	
+
 	/**
 	 * Setter for destination key field
 	 * @param key the value to assign to the key field
@@ -75,8 +75,8 @@ public class Destination {
 	private void setKey(final String key) {
 		this.key = deriveKey(key);
 	}
-	
-	
+
+
 	/**
 	 * Getter for destination displayName field
 	 * @return the value of the displayName field
@@ -84,8 +84,8 @@ public class Destination {
 	public String getDisplayName() {
 		return displayName;
 	}
-	
-	
+
+
 	/**
 	 * Setter for destination displayName field
 	 * @param displayName the value to assign to the displayName field
@@ -93,8 +93,8 @@ public class Destination {
 	private void setDisplayName(final String displayName) {
 		this.displayName = displayName.replace('_', ' ');
 	}
-	
-	
+
+
 	/**
 	 * Getter for destination location field
 	 * @return the value of the location field
@@ -103,7 +103,7 @@ public class Destination {
 		return location;
 	}
 
-	
+
 	/**
 	 * Setter for destination location field
 	 * @param location value to assign to location field
@@ -111,8 +111,8 @@ public class Destination {
 	private void setLocation(final Location location) {
 		this.location = location;
 	}
-	
-	
+
+
 	/**
 	 * Derive key from destination display name<br>
 	 * replaces spaces with underscores, strips color codes and folds to lower case
@@ -120,12 +120,12 @@ public class Destination {
 	 * @return the key value derived from the destination name
 	 */
 	public static String deriveKey(final String key) {
-		
+
 		String derivedKey = key;
-		
+
 		derivedKey = derivedKey.replace(' ', '_');
 		derivedKey = derivedKey.toLowerCase().replaceAll("[&" + ChatColor.COLOR_CHAR + "][0-9a-zA-Zk-oK-OrR]", "");
 		return derivedKey;
 	}
-	
+
 }

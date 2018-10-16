@@ -1,92 +1,85 @@
 # sound configuration
-sounds:
-  command-fail:
-    enabled: true
-    player-only: true
-    sound: ENTITY_VILLAGER_NO
-    volume: 1
-    pitch: 1
 
-  command-success-give-sender:
-    enabled: true
-    player-only: true
-    sound: ENTITY_ARROW_SHOOT
-    volume: 1
-    pitch: 0.5
+COMMAND_FAIL:
+  enabled: true
+  player-only: true
+  sound: ENTITY_VILLAGER_NO
+  volume: 1
+  pitch: 1
 
-  command-success-give-target:
-    enabled: true
-    player-only: true
-    sound: ENTITY_ITEM_PICKUP
-    volume: 1
-    pitch: 1
+COMMAND_SUCCESS_GIVE_SENDER:
+  enabled: true
+  player-only: true
+  sound: ENTITY_ARROW_SHOOT
+  volume: 1
+  pitch: 0.5
 
-  command-success-delete:
-    enabled: true
-    player-only: true
-    sound: ENTITY_IRONGOLEM_HURT
-    volume: 1
-    pitch: 1
+COMMAND_SUCCESS_GIVE_TARGET:
+  enabled: true
+  player-only: true
+  sound: ENTITY_ITEM_PICKUP
+  volume: 1
+  pitch: 1
 
-  command-success-destroy:
-    enabled: true
-    player-only: true
-    sound: ENTITY_ITEM_BREAK
-    volume: 1
-    pitch: 1
+COMMAND_SUCCESS_DELETE:
+  enabled: true
+  player-only: true
+  sound: ENTITY_IRON_GOLEM_HURT
+  volume: 1
+  pitch: 1
 
-  command-success-set:
-    enabled: true
-    player-only: true
-    sound: ENTITY_PLAYER_LEVELUP
-    volume: 1
-    pitch: 1.5
+COMMAND_SUCCESS_DESTROY:
+  enabled: true
+  player-only: true
+  sound: ENTITY_ITEM_BREAK
+  volume: 1
+  pitch: 1
 
-  command-success-bind:
-    enabled: true
-    player-only: true
-    sound: BLOCK_ANVIL_LAND
-    volume: 1
-    pitch: 1.75
+COMMAND_SUCCESS_SET:
+  enabled: true
+  player-only: true
+  sound: ENTITY_PLAYER_LEVELUP
+  volume: 1
+  pitch: 1.5
 
-  teleport-denied-permission:
-    enabled: true
-    player-only: true
-    sound: ENTITY_GENERIC_EXTINGUISH_FIRE
-    volume: 1
-    pitch: 1
+COMMAND_SUCCESS_BIND:
+  enabled: true
+  player-only: true
+  sound: BLOCK_ANVIL_LAND
+  volume: 1
+  pitch: 1.75
 
-  teleport-cancelled:
-    enabled: true
-    player-only: false
-    sound: ENTITY_GENERIC_EXTINGUISH_FIRE
-    volume: 1
-    pitch: 1
+TELEPORT_CANCELLED:
+  enabled: true
+  player-only: false
+  sound: ENTITY_GENERIC_EXTINGUISH_FIRE
+  volume: 1
+  pitch: 1
 
-  teleport-cancelled-no-item:
-    enabled: true
-    player-only: false
-    sound: ENTITY_DONKEY_ANGRY
-    volume: 1
-    pitch: 1
+TELEPORT_CANCELLED_NO_ITEM:
+  enabled: true
+  player-only: false
+  sound: ENTITY_DONKEY_ANGRY
+  volume: 1
+  pitch: 1
 
-  teleport-warmup:
-    enabled: true
-    player-only: false
-    sound: BLOCK_PORTAL_TRAVEL
-    volume: 0.3
-    pitch: 1
+TELEPORT_WARMUP:
+  enabled: true
+  player-only: false
+  sound: BLOCK_PORTAL_TRAVEL
+  volume: 0.3
+  pitch: 1
 
-  teleport-success-departure:
-     enabled: true
-     player-only: false
-     sound: ENTITY_ENDERMEN_TELEPORT
-     volume: 1
-     pitch: 1
+TELEPORT_SUCCESS_DEPARTURE:
+  enabled: true
+  player-only: false
+  sound: ENTITY_ENDERMAN_TELEPORT
+  volume: 1
+  pitch: 1
 
-  teleport-success-arrival:
-     enabled: true
-     player-only: false
-     sound: ENTITY_ENDERMEN_TELEPORT
-     volume: 1
-     pitch: 1
+TELEPORT_SUCCESS_ARRIVAL:
+  enabled: true
+  player-only: false
+  sound: ENTITY_ENDERMAN_TELEPORT
+  volume: 1
+  pitch: 1

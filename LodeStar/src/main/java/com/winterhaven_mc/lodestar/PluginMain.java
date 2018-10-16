@@ -5,8 +5,7 @@ import com.winterhaven_mc.lodestar.listeners.PlayerEventListener;
 import com.winterhaven_mc.lodestar.storage.DataStore;
 import com.winterhaven_mc.lodestar.storage.DataStoreFactory;
 import com.winterhaven_mc.lodestar.teleport.TeleportManager;
-import com.winterhaven_mc.lodestar.util.MessageManager;
-import com.winterhaven_mc.util.SoundManager;
+import com.winterhaven_mc.lodestar.messages.MessageManager;
 import com.winterhaven_mc.util.WorldManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,7 +28,6 @@ public final class PluginMain extends JavaPlugin {
 	public DataStore dataStore;
 	public TeleportManager teleportManager;
 	public MessageManager messageManager;
-	public SoundManager soundManager;
 	public WorldManager worldManager;
 
 	@Override
@@ -50,9 +48,6 @@ public final class PluginMain extends JavaPlugin {
 		// instantiate message manager
 		messageManager = new MessageManager(this);
 
-		// instantiate sound manager
-		soundManager = new SoundManager(this);
-		
 		// instantiate teleport manager
 		teleportManager = new TeleportManager(this);
 

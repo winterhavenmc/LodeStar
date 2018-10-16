@@ -13,7 +13,7 @@ public abstract class DataStore {
 
 	/**
 	 * Initialize storage
-	 * @throws Exception
+	 * @throws Exception on error
 	 */
 	abstract void initialize() throws Exception;
 	
@@ -47,6 +47,7 @@ public abstract class DataStore {
 	 * @param destinationName the name key string of the destination record to be deleted
 	 * @return the destination record that was deleted
 	 */	
+	@SuppressWarnings("UnusedReturnValue")
 	public abstract Destination deleteRecord(final String destinationName);
 	
 	/**
@@ -62,6 +63,7 @@ public abstract class DataStore {
 	/**
 	 * Delete datastore
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	abstract boolean delete();
 	
 	/**

@@ -1,6 +1,8 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.messages.MessageId;
+import com.winterhaven_mc.lodestar.messages.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.Location;
 //import org.bukkit.Sound;
@@ -75,28 +77,28 @@ class DelayedTeleportTask extends BukkitRunnable {
 				
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
 				if (notRemoved) {
-					plugin.messageManager.sendPlayerMessage(player, "teleport-cancelled-no-item");
-					plugin.soundManager.playerSound(player, "teleport-cancelled-no-item");
+					plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_CANCELLED_NO_ITEM);
+					plugin.messageManager.sendPlayerSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
 					plugin.teleportManager.setPlayerCooldown(player);
 					return;
 				}
 			}
 			// play pre-teleport sound if sound effects are enabled
-			plugin.soundManager.playerSound(player, "teleport-success-departure");
+			plugin.messageManager.sendPlayerSound(player,SoundId.TELEPORT_SUCCESS_DEPARTURE);
 
 			// teleport player to location
 			player.teleport(location);
 
 			// if destination is spawn, send spawn specific success message
 			if (destination.isSpawn()) {
-				plugin.messageManager.sendPlayerMessage(player, "teleport-success-spawn", plugin.messageManager.getSpawnDisplayName());
+				plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_SUCCESS_SPAWN,plugin.messageManager.getSpawnDisplayName());
 			}
 			// otherwise send regular success message
 			else {
-				plugin.messageManager.sendPlayerMessage(player, "teleport-success", destination.getDisplayName());
+				plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_SUCCESS,destination.getDisplayName());
 			}
 			// play post-teleport sound if sound effects are enabled
-			plugin.soundManager.playerSound(player, "teleport-success-arrival");
+			plugin.messageManager.sendPlayerSound(player,SoundId.TELEPORT_SUCCESS_ARRIVAL);
 
 			// if lightning is enabled in config, strike lightning at teleport destination
 			if (plugin.getConfig().getBoolean("lightning")) {

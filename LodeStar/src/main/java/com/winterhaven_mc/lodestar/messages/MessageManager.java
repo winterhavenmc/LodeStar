@@ -1,14 +1,16 @@
-package com.winterhaven_mc.lodestar.util;
+package com.winterhaven_mc.lodestar.messages;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.storage.Destination;
-import com.winterhaven_mc.util.ConfigAccessor;
 import com.winterhaven_mc.util.LanguageManager;
+import com.winterhaven_mc.util.SoundManager;
 import com.winterhaven_mc.util.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,14 +28,17 @@ public class MessageManager {
 	// reference to main class
 	private final PluginMain plugin;
 
-	// language file manager
-	private LanguageManager languageManager;
+	// hashmap for per player message cooldown
+	private final ConcurrentHashMap<UUID, EnumMap<MessageId, Long>> messageCooldownMap;
 
-	// custom configuration for messages
-	private ConfigAccessor messages;
+	// language manager
+	private final LanguageManager languageManager;
 
-	// message cooldown map
-	private ConcurrentHashMap<UUID, ConcurrentHashMap<String, Long>> messageCooldownMap;
+	// sound manager
+	private final SoundManager soundManager;
+
+	// configuration object for messages
+	private YamlConfiguration messages;
 
 
 	/**
@@ -46,14 +51,17 @@ public class MessageManager {
 		// set reference to main class
 		this.plugin = plugin;
 
-		// instantiate language manager
+		// initialize messageCooldownMap
+		this.messageCooldownMap = new ConcurrentHashMap<>();
+
+		// instantiate messageFileHelper
 		this.languageManager = new LanguageManager(plugin);
 
-		// instantiate custom configuration manager for language file
-		this.messages = new ConfigAccessor(plugin, languageManager.getFileName());
+		// instantiate sound manager
+		this.soundManager = new SoundManager(plugin);
 
-		// initialize messageCooldownMap
-		this.messageCooldownMap = new ConcurrentHashMap<UUID,ConcurrentHashMap<String,Long>>();
+		// load messages from file
+		this.messages = languageManager.loadMessages();
 	}
 
 
@@ -63,7 +71,7 @@ public class MessageManager {
 	 * @param sender			player receiving message
 	 * @param messageId			message identifier in messages file
 	 */
-	public void sendPlayerMessage(final CommandSender sender, final String messageId) {
+	public void sendPlayerMessage(final CommandSender sender, final MessageId messageId) {
 		this.sendPlayerMessage(sender, messageId, 1, "", "");
 	}
 
@@ -74,7 +82,7 @@ public class MessageManager {
 	 * @param messageId			message identifier in messages file
 	 * @param quantity			number of items
 	 */
-	public void sendPlayerMessage(final CommandSender sender, final String messageId, final Integer quantity) {
+	public void sendPlayerMessage(final CommandSender sender, final MessageId messageId, final Integer quantity) {
 		this.sendPlayerMessage(sender, messageId, quantity, "", "");
 	}
 
@@ -85,7 +93,7 @@ public class MessageManager {
 	 * @param messageId			message identifier in messages file
 	 * @param destinationName	name of destination
 	 */
-	public void sendPlayerMessage(final CommandSender sender, final String messageId, final String destinationName) {
+	public void sendPlayerMessage(final CommandSender sender, final MessageId messageId, final String destinationName) {
 		this.sendPlayerMessage(sender, messageId, 1, destinationName,"");
 	}
 
@@ -97,7 +105,7 @@ public class MessageManager {
 	 * @param quantity			number of items
 	 * @param destinationName	name of destination
 	 */
-	public void sendPlayerMessage(final CommandSender sender, final String messageId,
+	public void sendPlayerMessage(final CommandSender sender, final MessageId messageId,
 								  final Integer quantity, final String destinationName) {
 		this.sendPlayerMessage(sender, messageId, quantity, destinationName,"");
 	}
@@ -111,13 +119,13 @@ public class MessageManager {
 	 * @param passedTargetPlayerName	name of player targeted
 	 */
 	public void sendPlayerMessage(final CommandSender sender,
-								  final String messageId,
+								  final MessageId messageId,
 								  final Integer quantity,
 								  final String passedDestinationName,
 								  final String passedTargetPlayerName) {
 
 		// if message is not enabled in messages file, do nothing and return
-		if (!messages.getConfig().getBoolean("messages." + messageId + ".enabled")) {
+		if (!messages.getBoolean("messages." + messageId.toString() + ".enabled")) {
 			return;
 		}
 
@@ -145,10 +153,10 @@ public class MessageManager {
 			Player player = (Player) sender;
 
 			// get message cooldown time remaining
-			Long lastDisplayed = getMessageCooldown(player,messageId);
+			long lastDisplayed = getMessageCooldown(player,messageId);
 
 			// get message repeat delay
-			int messageRepeatDelay = messages.getConfig().getInt("messages." + messageId + ".repeat-delay");
+			int messageRepeatDelay = messages.getInt("messages." + messageId.toString() + ".repeat-delay");
 
 			// if message has repeat delay value and was displayed to player more recently, do nothing and return
 			if (lastDisplayed > System.currentTimeMillis() - messageRepeatDelay * 1000) {
@@ -169,7 +177,7 @@ public class MessageManager {
 		}
 
 		// get message from file
-		String message = messages.getConfig().getString("messages." + messageId + ".string");
+		String message = messages.getString("messages." + messageId.toString() + ".string");
 
 		// get item name and strip color codes
 		String itemName = getItemName();
@@ -266,25 +274,35 @@ public class MessageManager {
 
 
 	/**
-	 * Add entry to message cooldown map
-	 * @param player the player to add to the message cooldown map
-	 * @param messageId the message identifier to be added to the cooldown map
+	 * Play sound
+	 * @param sender command sender (player) to play sound
+	 * @param soundId unique identifier that refers to sound in sounds.yml
 	 */
-	private void putMessageCooldown(final Player player, final String messageId) {
+	public final void sendPlayerSound(final CommandSender sender, final SoundId soundId) {
+		this.soundManager.playerSound(sender,soundId.toString());
+	}
 
-		ConcurrentHashMap<String, Long> tempMap = new ConcurrentHashMap<String, Long>();
+
+	/**
+	 * Add entry to message cooldown map
+	 * @param player the player to insert in the message cooldown map
+	 * @param messageId the message identifier to insert in the cooldown map
+	 */
+	private void putMessageCooldown(final Player player, final MessageId messageId) {
+
+		final EnumMap<MessageId, Long> tempMap = new EnumMap<>(MessageId.class);
 		tempMap.put(messageId, System.currentTimeMillis());
-		messageCooldownMap.put(player.getUniqueId(), tempMap);
+		this.messageCooldownMap.put(player.getUniqueId(), tempMap);
 	}
 
 
 	/**
 	 * get entry from message cooldown map
-	 * @param player the player whose uuid to use as key to retrieve cooldown time from map
-	 * @param messageId the message identifier to use as key to retrieve cooldown time from map
+	 * @param player the player for whom to retrieve cooldown time
+	 * @param messageId the message identifier for which retrieve cooldown time
 	 * @return cooldown expire time
 	 */
-	private long getMessageCooldown(final Player player, final String messageId) {
+	private long getMessageCooldown(final Player player, final MessageId messageId) {
 
 		// check if player is in message cooldown hashmap
 		if (messageCooldownMap.containsKey(player.getUniqueId())) {
@@ -302,51 +320,62 @@ public class MessageManager {
 
 	/**
 	 * Remove player from message cooldown map
-	 * @param player the player whose uuid will be removed from the cooldown map
+	 * @param player the player to be removed from the message cooldown map
 	 */
-	public void removePlayerCooldown(final Player player) {
+	public final void removePlayerCooldown(final Player player) {
 		messageCooldownMap.remove(player.getUniqueId());
 	}
 
 
-	public void reload() {
+	/**
+	 * Reload messages
+	 */
+	public final void reload() {
 
-		// reload language file
-		languageManager.reload(messages);
+		// reload messages
+		this.messages = languageManager.loadMessages();
+
+		// reload sounds
+		soundManager.reload();
 	}
 
-	public String getLanguage() {
-		return languageManager.getLanguage();
+
+	/**
+	 * Get item name from language file
+	 * @return the formatted display name of the SpawnStar item
+	 */
+	public final String getItemName() {
+		return messages.getString("item-name");
 	}
 
-	public String getItemName() {
-		return messages.getConfig().getString("item-name");
-	}
 
-
+	/**
+	 * Get configured plural item name from language file
+	 * @return the formatted plural display name of the SpawnStar item
+	 */
 	@SuppressWarnings("WeakerAccess")
-	public String getItemNamePlural() {
-		return messages.getConfig().getString("item-name-plural");
+	public final String getItemNamePlural() {
+		return messages.getString("item-name-plural");
 	}
 
 
 	public String getInventoryItemName() {
-		return messages.getConfig().getString("inventory-item-name");
+		return messages.getString("inventory-item-name");
 	}
 
 
 	public String getSpawnDisplayName() {
-		return messages.getConfig().getString("spawn-display-name");
+		return messages.getString("spawn-display-name");
 	}
 
 
 	public String getHomeDisplayName() {
-		return messages.getConfig().getString("home-display-name");
+		return messages.getString("home-display-name");
 	}
 
 
 	public List<String> getItemLore() {
-		return messages.getConfig().getStringList("item-lore");
+		return messages.getStringList("item-lore");
 	}
 
 
@@ -363,12 +392,12 @@ public class MessageManager {
 		int minutes = (int)(duration % 3600) / 60;
 		int seconds = (int)duration % 60;
 
-		String hour_string = this.messages.getConfig().getString("hour");
-		String hour_plural_string = this.messages.getConfig().getString("hour_plural");
-		String minute_string = this.messages.getConfig().getString("minute");
-		String minute_plural_string = this.messages.getConfig().getString("minute_plural");
-		String second_string = this.messages.getConfig().getString("second");
-		String second_plural_string = this.messages.getConfig().getString("second_plural");
+		String hour_string = this.messages.getString("hour");
+		String hour_plural_string = this.messages.getString("hour_plural");
+		String minute_string = this.messages.getString("minute");
+		String minute_plural_string = this.messages.getString("minute_plural");
+		String second_string = this.messages.getString("second");
+		String second_plural_string = this.messages.getString("second_plural");
 
 		if (hours > 1) {
 			timeString.append(hours);

@@ -84,7 +84,7 @@ public final class SimpleAPI {
 		// allow for '&' character for color codes in name and lore
 		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
 
-		ArrayList<String> coloredLore = new ArrayList<String>();
+		ArrayList<String> coloredLore = new ArrayList<>();
 		
 		for (String line : configLore) {
 			line = line.replaceAll("%destination%", formattedName);
@@ -154,26 +154,8 @@ public final class SimpleAPI {
 			return false;
 		}
 
-		Material material = null;
-		byte materialDataByte = 0;
-		
-		// try to match default material from config
-		String[] materialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
-
 		// try to match material
-		if (materialElements.length > 0) {
-			material = Material.matchMaterial(materialElements[0]);
-		}
-
-		// try to match material data
-		if (materialElements.length > 1) {
-			try {
-				materialDataByte = Byte.parseByte(materialElements[1]);
-			}
-			catch (NumberFormatException e2) {
-				materialDataByte = (byte) 0;
-			}
-		}
+		Material material = Material.matchMaterial(plugin.getConfig().getString("default-material"));
 
 		// if no match set to nether star
 		if (material == null) {
@@ -181,7 +163,7 @@ public final class SimpleAPI {
 		}
 
 		// if material and data match defaults return true
-		return itemStack.getType().equals(material) && itemStack.getData().getData() == materialDataByte;
+		return itemStack.getType().equals(material);
 	}
 
 	
@@ -279,10 +261,10 @@ public final class SimpleAPI {
 	
 	
 	private static String hiddenString(final String s) {
-		String hidden = "";
+		StringBuilder hidden = new StringBuilder();
 		for (char c : s.toCharArray())
-			hidden += ChatColor.COLOR_CHAR + "" + c;
-		return hidden;
+			hidden.append(ChatColor.COLOR_CHAR + "").append(c);
+		return hidden.toString();
 	}
 	
 
@@ -411,37 +393,16 @@ public final class SimpleAPI {
 	@SuppressWarnings("WeakerAccess")
 	public static ItemStack getDefaultItem() {
 		
-		// get material type and data from config file
-		String[] configMaterialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
-		
-		// try to match material
-		Material configMaterial = Material.matchMaterial(configMaterialElements[0]);
+		// try to match material type to string in config file
+		Material configMaterial = Material.matchMaterial(plugin.getConfig().getString("default-material"));
 		
 		// if no match default to nether star
 		if (configMaterial == null) {
 			configMaterial = Material.NETHER_STAR;
 		}
-		
-		// parse material data from config file if present
-		byte configMaterialDataByte;
-		
-		// if data set in config try to parse as byte; set to zero if it doesn't parse
-		if (configMaterialElements.length > 1) {
-			try {
-				configMaterialDataByte = Byte.parseByte(configMaterialElements[1]);
-			}
-			catch (NumberFormatException e) {
-				configMaterialDataByte = (byte) 0;
-			}
-		}
-		// if no data set in config default to zero
-		else {
-			configMaterialDataByte = (byte) 0;
-		}
-		
-		// create item stack with configured material and data
 
-		return new ItemStack(configMaterial,1,configMaterialDataByte);
+		// create a one item stack with configured material
+		return new ItemStack(configMaterial,1);
 	}
 
 	

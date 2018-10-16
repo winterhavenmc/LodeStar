@@ -16,8 +16,7 @@ disabled-worlds:
   - disabled_world1
   - disabled_world2
 
-# material to be used as default item. Set item data using a colon, example: WOOL:5
-# invalid item data may be reset, so use only valid item data values for a given material
+# material to be used as default item
 default-material: NETHER_STAR
 
 # allow giving and binding with items of default material only
