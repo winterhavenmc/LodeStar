@@ -2,12 +2,15 @@ package com.winterhaven_mc.lodestar.messages;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.storage.Destination;
+
+import com.winterhaven_mc.util.YamlLanguageManager;
 import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.SoundManager;
 import com.winterhaven_mc.util.StringUtil;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 
 import java.util.EnumMap;
@@ -38,7 +41,7 @@ public class MessageManager {
 	private final SoundManager soundManager;
 
 	// configuration object for messages
-	private YamlConfiguration messages;
+	private Configuration messages;
 
 
 	/**
@@ -55,7 +58,7 @@ public class MessageManager {
 		this.messageCooldownMap = new ConcurrentHashMap<>();
 
 		// instantiate messageFileHelper
-		this.languageManager = new LanguageManager(plugin);
+		this.languageManager = new YamlLanguageManager(plugin);
 
 		// instantiate sound manager
 		this.soundManager = new SoundManager(plugin);
@@ -125,7 +128,7 @@ public class MessageManager {
 								  final String passedTargetPlayerName) {
 
 		// if message is not enabled in messages file, do nothing and return
-		if (!messages.getBoolean("messages." + messageId.toString() + ".enabled")) {
+		if (!isEnabled(messageId)) {
 			return;
 		}
 
@@ -156,7 +159,7 @@ public class MessageManager {
 			long lastDisplayed = getMessageCooldown(player,messageId);
 
 			// get message repeat delay
-			int messageRepeatDelay = messages.getInt("messages." + messageId.toString() + ".repeat-delay");
+			int messageRepeatDelay = getRepeatDelay(messageId);
 
 			// if message has repeat delay value and was displayed to player more recently, do nothing and return
 			if (lastDisplayed > System.currentTimeMillis() - messageRepeatDelay * 1000) {
@@ -177,7 +180,7 @@ public class MessageManager {
 		}
 
 		// get message from file
-		String message = messages.getString("messages." + messageId.toString() + ".string");
+		String message = getMessage(messageId);
 
 		// get item name and strip color codes
 		String itemName = getItemName();
@@ -337,6 +340,36 @@ public class MessageManager {
 
 		// reload sounds
 		soundManager.reload();
+	}
+
+
+	/**
+	 * Check if message is enabled
+	 * @param messageId message identifier to check
+	 * @return true if message is enabled, false if not
+	 */
+	private boolean isEnabled(MessageId messageId) {
+		return !messages.getBoolean("messages." + messageId.toString() + ".enabled");
+	}
+
+
+	/**
+	 * get message repeat delay from language file
+	 * @param messageId message identifier to retrieve message delay
+	 * @return int message repeat delay in seconds
+	 */
+	private int getRepeatDelay(MessageId messageId) {
+		return messages.getInt("messages." + messageId.toString() + ".repeat-delay");
+	}
+
+
+	/**
+	 * get message text from language file
+	 * @param messageId message identifier to retrieve message text
+	 * @return String message text
+	 */
+	private String getMessage(MessageId messageId) {
+		return messages.getString("messages." + messageId.toString() + ".string");
 	}
 
 
