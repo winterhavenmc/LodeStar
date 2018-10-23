@@ -3,7 +3,7 @@ package com.winterhaven_mc.lodestar.commands;
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.SimpleAPI;
 import com.winterhaven_mc.lodestar.messages.MessageId;
-import com.winterhaven_mc.lodestar.messages.SoundId;
+import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.DataStoreFactory;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.ChatColor;

@@ -1,4 +1,4 @@
-package com.winterhaven_mc.lodestar.messages;
+package com.winterhaven_mc.lodestar.sounds;
 
 public enum SoundId {
 	

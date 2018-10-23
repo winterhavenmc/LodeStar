@@ -1,6 +1,7 @@
 package com.winterhaven_mc.lodestar.messages;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
 import com.winterhaven_mc.util.YamlLanguageManager;

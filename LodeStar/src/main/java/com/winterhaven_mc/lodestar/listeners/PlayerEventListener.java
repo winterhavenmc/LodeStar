@@ -3,7 +3,7 @@ package com.winterhaven_mc.lodestar.listeners;
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.SimpleAPI;
 import com.winterhaven_mc.lodestar.messages.MessageId;
-import com.winterhaven_mc.lodestar.messages.SoundId;
+import com.winterhaven_mc.lodestar.sounds.SoundId;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
