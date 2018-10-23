@@ -50,65 +50,85 @@ messages:
   COMMAND_FAIL_ARGS_COUNT_UNDER:
     enabled: true
     string: '&3[LodeStar]&c Too few arguments!'
+
   COMMAND_FAIL_ARGS_COUNT_OVER:
     enabled: true
     string: '&3[LodeStar]&c Too many arguments!'
+
   COMMAND_FAIL_ARGS_COUNT_OVER_SPACES: # unused?
     enabled: true
     string: '&3[LodeStar]&c Use underscores in place of spaces for destination name.'
+
   COMMAND_FAIL_CONSOLE:
     enabled: true
     string: '&3[LodeStar]&c You must be in game to use this command!'
+
   COMMAND_FAIL_DELETE_RESERVED:
     enabled: true
     string: '&3[LodeStar]&c Destination &6%destination&c cannot be deleted!'
+
   COMMAND_FAIL_GIVE_INVENTORY_FULL:
     enabled: true
     string: '&3Could not give %ITEMNAME% to %PLAYERNAME% because their inventory is full.'
+
   COMMAND_FAIL_INVALID_COMMAND:
     enabled: true
     string: '&3[LodeStar]&c That is not a valid command!'
+
   COMMAND_FAIL_INVALID_DESTINATION:
     enabled: true
     string: '&3[LodeStar]&c That is not a valid destination!'
+
   COMMAND_FAIL_INVALID_ITEM:
     enabled: true
     string: '&3[LodeStar]&c The item you are holding is not a %ITEMNAME%!'
+
   command-fail-invalid-quantity:
     enabled: true
     string: '&3[LodeStar]&c Invalid quantity!'
+
   COMMAND_FAIL_PLAYER_NOT_FOUND:
     enabled: true
     string: '&3That player could not be found.'
+
   COMMAND_FAIL_PLAYER_NOT_ONLINE:
     enabled: true
     string: '&3That player is not online.'
+
   command-fail-set-overwrite:
     enabled: true
     string: '&3[LodeStar]&c Destination cannot be overwritten!'
+
   COMMAND_FAIL_SET_RESERVED:
     enabled: true
     string: '&3[LodeStar]&c Destination &6%destination%&c is reserved and cannot be set!'
 
+
   COMMAND_SUCCESS_BIND:
     enabled: true
     string: '&3[LodeStar]&b Item in hand now linked to &2%destination%&b.'
+
   COMMAND_SUCCESS_DELETE:
     enabled: true
     string: '&3[LodeStar]&c %destination% removed!'
+
   COMMAND_SUCCESS_DESTROY:
     enabled: true
     string: '&3[LodeStar]&c %ITEMNAME% destroyed!'
+
   COMMAND_SUCCESS_GIVE:
     enabled: true
     string: '&3You gave %quantity% %ITEMNAME% to %TARGETPLAYER%.'
+
 #NOTE: target player refers to item giver in below message!
   COMMAND_SUCCESS_GIVE_TARGET:
     enabled: true
     string: '&3%TARGETPLAYER% gave you %quantity% %ITEMNAME%.'
+
   COMMAND_SUCCESS_RELOAD:
     enabled: true
     string: '&3[LodeStar]&b configuration reloaded.'
+
   COMMAND_SUCCESS_SET:
     enabled: true
     string: '&3[LodeStar]&b Destination &2%destination%&b set.'
@@ -117,53 +137,69 @@ messages:
     enabled: true
     string: '&3[LodeStar]&c Warning: Destination name begins with a valid quantity. Be mindful when using with the &ogive&r&c command!'
 
+
   PERMISSION_DENIED_BIND:
     enabled: true
     string: '&cYou do not have permission to bind LodeStar items to locations!'
+
   PERMISSION_DENIED_DELETE:
     enabled: true
     string: '&cYou do not have permission to delete LodeStar locations!'
+
   PERMISSION_DENIED_DESTROY:
     enabled: true
     string: '&cYou do not have permission to destroy LodeStar items!'
+
   PERMISSION_DENIED_GIVE:
     enabled: true
     string: '&cYou do not have permission to give LodeStar items!'
+
   PERMISSION_DENIED_HELP:
     enabled: true
     string: '&cYou do not have permission to view LodeStar help!'
+
   PERMISSION_DENIED_LIST:
     enabled: true
     string: '&cYou do not have permission to list LodeStar locations!'
+
   PERMISSION_DENIED_OVERWRITE:
      enabled: true
      string: '&cYou do not have permission to overwrite LodeStar locations!'
+
   PERMISSION_DENIED_RELOAD:
     enabled: true
     string: '&cYou do not have permission to reload the configuration!'
+
   PERMISSION_DENIED_SET:
     enabled: true
     string: '&cYou do not have permission to set LodeStar locations!'
+
   PERMISSION_DENIED_STATUS:
     enabled: true
     string: '&cYou do not have permission to view LodeStar settings!'
+
   PERMISSION_DENIED_USE:
     enabled: true
     repeat-delay: 1
     string: '&cYou do not have permission to use a &b%ITEMNAME%&r&3 in %worldname%.'
 
+
   TELEPORT_CANCELLED_DAMAGE:
     enabled: true
     string: '&cTeleport cancelled by damage!'
+
   TELEPORT_CANCELLED_INTERACTION:
     enabled: true
     string: '&cTeleport cancelled by interaction!'
+
   TELEPORT_CANCELLED_MOVEMENT:
     enabled: true
     string: '&cTeleport cancelled by movement!'
+
   TELEPORT_CANCELLED_NO_ITEM:
     enabled: true
     string: '&cYou no longer have a %ITEMNAME%!'
+
   TELEPORT_COOLDOWN:
     enabled: true
     repeat-delay: 1
@@ -173,10 +209,12 @@ messages:
     enabled: true
     repeat-delay: 1
     string: '&cThat destination does not exist!'
+
   TELEPORT_FAIL_NO_BEDSPAWN:
     enabled: true
     repeat-delay: 1
     string: '&3You do not have a bed home set!'
+
   TELEPORT_FAIL_PROXIMITY:
     enabled: true
     repeat-delay: 1
@@ -185,12 +223,15 @@ messages:
   TELEPORT_SUCCESS:
     enabled: true
     string: '&3Successfully teleported to &b%destination%&r&3.'
+
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
     string: '&3Returned to &b%worldname%&3 spawn.'
+
   TELEPORT_WARMUP:
     enabled: true
     string: '&3Teleporting to &b%destination%&3 in &b%warmuptime%...'
+
   TELEPORT_WARMUP_SPAWN:
     enabled: true
     string: '&3Teleporting to &b%worldname%&3 spawn in &b%warmuptime%...'
