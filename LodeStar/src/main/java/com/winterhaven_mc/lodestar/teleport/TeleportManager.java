@@ -51,7 +51,7 @@ public class TeleportManager {
 
         // if player cooldown has not expired, send player cooldown message and return
         if (getCooldownTimeRemaining(player) > 0) {
-            plugin.messageManager.sendPlayerMessage(player, MessageId.TELEPORT_COOLDOWN);
+            plugin.messageManager.sendMessage(player, MessageId.TELEPORT_COOLDOWN);
             return;
         }
 
@@ -84,7 +84,7 @@ public class TeleportManager {
             }
             // if bedspawn location is null and bedspawn-fallback is false, send message and return
             else {
-                plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_FAIL_NO_BEDSPAWN);
+                plugin.messageManager.sendMessage(player,MessageId.TELEPORT_FAIL_NO_BEDSPAWN);
                 plugin.soundConfig.playSound(player,SoundId.TELEPORT_CANCELLED);
                 return;
             }
@@ -147,14 +147,14 @@ public class TeleportManager {
                 displayName = key;
             }
 
-            plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_FAIL_INVALID_DESTINATION,1, displayName);
+            plugin.messageManager.sendMessage(player,MessageId.TELEPORT_FAIL_INVALID_DESTINATION,1, displayName);
             return;
         }
 
         // if player is less than config min-distance from destination, send player proximity message and return
         if (player.getWorld() == location.getWorld()
                 && location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
-            plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_FAIL_PROXIMITY,1, destination.getDisplayName());
+            plugin.messageManager.sendMessage(player,MessageId.TELEPORT_FAIL_PROXIMITY,1, destination.getDisplayName());
             return;
         }
 
@@ -180,11 +180,11 @@ public class TeleportManager {
 
             // if destination is spawn send spawn specific warmup message
             if (destination.isSpawn()) {
-                plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_WARMUP_SPAWN,destination.getDisplayName());
+                plugin.messageManager.sendMessage(player,MessageId.TELEPORT_WARMUP_SPAWN,destination.getDisplayName());
             }
             // otherwise send regular warmup message
             else {
-                plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_WARMUP,destination.getDisplayName());
+                plugin.messageManager.sendMessage(player,MessageId.TELEPORT_WARMUP,destination.getDisplayName());
             }
             // if enabled, play sound effect
             plugin.soundConfig.playSound(player, SoundId.TELEPORT_WARMUP);
