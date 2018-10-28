@@ -6,6 +6,7 @@ import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.DataStoreFactory;
 import com.winterhaven_mc.lodestar.storage.Destination;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
