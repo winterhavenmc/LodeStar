@@ -1,190 +1,236 @@
-# Item Name
-item-name: '&aEstrella de Guía'
-item-name-plural: '&aEstrellas de Guía'
-inventory-item-name: '&aEstrella de Guía: %destination%'
+# Language configuration file for ${project.name} v${project.version}
 
-# Spawn Display Name
-spawn-display-name: 'Origen'
-
-# Home Display Name
-home-display-name: 'Domicilio'
+###########
+# Item Info
+###########
+item_info:
+# Item Display Name
+  ITEM_NAME: '&aEstrella de Guía'
+  ITEM_NAME_PLURAL: '&aEstrellas de Guía'
+  INVENTORY_ITEM_NAME: '&aEstrella de Guía: %destination_name%'
 
 # Item Lore
-item-lore:
-  - '&eSe utiliza para viajar'
-  - '&a %destination%'
+  ITEM_LORE:
+- '&eSe utiliza para viajar'
+- '&a %destination_name%'
+
+# Spawn Display Name
+  SPAWN_DISPLAY_NAME: 'Origen'
+
+# Home Display Name
+  HOME_DISPLAY_NAME: 'Domicilio'
 
 # Custom Messages
 #
 # Variable substitutions:
-# %itemname%            Item name as defined in messages (this file)
-# %playername%          Player's name
-# %playernickname%      Player's nickname
-# %playerdisplayname%   Player's display name, including prefix/suffix
-# %worldname%           World name that player is in
-# %timeremaining%		seconds remaining in cooldown (valid in cooldown message only)
-# %warmuptime%			seconds until teleport (valid in warmup message only)
-# %quantity%			number of items (valid in give command message only)
-# %destination%			display name of teleport destination
-# %targetplayer%		Target player's name
+# %item_name%           Item name as defined in messages (this file)
+# %player_name%         Player's name
+# %world_name%          World name that player is in
+# %destination_name%    display name of teleport destination
+# %target_player%       Target player's name
 #
-# %PLAYERNAME%          Player's name, with no color codes
-# %PLAYERNICKNAME%      Player's nickname, with no color codes
-# %ITEMNAME%            Item name, with no color codes
-# %WORLDNAME%           World name that player is in, with no color codes
-# %DESTINATION%			display name of teleport destination, with no color codes
-# %TARGETPLAYER%		Target player's name, with no color codes
+# %ITEM_NAME%           Item name, with no color codes
+# %PLAYER_NAME%         Player's name, with no color codes
+# %WORLD_NAME%          World name that player is in, with no color codes
+# %DESTINATION_NAME%    display name of teleport destination, with no color codes
+# %TARGET_PLAYER%       Target player's name, with no color codes
+# %QUANTITY%            number of items (valid in give command message only)
+# %COOLDOWN_TIME%       seconds remaining in cooldown (valid in cooldown message only)
+# %WARMUP_TIME%         seconds until teleport (valid in warmup message only)
 
 
 # repeat-delay is the number of seconds to wait before
 # displaying a message again (only used on appropriate messages)
 
 messages:
-  command-fail-args-count-under:
+  COMMAND_FAIL_ARGS_COUNT_UNDER:
     enabled: true
     string: '&3[LodeStar]&c ¡No hay suficientes parámetros!'
-  MessageId.COMMAND_FAIL_ARGS_COUNT_OVER:
+
+  COMMAND_FAIL_ARGS_COUNT_OVER:
     enabled: true
     string: '&3[LodeStar]&c ¡Demasiados parámetros!'
-  MessageId.COMMAND_FAIL_ARGS_COUNT_OVER-spaces:
+
+  COMMAND_FAIL_ARGS_COUNT_OVER-spaces:
     enabled: true
     string: '&3[LodeStar]&c Uso de relieve en lugar de espacios para el nombre de destino.'
-  command-fail-delete-reserved:
+
+  COMMAND_FAIL_DELETE_RESERVED:
     enabled: true
-    string: '&3[LodeStar]&c Destino %destination% no se puede eliminar!'
-  command-fail-console:
+    string: '&3[LodeStar]&c Destino %destination_name% no se puede eliminar!'
+
+  COMMAND_FAIL_CONSOLE:
     enabled: true
     string: '&3[LodeStar]&c ¡Usted debe estar en el juego para utilizar este comando!'
-  command-fail-give-inventory-full:
+
+  COMMAND_FAIL_GIVE_INVENTORY_FULL:
     enabled: true
-    string: '&3No se pudo dar %ITEMNAME% para %playername% porque sus inventario está lleno.'
-  command-fail-invalid-command:
+    string: '&3No se pudo dar %ITEM_NAME% para %player_name% porque sus inventario está lleno.'
+
+  COMMAND_FAIL_INVALID_COMMAND:
     enabled: true
     string: '&3[LodeStar]&c ¡Eso no es un comando válido!'
-  command-fail-invalid-destination:
+
+  COMMAND_FAIL_INVALID_DESTINATION:
     enabled: true
     string: '&3[LodeStar]&c ¡Eso no es un destino válido!'
-  command-fail-invalid-item:
+
+  COMMAND_FAIL_INVALID_ITEM:
     enabled: true
-    string: '&3[LodeStar]&c ¡El tema tiene en sus manos no es una %itemname%!'
-  command-fail-invalid-quantity:
+    string: '&3[LodeStar]&c ¡El tema tiene en sus manos no es una %item_name%!'
+
+  COMMAND_FAIL_INVALID_QUANTITY:
     enabled: true
     string: '&3[LodeStar]&c ¡Cantidad no válida!'
-  command-fail-player-not-found:
+
+  COMMAND_FAIL_PLAYER_NOT_FOUND:
     enabled: true
     string: '&3Ese jugador no pudo ser encontrado.'
-  command-fail-player-not-online:
+
+  COMMAND_FAIL_PLAYER_NOT_ONLINE:
     enabled: true
     string: '&3Ese jugador no está conectado.'
-  command-fail-set-overwrite:
+
+  COMMAND_FAIL_SET_OVERWRITE:
     enabled: true
     string: '&3[LodeStar]&c ¡Destino no se puede sobrescribir!'
-  command-fail-set-reserved:
+
+  COMMAND_FAIL_SET_RESERVED:
     enabled: true
-    string: '&3[LodeStar]&c ¡Destino %destination% está reservado y no se puede ajustar!'
-  command-success-bind:
+    string: '&3[LodeStar]&c ¡Destino %destination_name% está reservado y no se puede ajustar!'
+
+  COMMAND_SUCCESS_BIND:
     enabled: true
-    string: '&3[LodeStar]&bArtículo en la mano ahora vinculado a %destination%.'
-  command-success-delete:
+    string: '&3[LodeStar]&bArtículo en la mano ahora vinculado a %destination_name%.'
+
+  COMMAND_SUCCESS_DELETE:
     enabled: true
-    string: '&3[LodeStar]&c ¡%destination% removed!'
-  command-success-destroy:
+    string: '&3[LodeStar]&c ¡%destination_name% removed!'
+
+  COMMAND_SUCCESS_DESTROY:
     enabled: true
-    string: '&3[LodeStar]&c ¡%ITEMNAME% destruida!'
-  command-success-give:
+    string: '&3[LodeStar]&c ¡%ITEM_NAME% destruida!'
+
+  COMMAND_SUCCESS_GIVE:
     enabled: true
-    string: '&3Usted diste %quantity% %ITEMNAME% a %TARGETPLAYERNAME%.'
-#NOTE: target player refers to item giver in below message!
-  command-success-give-target:
+    string: '&3Usted diste %QUANTITY% %ITEM_NAME% a %TARGETPLAYERNAME%.'
+
+# NOTE: target player refers to item giver in below message!
+  COMMAND_SUCCESS_GIVE_TARGET:
     enabled: true
-    string: '&3%TARGETPLAYER% le dio %quantity% %ITEMNAME%.'
-  command-success-reload:
+    string: '&3%TARGET_PLAYER% le dio %QUANTITY% %ITEM_NAME%.'
+
+  COMMAND_SUCCESS_RELOAD:
     enabled: true
     string: '&3[LodeStar] configuración vuelve a cargar.'
  
-  command-warn-set-numeric-prefix:
+  COMMAND_WARN_SET_NUMERIC_PREFIX:
     enabled: true
     string: '&3[LodeStar]&c Advertencia: Destino comienza con una cantidad válida. Tenga en cuenta cuando se utiliza con el comando &ogive.'
+
 
   permission-denied-bind:
     enabled: true
     string: '&c¡Usted no tiene permiso para enlazar artículos LodeStar a lugares!'
+
   permission-denied-delete:
     enabled: true
     string: '&c¡Usted no tiene permiso para eliminar ubicaciones LodeStar!'
-  permission-denied-destroy:
+
+  PERMISSION_DENIED_DESTROY:
     enabled: true
     string: '&c¡Usted no tiene permiso para destruir elementos LodeStar!'
-  permission-denied-give:
+
+  PERMISSION_DENIED_GIVE:
     enabled: true
     string: '&c¡Usted no tiene permiso para dar elementos LodeStar!'
-  permission-denied-help:
+
+  PERMISSION_DENIED_HELP:
     enabled: true
     string: '&c¡Usted no tiene permiso para ver LodeStar ayuda!!'
-  permission-denied-list:
+
+  PERMISSION_DENIED_LIST:
     enabled: true
     string: '&c¡Usted no tiene permiso para ver la lista de ubicaciones LodeStar!'
-  permission-denied-overwrite:
+
+  PERMISSION_DENIED_OVERWRITE:
      enabled: true
      string: '&c¡Usted no tiene permiso para sobrescribir lugares LodeStar!'
-  permission-denied-reload:
+
+  PERMISSION_DENIED_RELOAD:
     enabled: true
     string: '&c¡Usted no tiene permiso para recargar la configuración!'
-  permission-denied-set:
+
+  PERMISSION_DENIED_SET:
     enabled: true
     string: '&c¡Usted no tiene permiso para establecer lugares de LodeStar!'
-  permission-denied-status:
+
+  PERMISSION_DENIED_STATUS:
     enabled: true
     string: '&c¡Usted no tiene permiso para ver los ajustes LodeStar!'
-  permission-denied-use:
+
+  TELEPORT_DENIED_USE:
     enabled: true
     repeat-delay: 1
-    string: '&cUsted no tiene permiso para usar %ITEMNAME% en %worldname%.'
+    string: '&cUsted no tiene permiso para usar %ITEM_NAME% en %WORLD_NAME%.'
 
-  teleport-cancelled-damage:
+
+  TELEPORT_CANCELLED_DAMAGE:
     enabled: true
     string: '&c¡teletransporte cancelado por daños!'
-  teleport-cancelled-interaction:
+
+  TELEPORT_CANCELLED_INTERACTION:
     enabled: true
     string: '&c¡teletransporte cancelado por la interacción!'
-  teleport-cancelled-movement:
+
+  TELEPORT_CANCELLED_MOVEMENT:
     enabled: true
     string: '&c¡teletransporte cancelado por el movimiento!'
-  teleport-cancelled-no-item:
+
+  TELEPORT_CANCELLED_NO_ITEM:
     enabled: true
-    string: '&c¡Ya no tiene un %ITEMNAME%!'
-  teleport-cooldown:
+    string: '&c¡Ya no tiene un %ITEM_NAME%!'
+
+  TELEPORT_COOLDOWN:
     enabled: true
     repeat-delay: 1
-    string: '&3Tienes que esperar &b%timeremaining%&3 segundos para utilizar otro %ITEMNAME%.'
+    string: '&3Tienes que esperar &b%COOLDOWN_TIME%&3 segundos para utilizar otro %ITEM_NAME%.'
 
-  teleport-fail-invalid-destination:
+
+  TELEPORT_FAIL_INVALID_DESTINATION:
     enabled: true
     repeat-delay: 1
     string: '&c¡Ese destino no existe!'
-  teleport-fail-no-bedspawn:
+
+  TELEPORT_FAIL_BEDSPAWN:
     enabled: true
     repeat-delay: 1
     string: '&3¡Usted no tiene un conjunto de posiciones base!'
-  teleport-fail-proximity:
+
+  TELEPORT_FAIL_PROXIMITY:
     enabled: true
     repeat-delay: 1
-    string: '&3Usted está demasiado cerca de %destination%&r&3 de usar %ITEMNAME%.'
+    string: '&3Usted está demasiado cerca de %destination_name%&r&3 de usar %ITEM_NAME%.'
 
-  teleport-success:
-    enabled: true
-    string: '&3Con éxito teletransportado a &b%destination%.'
-  teleport-success-spawn:
-    enabled: true
-    string: '&3Volviendo al origen de &b%worldname%.'
-  teleport-warmup:
-    enabled: true
-    string: '&3Teletransportarse a %destination% en &b%warmuptime%&3 segundos...'
-  teleport-warmup-spawn:
-    enabled: true
-    string: '&3Teletransportarse a origen en &b%warmuptime%&3 segundos...'
 
-  usage-shift-click:
+  TELEPORT_SUCCESS:
+    enabled: true
+    string: '&3Con éxito teletransportado a &b%destination_name%.'
+
+  TELEPORT_SUCCESS_SPAWN:
+    enabled: true
+    string: '&3Volviendo al origen de &b%world_name%.'
+
+  TELEPORT_WARMUP:
+    enabled: true
+    string: '&3Teletransportarse a %destination_name% en &b%WARMUP_TIME%&3 segundos...'
+
+  TELEPORT_WARMUP_SPAWN:
+    enabled: true
+    string: '&3Teletransportarse a origen en &b%WARMUP_TIME%&3 segundos...'
+
+
+  USAGE_SHIFT_CLICK:
     enabled: true
     repeat-delay: 1
-    string: '&3Usted debe mantener pulsada la tecla Mayús mientras hace clic para utilizar %ITEMNAME%.'
+    string: '&3Usted debe mantener pulsada la tecla Mayús mientras hace clic para utilizar %ITEM_NAME%.'

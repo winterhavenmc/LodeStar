@@ -75,11 +75,12 @@ public final class SimpleAPI {
 		
 		// retrieve item name and lore from language file file
 		String displayName = plugin.messageManager.getInventoryItemName();
+		//noinspection unchecked
 		List<String> configLore = plugin.messageManager.getItemLore();
 
-		// substitute %destination% variable in display name
-		displayName = displayName.replaceAll("%destination%", formattedName);
-		displayName = displayName.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
+		// substitute %destination_name% variable in display name
+		displayName = displayName.replaceAll("%destination_name%", formattedName);
+		displayName = displayName.replaceAll("%DESTINATION_NAME%", ChatColor.stripColor(formattedName));
 
 		// allow for '&' character for color codes in name and lore
 		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
@@ -87,8 +88,8 @@ public final class SimpleAPI {
 		ArrayList<String> coloredLore = new ArrayList<>();
 		
 		for (String line : configLore) {
-			line = line.replaceAll("%destination%", formattedName);
-			line = line.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
+			line = line.replaceAll("%destination_name%", formattedName);
+			line = line.replaceAll("%DESTINATION_NAME%", ChatColor.stripColor(formattedName));
 			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		
