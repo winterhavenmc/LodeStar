@@ -82,7 +82,7 @@
 							<artifactSet>
 								<includes>
 									<include>com.winterhaven-mc:world-manager-lib</include>
-									<include>com.winterhaven-mc:language-manager-lib</include>
+									<include>com.winterhaven-mc:message-manager-lib</include>
 									<include>com.winterhaven-mc:sound-manager-lib</include>
 								</includes>
 							</artifactSet>
