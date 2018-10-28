@@ -25,8 +25,8 @@ public final class SimpleAPI {
 	// static reference to main class
 	private final static PluginMain plugin = PluginMain.instance;
 
-	// item tag
-	private final static String itemTag = hiddenString("SSv2");
+	// create item tag string
+	private final static String itemTag = plugin.messageManager.createHiddenString("SSv2");
 
 	// private constructor to prevent instantiation
 	private SimpleAPI() {
@@ -93,8 +93,8 @@ public final class SimpleAPI {
 			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		
-		String hiddenDestination = hiddenString(key);
-		String hiddenSeparator = hiddenString("|");
+		String hiddenDestination = plugin.messageManager.createHiddenString(key);
+		String hiddenSeparator = plugin.messageManager.createHiddenString("|");
 		
 		// set invisible tag in first line of lore
 		coloredLore.set(0, itemTag + hiddenSeparator + hiddenDestination + hiddenSeparator + coloredLore.get(0));
@@ -261,14 +261,6 @@ public final class SimpleAPI {
 
 	
 	
-	private static String hiddenString(final String s) {
-		StringBuilder hidden = new StringBuilder();
-		for (char c : s.toCharArray())
-			hidden.append(ChatColor.COLOR_CHAR + "").append(c);
-		return hidden.toString();
-	}
-	
-
 	@SuppressWarnings("unused")
 	public static String getItemName() {
 		return plugin.messageManager.getItemName();
