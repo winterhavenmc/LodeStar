@@ -40,18 +40,18 @@
 			<version>1.0.5</version>
 		</dependency>
 
-		<!-- LanguageManagerLib -->
+		<!-- MessageManagerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>language-manager-lib</artifactId>
-			<version>1.1.0</version>
+			<artifactId>message-manager-lib</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
-		<!-- SoundManagerLib -->
+		<!-- SoundConfigLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>sound-manager-lib</artifactId>
-			<version>1.0.5</version>
+			<artifactId>sound-config-lib</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 

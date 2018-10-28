@@ -1,12 +1,10 @@
 package com.winterhaven_mc.lodestar.messages;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
 import com.winterhaven_mc.util.YamlLanguageManager;
 import com.winterhaven_mc.util.LanguageManager;
-import com.winterhaven_mc.util.SoundManager;
 import com.winterhaven_mc.util.StringUtil;
 
 import org.bukkit.ChatColor;
@@ -38,9 +36,6 @@ public class MessageManager {
 	// language manager
 	private final LanguageManager languageManager;
 
-	// sound manager
-	private final SoundManager soundManager;
-
 	// configuration object for messages
 	private Configuration messages;
 
@@ -60,9 +55,6 @@ public class MessageManager {
 
 		// instantiate messageFileHelper
 		this.languageManager = new YamlLanguageManager(plugin);
-
-		// instantiate sound manager
-		this.soundManager = new SoundManager(plugin);
 
 		// load messages from file
 		this.messages = languageManager.loadMessages();
@@ -278,16 +270,6 @@ public class MessageManager {
 
 
 	/**
-	 * Play sound
-	 * @param sender command sender (player) to play sound
-	 * @param soundId unique identifier that refers to sound in sounds.yml
-	 */
-	public final void sendPlayerSound(final CommandSender sender, final SoundId soundId) {
-		this.soundManager.playerSound(sender,soundId.toString());
-	}
-
-
-	/**
 	 * Add entry to message cooldown map
 	 * @param player the player to insert in the message cooldown map
 	 * @param messageId the message identifier to insert in the cooldown map
@@ -338,9 +320,6 @@ public class MessageManager {
 
 		// reload messages
 		this.messages = languageManager.loadMessages();
-
-		// reload sounds
-		soundManager.reload();
 	}
 
 

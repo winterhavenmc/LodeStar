@@ -150,7 +150,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// send invalid command message
 		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_COMMAND);
-		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+		plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 		displayUsage(sender,"help");
 		return true;
 	}
@@ -166,7 +166,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if command sender does not have permission to view status, output error message and return true
 		if (!sender.hasPermission("lodestar.status")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_STATUS);
-			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -241,7 +241,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if sender does not have permission to reload config, send error message and return true
 		if (!sender.hasPermission("lodestar.reload")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_RELOAD);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -298,7 +298,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check that sender has permission
 		if (!sender.hasPermission("lodestar.destroy")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_DESTROY);
-			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -310,7 +310,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if too many arguments, send error and usage message
 		if (args.length > maxArgs) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_OVER);
-			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;				
 		}
@@ -321,7 +321,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check that player is holding a LodeStar item
 		if (!SimpleAPI.isLodeStar(playerItem)) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_ITEM);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 		int quantity = playerItem.getAmount();
@@ -329,7 +329,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
 		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_DESTROY,quantity,destinationName);
-		plugin.messageManager.sendPlayerSound(player,SoundId.COMMAND_SUCCESS_DESTROY);
+		plugin.soundConfig.playSound(player,SoundId.COMMAND_SUCCESS_DESTROY);
 		return true;
 	}
 
@@ -362,14 +362,14 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check for permission
 		if (!sender.hasPermission("lodestar.set")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_SET);
-			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.length < minArgs) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
-			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
@@ -383,7 +383,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check if destination name is a reserved name
 		if (SimpleAPI.isReservedName(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_SET_RESERVED,destinationName);
-			plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -393,7 +393,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check for overwrite permission if destination already exists
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_OVERWRITE,destinationName);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -412,7 +412,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_SET,destinationName);
 
 		// play sound effect
-		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_SUCCESS_SET);
+		plugin.soundConfig.playSound(sender,SoundId.COMMAND_SUCCESS_SET);
 		return true;
 	}
 
@@ -428,7 +428,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check for permission
 		if (!sender.hasPermission("lodestar.delete")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_DELETE);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 		// convert args list to ArrayList so we can remove elements as we parse them
@@ -446,7 +446,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		if (args.length < minArgs) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
 			displayUsage(sender, subcmd);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -456,14 +456,14 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// test that destination name is not reserved name
 		if (SimpleAPI.isReservedName(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_DELETE_RESERVED,destinationName);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// test that destination name is valid
 		if (!SimpleAPI.isValidDestination(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_DESTINATION,destinationName);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -474,7 +474,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_DELETE,destinationName);
 
 		// play sound effect
-		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_SUCCESS_DELETE);
+		plugin.soundConfig.playSound(sender,SoundId.COMMAND_SUCCESS_DELETE);
 		return true;
 	}
 
@@ -496,7 +496,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check sender has permission
 		if (!sender.hasPermission("lodestar.bind")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_BIND);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -514,7 +514,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// check minimum arguments
 		if (args.length < minArgs) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
@@ -525,7 +525,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// test that destination name is valid
 		if (!SimpleAPI.isValidDestination(destinationName)) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_DESTINATION,destinationName);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -537,7 +537,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!SimpleAPI.isDefaultItem(playerItem)) {
 				plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_ITEM,destinationName);
-				plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 				return true;
 			}
 		}
@@ -555,7 +555,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_SUCCESS_BIND, destinationName);
 
 		// play sound effect
-		plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_SUCCESS_BIND);
+		plugin.soundConfig.playSound(sender,SoundId.COMMAND_SUCCESS_BIND);
 		return true;
 	}
 
@@ -571,7 +571,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission("lodestar.list")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_LIST);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -581,7 +581,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		if (args.length > maxArgs) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_OVER);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
@@ -627,7 +627,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if command sender does not have permission to display help, output error message and return true
 		if (!sender.hasPermission("lodestar.help")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_HELP);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -684,7 +684,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.PERMISSION_DENIED_GIVE);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -703,7 +703,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if too few arguments, send error and usage message
 		if (args.length < minArgs) {
 			plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER);
-			plugin.messageManager.sendPlayerSound(sender, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender, subcmd);
 			return true;
 		}
@@ -820,7 +820,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			// else given destination is invalid (but not blank), so send error message
 			else {
 				plugin.messageManager.sendPlayerMessage(sender,MessageId.COMMAND_FAIL_INVALID_DESTINATION,testName);
-				plugin.messageManager.sendPlayerSound(sender,SoundId.COMMAND_FAIL);
+				plugin.soundConfig.playSound(sender,SoundId.COMMAND_FAIL);
 				return true;
 			}
 		}		
@@ -891,7 +891,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// test that item is a LodeStar item
 		if (!SimpleAPI.isLodeStar(itemStack)) {
 			plugin.messageManager.sendPlayerMessage(giver,MessageId.COMMAND_FAIL_INVALID_ITEM);
-			plugin.messageManager.sendPlayerSound(giver, SoundId.COMMAND_FAIL);
+			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -925,7 +925,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 			// if giver is in game, play sound
 			if (giver instanceof Player) {
-				plugin.messageManager.sendPlayerSound(giver,SoundId.COMMAND_SUCCESS_GIVE_SENDER);
+				plugin.soundConfig.playSound(giver,SoundId.COMMAND_SUCCESS_GIVE_SENDER);
 			}
 			
 			// send message to target player
@@ -933,7 +933,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 					destinationName,giver.getName());
 		}
 		// play sound to target player
-		plugin.messageManager.sendPlayerSound(targetPlayer,SoundId.COMMAND_SUCCESS_GIVE_TARGET);
+		plugin.soundConfig.playSound(targetPlayer,SoundId.COMMAND_SUCCESS_GIVE_TARGET);
 		return true;
 	}
 

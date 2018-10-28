@@ -71,7 +71,7 @@ public class PlayerEventListener implements Listener {
 					plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_CANCELLED_INTERACTION);
 
 					// play sound effects if enabled
-					plugin.messageManager.sendPlayerSound(player,SoundId.TELEPORT_CANCELLED);
+					plugin.soundConfig.playSound(player,SoundId.TELEPORT_CANCELLED);
 					return;
 				}
 			}
@@ -106,7 +106,7 @@ public class PlayerEventListener implements Listener {
 		// if player does not have LodeStar.use permission, send message and return
 		if (!player.hasPermission("lodestar.use")) {
 			plugin.messageManager.sendPlayerMessage(player,MessageId.PERMISSION_DENIED_USE);
-			plugin.messageManager.sendPlayerSound(player,SoundId.TELEPORT_CANCELLED);
+			plugin.soundConfig.playSound(player,SoundId.TELEPORT_CANCELLED);
 			return;
 		}
 
@@ -199,7 +199,7 @@ public class PlayerEventListener implements Listener {
 				if (plugin.teleportManager.isWarmingUp(player)) {
 					plugin.teleportManager.cancelTeleport(player);
 					plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_CANCELLED_DAMAGE);
-					plugin.messageManager.sendPlayerSound(player, SoundId.TELEPORT_CANCELLED);
+					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				}
 			}
 		}
@@ -227,7 +227,7 @@ public class PlayerEventListener implements Listener {
 			if (event.getFrom().distance(event.getTo()) > 0) {
 				plugin.teleportManager.cancelTeleport(player);
 				plugin.messageManager.sendPlayerMessage(player,MessageId.TELEPORT_CANCELLED_MOVEMENT);
-				plugin.messageManager.sendPlayerSound(player,SoundId.TELEPORT_CANCELLED);
+				plugin.soundConfig.playSound(player,SoundId.TELEPORT_CANCELLED);
 			}
 		}
 	}
