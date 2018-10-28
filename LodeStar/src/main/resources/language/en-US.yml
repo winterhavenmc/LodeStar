@@ -33,12 +33,6 @@ time_strings:
 # Custom Messages
 #
 # Variable substitutions:
-# %item_name%           Item name as defined in messages (this file)
-# %player_name%         Player's name
-# %world_name%          World name that player is in
-# %destination_name%    display name of teleport destination
-# %target_player%       Target player's name
-#
 # %ITEM_NAME%           Item name, with no color codes
 # %PLAYER_NAME%         Player's name, with no color codes
 # %WORLD_NAME%          World name that player is in, with no color codes
@@ -47,6 +41,12 @@ time_strings:
 # %QUANTITY%            number of items (valid in give command message only)
 # %COOLDOWN_TIME%       seconds remaining in cooldown (valid in cooldown message only)
 # %WARMUP_TIME%         seconds until teleport (valid in warmup message only)
+#
+# %item_name%           Item name as defined in messages (this file)
+# %player_name%         Player's name
+# %world_name%          World name that player is in
+# %destination_name%    display name of teleport destination
+# %target_player%       Target player's name
 
 
 # repeat-delay is the number of seconds to wait before
