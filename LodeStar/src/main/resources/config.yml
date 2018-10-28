@@ -3,9 +3,6 @@
 # localized language support
 language: en-US
 
-# data store type ( sqlite | yaml )
-storage-type: sqlite
-
 # If this list is empty, all worlds will be added to the enabled worlds list
 enabled-worlds:
 #  - enabled_world1
