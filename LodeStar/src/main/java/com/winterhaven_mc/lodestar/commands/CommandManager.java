@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -194,11 +195,13 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		sender.sendMessage(ChatColor.GREEN + "Warmup: "
 				+ ChatColor.RESET
-				+ plugin.messageManager.getTimeString(plugin.getConfig().getInt("teleport-warmup")));
+				+ plugin.messageManager.getTimeString(TimeUnit.SECONDS.toMillis(
+				plugin.getConfig().getInt("teleport-warmup"))));
 
 		sender.sendMessage(ChatColor.GREEN + "Cooldown: "
 				+ ChatColor.RESET
-				+ plugin.messageManager.getTimeString(plugin.getConfig().getInt("teleport-cooldown")));
+				+ plugin.messageManager.getTimeString(TimeUnit.SECONDS.toMillis(
+				plugin.getConfig().getInt("teleport-cooldown"))));
 
 		sender.sendMessage(ChatColor.GREEN + "Shift-click required: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));
@@ -237,7 +240,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	private boolean reloadCommand(final CommandSender sender, final String args[]) {
+	private boolean reloadCommand(final CommandSender sender, final String[] args) {
 
 		// if sender does not have permission to reload config, send error message and return true
 		if (!sender.hasPermission("lodestar.reload")) {
@@ -288,7 +291,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	private boolean destroyCommand(final CommandSender sender, final String args[]) {
+	private boolean destroyCommand(final CommandSender sender, final String[] args) {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
@@ -341,7 +344,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
      */
-	private boolean setCommand(final CommandSender sender, final String args[]) {
+	private boolean setCommand(final CommandSender sender, final String[] args) {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
@@ -424,7 +427,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	private boolean deleteCommand(final CommandSender sender, final String args[]) {
+	private boolean deleteCommand(final CommandSender sender, final String[] args) {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.delete")) {
@@ -486,7 +489,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	private boolean bindCommand(final CommandSender sender, final String args[]) {
+	private boolean bindCommand(final CommandSender sender, final String[] args) {
 
 		// command sender must be player
 		if (!(sender instanceof Player)) {
@@ -567,7 +570,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	private boolean listCommand(final CommandSender sender, final String args[]) {
+	private boolean listCommand(final CommandSender sender, final String[] args) {
 
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission("lodestar.list")) {
@@ -623,7 +626,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	private boolean helpCommand(final CommandSender sender, final String args[]) {
+	private boolean helpCommand(final CommandSender sender, final String[] args) {
 
 		// if command sender does not have permission to display help, output error message and return true
 		if (!sender.hasPermission("lodestar.help")) {
@@ -680,7 +683,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
 	@SuppressWarnings("deprecation")
-	private boolean giveCommand(final CommandSender sender, final String args[]) {
+	private boolean giveCommand(final CommandSender sender, final String[] args) {
 
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
@@ -785,7 +788,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 
 		// try to parse next argument as material
 		if (!arguments.isEmpty()) {
-			String materialElements[] = arguments.get(0).split("\\s*:\\s*");
+			String[] materialElements = arguments.get(0).split("\\s*:\\s*");
 
 			// try to match material
 			if (materialElements.length > 0) {
@@ -834,7 +837,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		// if no material set or default-material-only configured true, try to parse material from config
 		if (material == null || plugin.getConfig().getBoolean("default-material-only")) {
 
-			String materialElements[] = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
+			String[] materialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
 
 			// try to match material
 			if (materialElements.length > 0) {
