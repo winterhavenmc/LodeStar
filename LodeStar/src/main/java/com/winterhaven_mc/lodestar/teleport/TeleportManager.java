@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 
 public class TeleportManager {
@@ -21,10 +22,10 @@ public class TeleportManager {
     // reference to main class
     private final PluginMain plugin;
 
-    // HashMap of player UUIDs and warmup times
+    // HashMap containing player UUID as key and warmup task id as value
     private ConcurrentHashMap<UUID,Integer> warmupMap;
 
-    // hashmap to store player uuids and cooldown expire times
+    // hashmap to store player UUID and cooldown expire time in milliseconds
     private ConcurrentHashMap<UUID, Long> cooldownMap;
 
 
@@ -269,28 +270,28 @@ public class TeleportManager {
      */
     void setPlayerCooldown(final Player player) {
 
-        int cooldown_seconds = plugin.getConfig().getInt("teleport-cooldown");
+        int cooldownSeconds = plugin.getConfig().getInt("teleport-cooldown");
 
-        Long expiretime = System.currentTimeMillis() + (cooldown_seconds * 1000);
-        cooldownMap.put(player.getUniqueId(), expiretime);
+        Long expireTime = System.currentTimeMillis() + (TimeUnit.SECONDS.toMillis(cooldownSeconds));
+        cooldownMap.put(player.getUniqueId(), expireTime);
         new BukkitRunnable(){
 
             public void run() {
                 cooldownMap.remove(player.getUniqueId());
             }
-        }.runTaskLater(plugin, (cooldown_seconds * 20));
+        }.runTaskLater(plugin, (cooldownSeconds * 20));
     }
 
 
     /**
      * Get time remaining for player cooldown
      * @param player the player whose cooldown time remaining is being retrieved
-     * @return long remainingtime
+     * @return long remaining time in milliseconds
      */
     public long getCooldownTimeRemaining(final Player player) {
         long remainingTime = 0;
         if (cooldownMap.containsKey(player.getUniqueId())) {
-            remainingTime = (cooldownMap.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000;
+            remainingTime = (cooldownMap.get(player.getUniqueId()) - System.currentTimeMillis());
         }
         return remainingTime;
     }
