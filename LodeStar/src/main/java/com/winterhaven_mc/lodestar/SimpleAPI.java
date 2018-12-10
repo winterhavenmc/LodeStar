@@ -143,7 +143,6 @@ public final class SimpleAPI {
 	 * @param itemStack the ItemStack to test if default LodeStar item
 	 * @return {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
 	 */
-	@SuppressWarnings("deprecation")
 	public static boolean isDefaultItem(final ItemStack itemStack) {
 		
 		if (plugin.debug) {
