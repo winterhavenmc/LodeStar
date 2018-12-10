@@ -11,8 +11,8 @@ ITEM_INFO:
 
 # Item Lore
   ITEM_LORE:
-- '&eSe utiliza para viajar'
-- '&a %destination_name%'
+  - '&eSe utiliza para viajar'
+  - '&a %destination_name%'
 
 # Spawn Display Name
   SPAWN_DISPLAY_NAME: 'Origen'
@@ -20,8 +20,21 @@ ITEM_INFO:
 # Home Display Name
   HOME_DISPLAY_NAME: 'Domicilio'
 
+# Time strings
+TIME_STRINGS:
+  DAY: 'día'
+  DAYS: 'días'
+  HOUR: 'hora'
+  HOUR_PLURAL: 'horas'
+  MINUTE: 'minuto'
+  MINUTE_PLURAL: 'minutos'
+  SECOND: 'segundo'
+  SECOND_PLURAL: 'segundos'
+
+
 # Custom Messages
 #
+# Variable substitutions:
 # %ITEM_NAME%           Item name, with no color codes
 # %PLAYER_NAME%         Player's name, with no color codes
 # %WORLD_NAME%          World name that player is in, with no color codes
@@ -31,7 +44,6 @@ ITEM_INFO:
 # %COOLDOWN_TIME%       seconds remaining in cooldown (valid in cooldown message only)
 # %WARMUP_TIME%         seconds until teleport (valid in warmup message only)
 #
-# Variable substitutions:
 # %item_name%           Item name as defined in messages (this file)
 # %player_name%         Player's name
 # %world_name%          World name that player is in
