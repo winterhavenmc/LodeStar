@@ -3,7 +3,7 @@
 ###########
 # Item Info
 ###########
-item_info:
+ITEM_INFO:
   # Item Display Name
   ITEM_NAME: '&aLodeStar'
   ITEM_NAME_PLURAL: '&aLodeStars'
@@ -16,12 +16,14 @@ item_info:
 
 # Spawn Display Name
   SPAWN_DISPLAY_NAME: 'spawn'
-  
+
 # Home Display Name
   HOME_DISPLAY_NAME: 'home'
 
 # Time strings
-time_strings:
+TIME_STRINGS:
+  DAY: 'day'
+  DAY_PLURAL: 'days'
   HOUR: 'hour'
   HOUR_PLURAL: 'hours'
   MINUTE: 'minute'
@@ -52,7 +54,7 @@ time_strings:
 # repeat-delay is the number of seconds to wait before
 # displaying a message again (only used on appropriate messages)
 
-messages:
+MESSAGES:
   COMMAND_FAIL_ARGS_COUNT_UNDER:
     enabled: true
     string: '&3[LodeStar]&c Too few arguments!'
@@ -107,16 +109,16 @@ messages:
 
   COMMAND_FAIL_SET_RESERVED:
     enabled: true
-    string: '&3[LodeStar]&c Destination &6%destination_name%&c is reserved and cannot be set!'
+    string: '&3[LodeStar]&c Destination &6%DESTINATION_NAME%&c is reserved and cannot be set!'
 
 
   COMMAND_SUCCESS_BIND:
     enabled: true
-    string: '&3[LodeStar]&b Item in hand now linked to &2%destination_name%&b.'
+    string: '&3[LodeStar]&b Item in hand now linked to &2%DESTINATION_NAME%&b.'
 
   COMMAND_SUCCESS_DELETE:
     enabled: true
-    string: '&3[LodeStar]&c %destination_name% removed!'
+    string: '&3[LodeStar]&c %DESTINATION_NAME% removed!'
 
   COMMAND_SUCCESS_DESTROY:
     enabled: true
@@ -137,7 +139,7 @@ messages:
 
   COMMAND_SUCCESS_SET:
     enabled: true
-    string: '&3[LodeStar]&b Destination &2%destination_name%&b set.'
+    string: '&3[LodeStar]&b Destination &2%DESTINATION_NAME%&b set.'
 
   COMMAND_WARN_SET_NUMERIC_PREFIX:
     enabled: true
@@ -224,11 +226,11 @@ messages:
   TELEPORT_FAIL_PROXIMITY:
     enabled: true
     repeat-delay: 1
-    string: '&3You are too close to %destination_name%&r&3 to use a %ITEM_NAME%.'
+    string: '&3You are too close to %DESTINATION_NAME%&r&3 to use a %ITEM_NAME%.'
 
   TELEPORT_SUCCESS:
     enabled: true
-    string: '&3Successfully teleported to &b%destination_name%&r&3.'
+    string: '&3Successfully teleported to &b%DESTINATION_NAME%&r&3.'
 
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
@@ -236,7 +238,7 @@ messages:
 
   TELEPORT_WARMUP:
     enabled: true
-    string: '&3Teleporting to &b%destination_name%&3 in &b%WARMUP_TIME%...'
+    string: '&3Teleporting to &b%DESTINATION_NAME%&3 in &b%WARMUP_TIME%...'
 
   TELEPORT_WARMUP_SPAWN:
     enabled: true
