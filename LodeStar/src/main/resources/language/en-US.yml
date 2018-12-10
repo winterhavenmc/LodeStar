@@ -30,6 +30,7 @@ TIME_STRINGS:
   MINUTE_PLURAL: 'minutes'
   SECOND: 'second'
   SECOND_PLURAL: 'seconds'
+  UNLIMITED: 'unlimited time'
 
 
 # Custom Messages
