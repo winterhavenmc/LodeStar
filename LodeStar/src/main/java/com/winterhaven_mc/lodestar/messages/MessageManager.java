@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -54,7 +55,9 @@ public class MessageManager extends AbstractMessageManager {
 		replacements.put("%TARGET_PLAYER%","target player");
 		replacements.put("%QUANTITY%","1");
 		replacements.put("%MATERIAL%","unknown");
-		replacements.put("%WARMUP_TIME%",getTimeString(plugin.getConfig().getInt("teleport-warmup")));
+		replacements.put("%WARMUP_TIME%",
+				getTimeString(TimeUnit.SECONDS.toMillis(plugin.getConfig().getInt("teleport-warmup"))));
+
 
 		// retain color codes
 		replacements.put("%player_name%",recipient.getName());
@@ -199,28 +202,8 @@ public class MessageManager extends AbstractMessageManager {
 	}
 
 
-	/**
-	 * Get configured plural item name from language file
-	 * @return the formatted plural display name of the LodeStar item
-	 */
-	@SuppressWarnings({"WeakerAccess","unused"})
-	public final String getItemNamePlural() {
-		return messages.getString("item-name-plural");
-	}
-
-
 	public String getInventoryItemName() {
-		return messages.getString("INVENTORY_ITEM_NAME");
-	}
-
-
-	public String getSpawnDisplayName() {
-		return messages.getString("SPAWN_DISPLAY_NAME");
-	}
-
-
-	public String getHomeDisplayName() {
-		return messages.getString("HOME_DISPLAY_NAME");
+		return messages.getString("ITEM_INFO.INVENTORY_ITEM_NAME");
 	}
 
 }
