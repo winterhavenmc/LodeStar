@@ -3,7 +3,7 @@
 ###########
 # Item Info
 ###########
-item_info:
+ITEM_INFO:
 # Item Display Name
   ITEM_NAME: '&aEstrella de Guía'
   ITEM_NAME_PLURAL: '&aEstrellas de Guía'
@@ -42,7 +42,7 @@ item_info:
 # repeat-delay is the number of seconds to wait before
 # displaying a message again (only used on appropriate messages)
 
-messages:
+MESSAGES:
   COMMAND_FAIL_ARGS_COUNT_UNDER:
     enabled: true
     string: '&3[LodeStar]&c ¡No hay suficientes parámetros!'
