@@ -61,7 +61,7 @@ cancel-on-movement: false
 # cancel teleport if player interacts with another block
 cancel-on-interaction: false
 
-# maximum number of spawn star items that can be given at once (-1 for no limit)
+# maximum number of LodeStar items that can be given at once (-1 for no limit)
 max-give-amount: -1
 
 # if player is in netherworld, try to respawn in matching overworld
