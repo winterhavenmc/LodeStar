@@ -75,7 +75,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		if (args.length == 1) {
 
 			for (String subcommand : subcommands) {
-				if (sender.hasPermission("homestar." + subcommand)
+				if (sender.hasPermission("lodestar." + subcommand)
 						&& subcommand.startsWith(args[0].toLowerCase())) {
 					returnList.add(subcommand);
 				}
