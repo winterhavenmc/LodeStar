@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>message-manager-lib</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3</version>
 		</dependency>
 
 		<!-- SoundConfigLib -->
@@ -83,7 +83,7 @@
 								<includes>
 									<include>com.winterhaven-mc:world-manager-lib</include>
 									<include>com.winterhaven-mc:message-manager-lib</include>
-									<include>com.winterhaven-mc:sound-manager-lib</include>
+									<include>com.winterhaven-mc:sound-config-lib</include>
 								</includes>
 							</artifactSet>
 							<relocations>

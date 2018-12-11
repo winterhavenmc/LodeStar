@@ -86,8 +86,8 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	}
 
 
-	/** command executor method for LodeStar
-	 * 
+	/**
+	 * command executor method for LodeStar
 	 */
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, 
@@ -682,7 +682,6 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	@SuppressWarnings("deprecation")
 	private boolean giveCommand(final CommandSender sender, final String[] args) {
 
 		// if command sender does not have permission to give LodeStars, output error message and return true
@@ -735,7 +734,6 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		int quantity = 1;
 
 		Material material = null;
-		byte materialDataByte = 0;
 
 		// try to parse first argument as integer quantity
 		if (!arguments.isEmpty()) {
@@ -761,15 +759,14 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			}
 
 			Player player = (Player) sender;
-			ItemStack playerItem = player.getInventory().getItemInHand().clone();
+			ItemStack playerItem = player.getInventory().getItemInMainHand().clone();
 
 			// if item in hand is a LodeStar item, set destination and material from item
 			if (SimpleAPI.isLodeStar(playerItem)) {
 
 				destinationName = SimpleAPI.getDestinationName(playerItem);
 				material = playerItem.getType();
-				materialDataByte = playerItem.getData().getData();
-			}			
+			}
 		}
 
 		// try to parse all remaining arguments as destinationName
@@ -795,15 +792,6 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 				material = Material.matchMaterial(materialElements[0]);
 			}
 
-			// if data set, try to parse as byte; set to zero if it doesn't parse
-			if (materialElements.length > 1) {
-				try {
-					materialDataByte = Byte.parseByte(materialElements[1]);
-				}
-				catch (NumberFormatException e2) {
-					materialDataByte = (byte) 0;
-				}
-			}
 			// if material matched, remove argument from list
 			if (material != null) {
 				arguments.remove(0);
@@ -843,16 +831,6 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 			if (materialElements.length > 0) {
 				material = Material.matchMaterial(materialElements[0]);
 			}
-
-			// if data set, try to parse as byte; set to zero if it doesn't parse
-			if (materialElements.length > 1) {
-				try {
-					materialDataByte = Byte.parseByte(materialElements[1]);
-				}
-				catch (NumberFormatException e2) {
-					materialDataByte = (byte) 0;
-				}
-			}
 		}
 		// if still no material match, set to nether star
 		if (material == null) {
@@ -860,7 +838,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 		}
 
 		// create item stack with material, quantity and data
-		ItemStack itemStack = new ItemStack(material, quantity, (short) 0, materialDataByte);
+		ItemStack itemStack = new ItemStack(material, quantity);
 
 		// set item metadata on item stack
 		SimpleAPI.setMetaData(itemStack, destinationName);
@@ -1047,7 +1025,7 @@ public class CommandManager implements CommandExecutor,TabCompleter {
 				sender.sendMessage(usageColor + "/lodestar give <player> [quantity] [destination_name]");				
 			}
 			else {
-				sender.sendMessage(usageColor + "/lodestar give <player> [quantity] [material][:data] [destination_name]");
+				sender.sendMessage(usageColor + "/lodestar give <player> [quantity] [material] [destination_name]");
 			}
 		}
 	}
