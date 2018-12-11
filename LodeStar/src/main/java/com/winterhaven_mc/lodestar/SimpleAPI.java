@@ -25,8 +25,8 @@ public final class SimpleAPI {
 	// static reference to main class
 	private final static PluginMain plugin = PluginMain.instance;
 
-	// item tag
-	private final static String itemTag = hiddenString("SSv2");
+	// create item tag string
+	private final static String itemTag = plugin.messageManager.createHiddenString("SSv2");
 
 	// private constructor to prevent instantiation
 	private SimpleAPI() {
@@ -75,25 +75,26 @@ public final class SimpleAPI {
 		
 		// retrieve item name and lore from language file file
 		String displayName = plugin.messageManager.getInventoryItemName();
+		//noinspection unchecked
 		List<String> configLore = plugin.messageManager.getItemLore();
 
-		// substitute %destination% variable in display name
-		displayName = displayName.replaceAll("%destination%", formattedName);
-		displayName = displayName.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
+		// substitute %destination_name% variable in display name
+		displayName = displayName.replaceAll("%destination_name%", formattedName);
+		displayName = displayName.replaceAll("%DESTINATION_NAME%", ChatColor.stripColor(formattedName));
 
 		// allow for '&' character for color codes in name and lore
 		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
 
-		ArrayList<String> coloredLore = new ArrayList<String>();
+		ArrayList<String> coloredLore = new ArrayList<>();
 		
 		for (String line : configLore) {
-			line = line.replaceAll("%destination%", formattedName);
-			line = line.replaceAll("%DESTINATION%", ChatColor.stripColor(formattedName));
+			line = line.replaceAll("%destination_name%", formattedName);
+			line = line.replaceAll("%DESTINATION_NAME%", ChatColor.stripColor(formattedName));
 			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		
-		String hiddenDestination = hiddenString(key);
-		String hiddenSeparator = hiddenString("|");
+		String hiddenDestination = plugin.messageManager.createHiddenString(key);
+		String hiddenSeparator = plugin.messageManager.createHiddenString("|");
 		
 		// set invisible tag in first line of lore
 		coloredLore.set(0, itemTag + hiddenSeparator + hiddenDestination + hiddenSeparator + coloredLore.get(0));
@@ -142,7 +143,6 @@ public final class SimpleAPI {
 	 * @param itemStack the ItemStack to test if default LodeStar item
 	 * @return {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
 	 */
-	@SuppressWarnings("deprecation")
 	public static boolean isDefaultItem(final ItemStack itemStack) {
 		
 		if (plugin.debug) {
@@ -154,26 +154,8 @@ public final class SimpleAPI {
 			return false;
 		}
 
-		Material material = null;
-		byte materialDataByte = 0;
-		
-		// try to match default material from config
-		String[] materialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
-
 		// try to match material
-		if (materialElements.length > 0) {
-			material = Material.matchMaterial(materialElements[0]);
-		}
-
-		// try to match material data
-		if (materialElements.length > 1) {
-			try {
-				materialDataByte = Byte.parseByte(materialElements[1]);
-			}
-			catch (NumberFormatException e2) {
-				materialDataByte = (byte) 0;
-			}
-		}
+		Material material = Material.matchMaterial(plugin.getConfig().getString("default-material"));
 
 		// if no match set to nether star
 		if (material == null) {
@@ -181,7 +163,7 @@ public final class SimpleAPI {
 		}
 
 		// if material and data match defaults return true
-		return itemStack.getType().equals(material) && itemStack.getData().getData() == materialDataByte;
+		return itemStack.getType().equals(material);
 	}
 
 	
@@ -278,14 +260,6 @@ public final class SimpleAPI {
 
 	
 	
-	private static String hiddenString(final String s) {
-		String hidden = "";
-		for (char c : s.toCharArray())
-			hidden += ChatColor.COLOR_CHAR + "" + c;
-		return hidden;
-	}
-	
-
 	@SuppressWarnings("unused")
 	public static String getItemName() {
 		return plugin.messageManager.getItemName();
@@ -411,37 +385,16 @@ public final class SimpleAPI {
 	@SuppressWarnings("WeakerAccess")
 	public static ItemStack getDefaultItem() {
 		
-		// get material type and data from config file
-		String[] configMaterialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
-		
-		// try to match material
-		Material configMaterial = Material.matchMaterial(configMaterialElements[0]);
+		// try to match material type to string in config file
+		Material configMaterial = Material.matchMaterial(plugin.getConfig().getString("default-material"));
 		
 		// if no match default to nether star
 		if (configMaterial == null) {
 			configMaterial = Material.NETHER_STAR;
 		}
-		
-		// parse material data from config file if present
-		byte configMaterialDataByte;
-		
-		// if data set in config try to parse as byte; set to zero if it doesn't parse
-		if (configMaterialElements.length > 1) {
-			try {
-				configMaterialDataByte = Byte.parseByte(configMaterialElements[1]);
-			}
-			catch (NumberFormatException e) {
-				configMaterialDataByte = (byte) 0;
-			}
-		}
-		// if no data set in config default to zero
-		else {
-			configMaterialDataByte = (byte) 0;
-		}
-		
-		// create item stack with configured material and data
 
-		return new ItemStack(configMaterial,1,configMaterialDataByte);
+		// create a one item stack with configured material
+		return new ItemStack(configMaterial,1);
 	}
 
 	

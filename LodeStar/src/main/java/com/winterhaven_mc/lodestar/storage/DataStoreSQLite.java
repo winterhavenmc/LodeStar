@@ -230,7 +230,7 @@ class DataStoreSQLite extends DataStore {
 	@Override
 	public List<String> getAllKeys() {
 
-		List<String> returnList = new ArrayList<String>();
+		List<String> returnList = new ArrayList<>();
 
 		// sql statement to retrieve all display names
 		final String sqlSelectAllKeys = "SELECT key FROM destinations ORDER BY key";
@@ -264,7 +264,7 @@ class DataStoreSQLite extends DataStore {
 
 	List<Destination> getAllRecords() {
 
-		List<Destination> returnList = new ArrayList<Destination>();
+		List<Destination> returnList = new ArrayList<>();
 
 		// sql statement to retrieve all display names
 		final String sqlSelectAllRecords = "SELECT * FROM destinations ORDER BY key";
@@ -396,7 +396,7 @@ class DataStoreSQLite extends DataStore {
 	boolean delete() {
 
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
-		Boolean result = false;
+		boolean result = false;
 		if (dataStoreFile.exists()) {
 			result = dataStoreFile.delete();
 		}

@@ -3,9 +3,6 @@
 # localized language support
 language: en-US
 
-# data store type ( sqlite | yaml )
-storage-type: sqlite
-
 # If this list is empty, all worlds will be added to the enabled worlds list
 enabled-worlds:
 #  - enabled_world1
@@ -16,8 +13,7 @@ disabled-worlds:
   - disabled_world1
   - disabled_world2
 
-# material to be used as default item. Set item data using a colon, example: WOOL:5
-# invalid item data may be reset, so use only valid item data values for a given material
+# material to be used as default item
 default-material: NETHER_STAR
 
 # allow giving and binding with items of default material only
@@ -65,7 +61,7 @@ cancel-on-movement: false
 # cancel teleport if player interacts with another block
 cancel-on-interaction: false
 
-# maximum number of spawn star items that can be given at once (-1 for no limit)
+# maximum number of LodeStar items that can be given at once (-1 for no limit)
 max-give-amount: -1
 
 # if player is in netherworld, try to respawn in matching overworld

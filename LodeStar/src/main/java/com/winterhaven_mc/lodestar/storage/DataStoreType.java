@@ -4,16 +4,6 @@ import com.winterhaven_mc.lodestar.PluginMain;
 
 enum DataStoreType {
 
-	YAML("yaml") {
-		
-		@Override
-		public DataStore create() {
-			
-			// create new sqlite datastore object
-			return new DataStoreYAML(plugin);
-		}
-	},
-	
 	SQLITE("SQLite") {
 		
 		@Override

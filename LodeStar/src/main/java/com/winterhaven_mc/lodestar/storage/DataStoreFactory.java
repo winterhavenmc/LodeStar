@@ -120,7 +120,7 @@ public class DataStoreFactory {
 	private static void convertAll(final DataStore newDataStore) {
 		
 		// get array list of all data store types
-		ArrayList<DataStoreType> dataStores = new ArrayList<DataStoreType>(Arrays.asList(DataStoreType.values()));
+		ArrayList<DataStoreType> dataStores = new ArrayList<>(Arrays.asList(DataStoreType.values()));
 		
 		// remove newDataStore from list of types to convert
 		dataStores.remove(newDataStore.getType());
@@ -130,10 +130,7 @@ public class DataStoreFactory {
 			// create oldDataStore holder
 			DataStore oldDataStore = null;
 			
-			if (type.equals(DataStoreType.YAML)) {
-				oldDataStore = new DataStoreYAML(plugin);
-			}
-			else if (type.equals(DataStoreType.SQLITE)) {
+			if (type.equals(DataStoreType.SQLITE)) {
 				oldDataStore = new DataStoreSQLite(plugin);
 			}
 			
