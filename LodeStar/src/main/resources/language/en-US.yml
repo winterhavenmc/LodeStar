@@ -31,6 +31,7 @@ TIME_STRINGS:
   SECOND: 'second'
   SECOND_PLURAL: 'seconds'
   UNLIMITED: 'unlimited time'
+  LESS_THAN_ONE: 'less than one'
 
 
 # Custom Messages
