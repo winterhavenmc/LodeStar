@@ -1,7 +1,7 @@
 package com.winterhaven_mc.lodestar.sounds;
 
 public enum SoundId {
-	
+
 	COMMAND_FAIL,
 	COMMAND_SUCCESS_GIVE_SENDER,
 	COMMAND_SUCCESS_GIVE_TARGET,

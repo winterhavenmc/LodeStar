@@ -4,6 +4,7 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.SimpleAPI;
 import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,10 +21,9 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * Implements event listener for LodeStar
- * 
- * @author      Tim Savage
- * @version		1.0
- *  
+ *
+ * @author Tim Savage
+ * @version 1.0
  */
 public class PlayerEventListener implements Listener {
 
@@ -33,7 +33,8 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * constructor method for PlayerEventListener class
-	 * @param	plugin		A reference to this plugin's main class
+	 *
+	 * @param    plugin        A reference to this plugin's main class
 	 */
 	public PlayerEventListener(final PluginMain plugin) {
 
@@ -49,6 +50,7 @@ public class PlayerEventListener implements Listener {
 	 * Event listener for PlayerInteractEvent<br>
 	 * detects LodeStar use, or cancels teleport
 	 * if cancel-on-interaction configured
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@SuppressWarnings("deprecation")
@@ -68,10 +70,10 @@ public class PlayerEventListener implements Listener {
 				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
 						|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					plugin.teleportManager.cancelTeleport(player);
-					plugin.messageManager.sendMessage(player,MessageId.TELEPORT_CANCELLED_INTERACTION);
+					plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_INTERACTION);
 
 					// play sound effects if enabled
-					plugin.soundConfig.playSound(player,SoundId.TELEPORT_CANCELLED);
+					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 					return;
 				}
 			}
@@ -86,12 +88,12 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// if event action is not a right click, or not a left click if configured, do nothing and return
-		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) 
+		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR)
 				|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
-				|| (plugin.getConfig().getBoolean("left-click") 
+				|| (plugin.getConfig().getBoolean("left-click")
 				&& !(event.getAction().equals(Action.LEFT_CLICK_AIR)
 				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)))) {
-				return;
+			return;
 		}
 
 		// cancel event
@@ -105,14 +107,14 @@ public class PlayerEventListener implements Listener {
 
 		// if player does not have LodeStar.use permission, send message and return
 		if (!player.hasPermission("lodestar.use")) {
-			plugin.messageManager.sendMessage(player,MessageId.PERMISSION_DENIED_USE);
-			plugin.soundConfig.playSound(player,SoundId.TELEPORT_CANCELLED);
+			plugin.messageManager.sendMessage(player, MessageId.PERMISSION_DENIED_USE);
+			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 			return;
 		}
 
 		// if shift-click is configured true and player is not sneaking, send message and return
 		if (plugin.getConfig().getBoolean("shift-click") && !event.getPlayer().isSneaking()) {
-			plugin.messageManager.sendMessage(player,MessageId.USAGE_SHIFT_CLICK);
+			plugin.messageManager.sendMessage(player, MessageId.USAGE_SHIFT_CLICK);
 			return;
 		}
 
@@ -123,6 +125,7 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * cancel any pending teleports on player death
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -137,6 +140,7 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * clean up any pending player tasks when player logs off of server
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -151,6 +155,7 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * Prevent LodeStar items from being used in crafting recipes if configured
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -162,7 +167,7 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// if crafting inventory contains LodeStar item, set result item to null
-		for(ItemStack itemStack : event.getInventory()) {
+		for (ItemStack itemStack : event.getInventory()) {
 			if (SimpleAPI.isLodeStar(itemStack)) {
 				event.getInventory().setResult(null);
 			}
@@ -172,6 +177,7 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * Cancels pending teleport if cancel-on-damage configured
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -195,7 +201,7 @@ public class PlayerEventListener implements Listener {
 				// if player is in warmup hashmap, cancel teleport and send player message
 				if (plugin.teleportManager.isWarmingUp(player)) {
 					plugin.teleportManager.cancelTeleport(player);
-					plugin.messageManager.sendMessage(player,MessageId.TELEPORT_CANCELLED_DAMAGE);
+					plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_DAMAGE);
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				}
 			}
@@ -205,6 +211,7 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * cancels player teleport if cancel-on-movement configured
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -223,8 +230,8 @@ public class PlayerEventListener implements Listener {
 			// check for player movement other than head turning
 			if (event.getFrom().distance(event.getTo()) > 0) {
 				plugin.teleportManager.cancelTeleport(player);
-				plugin.messageManager.sendMessage(player,MessageId.TELEPORT_CANCELLED_MOVEMENT);
-				plugin.soundConfig.playSound(player,SoundId.TELEPORT_CANCELLED);
+				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_MOVEMENT);
+				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 			}
 		}
 	}

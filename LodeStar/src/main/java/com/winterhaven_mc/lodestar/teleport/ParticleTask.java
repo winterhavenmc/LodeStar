@@ -1,16 +1,17 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+
 import org.bukkit.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+
 /**
  * A self-cancelling, repeating task that generates ender signal particles
  * at a player's location as long as they are in the warmup hashmap
- * 
- * @author savage
  *
+ * @author savage
  */
 class ParticleTask extends BukkitRunnable {
 
@@ -19,16 +20,17 @@ class ParticleTask extends BukkitRunnable {
 
 	/**
 	 * Class constructor method
+	 *
 	 * @param player the player being teleported
 	 */
 	ParticleTask(final Player player) {
-		
+
 		this.plugin = PluginMain.instance;
 		this.player = player;
-		
+
 	}
-	
-		
+
+
 	@Override
 	public void run() {
 
