@@ -22,9 +22,10 @@ class DataStoreSQLite extends DataStore {
 
 	/**
 	 * Class constructor
+	 *
 	 * @param plugin reference to main class
 	 */
-	DataStoreSQLite (final PluginMain plugin) {
+	DataStoreSQLite(final PluginMain plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
@@ -85,7 +86,7 @@ class DataStoreSQLite extends DataStore {
 
 	@Override
 	public Destination getRecord(final String key) {
-		
+
 		String derivedKey = key;
 
 		// if key is null return null record
@@ -131,8 +132,8 @@ class DataStoreSQLite extends DataStore {
 					return null;
 				}
 				world = plugin.getServer().getWorld(worldName);
-				Location location = new Location(world,x,y,z,yaw,pitch);
-				destination = new Destination(derivedKey,displayName,location);
+				Location location = new Location(world, x, y, z, yaw, pitch);
+				destination = new Destination(derivedKey, displayName, location);
 			}
 		}
 		catch (SQLException e) {
@@ -149,6 +150,7 @@ class DataStoreSQLite extends DataStore {
 		}
 		return destination;
 	}
+
 
 	@Override
 	public void putRecord(final Destination destination) {
@@ -173,7 +175,8 @@ class DataStoreSQLite extends DataStore {
 		// test that world in destination location is valid
 		try {
 			testWorldName = location.getWorld().getName();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			plugin.getLogger().warning("An error occured while inserting"
 					+ " a destination in the " + toString() + " datastore. World invalid!");
 			return;
@@ -215,7 +218,7 @@ class DataStoreSQLite extends DataStore {
 
 					// output simple error message
 					plugin.getLogger().warning("An error occured while inserting a destination "
-							+ "into the "  + toString() + " datastore.");
+							+ "into the " + toString() + " datastore.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
@@ -226,6 +229,7 @@ class DataStoreSQLite extends DataStore {
 			}
 		}.runTaskAsynchronously(plugin);
 	}
+
 
 	@Override
 	public List<String> getAllKeys() {
@@ -262,6 +266,8 @@ class DataStoreSQLite extends DataStore {
 		return returnList;
 	}
 
+
+	@Override
 	List<Destination> getAllRecords() {
 
 		List<Destination> returnList = new ArrayList<>();
@@ -290,13 +296,14 @@ class DataStoreSQLite extends DataStore {
 
 				try {
 					world = plugin.getServer().getWorld(worldName);
-				} catch (Exception e) {
-					plugin.getLogger().warning("Stored destination has unloaded world: " 
+				}
+				catch (Exception e) {
+					plugin.getLogger().warning("Stored destination has unloaded world: "
 							+ worldName + ". Skipping record.");
 					continue;
 				}
 
-				Location location = new Location(world,x,y,z,yaw,pitch);				
+				Location location = new Location(world, x, y, z, yaw, pitch);
 				Destination destination = new Destination(key, displayName, location);
 				returnList.add(destination);
 			}
@@ -318,6 +325,7 @@ class DataStoreSQLite extends DataStore {
 		return returnList;
 
 	}
+
 
 	@Override
 	public Destination deleteRecord(String key) {
@@ -360,9 +368,10 @@ class DataStoreSQLite extends DataStore {
 			if (plugin.debug) {
 				e.getStackTrace();
 			}
-		}		
+		}
 		return destination;
 	}
+
 
 	@Override
 	public void close() {
@@ -385,12 +394,14 @@ class DataStoreSQLite extends DataStore {
 		setInitialized(false);
 	}
 
+
 	@Override
 	void sync() {
 
 		// no action necessary for this storage type
 
 	}
+
 
 	@Override
 	boolean delete() {
@@ -402,6 +413,7 @@ class DataStoreSQLite extends DataStore {
 		}
 		return result;
 	}
+
 
 	@Override
 	boolean exists() {
