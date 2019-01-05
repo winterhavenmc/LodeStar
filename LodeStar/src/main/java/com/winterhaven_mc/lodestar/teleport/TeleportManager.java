@@ -6,6 +6,7 @@ import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -208,16 +209,10 @@ public class TeleportManager {
 		// if log-use is enabled in config, write log entry
 		if (plugin.getConfig().getBoolean("log-use")) {
 
-			// construct log message
-			String configItemName = plugin.messageManager.getItemName();
-			String logMessage = player.getName() + " just used a "
-					+ configItemName + " in " + plugin.worldManager.getWorldName(player.getWorld()) + ".";
-
-			// strip color codes from log message
-			logMessage = logMessage.replaceAll("&[0-9a-fA-Fk-oK-OrR]", "");
-
 			// write message to log
-			plugin.getLogger().info(logMessage);
+			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
+					+ plugin.messageManager.getItemName() + ChatColor.RESET + " in "
+					+ plugin.messageManager.getWorldName(player) + ChatColor.RESET + ".");
 		}
 	}
 
