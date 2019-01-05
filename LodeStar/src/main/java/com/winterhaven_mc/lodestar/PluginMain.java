@@ -3,7 +3,6 @@ package com.winterhaven_mc.lodestar;
 import com.winterhaven_mc.lodestar.commands.CommandManager;
 import com.winterhaven_mc.lodestar.listeners.PlayerEventListener;
 import com.winterhaven_mc.lodestar.storage.DataStore;
-import com.winterhaven_mc.lodestar.storage.DataStoreFactory;
 import com.winterhaven_mc.lodestar.teleport.TeleportManager;
 import com.winterhaven_mc.lodestar.messages.MessageManager;
 
@@ -46,7 +45,7 @@ public final class PluginMain extends JavaPlugin {
 		saveDefaultConfig();
 
 		// get initialized destination storage object
-		dataStore = DataStoreFactory.create();
+		dataStore = DataStore.create();
 
 		// instantiate world manager
 		worldManager = new WorldManager(this);
