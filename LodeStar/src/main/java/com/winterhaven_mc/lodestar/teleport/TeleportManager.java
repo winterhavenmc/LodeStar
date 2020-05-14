@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -25,10 +26,10 @@ public class TeleportManager {
 	private final PluginMain plugin;
 
 	// HashMap containing player UUID as key and warmup task id as value
-	private ConcurrentHashMap<UUID, Integer> warmupMap;
+	private final ConcurrentHashMap<UUID, Integer> warmupMap;
 
 	// hashmap to store player UUID and cooldown expire time in milliseconds
-	private ConcurrentHashMap<UUID, Long> cooldownMap;
+	private final ConcurrentHashMap<UUID, Long> cooldownMap;
 
 
 	/**
@@ -124,7 +125,7 @@ public class TeleportManager {
 			}
 
 			// if multiverse is enabled, get spawn location from it so we have pitch and yaw
-			location = plugin.worldManager.getSpawnLocation(location.getWorld());
+			location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 
 			// create warp object to send to delayed teleport method
 			String displayName = plugin.messageManager.getSpawnDisplayName();
@@ -173,13 +174,13 @@ public class TeleportManager {
 		}
 
 		// load destination chunk if not already loaded
-		String worldName = location.getWorld().getName();
-		if (!plugin.getServer().getWorld(worldName).getChunkAt(location).isLoaded()) {
-			plugin.getServer().getWorld(worldName).getChunkAt(location).load();
+		String worldName = Objects.requireNonNull(location.getWorld()).getName();
+		if (!Objects.requireNonNull(plugin.getServer().getWorld(worldName)).getChunkAt(location).isLoaded()) {
+			Objects.requireNonNull(plugin.getServer().getWorld(worldName)).getChunkAt(location).load();
 		}
 
 		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-		if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-use")) {
+		if (Objects.requireNonNull(plugin.getConfig().getString("remove-from-inventory")).equalsIgnoreCase("on-use")) {
 			playerItem.setAmount(playerItem.getAmount() - 1);
 			player.getInventory().setItemInMainHand(playerItem);
 		}
