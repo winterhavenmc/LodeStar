@@ -9,6 +9,7 @@ import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 class DataStoreSQLite extends DataStore {
@@ -121,11 +122,11 @@ class DataStoreSQLite extends DataStore {
 
 				// get stored world and coordinates
 				String worldName = rs.getString("worldname");
-				Double x = rs.getDouble("x");
-				Double y = rs.getDouble("y");
-				Double z = rs.getDouble("z");
-				Float yaw = rs.getFloat("yaw");
-				Float pitch = rs.getFloat("pitch");
+				double x = rs.getDouble("x");
+				double y = rs.getDouble("y");
+				double z = rs.getDouble("z");
+				float yaw = rs.getFloat("yaw");
+				float pitch = rs.getFloat("pitch");
 
 				if (plugin.getServer().getWorld(worldName) == null) {
 					plugin.getLogger().warning("Stored destination world not found!");
@@ -174,7 +175,7 @@ class DataStoreSQLite extends DataStore {
 
 		// test that world in destination location is valid
 		try {
-			testWorldName = location.getWorld().getName();
+			testWorldName = Objects.requireNonNull(location.getWorld()).getName();
 		}
 		catch (Exception e) {
 			plugin.getLogger().warning("An error occured while inserting"
@@ -286,11 +287,11 @@ class DataStoreSQLite extends DataStore {
 				String key = rs.getString("key");
 				String displayName = rs.getString("displayname");
 				String worldName = rs.getString("worldname");
-				Double x = rs.getDouble("x");
-				Double y = rs.getDouble("y");
-				Double z = rs.getDouble("z");
-				Float yaw = rs.getFloat("yaw");
-				Float pitch = rs.getFloat("pitch");
+				double x = rs.getDouble("x");
+				double y = rs.getDouble("y");
+				double z = rs.getDouble("z");
+				float yaw = rs.getFloat("yaw");
+				float pitch = rs.getFloat("pitch");
 
 				World world;
 
