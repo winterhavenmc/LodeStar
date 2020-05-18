@@ -54,10 +54,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		this.plugin = plugin;
 
 		// register this class as command executor
-		plugin.getCommand("lodestar").setExecutor(this);
+		Objects.requireNonNull(plugin.getCommand("lodestar")).setExecutor(this);
 
 		// register this class as tab completer
-		plugin.getCommand("lodestar").setTabCompleter(this);
+		Objects.requireNonNull(plugin.getCommand("lodestar")).setTabCompleter(this);
 	}
 
 
@@ -385,7 +385,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		Location location = player.getLocation();
 
 		// set destinationName to passed argument
-		String destinationName = join(arguments);
+		String destinationName = String.join(" ", arguments);
 
 		// check if destination name is a reserved name
 		if (SimpleAPI.isReservedName(destinationName)) {
@@ -458,7 +458,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			return true;
 		}
 
-		String destinationName = join(arguments);
+		String destinationName = String.join(" ", arguments);
 		String key = Destination.deriveKey(destinationName);
 
 		// test that destination name is not reserved name
@@ -529,7 +529,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		Player player = (Player) sender;
-		String destinationName = join(arguments);
+		String destinationName = String.join(" ", arguments);
 
 		// test that destination name is valid
 		if (!SimpleAPI.isValidDestination(destinationName)) {
@@ -781,7 +781,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// try to parse all remaining arguments as destinationName
 		if (!arguments.isEmpty()) {
 
-			String testName = join(arguments);
+			String testName = String.join(" ", arguments);
 
 			// if resulting name is valid destination, set to destinationName
 			if (SimpleAPI.isValidDestination(testName)) {
@@ -809,7 +809,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 		// try to parse all remaining arguments as destinationName
 		if (!arguments.isEmpty()) {
-			String testName = join(arguments);
+			String testName = String.join(" ", arguments);
 
 			// if resulting name is valid destination, set to destinationName
 			if (SimpleAPI.isValidDestination(testName)) {
@@ -833,14 +833,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 		// if no material set or default-material-only configured true, try to parse material from config
 		if (material == null || plugin.getConfig().getBoolean("default-material-only")) {
-
-			String[] materialElements = plugin.getConfig().getString("default-material").split("\\s*:\\s*");
-
-			// try to match material
-			if (materialElements.length > 0) {
-				material = Material.matchMaterial(materialElements[0]);
-			}
+			material = Material.matchMaterial(Objects.requireNonNull(plugin.getConfig().getString("default-material")));
 		}
+
 		// if still no material match, set to nether star
 		if (material == null) {
 			material = Material.NETHER_STAR;
@@ -935,7 +930,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * @param targetPlayerName the player name to match
 	 * @return the matched player object, or null if no match
 	 */
-	@SuppressWarnings("deprecation")
 	private Player matchPlayer(final CommandSender sender, final String targetPlayerName) {
 
 		Player targetPlayer;
@@ -967,12 +961,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 		if (matchedPlayers.isEmpty()) {
 			plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND);
-			return null;
 		}
 		else {
 			plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_ONLINE);
-			return null;
 		}
+		return null;
 	}
 
 
@@ -1038,22 +1031,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				sender.sendMessage(usageColor + "/lodestar give <player> [quantity] [material] [destination_name]");
 			}
 		}
-	}
-
-
-	/**
-	 * Join list of strings into one string with spaces
-	 *
-	 * @param stringList a list of strings to be joined
-	 * @return the resulting string
-	 */
-	private String join(final List<String> stringList) {
-
-		StringBuilder returnString = new StringBuilder();
-		for (String string : stringList) {
-			returnString.append(" ").append(string);
-		}
-		return returnString.toString().trim();
 	}
 
 }
