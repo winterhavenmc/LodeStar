@@ -794,12 +794,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 		// try to parse next argument as material
 		if (!arguments.isEmpty()) {
-			String[] materialElements = arguments.get(0).split("\\s*:\\s*");
 
 			// try to match material
-			if (materialElements.length > 0) {
-				material = Material.matchMaterial(materialElements[0]);
-			}
+			material = Material.matchMaterial(arguments.get(0));
 
 			// if material matched, remove argument from list
 			if (material != null) {
