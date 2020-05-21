@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Objects;
+
 
 class DelayedTeleportTask extends BukkitRunnable {
 
@@ -18,12 +20,16 @@ class DelayedTeleportTask extends BukkitRunnable {
 	private final Player player;
 	private Location location;
 	private BukkitTask particleTask;
-	private Destination destination;
-	private ItemStack playerItem;
+	private final Destination destination;
+	private final ItemStack playerItem;
 
 
 	/**
 	 * Class constructor method
+	 *
+	 * @param player the player to be teleported
+	 * @param destination the teleport destination
+	 * @param playerItem the item used to initiate teleport
 	 */
 	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 
@@ -58,11 +64,12 @@ class DelayedTeleportTask extends BukkitRunnable {
 
 			// if destination is spawn, get spawn location from world manager
 			if (destination.isSpawn()) {
-				location = plugin.worldManager.getSpawnLocation(location.getWorld());
+				location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 			}
 
 			// if remove-from-inventory is configured on-success, take one LodeStar item from inventory now
-			if (plugin.getConfig().getString("remove-from-inventory").equalsIgnoreCase("on-success")) {
+			if (Objects.requireNonNull(plugin.getConfig().getString("remove-from-inventory"))
+					.equalsIgnoreCase("on-success")) {
 
 				// try to remove one LodeStar item from player inventory
 				//HashMap<Integer,ItemStack> notRemoved = new HashMap<Integer,ItemStack>();

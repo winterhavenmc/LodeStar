@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @author Tim Savage
  * @version 1.0
  */
-public class MessageManager extends AbstractMessageManager {
+public class MessageManager extends AbstractMessageManager<MessageId> {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -33,7 +33,6 @@ public class MessageManager extends AbstractMessageManager {
 	public MessageManager(final PluginMain plugin) {
 
 		// call super class constructor
-		//noinspection unchecked
 		super(plugin, MessageId.class);
 
 		// set reference to main class
@@ -90,7 +89,6 @@ public class MessageManager extends AbstractMessageManager {
 		Map<String, String> replacements = getDefaultReplacements(recipient);
 
 		// send message to recipient
-		//noinspection unchecked
 		sendMessage(recipient, messageId, replacements);
 	}
 
@@ -113,7 +111,6 @@ public class MessageManager extends AbstractMessageManager {
 		replacements.put("%QUANTITY%", quantity.toString());
 
 		// send message to recipient
-		//noinspection unchecked
 		sendMessage(recipient, messageId, replacements);
 	}
 
@@ -137,7 +134,6 @@ public class MessageManager extends AbstractMessageManager {
 		replacements.put("%destination_name%", destinationName);
 
 		// send message to recipient
-		//noinspection unchecked
 		sendMessage(recipient, messageId, replacements);
 	}
 
@@ -166,7 +162,6 @@ public class MessageManager extends AbstractMessageManager {
 		replacements.put("%destination_name%", destinationName);
 
 		// send message to recipient
-		//noinspection unchecked
 		sendMessage(recipient, messageId, replacements);
 	}
 
@@ -201,7 +196,6 @@ public class MessageManager extends AbstractMessageManager {
 		replacements.put("%target_player%", targetPlayerName);
 
 		// send message to recipient
-		//noinspection unchecked
 		sendMessage(recipient, messageId, replacements);
 	}
 

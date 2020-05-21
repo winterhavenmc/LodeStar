@@ -1,9 +1,9 @@
 package com.winterhaven_mc.lodestar.listeners;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.SimpleAPI;
 import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
+import com.winterhaven_mc.lodestar.util.LodeStar;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,6 +17,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Objects;
 
 
 /**
@@ -53,7 +55,6 @@ public class PlayerEventListener implements Listener {
 	 *
 	 * @param event the event being handled by this method
 	 */
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	void onPlayerUse(final PlayerInteractEvent event) {
 
@@ -80,10 +81,10 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// get players item in hand
-		ItemStack playerItem = player.getInventory().getItemInHand();
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// if item used is not a LodeStar, do nothing and return
-		if (!SimpleAPI.isLodeStar(playerItem)) {
+		if (!LodeStar.isItem(playerItem)) {
 			return;
 		}
 
@@ -98,6 +99,7 @@ public class PlayerEventListener implements Listener {
 
 		// cancel event
 		event.setCancelled(true);
+		//noinspection deprecation
 		player.updateInventory();
 
 		// if player current world is not enabled in config, do nothing and return
@@ -168,7 +170,7 @@ public class PlayerEventListener implements Listener {
 
 		// if crafting inventory contains LodeStar item, set result item to null
 		for (ItemStack itemStack : event.getInventory()) {
-			if (SimpleAPI.isLodeStar(itemStack)) {
+			if (LodeStar.isItem(itemStack)) {
 				event.getInventory().setResult(null);
 			}
 		}
@@ -228,7 +230,7 @@ public class PlayerEventListener implements Listener {
 		if (plugin.teleportManager.isWarmingUp(player)) {
 
 			// check for player movement other than head turning
-			if (event.getFrom().distance(event.getTo()) > 0) {
+			if (event.getFrom().distanceSquared(Objects.requireNonNull(event.getTo())) > 0) {
 				plugin.teleportManager.cancelTeleport(player);
 				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_MOVEMENT);
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
