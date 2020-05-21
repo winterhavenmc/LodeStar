@@ -1,10 +1,10 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.SimpleAPI;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.storage.Destination;
+import com.winterhaven_mc.lodestar.util.LodeStar;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -71,7 +71,7 @@ public class TeleportManager {
 		}
 
 		// get destination from player item
-		String key = SimpleAPI.getKey(playerItem);
+		String key = LodeStar.getKey(playerItem);
 		Location location = null;
 		Destination destination = null;
 
@@ -240,7 +240,7 @@ public class TeleportManager {
 
 
 	/**
-	 * Test if player uuid is in warmup hashmap.
+	 * Test if player uuid is in warmup hashmap
 	 *
 	 * @param player the player to test if in warmup map
 	 * @return {@code true} if player is in warmup map, {@code false} if not
@@ -249,6 +249,17 @@ public class TeleportManager {
 
 		// if player is in warmup hashmap, return true, otherwise return false
 		return warmupMap.containsKey(player.getUniqueId());
+	}
+
+
+	/**
+	 * Test if player is currently cooling down after item use
+	 *
+	 * @param player the player to check for cooldown
+	 * @return boolean - {@code true} if player is cooling down after item use, {@code false} if not
+	 */
+	public boolean isCoolingDown(final Player player) {
+		return getCooldownTimeRemaining(player) > 0;
 	}
 
 
@@ -309,6 +320,5 @@ public class TeleportManager {
 		}
 		return remainingTime;
 	}
-
 
 }
