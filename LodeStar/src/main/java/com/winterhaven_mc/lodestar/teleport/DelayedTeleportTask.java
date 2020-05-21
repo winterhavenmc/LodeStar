@@ -26,6 +26,10 @@ class DelayedTeleportTask extends BukkitRunnable {
 
 	/**
 	 * Class constructor method
+	 *
+	 * @param player the player to be teleported
+	 * @param destination the teleport destination
+	 * @param playerItem the item used to initiate teleport
 	 */
 	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 
