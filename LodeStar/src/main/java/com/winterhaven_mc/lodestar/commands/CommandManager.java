@@ -1,11 +1,11 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.SimpleAPI;
 import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.DataStore;
 import com.winterhaven_mc.lodestar.storage.Destination;
+import com.winterhaven_mc.lodestar.util.LodeStar;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -325,13 +325,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// check that player is holding a LodeStar item
-		if (!SimpleAPI.isLodeStar(playerItem)) {
+		if (!LodeStar.isItem(playerItem)) {
 			plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_INVALID_ITEM);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 		int quantity = playerItem.getAmount();
-		String destinationName = SimpleAPI.getDestinationName(playerItem);
+		String destinationName = LodeStar.getName(playerItem);
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
 		plugin.messageManager.sendMessage(sender, MessageId.COMMAND_SUCCESS_DESTROY, quantity, destinationName);
@@ -388,7 +388,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		String destinationName = String.join(" ", arguments);
 
 		// check if destination name is a reserved name
-		if (SimpleAPI.isReservedName(destinationName)) {
+		if (Destination.isReserved(destinationName)) {
 			plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_SET_RESERVED, destinationName);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -462,14 +462,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		String key = Destination.deriveKey(destinationName);
 
 		// test that destination name is not reserved name
-		if (SimpleAPI.isReservedName(destinationName)) {
+		if (Destination.isReserved(destinationName)) {
 			plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED, destinationName);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// test that destination name is valid
-		if (!SimpleAPI.isValidDestination(destinationName)) {
+		if (!Destination.exists(destinationName)) {
 			plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION, destinationName);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -531,8 +531,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		Player player = (Player) sender;
 		String destinationName = String.join(" ", arguments);
 
-		// test that destination name is valid
-		if (!SimpleAPI.isValidDestination(destinationName)) {
+		// test that destination exists
+		if (!Destination.exists(destinationName)) {
 			plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION, destinationName);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -544,7 +544,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// if default-item-only configured true, check that item in hand has default material and data
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
-			if (!SimpleAPI.isDefaultItem(playerItem)) {
+			if (!LodeStar.isDefaultItem(playerItem)) {
 				plugin.messageManager.sendMessage(sender, MessageId.COMMAND_FAIL_INVALID_ITEM, destinationName);
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 				return true;
@@ -558,7 +558,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		// set destination in item lore
-		SimpleAPI.setMetaData(playerItem, destinationName);
+		LodeStar.setMetaData(playerItem, destinationName);
 
 		// send success message
 		plugin.messageManager.sendMessage(sender, MessageId.COMMAND_SUCCESS_BIND, destinationName);
@@ -771,9 +771,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			ItemStack playerItem = player.getInventory().getItemInMainHand().clone();
 
 			// if item in hand is a LodeStar item, set destination and material from item
-			if (SimpleAPI.isLodeStar(playerItem)) {
+			if (LodeStar.isItem(playerItem)) {
 
-				destinationName = SimpleAPI.getDestinationName(playerItem);
+				destinationName = LodeStar.getName(playerItem);
 				material = playerItem.getType();
 			}
 		}
@@ -783,8 +783,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 			String testName = String.join(" ", arguments);
 
-			// if resulting name is valid destination, set to destinationName
-			if (SimpleAPI.isValidDestination(testName)) {
+			// if resulting name is existing destination, set to destinationName
+			if (Destination.exists(testName)) {
 				destinationName = testName;
 
 				// set arguments to empty list
@@ -809,7 +809,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			String testName = String.join(" ", arguments);
 
 			// if resulting name is valid destination, set to destinationName
-			if (SimpleAPI.isValidDestination(testName)) {
+			if (Destination.exists(testName)) {
 				destinationName = testName;
 
 				// set arguments to empty list
@@ -842,7 +842,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		ItemStack itemStack = new ItemStack(material, quantity);
 
 		// set item metadata on item stack
-		SimpleAPI.setMetaData(itemStack, destinationName);
+		LodeStar.setMetaData(itemStack, destinationName);
 
 		// give item stack to target player
 		giveItem(sender, targetPlayer, itemStack);
@@ -862,7 +862,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	@SuppressWarnings("UnusedReturnValue")
 	private boolean giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack) {
 
-		String key = SimpleAPI.getKey(itemStack);
+		String key = LodeStar.getKey(itemStack);
 		int quantity = itemStack.getAmount();
 		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
 
@@ -873,7 +873,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		// test that item is a LodeStar item
-		if (!SimpleAPI.isLodeStar(itemStack)) {
+		if (!LodeStar.isItem(itemStack)) {
 			plugin.messageManager.sendMessage(giver, MessageId.COMMAND_FAIL_INVALID_ITEM);
 			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;
@@ -898,7 +898,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		quantity = quantity - noFitCount;
 
 		// get destination display name
-		String destinationName = SimpleAPI.getDestinationName(key);
+		String destinationName = Destination.getName(key);
 
 		// don't display messages if giving item to self
 		if (!giver.getName().equals(targetPlayer.getName())) {
@@ -916,6 +916,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			plugin.messageManager.sendMessage(targetPlayer, MessageId.COMMAND_SUCCESS_GIVE_TARGET, quantity,
 					destinationName, giver.getName());
 		}
+
 		// play sound to target player
 		plugin.soundConfig.playSound(targetPlayer, SoundId.COMMAND_SUCCESS_GIVE_TARGET);
 		return true;
@@ -923,6 +924,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 
 	/**
+	 * Match a player name to player object
+	 *
 	 * @param sender           the player issuing the command
 	 * @param targetPlayerName the player name to match
 	 * @return the matched player object, or null if no match
