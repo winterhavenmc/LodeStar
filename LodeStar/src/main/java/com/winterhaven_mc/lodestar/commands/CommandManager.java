@@ -70,14 +70,42 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 		final List<String> returnList = new ArrayList<>();
 
-		// if first argument, return list of valid matching subcommands
+		// if first argument
 		if (args.length == 1) {
 
+			// return list of valid matching subcommands
 			for (String subcommand : subcommands) {
 				if (sender.hasPermission("lodestar." + subcommand)
 						&& subcommand.startsWith(args[0].toLowerCase())) {
 					returnList.add(subcommand);
 				}
+			}
+		}
+
+		// if second argument
+		if (args.length == 2) {
+
+			// if subcommand is 'give', return list of online player names
+			if (args[0].equalsIgnoreCase("give")) {
+				for (Player player : plugin.getServer().getOnlinePlayers()) {
+					returnList.add(player.getName());
+				}
+			}
+			// if subcommand is 'set', 'unset', 'bind' or 'delete', return list of destination keys
+			else if (args[0].equalsIgnoreCase("set")
+					|| args[0].equalsIgnoreCase("unset")
+					|| args[0].equalsIgnoreCase("bind")
+					|| args[0].equalsIgnoreCase("delete")) {
+				returnList.addAll(plugin.dataStore.getAllKeys());
+			}
+		}
+
+		// if third argument
+		if (args.length == 3) {
+
+			// if subcommand is 'give', return list of destination keys
+			if (args[0].equals("give")) {
+				returnList.addAll(plugin.dataStore.getAllKeys());
 			}
 		}
 
