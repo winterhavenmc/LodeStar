@@ -1,10 +1,11 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
-import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
+import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,6 +13,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Objects;
+
+import static com.winterhaven_mc.lodestar.messages.MessageId.*;
+import static com.winterhaven_mc.lodestar.messages.Macro.*;
 
 
 class DelayedTeleportTask extends BukkitRunnable {
@@ -22,7 +26,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 	private BukkitTask particleTask;
 	private final Destination destination;
 	private final ItemStack playerItem;
-
+	private final LanguageManager languageManager;
 
 	/**
 	 * Class constructor method
@@ -33,6 +37,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 	 */
 	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 
+		languageManager = LanguageManager.getInstance();
 		this.plugin = PluginMain.instance;
 		this.player = player;
 		this.destination = destination;
@@ -86,7 +91,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
 				if (notRemoved) {
-					plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_NO_ITEM);
+					Message.create(player, TELEPORT_CANCELLED_NO_ITEM).send();
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
 					plugin.teleportManager.setPlayerCooldown(player);
 					return;
@@ -100,11 +105,16 @@ class DelayedTeleportTask extends BukkitRunnable {
 
 			// if destination is spawn, send spawn specific success message
 			if (destination.isSpawn()) {
-				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_SUCCESS_SPAWN, plugin.messageManager.getSpawnDisplayName());
+				Message.create(player, TELEPORT_SUCCESS_SPAWN)
+						.setMacro(DESTINATION, languageManager.getSpawnDisplayName())
+						.setMacro(WORLD, destination.getLocation().getWorld())
+						.send();
 			}
 			// otherwise send regular success message
 			else {
-				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_SUCCESS, destination.getDisplayName());
+				Message.create(player, TELEPORT_SUCCESS)
+						.setMacro(DESTINATION, destination.getDisplayName())
+						.send();
 			}
 			// play post-teleport sound if sound effects are enabled
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_SUCCESS_ARRIVAL);

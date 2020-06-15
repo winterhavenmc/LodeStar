@@ -2,6 +2,7 @@ package com.winterhaven_mc.lodestar.util;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.storage.Destination;
+import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,6 +16,9 @@ public final class LodeStar {
 
 	// static reference to main class instance
 	private final static PluginMain plugin = PluginMain.instance;
+
+	// reference to language manager
+	private final static LanguageManager languageManager = LanguageManager.getInstance();
 
 	// name spaced key for persistent data
 	public final static NamespacedKey PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
@@ -94,23 +98,26 @@ public final class LodeStar {
 	 */
 	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
 
-		// retrieve item name and lore from language file file
-		String displayName = plugin.messageManager.getInventoryItemName();
-		List<String> configLore = plugin.messageManager.getItemLore();
+		// retrieve item name from language file
+		String itemName = languageManager.getInventoryItemName();
 
-		// substitute %destination_name% variable in display name
-		displayName = displayName.replaceAll("%destination_name%", destinationName);
-		displayName = displayName.replaceAll("%DESTINATION_NAME%", ChatColor.stripColor(destinationName));
+		// translate color codes
+		itemName = ChatColor.translateAlternateColorCodes('&', itemName);
 
-		// allow for '&' character for color codes in name and lore
-		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
+		// replace destination placeholder with destination name
+		itemName = itemName.replace("%DESTINATION%", destinationName);
 
-		ArrayList<String> coloredLore = new ArrayList<>();
+		// retrieve item lore from language file
+		List<String> configLore = languageManager.getItemLore();
 
+		// list of strings for formatted item lore
+		List<String> itemLore = new ArrayList<>();
+
+		// iterate over lines of lore and translate color codes and replace destination placeholder
 		for (String line : configLore) {
-			line = line.replaceAll("%destination_name%", destinationName);
-			line = line.replaceAll("%DESTINATION_NAME%", ChatColor.stripColor(destinationName));
-			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
+			line = ChatColor.translateAlternateColorCodes('&', line);
+			line = line.replace("%DESTINATION%", destinationName);
+			itemLore.add(line);
 		}
 
 		// get item metadata object
@@ -118,10 +125,10 @@ public final class LodeStar {
 
 		// set item metadata display name to value from config file
 		//noinspection ConstantConditions
-		itemMeta.setDisplayName(displayName);
+		itemMeta.setDisplayName(itemName);
 
 		// set item metadata Lore to value from config file
-		itemMeta.setLore(coloredLore);
+		itemMeta.setLore(itemLore);
 
 		// set persistent data in item metadata
 		itemMeta.getPersistentDataContainer()
@@ -175,13 +182,13 @@ public final class LodeStar {
 		String destinationName = null;
 
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			destinationName = plugin.messageManager.getSpawnDisplayName();
+		if (key.equals("spawn") || key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()))) {
+			destinationName = languageManager.getSpawnDisplayName();
 		}
 		// if destination is home get home display name from messages file
 		else if (key.equals("home")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			destinationName = plugin.messageManager.getHomeDisplayName();
+				|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName()))) {
+			destinationName = languageManager.getHomeDisplayName();
 		}
 		// else get destination name from datastore
 		else {
@@ -258,5 +265,7 @@ public final class LodeStar {
 		// if material and data match defaults return true
 		return itemStack.getType().equals(material);
 	}
+
+
 
 }

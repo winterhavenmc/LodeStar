@@ -2,6 +2,7 @@ package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 
+import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
@@ -9,6 +10,8 @@ import org.bukkit.Location;
 public class Destination {
 
 	private static final PluginMain plugin = PluginMain.instance;
+
+	private static final LanguageManager languageManager = LanguageManager.getInstance();
 
 	private final String key;
 	private final String displayName;
@@ -54,6 +57,12 @@ public class Destination {
 	}
 
 
+	@Override
+	public String toString() {
+		return getDisplayName();
+	}
+
+
 	/**
 	 * Check if destination is spawn location
 	 *
@@ -61,7 +70,7 @@ public class Destination {
 	 */
 	public boolean isSpawn() {
 		return this.getKey().equals("spawn")
-				|| this.getKey().equals(deriveKey(plugin.messageManager.getSpawnDisplayName()));
+				|| this.getKey().equals(deriveKey(languageManager.getSpawnDisplayName()));
 	}
 
 
@@ -73,7 +82,7 @@ public class Destination {
 	@SuppressWarnings("unused")
 	public boolean isHome() {
 		return this.getKey().equals("home")
-				|| this.getKey().equals(deriveKey(plugin.messageManager.getHomeDisplayName()));
+				|| this.getKey().equals(deriveKey(languageManager.getHomeDisplayName()));
 	}
 
 
@@ -179,7 +188,7 @@ public class Destination {
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
 		String key = Destination.deriveKey(destinationName);
 		return key.equals("home")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()));
+				|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName()));
 	}
 
 
@@ -194,7 +203,7 @@ public class Destination {
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
 		String key = Destination.deriveKey(destinationName);
 		return key.equals("spawn")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()));
+				|| key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()));
 	}
 
 
@@ -213,14 +222,14 @@ public class Destination {
 
 		// if destination is spawn get spawn display name from messages files
 		if (derivedKey.equals("spawn")
-				|| derivedKey.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-			returnName = plugin.messageManager.getSpawnDisplayName();
+				|| derivedKey.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()))) {
+			returnName = languageManager.getSpawnDisplayName();
 		}
 
 		// if destination is home get home display name from messages file
 		else if (derivedKey.equals("home")
-				|| derivedKey.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-			returnName = plugin.messageManager.getHomeDisplayName();
+				|| derivedKey.equals(Destination.deriveKey(languageManager.getHomeDisplayName()))) {
+			returnName = languageManager.getHomeDisplayName();
 		}
 
 		// else get destination name from datastore

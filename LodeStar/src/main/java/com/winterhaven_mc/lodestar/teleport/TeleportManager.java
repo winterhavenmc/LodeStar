@@ -1,11 +1,12 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
-import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import com.winterhaven_mc.lodestar.util.LodeStar;
 
+import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,11 +20,17 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import static com.winterhaven_mc.lodestar.messages.MessageId.*;
+import static com.winterhaven_mc.lodestar.messages.Macro.*;
+
 
 public class TeleportManager {
 
 	// reference to main class
 	private final PluginMain plugin;
+
+	// reference to LanguageManager
+	private final LanguageManager languageManager;
 
 	// HashMap containing player UUID as key and warmup task id as value
 	private final ConcurrentHashMap<UUID, Integer> warmupMap;
@@ -41,6 +48,9 @@ public class TeleportManager {
 
 		// set reference to main class
 		this.plugin = plugin;
+
+		// set reference to language manager
+		languageManager = LanguageManager.getInstance();
 
 		// initialize warmup HashMap
 		warmupMap = new ConcurrentHashMap<>();
@@ -61,7 +71,9 @@ public class TeleportManager {
 
 		// if player cooldown has not expired, send player cooldown message and return
 		if (getCooldownTimeRemaining(player) > 0) {
-			plugin.messageManager.sendMessage(player, MessageId.TELEPORT_COOLDOWN);
+			Message.create(player, TELEPORT_COOLDOWN)
+					.setMacro(DURATION, languageManager.getTimeString(getCooldownTimeRemaining(player)))
+					.send();
 			return;
 		}
 
@@ -77,13 +89,13 @@ public class TeleportManager {
 
 		// if destination key equals home, get player bed spawn location
 		if (key != null && (key.equalsIgnoreCase("home")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName())))) {
+				|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName())))) {
 
 			location = player.getBedSpawnLocation();
 
 			// if bedspawn location is not null, create destination with bed spawn location
 			if (location != null) {
-				destination = new Destination("home", plugin.messageManager.getHomeDisplayName(), location);
+				destination = new Destination("home", languageManager.getHomeDisplayName(), location);
 				if (plugin.debug) {
 					plugin.getLogger().info("destination is home. Location: " + location.toString());
 				}
@@ -94,7 +106,7 @@ public class TeleportManager {
 			}
 			// if bedspawn location is null and bedspawn-fallback is false, send message and return
 			else {
-				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN);
+				Message.create(player, TELEPORT_FAIL_NO_BEDSPAWN).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				return;
 			}
@@ -102,7 +114,7 @@ public class TeleportManager {
 
 		// if destination is spawn, get spawn location
 		if (key != null && (key.equalsIgnoreCase("spawn")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName())))) {
+				|| key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName())))) {
 
 			World playerWorld = player.getWorld();
 			String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
@@ -128,7 +140,7 @@ public class TeleportManager {
 			location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 
 			// create warp object to send to delayed teleport method
-			String displayName = plugin.messageManager.getSpawnDisplayName();
+			String displayName = languageManager.getSpawnDisplayName();
 			destination = new Destination(key, displayName, location);
 		}
 
@@ -157,14 +169,20 @@ public class TeleportManager {
 				displayName = key;
 			}
 
-			plugin.messageManager.sendMessage(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION, 1, displayName);
-			return;
+			Message.create(player, TELEPORT_FAIL_INVALID_DESTINATION)
+					.setMacro(QUANTITY, 1)
+					.setMacro(DESTINATION, displayName)
+					.send();
+					return;
 		}
 
 		// if player is less than config min-distance from destination, send player proximity message and return
 		if (player.getWorld() == location.getWorld()
 				&& location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
-			plugin.messageManager.sendMessage(player, MessageId.TELEPORT_FAIL_PROXIMITY, 1, destination.getDisplayName());
+			Message.create(player, TELEPORT_FAIL_PROXIMITY)
+					.setMacro(QUANTITY, 1)
+					.setMacro(DESTINATION, destination.getDisplayName())
+					.send();
 			return;
 		}
 
@@ -186,15 +204,23 @@ public class TeleportManager {
 		}
 
 		// if warmup setting is greater than zero, send warmup message
-		if (plugin.getConfig().getInt("teleport-warmup") > 0) {
+		int warmupTime = plugin.getConfig().getInt("teleport-warmup");
+		if (warmupTime > 0) {
 
 			// if destination is spawn send spawn specific warmup message
 			if (destination.isSpawn()) {
-				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_WARMUP_SPAWN, destination.getDisplayName());
+				Message.create(player, TELEPORT_WARMUP_SPAWN)
+						.setMacro(DESTINATION, destination.getDisplayName())
+						.setMacro(WORLD, destination.getLocation().getWorld())
+						.setMacro(DURATION, languageManager.getTimeString(TimeUnit.SECONDS.toMillis(warmupTime)))
+						.send();
 			}
 			// otherwise send regular warmup message
 			else {
-				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_WARMUP, destination.getDisplayName());
+				Message.create(player, TELEPORT_WARMUP)
+						.setMacro(DESTINATION, destination.getDisplayName())
+						.setMacro(DURATION, languageManager.getTimeString(TimeUnit.SECONDS.toMillis(warmupTime)))
+						.send();
 			}
 			// if enabled, play sound effect
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_WARMUP);
@@ -202,7 +228,7 @@ public class TeleportManager {
 
 		// initiate delayed teleport for player to destination
 		BukkitTask teleportTask = new DelayedTeleportTask(player, destination,
-				playerItem.clone()).runTaskLater(plugin, plugin.getConfig().getInt("teleport-warmup") * 20);
+				playerItem.clone()).runTaskLater(plugin, warmupTime * 20);
 
 		// insert player and taskId into warmup hashmap
 		putPlayer(player, teleportTask.getTaskId());
@@ -212,8 +238,8 @@ public class TeleportManager {
 
 			// write message to log
 			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
-					+ plugin.messageManager.getItemName() + ChatColor.RESET + " in "
-					+ plugin.messageManager.getWorldName(player) + ChatColor.RESET + ".");
+					+ languageManager.getItemName() + ChatColor.RESET + " in "
+					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
 		}
 	}
 
