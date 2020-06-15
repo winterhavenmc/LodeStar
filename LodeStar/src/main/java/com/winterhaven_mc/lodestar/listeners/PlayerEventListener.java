@@ -1,7 +1,7 @@
 package com.winterhaven_mc.lodestar.listeners;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.MessageId;
+import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.util.LodeStar;
 
@@ -19,6 +19,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
+
+import static com.winterhaven_mc.lodestar.messages.MessageId.*;
 
 
 /**
@@ -71,7 +73,7 @@ public class PlayerEventListener implements Listener {
 				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
 						|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					plugin.teleportManager.cancelTeleport(player);
-					plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_INTERACTION);
+					Message.create(player, TELEPORT_CANCELLED_INTERACTION).send();
 
 					// play sound effects if enabled
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
@@ -109,14 +111,14 @@ public class PlayerEventListener implements Listener {
 
 		// if player does not have LodeStar.use permission, send message and return
 		if (!player.hasPermission("lodestar.use")) {
-			plugin.messageManager.sendMessage(player, MessageId.PERMISSION_DENIED_USE);
+			Message.create(player, PERMISSION_DENIED_USE).send();
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 			return;
 		}
 
 		// if shift-click is configured true and player is not sneaking, send message and return
 		if (plugin.getConfig().getBoolean("shift-click") && !event.getPlayer().isSneaking()) {
-			plugin.messageManager.sendMessage(player, MessageId.USAGE_SHIFT_CLICK);
+			Message.create(player, USAGE_SHIFT_CLICK).send();
 			return;
 		}
 
@@ -203,7 +205,7 @@ public class PlayerEventListener implements Listener {
 				// if player is in warmup hashmap, cancel teleport and send player message
 				if (plugin.teleportManager.isWarmingUp(player)) {
 					plugin.teleportManager.cancelTeleport(player);
-					plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_DAMAGE);
+					Message.create(player, TELEPORT_CANCELLED_DAMAGE).send();
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				}
 			}
@@ -232,7 +234,7 @@ public class PlayerEventListener implements Listener {
 			// check for player movement other than head turning
 			if (event.getFrom().distanceSquared(Objects.requireNonNull(event.getTo())) > 0) {
 				plugin.teleportManager.cancelTeleport(player);
-				plugin.messageManager.sendMessage(player, MessageId.TELEPORT_CANCELLED_MOVEMENT);
+				Message.create(player, TELEPORT_CANCELLED_MOVEMENT).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 			}
 		}

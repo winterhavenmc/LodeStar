@@ -4,8 +4,8 @@ import com.winterhaven_mc.lodestar.commands.CommandManager;
 import com.winterhaven_mc.lodestar.listeners.PlayerEventListener;
 import com.winterhaven_mc.lodestar.storage.DataStore;
 import com.winterhaven_mc.lodestar.teleport.TeleportManager;
-import com.winterhaven_mc.lodestar.messages.MessageManager;
 
+import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.WorldManager;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
@@ -30,7 +30,6 @@ public final class PluginMain extends JavaPlugin {
 
 	public DataStore dataStore;
 	public TeleportManager teleportManager;
-	public MessageManager messageManager;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 
@@ -50,8 +49,8 @@ public final class PluginMain extends JavaPlugin {
 		// instantiate world manager
 		worldManager = new WorldManager(this);
 
-		// instantiate message manager
-		messageManager = new MessageManager(this);
+		// force loading of language file on enable
+		LanguageManager.getInstance();
 
 		// instantiate sound configuration
 		soundConfig = new YamlSoundConfiguration(this);

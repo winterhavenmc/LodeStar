@@ -3,6 +3,7 @@ package com.winterhaven_mc.lodestar;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
 import com.winterhaven_mc.lodestar.util.LodeStar;
+import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.Material;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -24,6 +25,8 @@ public final class SimpleAPI {
 	// static reference to main class
 	private final static PluginMain plugin = PluginMain.instance;
 
+	// static reference to language manager
+	private final static LanguageManager languageManager = LanguageManager.getInstance();
 
 	/**
 	 * Private constructor to prevent instantiation
@@ -177,7 +180,7 @@ public final class SimpleAPI {
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
 		String key = Destination.deriveKey(destinationName);
 		return key.equals("spawn")
-				|| key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()));
+				|| key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()));
 	}
 
 
@@ -188,7 +191,7 @@ public final class SimpleAPI {
 	 * @deprecated use {@code LodeStar.getItemName()} method
 	 */
 	public static String getItemName() {
-		return plugin.messageManager.getItemName();
+		return languageManager.getItemName();
 	}
 
 
@@ -219,13 +222,13 @@ public final class SimpleAPI {
 
 		// if destination is spawn get spawn display name from messages files
 		if (key != null) {
-			if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageManager.getSpawnDisplayName()))) {
-				destinationName = plugin.messageManager.getSpawnDisplayName();
+			if (key.equals("spawn") || key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()))) {
+				destinationName = languageManager.getSpawnDisplayName();
 			}
 			// if destination is home get home display name from messages file
 			else if (key.equals("home")
-					|| key.equals(Destination.deriveKey(plugin.messageManager.getHomeDisplayName()))) {
-				destinationName = plugin.messageManager.getHomeDisplayName();
+					|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName()))) {
+				destinationName = languageManager.getHomeDisplayName();
 			}
 			// else get destination name from datastore
 			else {
