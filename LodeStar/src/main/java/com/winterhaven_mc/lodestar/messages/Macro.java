@@ -6,7 +6,6 @@ public enum Macro {
 	QUANTITY,
 	TARGET_PLAYER,
 	DURATION,
-	WARMUP_TIME,
 	WORLD,
 
 }
