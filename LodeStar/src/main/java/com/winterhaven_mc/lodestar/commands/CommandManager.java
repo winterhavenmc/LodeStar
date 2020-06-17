@@ -309,8 +309,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// update enabledWorlds list
 		plugin.worldManager.reload();
 
+		// reload sounds
+		plugin.soundConfig.reload();
+
 		// reload messages
-		LanguageManager.getInstance().reload();
+		LanguageManager.reload();
 
 		// reload datastore
 		DataStore.reload();
