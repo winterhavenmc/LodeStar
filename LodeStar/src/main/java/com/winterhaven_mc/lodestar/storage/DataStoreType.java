@@ -1,6 +1,7 @@
 package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import org.bukkit.plugin.java.JavaPlugin;
 
 
 enum DataStoreType {
@@ -17,13 +18,17 @@ enum DataStoreType {
 
 	private String displayName;
 
+	// static reference to main class
+	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
-	private final static PluginMain plugin = PluginMain.instance;
-
-
+	// default datastore type
 	private final static DataStoreType defaultType = DataStoreType.SQLITE;
 
 
+	/**
+	 * Create datastore
+	 * @return DataStore object
+	 */
 	public abstract DataStore create();
 
 

@@ -23,9 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class PluginMain extends JavaPlugin {
 
-	// static reference to main class
-	public static PluginMain instance;
-
+	// global debug field
 	public Boolean debug = getConfig().getBoolean("debug");
 
 	public DataStore dataStore;
@@ -37,10 +35,7 @@ public final class PluginMain extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-		// set static reference to main class
-		instance = this;
-
-		// install default config.yml if not present  
+		// install default config.yml if not present
 		saveDefaultConfig();
 
 		// initialize language manager

@@ -5,11 +5,12 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class Destination {
 
-	private static final PluginMain plugin = PluginMain.instance;
+	private static final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	private static final LanguageManager languageManager = LanguageManager.getInstance();
 

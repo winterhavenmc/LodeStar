@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
 public final class SimpleAPI {
 
 	// static reference to main class
-	private final static PluginMain plugin = PluginMain.instance;
+	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// static reference to language manager
 	private final static LanguageManager languageManager = LanguageManager.getInstance();

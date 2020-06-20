@@ -9,6 +9,7 @@ import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -37,8 +38,8 @@ class DelayedTeleportTask extends BukkitRunnable {
 	 */
 	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
 
+		this.plugin = JavaPlugin.getPlugin(PluginMain.class);
 		languageManager = LanguageManager.getInstance();
-		this.plugin = PluginMain.instance;
 		this.player = player;
 		this.destination = destination;
 		this.playerItem = playerItem;
