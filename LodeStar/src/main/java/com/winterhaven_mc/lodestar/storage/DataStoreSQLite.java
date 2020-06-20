@@ -48,18 +48,7 @@ class DataStoreSQLite extends DataStore {
 			return;
 		}
 
-		// sql statement to create table if it doesn't already exist
-		final String createDestinationTable = "CREATE TABLE IF NOT EXISTS destinations ("
-				+ "key VARCHAR PRIMARY KEY, "
-				+ "displayname VARCHAR,"
-				+ "worldname VARCHAR(255) NOT NULL, "
-				+ "x DOUBLE, "
-				+ "y DOUBLE, "
-				+ "z DOUBLE, "
-				+ "yaw FLOAT, "
-				+ "pitch FLOAT) ";
-
-		// register the driver 
+		// register the driver
 		final String jdbcDriverName = "org.sqlite.JDBC";
 
 		Class.forName(jdbcDriverName);
@@ -74,7 +63,7 @@ class DataStoreSQLite extends DataStore {
 		Statement statement = connection.createStatement();
 
 		// execute table creation statement
-		statement.executeUpdate(createDestinationTable);
+		statement.executeUpdate(Queries.getQuery("CreateDestinationTable"));
 
 		// set initialized true
 		setInitialized(true);
@@ -101,10 +90,8 @@ class DataStoreSQLite extends DataStore {
 		Destination destination = null;
 		World world;
 
-		final String sqlGetDestination = "SELECT * FROM destinations WHERE key = ?";
-
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlGetDestination);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("GetDestination"));
 
 			preparedStatement.setString(1, derivedKey);
 
@@ -184,24 +171,12 @@ class DataStoreSQLite extends DataStore {
 		}
 		final String worldName = testWorldName;
 
-		// sql statement to insert or replace record
-		final String sqlInsertDestination = "INSERT OR REPLACE INTO destinations ("
-				+ "key, "
-				+ "displayname,"
-				+ "worldname, "
-				+ "x, "
-				+ "y, "
-				+ "z, "
-				+ "yaw, "
-				+ "pitch) "
-				+ "values(?,?,?,?,?,?,?,?)";
-
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				try {
 					// create prepared statement
-					PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertDestination);
+					PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("InsertDestination"));
 
 					preparedStatement.setString(1, key);
 					preparedStatement.setString(2, displayName);
@@ -237,11 +212,8 @@ class DataStoreSQLite extends DataStore {
 
 		List<String> returnList = new ArrayList<>();
 
-		// sql statement to retrieve all display names
-		final String sqlSelectAllKeys = "SELECT key FROM destinations ORDER BY key";
-
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlSelectAllKeys);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllKeys"));
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
@@ -273,11 +245,8 @@ class DataStoreSQLite extends DataStore {
 
 		List<Destination> returnList = new ArrayList<>();
 
-		// sql statement to retrieve all display names
-		final String sqlSelectAllRecords = "SELECT * FROM destinations ORDER BY key";
-
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlSelectAllRecords);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllRecords"));
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
@@ -342,11 +311,9 @@ class DataStoreSQLite extends DataStore {
 		// get destination record to be deleted, for return
 		Destination destination = this.getRecord(key);
 
-		final String sqlDeleteDestination = "DELETE FROM destinations WHERE key = ?";
-
 		try {
 			// create prepared statement
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlDeleteDestination);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("DeleteDestination"));
 
 			preparedStatement.setString(1, key);
 
