@@ -5,6 +5,7 @@ import com.winterhaven_mc.lodestar.listeners.PlayerEventListener;
 import com.winterhaven_mc.lodestar.storage.DataStore;
 import com.winterhaven_mc.lodestar.teleport.TeleportManager;
 
+import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.WorldManager;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
@@ -41,6 +42,9 @@ public final class PluginMain extends JavaPlugin {
 
 		// install default config.yml if not present  
 		saveDefaultConfig();
+
+		// initialize language manager
+		LanguageManager.init();
 
 		// get initialized destination storage object
 		dataStore = DataStore.create();
