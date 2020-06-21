@@ -75,73 +75,7 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	public Destination getRecord(final String key) {
-
-		String derivedKey = key;
-
-		// if key is null return null record
-		if (derivedKey == null) {
-			return null;
-		}
-
-		// derive key in case destination name was passed
-		derivedKey = Destination.deriveKey(derivedKey);
-
-		Destination destination = null;
-		World world;
-
-		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("GetDestination"));
-
-			preparedStatement.setString(1, derivedKey);
-
-			// execute sql query
-			ResultSet rs = preparedStatement.executeQuery();
-
-			// only zero or one record can match the unique key
-			if (rs.next()) {
-
-				// get stored displayName
-				String displayName = rs.getString("displayname");
-				if (displayName == null || displayName.isEmpty()) {
-					displayName = derivedKey;
-				}
-
-				// get stored world and coordinates
-				String worldName = rs.getString("worldname");
-				double x = rs.getDouble("x");
-				double y = rs.getDouble("y");
-				double z = rs.getDouble("z");
-				float yaw = rs.getFloat("yaw");
-				float pitch = rs.getFloat("pitch");
-
-				if (plugin.getServer().getWorld(worldName) == null) {
-					plugin.getLogger().warning("Stored destination world not found!");
-					return null;
-				}
-				world = plugin.getServer().getWorld(worldName);
-				Location location = new Location(world, x, y, z, yaw, pitch);
-				destination = new Destination(derivedKey, displayName, location);
-			}
-		}
-		catch (SQLException e) {
-
-			// output simple error message
-			plugin.getLogger().warning("An error occured while fetching a destination from the SQLite database.");
-			plugin.getLogger().warning(e.getLocalizedMessage());
-
-			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
-				e.getStackTrace();
-			}
-			return null;
-		}
-		return destination;
-	}
-
-
-	@Override
-	public void putRecord(final Destination destination) {
+	public void insertRecord(final Destination destination) {
 
 		// if destination is null do nothing and return
 		if (destination == null) {
@@ -208,7 +142,71 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	public List<String> getAllKeys() {
+	public Destination selectRecord(final String key) {
+
+		// if key is null return null record
+		if (key == null) {
+			return null;
+		}
+
+		// derive key in case destination name was passed
+		String derivedKey = Destination.deriveKey(key);
+
+		Destination destination = null;
+		World world;
+
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("GetDestination"));
+
+			preparedStatement.setString(1, derivedKey);
+
+			// execute sql query
+			ResultSet rs = preparedStatement.executeQuery();
+
+			// only zero or one record can match the unique key
+			if (rs.next()) {
+
+				// get stored displayName
+				String displayName = rs.getString("displayname");
+				if (displayName == null || displayName.isEmpty()) {
+					displayName = derivedKey;
+				}
+
+				// get stored world and coordinates
+				String worldName = rs.getString("worldname");
+				double x = rs.getDouble("x");
+				double y = rs.getDouble("y");
+				double z = rs.getDouble("z");
+				float yaw = rs.getFloat("yaw");
+				float pitch = rs.getFloat("pitch");
+
+				if (plugin.getServer().getWorld(worldName) == null) {
+					plugin.getLogger().warning("Stored destination world not found!");
+					return null;
+				}
+				world = plugin.getServer().getWorld(worldName);
+				Location location = new Location(world, x, y, z, yaw, pitch);
+				destination = new Destination(derivedKey, displayName, location);
+			}
+		}
+		catch (SQLException e) {
+
+			// output simple error message
+			plugin.getLogger().warning("An error occured while fetching a destination from the SQLite database.");
+			plugin.getLogger().warning(e.getLocalizedMessage());
+
+			// if debugging is enabled, output stack trace
+			if (plugin.debug) {
+				e.getStackTrace();
+			}
+			return null;
+		}
+		return destination;
+	}
+
+
+	@Override
+	public List<String> selectAllKeys() {
 
 		List<String> returnList = new ArrayList<>();
 
@@ -241,7 +239,7 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	List<Destination> getAllRecords() {
+	List<Destination> selectAllRecords() {
 
 		List<Destination> returnList = new ArrayList<>();
 
@@ -309,7 +307,7 @@ class DataStoreSQLite extends DataStore {
 		key = Destination.deriveKey(key);
 
 		// get destination record to be deleted, for return
-		Destination destination = this.getRecord(key);
+		Destination destination = this.selectRecord(key);
 
 		try {
 			// create prepared statement
