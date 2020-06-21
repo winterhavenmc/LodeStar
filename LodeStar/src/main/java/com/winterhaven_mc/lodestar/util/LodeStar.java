@@ -102,11 +102,11 @@ public final class LodeStar {
 		// retrieve item name from language file
 		String itemName = languageManager.getInventoryItemName();
 
-		// translate color codes
-		itemName = ChatColor.translateAlternateColorCodes('&', itemName);
-
 		// replace destination placeholder with destination name
 		itemName = itemName.replace("%DESTINATION%", destinationName);
+
+		// translate color codes
+		itemName = ChatColor.translateAlternateColorCodes('&', itemName);
 
 		// retrieve item lore from language file
 		List<String> configLore = languageManager.getItemLore();
@@ -116,8 +116,8 @@ public final class LodeStar {
 
 		// iterate over lines of lore and translate color codes and replace destination placeholder
 		for (String line : configLore) {
-			line = ChatColor.translateAlternateColorCodes('&', line);
 			line = line.replace("%DESTINATION%", destinationName);
+			line = ChatColor.translateAlternateColorCodes('&', line);
 			itemLore.add(line);
 		}
 
