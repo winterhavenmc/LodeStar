@@ -41,14 +41,14 @@ public final class PluginMain extends JavaPlugin {
 		// initialize language manager
 		LanguageManager.init();
 
-		// get initialized destination storage object
-		dataStore = DataStore.create();
-
 		// instantiate world manager
 		worldManager = new WorldManager(this);
 
 		// instantiate sound configuration
 		soundConfig = new YamlSoundConfiguration(this);
+
+		// get initialized destination storage object
+		dataStore = DataStore.create();
 
 		// instantiate teleport manager
 		teleportManager = new TeleportManager(this);

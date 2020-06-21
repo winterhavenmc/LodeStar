@@ -67,9 +67,7 @@ class DataStoreSQLite extends DataStore {
 
 		// set initialized true
 		setInitialized(true);
-		if (plugin.debug) {
-			plugin.getLogger().info(this.getName() + " datastore initialized.");
-		}
+		plugin.getLogger().info(this.getName() + " datastore initialized.");
 
 	}
 
