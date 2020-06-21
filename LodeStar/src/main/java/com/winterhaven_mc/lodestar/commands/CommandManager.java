@@ -372,7 +372,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			return true;
 		}
 		int quantity = playerItem.getAmount();
-		String destinationName = LodeStar.getName(playerItem);
+		String destinationName = LodeStar.getDestinationName(playerItem);
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
 		Message.create(sender, COMMAND_SUCCESS_DESTROY)
@@ -837,7 +837,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			// if item in hand is a LodeStar item, set destination and material from item
 			if (LodeStar.isItem(playerItem)) {
 
-				destinationName = LodeStar.getName(playerItem);
+				destinationName = LodeStar.getDestinationName(playerItem);
 				material = playerItem.getType();
 			}
 		}

@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 
 public class Destination {
 
@@ -27,6 +29,10 @@ public class Destination {
 	 */
 	public Destination(final String displayName, final Location location) {
 
+		// validate parameters
+		Objects.requireNonNull(displayName);
+		Objects.requireNonNull(location);
+
 		this.key = deriveKey(displayName);
 		this.displayName = displayName;
 		this.location = new Location(location.getWorld(),
@@ -46,6 +52,11 @@ public class Destination {
 	 * @param location    the destination location
 	 */
 	public Destination(final String key, final String displayName, final Location location) {
+
+		// validate parameters
+		Objects.requireNonNull(key);
+		Objects.requireNonNull(displayName);
+		Objects.requireNonNull(location);
 
 		this.key = key;
 		this.displayName = displayName;
@@ -128,6 +139,9 @@ public class Destination {
 	 */
 	public static String deriveKey(final String destinationName) {
 
+		// validate parameter
+		Objects.requireNonNull(destinationName);
+
 		// copy passed in destination name to derivedKey
 		String derivedKey = destinationName;
 
@@ -155,13 +169,14 @@ public class Destination {
 	 */
 	public static boolean exists(final String destinationName) {
 
+		// if parameter is null or empty string, return false
 		if (destinationName == null || destinationName.isEmpty()) {
 			return false;
 		}
 
 		String key = Destination.deriveKey(destinationName);
 
-		return isReserved(destinationName) || plugin.dataStore.getRecord(key) != null;
+		return isReserved(destinationName) || plugin.dataStore.selectRecord(key) != null;
 	}
 
 
@@ -172,6 +187,11 @@ public class Destination {
 	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
 	 */
 	public static boolean isReserved(final String destinationName) {
+
+		// if parameter is null or empty string, return false
+		if (destinationName == null || destinationName.isEmpty()) {
+			return false;
+		}
 
 		// test if passed destination name is reserved name for home or spawn locations
 		return isHome(destinationName) || isSpawn(destinationName);
@@ -185,6 +205,11 @@ public class Destination {
 	 * @return {@code true} if destination name is reserved home name, {@code false} if not
 	 */
 	public static boolean isHome(final String destinationName) {
+
+		// if parameter is null or empty string, return false
+		if (destinationName == null || destinationName.isEmpty()) {
+			return false;
+		}
 
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
 		String key = Destination.deriveKey(destinationName);
@@ -200,6 +225,11 @@ public class Destination {
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
 	 */
 	public static boolean isSpawn(final String destinationName) {
+
+		// if parameter is null or empty string, return false
+		if (destinationName == null || destinationName.isEmpty()) {
+			return false;
+		}
 
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
 		String key = Destination.deriveKey(destinationName);
@@ -235,7 +265,7 @@ public class Destination {
 
 		// else get destination name from datastore
 		else {
-			Destination destination = plugin.dataStore.getRecord(derivedKey);
+			Destination destination = plugin.dataStore.selectRecord(derivedKey);
 			if (destination != null) {
 				returnName = destination.getDisplayName();
 			}

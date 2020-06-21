@@ -171,7 +171,7 @@ public final class LodeStar {
 	 * @param itemStack the item whose destination name is being retrieved
 	 * @return String - destination display name
 	 */
-	public static String getName(final ItemStack itemStack) {
+	public static String getDestinationName(final ItemStack itemStack) {
 
 		String key = LodeStar.getKey(itemStack);
 
