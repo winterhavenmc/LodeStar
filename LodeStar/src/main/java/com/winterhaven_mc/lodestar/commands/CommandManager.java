@@ -106,7 +106,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					|| args[0].equalsIgnoreCase("unset")
 					|| args[0].equalsIgnoreCase("bind")
 					|| args[0].equalsIgnoreCase("delete")) {
-				returnList.addAll(plugin.dataStore.getAllKeys());
+				returnList.addAll(plugin.dataStore.selectAllKeys());
 			}
 		}
 
@@ -115,7 +115,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 			// if subcommand is 'give', return list of destination keys
 			if (args[0].equals("give")) {
-				returnList.addAll(plugin.dataStore.getAllKeys());
+				returnList.addAll(plugin.dataStore.selectAllKeys());
 			}
 		}
 
@@ -441,7 +441,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		// check if destination name exists and if so if player has overwrite permission
-		Destination destination = plugin.dataStore.getRecord(destinationName);
+		Destination destination = plugin.dataStore.selectRecord(destinationName);
 
 		// check for overwrite permission if destination already exists
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
@@ -465,7 +465,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		destination = new Destination(destinationName, location);
 
 		// store destination object
-		plugin.dataStore.putRecord(destination);
+		plugin.dataStore.insertRecord(destination);
 
 		// send success message to player
 		Message.create(sender, COMMAND_SUCCESS_SET).setMacro(DESTINATION, destinationName).send();
@@ -616,7 +616,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		// try to get formatted destination name from storage
-		Destination destination = plugin.dataStore.getRecord(destinationName);
+		Destination destination = plugin.dataStore.selectRecord(destinationName);
 		if (destination != null) {
 			destinationName = destination.getDisplayName();
 		}
@@ -674,7 +674,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 		int itemsPerPage = 20;
 
-		List<String> displayNames = plugin.dataStore.getAllKeys();
+		List<String> displayNames = plugin.dataStore.selectAllKeys();
 
 		int pageCount = (displayNames.size() / itemsPerPage) + 1;
 		if (page > pageCount) {

@@ -33,7 +33,7 @@ public abstract class DataStore {
 	 * @param destinationName the name string key of the destination to be retrieved from the datastore
 	 * @return destination object or null if no matching record
 	 */
-	public abstract Destination getRecord(final String destinationName);
+	public abstract Destination selectRecord(final String destinationName);
 
 
 	/**
@@ -41,7 +41,7 @@ public abstract class DataStore {
 	 *
 	 * @param destination the destination object to be inserted in the datastore
 	 */
-	public abstract void putRecord(final Destination destination);
+	public abstract void insertRecord(final Destination destination);
 
 
 	/**
@@ -49,7 +49,7 @@ public abstract class DataStore {
 	 *
 	 * @return List of all destination display name strings
 	 */
-	public abstract List<String> getAllKeys();
+	public abstract List<String> selectAllKeys();
 
 
 	/**
@@ -57,7 +57,7 @@ public abstract class DataStore {
 	 *
 	 * @return List of all destination records
 	 */
-	abstract List<Destination> getAllRecords();
+	abstract List<Destination> selectAllRecords();
 
 
 	/**
@@ -232,14 +232,14 @@ public abstract class DataStore {
 			}
 
 			// get List of all records from old datastore
-			List<Destination> allRecords = oldDataStore.getAllRecords();
+			List<Destination> allRecords = oldDataStore.selectAllRecords();
 
 			// initialize counter
 			int count = 0;
 
 			// insert each record into new datastore
 			for (Destination record : allRecords) {
-				newDataStore.putRecord(record);
+				newDataStore.insertRecord(record);
 				count++;
 			}
 			plugin.getLogger().info(count + " records converted to " + newDataStore.getName() + " datastore.");

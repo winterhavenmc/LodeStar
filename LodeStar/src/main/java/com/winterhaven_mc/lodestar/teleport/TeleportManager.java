@@ -147,7 +147,7 @@ public class TeleportManager {
 		// if destination is not set to home or spawn get destination from storage
 		if (destination == null) {
 			// get destination from storage
-			destination = plugin.dataStore.getRecord(key);
+			destination = plugin.dataStore.selectRecord(key);
 			if (destination != null) {
 				location = destination.getLocation();
 			}

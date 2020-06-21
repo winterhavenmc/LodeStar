@@ -193,7 +193,7 @@ public final class LodeStar {
 		}
 		// else get destination name from datastore
 		else {
-			Destination destination = plugin.dataStore.getRecord(key);
+			Destination destination = plugin.dataStore.selectRecord(key);
 			if (destination != null) {
 				destinationName = destination.getDisplayName();
 			}
