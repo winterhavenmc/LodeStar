@@ -38,7 +38,7 @@ TIME_STRINGS:
 #
 # Variable substitutions:
 # %ITEM%                Item name, with no color codes
-# %ITEM_QUANTITY%            number of items (valid in give command message only)
+# %ITEM_QUANTITY%       number of items (valid in give command message only)
 # %PLAYER%              message recipient's name
 # %WORLD%               destination world name
 # %DESTINATION%         display name of teleport destination
