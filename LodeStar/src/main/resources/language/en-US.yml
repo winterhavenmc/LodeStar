@@ -38,7 +38,7 @@ TIME_STRINGS:
 #
 # Variable substitutions:
 # %ITEM%                Item name as defined in this file
-# %QUANTITY%            number of items (valid in give command message only)
+# %ITEM_QUANTITY%       number of items (valid in give command message only)
 # %PLAYER%              message recipient's name
 # %WORLD%               destination world name
 # %DESTINATION%         display name of teleport destination
@@ -120,12 +120,12 @@ MESSAGES:
 
   COMMAND_SUCCESS_GIVE:
     enabled: true
-    string: '&3You gave %QUANTITY% %ITEM% to %TARGET_PLAYER%.'
+    string: '&3You gave %ITEM_QUANTITY% %ITEM% to %TARGET_PLAYER%.'
 
 #NOTE: target player refers to item giver in below message!
   COMMAND_SUCCESS_GIVE_TARGET:
     enabled: true
-    string: '&3%TARGET_PLAYER% gave you %QUANTITY% %ITEM%.'
+    string: '&3%TARGET_PLAYER% gave you %ITEM_QUANTITY% %ITEM%.'
 
   COMMAND_SUCCESS_RELOAD:
     enabled: true

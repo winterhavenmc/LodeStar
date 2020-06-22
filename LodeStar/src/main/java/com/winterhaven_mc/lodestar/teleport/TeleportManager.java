@@ -170,7 +170,6 @@ public class TeleportManager {
 			}
 
 			Message.create(player, TELEPORT_FAIL_INVALID_DESTINATION)
-					.setMacro(QUANTITY, 1)
 					.setMacro(DESTINATION, displayName)
 					.send();
 					return;
@@ -180,7 +179,6 @@ public class TeleportManager {
 		if (player.getWorld() == location.getWorld()
 				&& location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
 			Message.create(player, TELEPORT_FAIL_PROXIMITY)
-					.setMacro(QUANTITY, 1)
 					.setMacro(DESTINATION, destination.getDisplayName())
 					.send();
 			return;

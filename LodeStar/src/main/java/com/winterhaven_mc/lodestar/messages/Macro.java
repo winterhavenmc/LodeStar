@@ -3,7 +3,7 @@ package com.winterhaven_mc.lodestar.messages;
 public enum Macro {
 
 	DESTINATION,
-	QUANTITY,
+	ITEM_QUANTITY,
 	TARGET_PLAYER,
 	DURATION,
 	WORLD,

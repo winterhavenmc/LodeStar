@@ -376,7 +376,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
 		Message.create(sender, COMMAND_SUCCESS_DESTROY)
-				.setMacro(QUANTITY, quantity)
+				.setMacro(ITEM_QUANTITY, quantity)
 				.setMacro(DESTINATION, destinationName)
 				.send();
 		plugin.soundConfig.playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
@@ -957,7 +957,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// if remaining items equals quantity given, send player-inventory-full message and return
 		if (noFitCount == quantity) {
 			Message.create(giver, COMMAND_FAIL_GIVE_INVENTORY_FULL)
-					.setMacro(QUANTITY, quantity)
+					.setMacro(ITEM_QUANTITY, quantity)
 					.send();
 			return false;
 		}
@@ -974,7 +974,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			// send message and play sound to giver
 			Message.create(giver, COMMAND_SUCCESS_GIVE)
 					.setMacro(DESTINATION, destinationName)
-					.setMacro(QUANTITY, quantity)
+					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, targetPlayer)
 					.send();
 
@@ -986,7 +986,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			// send message to target player
 			Message.create(targetPlayer, COMMAND_SUCCESS_GIVE_TARGET)
 					.setMacro(DESTINATION, destinationName)
-					.setMacro(QUANTITY, quantity)
+					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, giver)
 					.send();
 		}
