@@ -9,7 +9,6 @@ import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -36,10 +35,10 @@ class DelayedTeleportTask extends BukkitRunnable {
 	 * @param destination the teleport destination
 	 * @param playerItem the item used to initiate teleport
 	 */
-	DelayedTeleportTask(final Player player, final Destination destination, final ItemStack playerItem) {
+	DelayedTeleportTask(final PluginMain plugin, final Player player, final Destination destination, final ItemStack playerItem) {
 
-		this.plugin = JavaPlugin.getPlugin(PluginMain.class);
-		languageManager = LanguageManager.getInstance();
+		this.plugin = plugin;
+		this.languageManager = LanguageManager.getInstance();
 		this.player = player;
 		this.destination = destination;
 		this.playerItem = playerItem;
@@ -50,7 +49,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 		if (plugin.getConfig().getBoolean("particle-effects")) {
 
 			// start particle task, with 2 tick delay so it doesn't self cancel on first run
-			particleTask = new ParticleTask(player).runTaskTimer(plugin, 2L, 10);
+			particleTask = new ParticleTask(plugin, player).runTaskTimer(plugin, 2L, 10);
 
 		}
 	}
