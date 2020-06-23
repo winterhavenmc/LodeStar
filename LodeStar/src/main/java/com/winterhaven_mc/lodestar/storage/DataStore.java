@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -42,6 +43,15 @@ public abstract class DataStore {
 	 * @param destination the destination object to be inserted in the datastore
 	 */
 	public abstract void insertRecord(final Destination destination);
+
+
+	/**
+	 * Insert a collection of records
+	 * @param destinations a collection of records to be inserted
+	 *
+	 * @return count of records inserted
+	 */
+	public abstract int insertRecords(final Collection<Destination> destinations);
 
 
 	/**

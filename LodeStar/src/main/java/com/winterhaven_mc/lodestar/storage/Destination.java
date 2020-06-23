@@ -5,21 +5,29 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
-public class Destination {
+public final class Destination {
 
+	// static reference to plugin main class instance, necessary for static methods
 	private static final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	private static final LanguageManager languageManager = LanguageManager.getInstance();
 
 	private final String key;
 	private final String displayName;
-	private final Location location;
 
+	private final UUID worldUid;
+	private final double x;
+	private final double y;
+	private final double z;
+	private final float yaw;
+	private final float pitch;
 
 	/**
 	 * Class constructor
@@ -35,12 +43,12 @@ public class Destination {
 
 		this.key = deriveKey(displayName);
 		this.displayName = displayName;
-		this.location = new Location(location.getWorld(),
-				location.getX(),
-				location.getY(),
-				location.getZ(),
-				location.getYaw(),
-				location.getPitch());
+		this.worldUid = Objects.requireNonNull(location.getWorld()).getUID();
+		this.x = location.getX();
+		this.y = location.getY();
+		this.z = location.getZ();
+		this.yaw = location.getYaw();
+		this.pitch = location.getPitch();
 	}
 
 
@@ -60,12 +68,32 @@ public class Destination {
 
 		this.key = key;
 		this.displayName = displayName;
-		this.location = new Location(location.getWorld(),
-				location.getX(),
-				location.getY(),
-				location.getZ(),
-				location.getYaw(),
-				location.getPitch());
+		this.worldUid = Objects.requireNonNull(location.getWorld()).getUID();
+		this.x = location.getX();
+		this.y = location.getY();
+		this.z = location.getZ();
+		this.yaw = location.getYaw();
+		this.pitch = location.getPitch();
+	}
+
+
+	public Destination(final String key,
+					   final String displayName,
+					   final UUID worldUid,
+					   final double x,
+					   final double y,
+					   final double z,
+					   final float yaw,
+					   final float pitch) {
+
+		this.key = key;
+		this.displayName = displayName;
+		this.worldUid = worldUid;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.yaw = yaw;
+		this.pitch = pitch;
 	}
 
 
@@ -124,7 +152,44 @@ public class Destination {
 	 * @return the value of the location field
 	 */
 	public Location getLocation() {
-		return location;
+
+		World world = plugin.getServer().getWorld(this.worldUid);
+
+		if (world == null) {
+			return null;
+		}
+
+		return new Location(world, x, y, z, yaw, pitch);
+	}
+
+
+	public UUID getWorldUid() {
+		return worldUid;
+	}
+
+
+	public double getX() {
+		return x;
+	}
+
+
+	public double getY() {
+		return y;
+	}
+
+
+	public double getZ() {
+		return z;
+	}
+
+
+	public float getYaw() {
+		return yaw;
+	}
+
+
+	public float getPitch() {
+		return pitch;
 	}
 
 

@@ -1,15 +1,12 @@
 package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 class DataStoreSQLite extends DataStore {
@@ -20,6 +17,8 @@ class DataStoreSQLite extends DataStore {
 	// database connection object
 	private Connection connection;
 
+	// schema version
+	private int schemaVersion;
 
 	/**
 	 * Class constructor
@@ -60,15 +59,62 @@ class DataStoreSQLite extends DataStore {
 
 		// create a database connection
 		connection = DriverManager.getConnection(dbUrl);
-		Statement statement = connection.createStatement();
 
-		// execute table creation statement
-		statement.executeUpdate(Queries.getQuery("CreateDestinationTable"));
+		// update schema if necessary
+		updateSchema();
 
 		// set initialized true
 		setInitialized(true);
 		plugin.getLogger().info(this.getName() + " datastore initialized.");
+	}
 
+
+	private int getSchemaVersion() {
+
+		int version = -1;
+
+		try {
+			final Statement statement = connection.createStatement();
+
+			ResultSet rs = statement.executeQuery(Queries.getQuery("GetUserVersion"));
+
+			while (rs.next()) {
+				version = rs.getInt(1);
+			}
+		}
+		catch (SQLException e) {
+			plugin.getLogger().warning("Could not get schema version!");
+		}
+		return version;
+	}
+
+
+	private void updateSchema() throws SQLException {
+
+		schemaVersion = getSchemaVersion();
+
+		final Statement statement = connection.createStatement();
+
+		if (schemaVersion == 0) {
+			int count;
+			ResultSet rs = statement.executeQuery(Queries.getQuery("SelectDestinationTable"));
+			if (rs.next()) {
+				Collection<Destination> existingRecords = selectAllRecords();
+				statement.executeUpdate(Queries.getQuery("DropDestinationTable"));
+				statement.executeUpdate(Queries.getQuery("CreateDestinationTable"));
+				count = insertRecords(existingRecords);
+				plugin.getLogger().info(count + " destination records migrated to schema v1");
+			}
+
+			// update schema version in database
+			statement.executeUpdate("PRAGMA user_version = 1");
+
+			// update schema version field
+			schemaVersion = 1;
+		}
+
+		// execute table creation statement
+		statement.executeUpdate(Queries.getQuery("CreateDestinationTable"));
 	}
 
 
@@ -86,22 +132,18 @@ class DataStoreSQLite extends DataStore {
 		// get display name
 		final String displayName = destination.getDisplayName();
 
-		// get location
-		final Location location = destination.getLocation();
-
-		// get world name
-		String testWorldName;
+		// get world
+		World world = plugin.getServer().getWorld(destination.getWorldUid());
 
 		// test that world in destination location is valid
-		try {
-			testWorldName = Objects.requireNonNull(location.getWorld()).getName();
-		}
-		catch (Exception e) {
+		if (world == null) {
 			plugin.getLogger().warning("An error occured while inserting"
 					+ " a destination in the " + toString() + " datastore. World invalid!");
 			return;
 		}
-		final String worldName = testWorldName;
+
+		// get current name of world
+		final String worldName = world.getName();
 
 		new BukkitRunnable() {
 			@Override
@@ -113,16 +155,18 @@ class DataStoreSQLite extends DataStore {
 					preparedStatement.setString(1, key);
 					preparedStatement.setString(2, displayName);
 					preparedStatement.setString(3, worldName);
-					preparedStatement.setDouble(4, location.getX());
-					preparedStatement.setDouble(5, location.getY());
-					preparedStatement.setDouble(6, location.getZ());
-					preparedStatement.setFloat(7, location.getYaw());
-					preparedStatement.setFloat(8, location.getPitch());
+					preparedStatement.setLong(4, destination.getWorldUid().getMostSignificantBits());
+					preparedStatement.setLong(5, destination.getWorldUid().getLeastSignificantBits());
+					preparedStatement.setDouble(6, destination.getX());
+					preparedStatement.setDouble(7, destination.getY());
+					preparedStatement.setDouble(8, destination.getZ());
+					preparedStatement.setFloat(9, destination.getYaw());
+					preparedStatement.setFloat(10, destination.getPitch());
 
 					// execute prepared statement
 					preparedStatement.executeUpdate();
 				}
-				catch (Exception e) {
+				catch (SQLException e) {
 
 					// output simple error message
 					plugin.getLogger().warning("An error occured while inserting a destination "
@@ -140,6 +184,77 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
+	public synchronized int insertRecords(final Collection<Destination> destinations) {
+
+		// if destination is null return zero record count
+		if (destinations == null) {
+			return 0;
+		}
+
+		int count = 0;
+
+		for (Destination destination : destinations) {
+
+			// get key
+			final String key = destination.getKey();
+
+			// get display name
+			final String displayName = destination.getDisplayName();
+
+			// get world
+			World world = plugin.getServer().getWorld(destination.getWorldUid());
+
+			// test that world in destination location is valid
+			if (world == null) {
+				plugin.getLogger().warning("An error occured while inserting"
+						+ " a destination in the " + toString() + " datastore. World invalid!");
+				continue;
+			}
+
+			final String worldName = world.getName();
+
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					try {
+						// create prepared statement
+						PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("InsertDestination"));
+
+						preparedStatement.setString(1, key);
+						preparedStatement.setString(2, displayName);
+						preparedStatement.setString(3, worldName);
+						preparedStatement.setLong(4, destination.getWorldUid().getMostSignificantBits());
+						preparedStatement.setLong(5, destination.getWorldUid().getLeastSignificantBits());
+						preparedStatement.setDouble(6, destination.getX());
+						preparedStatement.setDouble(7, destination.getY());
+						preparedStatement.setDouble(8, destination.getZ());
+						preparedStatement.setFloat(9, destination.getYaw());
+						preparedStatement.setFloat(10, destination.getPitch());
+
+						// execute prepared statement
+						preparedStatement.executeUpdate();
+					}
+					catch (Exception e) {
+
+						// output simple error message
+						plugin.getLogger().warning("An error occured while inserting a destination "
+								+ "into the " + toString() + " datastore.");
+						plugin.getLogger().warning(e.getLocalizedMessage());
+
+						// if debugging is enabled, output stack trace
+						if (plugin.debug) {
+							e.getStackTrace();
+						}
+					}
+				}
+			}.runTaskAsynchronously(plugin);
+			count++;
+		}
+		return count;
+	}
+
+
+	@Override
 	public Destination selectRecord(final String key) {
 
 		// if key is null return null record
@@ -151,7 +266,6 @@ class DataStoreSQLite extends DataStore {
 		String derivedKey = Destination.deriveKey(key);
 
 		Destination destination = null;
-		World world;
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("GetDestination"));
@@ -172,25 +286,35 @@ class DataStoreSQLite extends DataStore {
 
 				// get stored world and coordinates
 				String worldName = rs.getString("worldname");
+				long worldUidMsb = rs.getLong("worldUidMsb");
+				long worldUidLsb = rs.getLong("worldUidLsb");
 				double x = rs.getDouble("x");
 				double y = rs.getDouble("y");
 				double z = rs.getDouble("z");
 				float yaw = rs.getFloat("yaw");
 				float pitch = rs.getFloat("pitch");
 
-				if (plugin.getServer().getWorld(worldName) == null) {
-					plugin.getLogger().warning("Stored destination world not found!");
+				// reconstitute world uid from components
+				UUID worldUid = new UUID(worldUidMsb, worldUidLsb);
+
+				// get world
+				World world = plugin.getServer().getWorld(worldUid);
+
+				// if world is null, skip to next record
+				if (world == null) {
+					plugin.getLogger().warning("Stored destination has invalid world: "
+							+ worldName + ". Skipping record.");
 					return null;
 				}
-				world = plugin.getServer().getWorld(worldName);
-				Location location = new Location(world, x, y, z, yaw, pitch);
-				destination = new Destination(derivedKey, displayName, location);
+
+				// create destination
+				destination = new Destination(key, displayName, worldUid, x, y, z, yaw, pitch);
 			}
 		}
 		catch (SQLException e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occured while fetching a destination from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while fetching a destination from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
@@ -200,6 +324,102 @@ class DataStoreSQLite extends DataStore {
 			return null;
 		}
 		return destination;
+	}
+
+
+	@Override
+	List<Destination> selectAllRecords() {
+
+		List<Destination> returnList = new ArrayList<>();
+
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllRecords"));
+
+			// execute sql query
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+
+				if (schemaVersion == 0) {
+					String key = rs.getString("key");
+					String displayName = rs.getString("displayname");
+					String worldName = rs.getString("worldname");
+					double x = rs.getDouble("x");
+					double y = rs.getDouble("y");
+					double z = rs.getDouble("z");
+					float yaw = rs.getFloat("yaw");
+					float pitch = rs.getFloat("pitch");
+
+					// get world by name
+					World world = plugin.getServer().getWorld(worldName);
+
+					// if world is null, skip to next record
+					if (world == null) {
+						plugin.getLogger().warning("Stored destination has invalid world: "
+								+ worldName + ". Skipping record.");
+						continue;
+					}
+
+					// get world Uid
+					UUID worldUid = world.getUID();
+
+					// create destination from record
+					Destination destination = new Destination(key, displayName, worldUid, x, y, z, yaw, pitch);
+
+					// add destination to return list
+					returnList.add(destination);
+				}
+
+				else if (schemaVersion == 1) {
+
+					String key = rs.getString("key");
+					String displayName = rs.getString("displayname");
+					String worldName = rs.getString("worldname");
+					long worldUidMsb = rs.getLong("worldUidMsb");
+					long worldUidLsb = rs.getLong("worldUidLsb");
+					double x = rs.getDouble("x");
+					double y = rs.getDouble("y");
+					double z = rs.getDouble("z");
+					float yaw = rs.getFloat("yaw");
+					float pitch = rs.getFloat("pitch");
+
+					// reconstitute world uid from components
+					UUID worldUid = new UUID(worldUidMsb, worldUidLsb);
+
+					// get world
+					World world = plugin.getServer().getWorld(worldUid);
+
+					// if world is null, skip to next record
+					if (world == null) {
+						plugin.getLogger().warning("Stored destination has invalid world: "
+								+ worldName + ". Skipping record.");
+						continue;
+					}
+
+					// create destination
+					Destination destination = new Destination(key, displayName, worldUid, x, y, z, yaw, pitch);
+
+					// add destination to return list
+					returnList.add(destination);
+				}
+			}
+		}
+		catch (SQLException e) {
+
+			// output simple error message
+			plugin.getLogger().warning("An error occurred while trying to "
+					+ "fetch all records from the SQLite datastore.");
+			plugin.getLogger().warning(e.getLocalizedMessage());
+
+			// if debugging is enabled, output stack trace
+			if (plugin.debug) {
+				e.getStackTrace();
+			}
+		}
+
+		// return results
+		return returnList;
+
 	}
 
 
@@ -233,63 +453,6 @@ class DataStoreSQLite extends DataStore {
 
 		// return results
 		return returnList;
-	}
-
-
-	@Override
-	List<Destination> selectAllRecords() {
-
-		List<Destination> returnList = new ArrayList<>();
-
-		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllRecords"));
-
-			// execute sql query
-			ResultSet rs = preparedStatement.executeQuery();
-
-			while (rs.next()) {
-
-				String key = rs.getString("key");
-				String displayName = rs.getString("displayname");
-				String worldName = rs.getString("worldname");
-				double x = rs.getDouble("x");
-				double y = rs.getDouble("y");
-				double z = rs.getDouble("z");
-				float yaw = rs.getFloat("yaw");
-				float pitch = rs.getFloat("pitch");
-
-				World world;
-
-				try {
-					world = plugin.getServer().getWorld(worldName);
-				}
-				catch (Exception e) {
-					plugin.getLogger().warning("Stored destination has unloaded world: "
-							+ worldName + ". Skipping record.");
-					continue;
-				}
-
-				Location location = new Location(world, x, y, z, yaw, pitch);
-				Destination destination = new Destination(key, displayName, location);
-				returnList.add(destination);
-			}
-		}
-		catch (Exception e) {
-
-			// output simple error message
-			plugin.getLogger().warning("An error occurred while trying to "
-					+ "fetch all records from the SQLite datastore.");
-			plugin.getLogger().warning(e.getLocalizedMessage());
-
-			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
-				e.getStackTrace();
-			}
-		}
-
-		// return results
-		return returnList;
-
 	}
 
 

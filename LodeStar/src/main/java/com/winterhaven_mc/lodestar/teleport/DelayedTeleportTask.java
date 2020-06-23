@@ -107,7 +107,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 			if (destination.isSpawn()) {
 				Message.create(player, TELEPORT_SUCCESS_SPAWN)
 						.setMacro(DESTINATION, languageManager.getSpawnDisplayName())
-						.setMacro(WORLD, destination.getLocation().getWorld())
+						.setMacro(WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.send();
 			}
 			// otherwise send regular success message

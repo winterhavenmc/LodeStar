@@ -209,7 +209,7 @@ public class TeleportManager {
 			if (destination.isSpawn()) {
 				Message.create(player, TELEPORT_WARMUP_SPAWN)
 						.setMacro(DESTINATION, destination.getDisplayName())
-						.setMacro(WORLD, destination.getLocation().getWorld())
+						.setMacro(WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.setMacro(DURATION, languageManager.getTimeString(TimeUnit.SECONDS.toMillis(warmupTime)))
 						.send();
 			}
