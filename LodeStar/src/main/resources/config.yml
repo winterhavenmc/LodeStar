@@ -70,5 +70,8 @@ from-nether: true
 # if player is in end world, try to respawn in matching overworld
 from-end: true
 
+# number of destinations shown per page in list command
+list-page-size: 5
+
 # write log entry on use
 log-use: true

@@ -672,21 +672,52 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 		page = Math.max(1, page);
 
-		int itemsPerPage = 20;
+		int itemsPerPage = plugin.getConfig().getInt("list-page-size");
 
-		List<String> displayNames = plugin.dataStore.selectAllKeys();
+		// get all records from datastore
+		final List<String> allKeys = plugin.dataStore.selectAllKeys();
 
-		int pageCount = (displayNames.size() / itemsPerPage) + 1;
+		if (plugin.debug) {
+			plugin.getLogger().info("Total records fetched from db: " + allKeys.size());
+		}
+
+		// if display list is empty, output list empty message and return
+		if (allKeys.isEmpty()) {
+			Message.create(sender, LIST_EMPTY).send();
+			return true;
+		}
+
+		int pageCount = (allKeys.size() / itemsPerPage) + 1;
 		if (page > pageCount) {
 			page = pageCount;
 		}
 		int startIndex = ((page - 1) * itemsPerPage);
-		int endIndex = Math.min((page * itemsPerPage), displayNames.size());
+		int endIndex = Math.min((page * itemsPerPage), allKeys.size());
 
-		List<String> displayRange = displayNames.subList(startIndex, endIndex);
+		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
-		sender.sendMessage(ChatColor.DARK_AQUA + "page " + page + " of " + pageCount);
-		sender.sendMessage(ChatColor.AQUA + displayRange.toString().substring(1, displayRange.toString().length() - 1));
+		// display list header
+		Message.create(sender, LIST_HEADER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send();
+
+		int itemNumber = startIndex;
+
+		for (String key : displayKeys) {
+
+			// increment item number
+			itemNumber++;
+
+			Destination destination = plugin.dataStore.selectRecord(key);
+
+			Message.create(sender, LIST_ITEM)
+					.setMacro(DESTINATION, destination.getDisplayName())
+					.setMacro(ITEM_NUMBER, itemNumber)
+					.setMacro(LOCATION, destination.getLocation())
+					.send();
+		}
+
+		// display list footer
+		Message.create(sender, LIST_FOOTER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send();
+
 		return true;
 	}
 

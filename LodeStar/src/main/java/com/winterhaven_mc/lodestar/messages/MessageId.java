@@ -56,4 +56,9 @@ public enum MessageId {
 
 	USAGE_SHIFT_CLICK,
 
+	LIST_HEADER,
+	LIST_FOOTER,
+	LIST_ITEM,
+	LIST_EMPTY,
+
 }

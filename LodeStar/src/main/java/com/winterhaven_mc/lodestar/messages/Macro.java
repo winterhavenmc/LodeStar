@@ -7,5 +7,9 @@ public enum Macro {
 	TARGET_PLAYER,
 	DURATION,
 	WORLD,
+	PAGE_NUMBER,
+	PAGE_TOTAL,
+	ITEM_NUMBER,
+	LOCATION,
 
 }

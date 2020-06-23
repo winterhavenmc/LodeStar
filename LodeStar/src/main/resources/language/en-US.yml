@@ -57,10 +57,6 @@ MESSAGES:
     enabled: true
     string: '&3[LodeStar]&c Too many arguments!'
 
-  COMMAND_FAIL_ARGS_COUNT_OVER_SPACES: # unused?
-    enabled: true
-    string: '&3[LodeStar]&c Use underscores in place of spaces for destination name.'
-
   COMMAND_FAIL_CONSOLE:
     enabled: true
     string: '&3[LodeStar]&c You must be in game to use this command!'
@@ -242,3 +238,20 @@ MESSAGES:
     enabled: true
     repeat-delay: 5
     string: '&3You must shift-click to use a %ITEM%.'
+
+
+  LIST_HEADER:
+    enabled: true
+    string: '&3Page &b%PAGE_NUMBER%&3 of &b%PAGE_TOTAL%'
+
+  LIST_FOOTER:
+    enabled: false
+    string: '&3Page &b%PAGE_NUMBER%&3 of &b%PAGE_TOTAL%'
+
+  LIST_ITEM:
+    enabled: true
+    string: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%LOCATION%"
+
+  LIST_EMPTY:
+    enabled: true
+    string: '&bThere are no destinations to list!'
