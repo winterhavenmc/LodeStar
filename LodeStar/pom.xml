@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>messenger-lib</artifactId>
-			<version>1.0.1</version>
+			<version>1.16.0</version>
 		</dependency>
 
 		<!-- SoundConfigLib -->
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>world-manager-lib</artifactId>
-			<version>1.0.8</version>
+			<version>1.16.0</version>
 		</dependency>
 	</dependencies>
 
