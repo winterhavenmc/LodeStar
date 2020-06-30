@@ -35,7 +35,7 @@ particle-effects: true
 sound-effects: true
 
 # lightning strike at destination on use
-lightning: true
+lightning: false
 
 # Allow left-click to use
 left-click: false
