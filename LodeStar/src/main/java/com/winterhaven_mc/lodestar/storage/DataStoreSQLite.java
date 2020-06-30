@@ -268,7 +268,7 @@ class DataStoreSQLite extends DataStore {
 		Destination destination = null;
 
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("GetDestination"));
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectDestination"));
 
 			preparedStatement.setString(1, derivedKey);
 

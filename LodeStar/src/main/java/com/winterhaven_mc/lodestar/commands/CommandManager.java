@@ -349,7 +349,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			return true;
 		}
 
-		String subcmd = args[0];
+		String subcommand = args[0];
 
 		// argument limits
 		int maxArgs = 1;
@@ -358,7 +358,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		if (args.length > maxArgs) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-			displayUsage(sender, subcmd);
+			displayUsage(sender, subcommand);
 			return true;
 		}
 
@@ -371,6 +371,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
+
 		int quantity = playerItem.getAmount();
 		String destinationName = LodeStar.getDestinationName(playerItem);
 		playerItem.setAmount(0);
@@ -788,6 +789,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 */
 	private boolean giveCommand(final CommandSender sender, final String[] args) {
 
+
+//	/lodestar give <player> [quantity] [material] [destination_name]
+
+
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
 			Message.create(sender, PERMISSION_DENIED_GIVE).send();
@@ -873,16 +878,16 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		// try to parse all remaining arguments as destinationName
-		if (!arguments.isEmpty()) {
+		else {
 
+			// join remaining arguments with spaces
 			String testName = String.join(" ", arguments);
 
 			// if resulting name is existing destination, get destinationName from datastore
 			if (Destination.exists(testName)) {
-				Destination destination = plugin.dataStore.selectRecord(testName);
-				destinationName = destination.getDisplayName();
+				destinationName = Destination.getDisplayName(testName);
 
-				// set arguments to empty list
+				// remove remaining arguments
 				arguments.clear();
 			}
 		}
@@ -905,12 +910,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 			// if resulting name is existing destination, get destinationName from datastore
 			if (Destination.exists(testName)) {
-				Destination destination = plugin.dataStore.selectRecord(testName);
-				destinationName = destination.getDisplayName();
+				destinationName = Destination.getDisplayName(testName);
 
-				// set arguments to empty list
+				// remove remaining arguments
 				arguments.clear();
 			}
+
 			// else given destination is invalid (but not blank), so send error message
 			else {
 				Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
@@ -922,7 +927,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		// if no destination name set, set destination to spawn
-		if (destinationName.isEmpty()) {
+		if (destinationName == null || destinationName.isEmpty()) {
 			destinationName = "spawn";
 		}
 
@@ -998,7 +1003,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		quantity = quantity - noFitCount;
 
 		// get destination display name
-		String destinationName = Destination.getName(key);
+		String destinationName = Destination.getDisplayName(key);
 
 		// don't display messages if giving item to self
 		if (!giver.getName().equals(targetPlayer.getName())) {

@@ -2,10 +2,12 @@ package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 
+import com.winterhaven_mc.lodestar.util.LodeStar;
 import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -109,7 +111,7 @@ public final class Destination {
 	 * @return true if spawn, else false
 	 */
 	public boolean isSpawn() {
-		return this.getKey().equals("spawn")
+		return this.getKey().equalsIgnoreCase("spawn")
 				|| this.getKey().equals(deriveKey(languageManager.getSpawnDisplayName()));
 	}
 
@@ -121,7 +123,7 @@ public final class Destination {
 	 */
 	@SuppressWarnings("unused")
 	public boolean isHome() {
-		return this.getKey().equals("home")
+		return this.getKey().equalsIgnoreCase("home")
 				|| this.getKey().equals(deriveKey(languageManager.getHomeDisplayName()));
 	}
 
@@ -197,10 +199,11 @@ public final class Destination {
 
 	/**
 	 * Derive key from destination display name<br>
-	 * replaces spaces with underscores, strips color codes and folds to lower case
+	 * strips color codes and replaces spaces with underscores<br>
+	 * if a destination key is passed, it will be returned unaltered
 	 *
-	 * @param destinationName the destination name string to convert to a key value
-	 * @return the key value derived from the destination name
+	 * @param destinationName the destination name to convert to a key
+	 * @return String - the key derived from the destination name
 	 */
 	public static String deriveKey(final String destinationName) {
 
@@ -210,135 +213,168 @@ public final class Destination {
 		// copy passed in destination name to derivedKey
 		String derivedKey = destinationName;
 
-		// replace spaces with underscores
-		derivedKey = derivedKey.replace(' ', '_');
-
 		// translate alternate color codes
 		derivedKey = ChatColor.translateAlternateColorCodes('&', derivedKey);
 
 		// strip all color codes
 		derivedKey = ChatColor.stripColor(derivedKey);
 
+		// replace spaces with underscores
+		derivedKey = derivedKey.replace(' ', '_');
+
 		return derivedKey;
 	}
 
 
 	/**
-	 * Check if destination exists in storage or is reserved name
+	 * Check if destination exists in storage or is reserved name; accepts key or display name.<br>
+	 * Matching is case insensitive.
 	 *
-	 * @param destinationName the destination name to check
+	 * @param key the destination name to check
 	 * @return {@code true} if destination exists, {@code false} if it does not
 	 */
-	public static boolean exists(final String destinationName) {
+	public static boolean exists(final String key) {
 
 		// if parameter is null or empty string, return false
-		if (destinationName == null || destinationName.isEmpty()) {
+		if (key == null || key.isEmpty()) {
 			return false;
 		}
 
-		String key = Destination.deriveKey(destinationName);
+		String derivedKey = Destination.deriveKey(key);
 
-		return isReserved(destinationName) || plugin.dataStore.selectRecord(key) != null;
+		return isReserved(key) || plugin.dataStore.selectRecord(derivedKey) != null;
 	}
 
 
 	/**
-	 * Check if destination name is a reserved name
+	 * Check if destination key or display name is a reserved name<br>
+	 * Matching is case insensitive.
 	 *
-	 * @param destinationName the destination name to test for reserved name
+	 * @param key the key or destination name to test for reserved name
 	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
 	 */
-	public static boolean isReserved(final String destinationName) {
+	public static boolean isReserved(final String key) {
 
 		// if parameter is null or empty string, return false
-		if (destinationName == null || destinationName.isEmpty()) {
+		if (key == null || key.isEmpty()) {
 			return false;
 		}
 
 		// test if passed destination name is reserved name for home or spawn locations
-		return isHome(destinationName) || isSpawn(destinationName);
+		return isHome(key) || isSpawn(key);
 	}
 
 
 	/**
-	 * Check if passed destination name is reserved name for home location
+	 * Check if passed key is reserved name for home location; accepts key or display name<br>
+	 * Matching is case insensitive.
 	 *
-	 * @param destinationName the destination name to check
+	 * @param key the destination name to check
 	 * @return {@code true} if destination name is reserved home name, {@code false} if not
 	 */
-	public static boolean isHome(final String destinationName) {
+	public static boolean isHome(final String key) {
 
 		// if parameter is null or empty string, return false
-		if (destinationName == null || destinationName.isEmpty()) {
+		if (key == null || key.isEmpty()) {
 			return false;
 		}
 
-		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
-		String key = Destination.deriveKey(destinationName);
-		return key.equals("home")
-				|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName()));
+		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
+		String derivedKey = Destination.deriveKey(key);
+		return derivedKey.equalsIgnoreCase("home")
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(languageManager.getHomeDisplayName()));
 	}
 
 
 	/**
-	 * Check if passed destination name is reserved name for spawn location
+	 * Check if passed key is reserved name for spawn location; accepts key or display name.<br>
+	 * Matching is case insensitive.
 	 *
-	 * @param destinationName the destination name to check
+	 * @param key the destination name to check
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
 	 */
-	public static boolean isSpawn(final String destinationName) {
+	public static boolean isSpawn(final String key) {
 
 		// if parameter is null or empty string, return false
-		if (destinationName == null || destinationName.isEmpty()) {
+		if (key == null || key.isEmpty()) {
 			return false;
 		}
 
-		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
-		String key = Destination.deriveKey(destinationName);
-		return key.equals("spawn")
-				|| key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()));
+		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
+		String derivedKey = Destination.deriveKey(key);
+		return derivedKey.equalsIgnoreCase("spawn")
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(languageManager.getSpawnDisplayName()));
 	}
 
 
 	/**
-	 * Get destination display name from destination represented by passed key
+	 * Get destination display name from destination represented by passed key.
+	 * Accepts key or display name.<br>
+	 * Matching is case insensitive. Reserved names are tried first.
 	 *
 	 * @param key the key of the destination for which to retrieve display name
-	 * @return String - the formatted display name for the destination, or the key if no display name found
+	 * @return String - the formatted display name for the destination, or null if no record exists
 	 */
-	public static String getName(final String key) {
+	public static String getDisplayName(final String key) {
 
-		String returnName = key;
-
-		// get derived key in case destination name was passed; this will have no effect on a key
-		String derivedKey = Destination.deriveKey(key);
-
-		// if destination is spawn get spawn display name from messages files
-		if (derivedKey.equals("spawn")
-				|| derivedKey.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()))) {
-			returnName = languageManager.getSpawnDisplayName();
+		// if key matches spawn key, get spawn display name from messages files
+		if (isSpawn(key)) {
+			return languageManager.getSpawnDisplayName();
 		}
 
-		// if destination is home get home display name from messages file
-		else if (derivedKey.equals("home")
-				|| derivedKey.equals(Destination.deriveKey(languageManager.getHomeDisplayName()))) {
-			returnName = languageManager.getHomeDisplayName();
+		// if key matches home key, get home display name from messages file
+		if (isHome(key)) {
+			return languageManager.getHomeDisplayName();
 		}
 
-		// else get destination name from datastore
-		else {
-			Destination destination = plugin.dataStore.selectRecord(derivedKey);
-			if (destination != null) {
-				returnName = destination.getDisplayName();
+		// else try to get destination name from datastore
+		Destination destination = plugin.dataStore.selectRecord(Destination.deriveKey(key));
+		if (destination != null) {
+			return destination.getDisplayName();
+		}
+
+		// no matching record found, return null
+		return null;
+	}
+
+
+	/**
+	 * get destination display name for persistent key stored in item stack<br>
+	 * Matching is case insensitive. Reserved names are tried first.
+	 *
+	 * @param itemStack the item stack from which to get name
+	 * @return String destination display name, or null if no matching destination found
+	 */
+	@SuppressWarnings("unused")
+	public static String getDisplayName(final ItemStack itemStack) {
+
+		// get persistent key from item stack
+		String key = LodeStar.getKey(itemStack);
+
+		// if item stack persistent key is not null null, attempt to get display name for destination
+		if (key != null) {
+
+			// if key matches spawn key, get spawn display name from language file
+			if (isSpawn(key)) {
+				return languageManager.getSpawnDisplayName();
+			}
+
+			// if destination is home get home display name from messages file
+			else if (isHome(key)) {
+				return languageManager.getHomeDisplayName();
+			}
+
+			// else get destination name from datastore
+			else {
+				Destination destination = plugin.dataStore.selectRecord(key);
+				if (destination != null) {
+					return destination.getDisplayName();
+				}
 			}
 		}
 
-		// if no destination name found, use derived key for name
-		if (returnName == null) {
-			returnName = derivedKey;
-		}
-
-		return returnName;
+		// no matching record found, return null
+		return null;
 	}
 
 }

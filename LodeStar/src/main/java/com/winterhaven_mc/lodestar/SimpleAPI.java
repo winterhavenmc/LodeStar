@@ -197,14 +197,14 @@ public final class SimpleAPI {
 
 
 	/**
-	 * Get destination name from passed key
+	 * Get destination name from passed key. Matching is case insensitive.
 	 *
 	 * @param key the key for which to get destination name
-	 * @return String name of destination
-	 * @deprecated use {@code Destination.getName(key)} method
+	 * @return String name of destination, or null if no matching destination found
+	 * @deprecated use {@code Destination.getStoredName(key)} method
 	 */
 	public static String getDestinationName(final String key) {
-		return Destination.getName(key);
+		return Destination.getDisplayName(key);
 	}
 
 
@@ -213,37 +213,11 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the item stack from which to get name
 	 * @return String destination name
-	 * @deprecated use {@code Destination.getName(itemStack)} method
+	 * @deprecated use {@code Destination.getStoredName(itemStack)} method
 	 */
 	@Deprecated
 	public static String getDestinationName(final ItemStack itemStack) {
-
-		String key = LodeStar.getKey(itemStack);
-		String destinationName = null;
-
-		// if destination is spawn get spawn display name from messages files
-		if (key != null) {
-			if (key.equals("spawn") || key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()))) {
-				destinationName = languageManager.getSpawnDisplayName();
-			}
-			// if destination is home get home display name from messages file
-			else if (key.equals("home")
-					|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName()))) {
-				destinationName = languageManager.getHomeDisplayName();
-			}
-			// else get destination name from datastore
-			else {
-				Destination destination = plugin.dataStore.selectRecord(key);
-				if (destination != null) {
-					destinationName = destination.getDisplayName();
-				}
-			}
-		}
-		// if no destination name found, use key for name
-		if (destinationName == null) {
-			destinationName = key;
-		}
-		return destinationName;
+		return Destination.getDisplayName(itemStack);
 	}
 
 

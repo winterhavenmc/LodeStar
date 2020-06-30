@@ -15,10 +15,10 @@ ITEM_INFO:
   - '&eto %DESTINATION%'
 
 # Spawn Display Name
-  SPAWN_DISPLAY_NAME: 'spawn'
+  SPAWN_DISPLAY_NAME: 'Spawn'
 
 # Home Display Name
-  HOME_DISPLAY_NAME: 'home'
+  HOME_DISPLAY_NAME: 'Home'
 
 # Time strings
 TIME_STRINGS:
