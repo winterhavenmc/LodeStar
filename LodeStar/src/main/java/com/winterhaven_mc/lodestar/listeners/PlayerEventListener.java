@@ -5,6 +5,9 @@ import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.util.LodeStar;
 
+import org.bukkit.Material;
+import org.bukkit.block.TileState;
+import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +21,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Objects;
+import java.util.*;
 
 import static com.winterhaven_mc.lodestar.messages.MessageId.*;
 
@@ -33,6 +36,14 @@ public class PlayerEventListener implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
+
+	// set to hold craft table materials
+	private final Set<Material> craftTables =  Collections.unmodifiableSet(
+			new HashSet<>(Arrays.asList(
+					Material.CARTOGRAPHY_TABLE,
+					Material.CRAFTING_TABLE,
+					Material.FLETCHING_TABLE,
+					Material.SMITHING_TABLE )));
 
 
 	/**
@@ -99,9 +110,27 @@ public class PlayerEventListener implements Listener {
 			return;
 		}
 
+		// check if clicked block is null
+		if (event.getClickedBlock() != null) {
+
+			// allow use of doors, gates and trap doors with item in hand
+			if (event.getClickedBlock().getBlockData() instanceof Openable) {
+				return;
+			}
+
+			// allow use of containers and other tile state blocks with item in hand
+			if (event.getClickedBlock().getState() instanceof TileState) {
+				return;
+			}
+
+			// allow use of crafting tables with item in hand
+			if (craftTables.contains(event.getClickedBlock().getType())) {
+				return;
+			}
+		}
+
 		// cancel event
 		event.setCancelled(true);
-		//noinspection deprecation
 		player.updateInventory();
 
 		// if player current world is not enabled in config, do nothing and return

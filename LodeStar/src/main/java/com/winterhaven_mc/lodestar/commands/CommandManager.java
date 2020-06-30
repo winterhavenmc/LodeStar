@@ -798,10 +798,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// convert args list to ArrayList so we can remove elements as we parse them
 		List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
-		// get subcmd from arguments ArrayList
-		String subcmd = arguments.get(0);
+		// get subcommand from arguments ArrayList
+		String subcommand = arguments.get(0);
 
-		// remove subcmd from ArrayList
+		// remove subcommand from ArrayList
 		arguments.remove(0);
 
 		// argument limits
@@ -811,7 +811,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		if (args.length < minArgs) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-			displayUsage(sender, subcmd);
+			displayUsage(sender, subcommand);
 			return true;
 		}
 
@@ -829,14 +829,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			return true;
 		}
 
-		//------------------------
-
-		// set destinationName to empty string
+		// initialize destinationName to empty string
 		String destinationName = "";
 
-		// set default quantity
+		// initialize default quantity
 		int quantity = 1;
 
+		// initialize material as null
 		Material material = null;
 
 		// try to parse first argument as integer quantity
@@ -858,7 +857,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			// if sender is not player, send args-count-under error message
 			if (!(sender instanceof Player)) {
 				Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
-				displayUsage(sender, subcmd);
+				displayUsage(sender, subcommand);
 				return true;
 			}
 
@@ -878,9 +877,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 			String testName = String.join(" ", arguments);
 
-			// if resulting name is existing destination, set to destinationName
+			// if resulting name is existing destination, get destinationName from datastore
 			if (Destination.exists(testName)) {
-				destinationName = testName;
+				Destination destination = plugin.dataStore.selectRecord(testName);
+				destinationName = destination.getDisplayName();
 
 				// set arguments to empty list
 				arguments.clear();
@@ -903,9 +903,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		if (!arguments.isEmpty()) {
 			String testName = String.join(" ", arguments);
 
-			// if resulting name is valid destination, set to destinationName
+			// if resulting name is existing destination, get destinationName from datastore
 			if (Destination.exists(testName)) {
-				destinationName = testName;
+				Destination destination = plugin.dataStore.selectRecord(testName);
+				destinationName = destination.getDisplayName();
 
 				// set arguments to empty list
 				arguments.clear();

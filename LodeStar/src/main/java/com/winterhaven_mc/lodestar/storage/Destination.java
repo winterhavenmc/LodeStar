@@ -213,9 +213,6 @@ public final class Destination {
 		// replace spaces with underscores
 		derivedKey = derivedKey.replace(' ', '_');
 
-		// convert to lowercase
-		derivedKey = derivedKey.toLowerCase();
-
 		// translate alternate color codes
 		derivedKey = ChatColor.translateAlternateColorCodes('&', derivedKey);
 
