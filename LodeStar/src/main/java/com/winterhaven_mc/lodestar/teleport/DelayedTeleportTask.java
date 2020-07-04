@@ -61,10 +61,10 @@ class DelayedTeleportTask extends BukkitRunnable {
 		// cancel particles task
 		particleTask.cancel();
 
-		// if player is in warmup hashmap
+		// if player is in warmup map
 		if (plugin.teleportManager.isWarmingUp(player)) {
 
-			// remove player from warmup hashmap
+			// remove player from warmup map
 			plugin.teleportManager.removePlayer(player);
 
 			// if destination is spawn, get spawn location from world manager
