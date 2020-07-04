@@ -49,6 +49,20 @@ COMMAND_SUCCESS_BIND:
   volume: 1
   pitch: 1.75
 
+TELEPORT_DENIED_PERMISSION:
+  enabled: true
+  player-only: true
+  sound: BLOCK_NOTE_BLOCK_BASS
+  volume: 1
+  pitch: 1
+
+TELEPORT_DENIED_WORLD_DISABLED:
+  enabled: true
+  player-only: true
+  sound: BLOCK_NOTE_BLOCK_BASS
+  volume: 1
+  pitch: 1
+
 TELEPORT_CANCELLED:
   enabled: true
   player-only: false
