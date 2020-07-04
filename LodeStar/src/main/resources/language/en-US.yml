@@ -218,6 +218,16 @@ MESSAGES:
     repeat-delay: 1
     string: '&3You are too close to %DESTINATION%&r&3 to use a %ITEM%.'
 
+  TELEPORT_FAIL_SHIFT_CLICK:
+    enabled: true
+    repeat-delay: 5
+    string: '&3You must shift-click to use a %ITEM%.'
+
+  TELEPORT_FAIL_WORLD_DISABLED:
+    enabled: true
+    repeat-delay: 1
+    string: '&3LodeStars are not enabled in this world.'
+
   TELEPORT_SUCCESS:
     enabled: true
     string: '&3Successfully teleported to &b%DESTINATION%&r&3.'
@@ -233,11 +243,6 @@ MESSAGES:
   TELEPORT_WARMUP_SPAWN:
     enabled: true
     string: '&3Teleporting to &b%WORLD% spawn&3 in &b%DURATION%...'
-
-  USAGE_SHIFT_CLICK:
-    enabled: true
-    repeat-delay: 5
-    string: '&3You must shift-click to use a %ITEM%.'
 
 
   LIST_HEADER:

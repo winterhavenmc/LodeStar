@@ -214,6 +214,16 @@ MESSAGES:
     repeat-delay: 1
     string: '&3Usted está demasiado cerca de %DESTINATION%&r&3 de usar %ITEM%.'
 
+  TELEPORT_FAIL_SHIFT_CLICK:
+    enabled: true
+    repeat-delay: 1
+    string: '&3Usted debe mantener pulsada la tecla Mayús mientras hace clic para utilizar %ITEM%.'
+
+  TELEPORT_FAIL_WORLD_DISABLED:
+    enabled: true
+    repeat-delay: 1
+    string: '&3Estrellas de Guía no están habilitadas en este mundo.'
+
 
   TELEPORT_SUCCESS:
     enabled: true
@@ -230,11 +240,6 @@ MESSAGES:
   TELEPORT_WARMUP_SPAWN:
     enabled: true
     string: '&3Teletransportarse a origen en &b%DURATION%&3 segundos...'
-
-  USAGE_SHIFT_CLICK:
-    enabled: true
-    repeat-delay: 1
-    string: '&3Usted debe mantener pulsada la tecla Mayús mientras hace clic para utilizar %ITEM%.'
 
 
   LIST_HEADER:
