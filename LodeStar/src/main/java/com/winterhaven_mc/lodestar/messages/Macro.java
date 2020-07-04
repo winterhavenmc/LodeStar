@@ -1,5 +1,8 @@
 package com.winterhaven_mc.lodestar.messages;
 
+/**
+ * Enum with entries for custom message string replacement placeholders
+ */
 public enum Macro {
 
 	DESTINATION,
