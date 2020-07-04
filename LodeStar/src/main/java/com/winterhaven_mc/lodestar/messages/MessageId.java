@@ -1,5 +1,8 @@
 package com.winterhaven_mc.lodestar.messages;
 
+/**
+ * Enum with entries for all player messages in language configuration files
+ */
 public enum MessageId {
 
 	COMMAND_FAIL_ARGS_COUNT_OVER,
