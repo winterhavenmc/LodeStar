@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Utility class with static methods for creating and using LodeStar item stacks
+ */
 public final class LodeStar {
 
 	// static reference to main class instance
