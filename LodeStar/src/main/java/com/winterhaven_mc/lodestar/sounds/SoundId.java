@@ -1,5 +1,8 @@
 package com.winterhaven_mc.lodestar.sounds;
 
+/**
+ * Enum that contains entries for configured sounds
+ */
 public enum SoundId {
 
 	COMMAND_FAIL,
