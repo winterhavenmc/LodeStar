@@ -25,6 +25,9 @@ import static com.winterhaven_mc.lodestar.messages.MessageId.*;
 import static com.winterhaven_mc.lodestar.messages.Macro.*;
 
 
+/**
+ * Class that manages player teleportation, including warmup and cooldown.
+ */
 public class TeleportManager {
 
 	// reference to main class
@@ -48,7 +51,7 @@ public class TeleportManager {
 	 *
 	 * @param plugin reference to plugin main class
 	 */
-	public TeleportManager(PluginMain plugin) {
+	public TeleportManager(final PluginMain plugin) {
 
 		// set reference to main class
 		this.plugin = plugin;
