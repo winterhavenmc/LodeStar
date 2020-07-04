@@ -18,6 +18,10 @@ import static com.winterhaven_mc.lodestar.messages.MessageId.*;
 import static com.winterhaven_mc.lodestar.messages.Macro.*;
 
 
+/**
+ * Class that extends BukkitRunnable to teleport a player to a predefined location
+ * after a configured warmup period.
+ */
 class DelayedTeleportTask extends BukkitRunnable {
 
 	private final PluginMain plugin;
