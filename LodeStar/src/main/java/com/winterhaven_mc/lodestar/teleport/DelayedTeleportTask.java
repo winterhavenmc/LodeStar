@@ -35,15 +35,19 @@ class DelayedTeleportTask extends BukkitRunnable {
 	 * @param destination the teleport destination
 	 * @param playerItem the item used to initiate teleport
 	 */
-	DelayedTeleportTask(final PluginMain plugin, final Player player, final Destination destination, final ItemStack playerItem) {
+	DelayedTeleportTask(final PluginMain plugin,
+						final Player player,
+						final Destination destination,
+						final ItemStack playerItem) {
 
-		this.plugin = plugin;
+		// check for null parameters
+		Objects.requireNonNull(this.plugin = plugin);
+		Objects.requireNonNull(this.player = player);
+		Objects.requireNonNull(this.destination = destination);
+		Objects.requireNonNull(this.playerItem = playerItem);
+		Objects.requireNonNull(this.location = destination.getLocation());
+
 		this.languageManager = LanguageManager.getInstance();
-		this.player = player;
-		this.destination = destination;
-		this.playerItem = playerItem;
-
-		this.location = destination.getLocation();
 
 		// start repeating task for generating particles at player location
 		if (plugin.getConfig().getBoolean("particle-effects")) {
