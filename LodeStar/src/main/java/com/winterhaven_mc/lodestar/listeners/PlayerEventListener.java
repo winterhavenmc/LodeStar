@@ -57,7 +57,7 @@ public class PlayerEventListener implements Listener {
 	public PlayerEventListener(final PluginMain plugin) {
 
 		// reference to main
-		this.plugin = plugin;
+		Objects.requireNonNull(this.plugin = plugin);
 
 		// register events in this class
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -135,7 +135,7 @@ public class PlayerEventListener implements Listener {
 			// check if clicked block is air (null)
 			if (block != null) {
 
-				// check if player is not sneaking
+				// check that player is not sneaking, to interact with blocks
 				if (!event.getPlayer().isSneaking()) {
 
 					// allow use of doors, gates and trap doors with item in hand
@@ -157,21 +157,16 @@ public class PlayerEventListener implements Listener {
 					if (craftTables.contains(block.getType())) {
 						return;
 					}
-
-					// if shift-click configured, send shift-click message, cancel event and return
-					if (plugin.getConfig().getBoolean("shift-click")) {
-						Message.create(player, TELEPORT_FAIL_SHIFT_CLICK).send();
-						event.setCancelled(true);
-						return;
-					}
 				}
 			}
+
+			// cancel event
+			event.setCancelled(true);
 
 			// if players current world is not enabled in config, do nothing and return
 			if (!plugin.worldManager.isEnabled(player.getWorld())) {
 				Message.create(player, TELEPORT_FAIL_WORLD_DISABLED).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
-				event.setCancelled(true);
 				return;
 			}
 
@@ -179,16 +174,20 @@ public class PlayerEventListener implements Listener {
 			if (!player.hasPermission("lodestar.use")) {
 				Message.create(player, MessageId.PERMISSION_DENIED_USE).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
-				event.setCancelled(true);
+				return;
+			}
+
+			// if shift-click configured and player is not sneaking,
+			// send teleport fail shift-click message, cancel event and return
+			if (plugin.getConfig().getBoolean("shift-click")
+					&& !player.isSneaking()) {
+				Message.create(player, TELEPORT_FAIL_SHIFT_CLICK).send();
 				return;
 			}
 
 			// initiate teleport
 			plugin.teleportManager.initiateTeleport(player);
 		}
-
-		// cancel event
-		event.setCancelled(true);
 	}
 
 
