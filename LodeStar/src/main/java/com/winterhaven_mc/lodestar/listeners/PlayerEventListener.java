@@ -2,12 +2,15 @@ package com.winterhaven_mc.lodestar.listeners;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
+import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.util.LodeStar;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.block.data.Openable;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -83,76 +86,109 @@ public class PlayerEventListener implements Listener {
 				// if player is interacting with a block, cancel teleport, output message and return
 				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
 						|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+
+					// if player's last teleport initiated time is less than x ticks (def: 2), do nothing and return
+					// this is a workaround for event double firing (once for each hand) on every player interaction
+					if (!plugin.teleportManager.isInitiated(player)) {
+						return;
+					}
+
+					// cancel teleport
 					plugin.teleportManager.cancelTeleport(player);
+
+					// send cancelled teleport message
 					Message.create(player, TELEPORT_CANCELLED_INTERACTION).send();
 
-					// play sound effects if enabled
+					// play cancelled teleport sound
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 					return;
 				}
 			}
 		}
 
-		// get players item in hand
-		ItemStack playerItem = player.getInventory().getItemInMainHand();
-
 		// if item used is not a LodeStar, do nothing and return
-		if (!LodeStar.isItem(playerItem)) {
+		if (!LodeStar.isItem(event.getItem())) {
 			return;
 		}
 
-		// if event action is not a right click, or not a left click if configured, do nothing and return
-		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR)
-				|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
-				|| (plugin.getConfig().getBoolean("left-click")
-				&& !(event.getAction().equals(Action.LEFT_CLICK_AIR)
-				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)))) {
+		// get event action
+		Action action = event.getAction();
+
+		// if event action is PHYSICAL (not left click or right click), do nothing and return
+		if (action.equals(Action.PHYSICAL)) {
 			return;
 		}
 
-		// check if clicked block is null
-		if (event.getClickedBlock() != null) {
+		// if event action is left-click, and left-click is config disabled, do nothing and return
+		if (action.equals(Action.LEFT_CLICK_BLOCK)
+				|| action.equals(Action.LEFT_CLICK_AIR)
+				&& !plugin.getConfig().getBoolean("left-click")) {
+			return;
+		}
 
-			// allow use of doors, gates and trap doors with item in hand
-			if (event.getClickedBlock().getBlockData() instanceof Openable) {
+		// if player is not warming
+		if (!plugin.teleportManager.isWarmingUp(player)) {
+
+			// get clicked block
+			Block block = event.getClickedBlock();
+
+			// check if clicked block is air (null)
+			if (block != null) {
+
+				// check if player is not sneaking
+				if (!event.getPlayer().isSneaking()) {
+
+					// allow use of doors, gates and trap doors with item in hand
+					if (block.getBlockData() instanceof Openable) {
+						return;
+					}
+
+					// allow use of switches with item in hand
+					if (block.getBlockData() instanceof Switch) {
+						return;
+					}
+
+					// allow use of containers and other tile entity blocks with item in hand
+					if (block.getState() instanceof TileState) {
+						return;
+					}
+
+					// allow use of crafting tables with item in hand
+					if (craftTables.contains(block.getType())) {
+						return;
+					}
+
+					// if shift-click configured, send shift-click message, cancel event and return
+					if (plugin.getConfig().getBoolean("shift-click")) {
+						Message.create(player, TELEPORT_FAIL_SHIFT_CLICK).send();
+						event.setCancelled(true);
+						return;
+					}
+				}
+			}
+
+			// if players current world is not enabled in config, do nothing and return
+			if (!plugin.worldManager.isEnabled(player.getWorld())) {
+				Message.create(player, TELEPORT_FAIL_WORLD_DISABLED).send();
+				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
+				event.setCancelled(true);
 				return;
 			}
 
-			// allow use of containers and other tile state blocks with item in hand
-			if (event.getClickedBlock().getState() instanceof TileState) {
+			// if player does not have lodestar.use permission, send message and return
+			if (!player.hasPermission("lodestar.use")) {
+				Message.create(player, MessageId.PERMISSION_DENIED_USE).send();
+				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
+				event.setCancelled(true);
 				return;
 			}
 
-			// allow use of crafting tables with item in hand
-			if (craftTables.contains(event.getClickedBlock().getType())) {
-				return;
-			}
+			// initiate teleport
+			plugin.teleportManager.initiateTeleport(player);
 		}
 
 		// cancel event
 		event.setCancelled(true);
-		player.updateInventory();
-
-		// if player current world is not enabled in config, do nothing and return
-		if (!plugin.worldManager.isEnabled(player.getWorld())) {
-			return;
-		}
-
-		// if player does not have LodeStar.use permission, send message and return
-		if (!player.hasPermission("lodestar.use")) {
-			Message.create(player, PERMISSION_DENIED_USE).send();
-			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
-			return;
-		}
-
-		// if shift-click is configured true and player is not sneaking, send message and return
-		if (plugin.getConfig().getBoolean("shift-click") && !event.getPlayer().isSneaking()) {
-			Message.create(player, USAGE_SHIFT_CLICK).send();
-			return;
-		}
-
-		// initiate teleport
-		plugin.teleportManager.initiateTeleport(player);
 	}
 
 

@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +39,9 @@ public class TeleportManager {
 	// hashmap to store player UUID and cooldown expire time in milliseconds
 	private final ConcurrentHashMap<UUID, Long> cooldownMap;
 
+	// Map containing player uuid for teleport initiated
+	private final Set<UUID> teleportInitiated;
+
 
 	/**
 	 * Class constructor
@@ -57,6 +61,9 @@ public class TeleportManager {
 
 		// initialize cooldown map
 		cooldownMap = new ConcurrentHashMap<>();
+
+		// initialize teleport initiated set
+		teleportInitiated = ConcurrentHashMap.newKeySet();
 	}
 
 
@@ -249,7 +256,23 @@ public class TeleportManager {
 	 * @param taskId the taskId of the player's delayed teleport task
 	 */
 	private void putPlayer(final Player player, final Integer taskId) {
+
+		// check for null parameter
+		Objects.requireNonNull(player);
+
 		warmupMap.put(player.getUniqueId(), taskId);
+
+		// insert player uuid into teleport initiated set
+		teleportInitiated.add(player.getUniqueId());
+
+		// create task to remove player uuid from tpi set after set amount of ticks (default: 2)
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				teleportInitiated.remove(player.getUniqueId());
+			}
+		}.runTaskLater(plugin, plugin.getConfig().getInt("interact-delay", 2));
+
 	}
 
 
@@ -343,6 +366,23 @@ public class TeleportManager {
 			remainingTime = (cooldownMap.get(player.getUniqueId()) - System.currentTimeMillis());
 		}
 		return remainingTime;
+	}
+
+
+	/**
+	 * Check if player is in teleport initiated set
+	 *
+	 * @param player the player to check if teleport is initiated
+	 * @return {@code true} if teleport been initiated, {@code false} if it has not
+	 */
+	public final boolean isInitiated(final Player player) {
+
+		// check for null parameter
+		if (player == null) {
+			return false;
+		}
+
+		return !teleportInitiated.contains(player.getUniqueId());
 	}
 
 }
