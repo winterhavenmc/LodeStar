@@ -19,7 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * An alternative to the /spawn command.
  *
  * @author Tim Savage
- * @version 1.0
  */
 public final class PluginMain extends JavaPlugin {
 
