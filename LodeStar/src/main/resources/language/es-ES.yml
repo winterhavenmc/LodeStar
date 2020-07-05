@@ -224,6 +224,10 @@ MESSAGES:
     repeat-delay: 1
     string: '&3Estrellas de Guía no están habilitadas en este mundo.'
 
+  PERMISSION_DENIED_TELEPORT:
+    enabled: true
+    string: '&cYou do not have permission to teleport to LodeStar locations!'
+
 
   TELEPORT_SUCCESS:
     enabled: true

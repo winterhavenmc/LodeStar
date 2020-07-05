@@ -47,7 +47,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	// constant list of subcommands
 	private final static List<String> subcommands =
 			Collections.unmodifiableList(new ArrayList<>(
-					Arrays.asList("bind", "give", "delete", "destroy", "list", "set", "status", "reload", "help")));
+					Arrays.asList("bind", "give", "delete", "destroy", "list", "set",
+							"teleport", "status", "reload", "help")));
 
 
 	/**
@@ -101,10 +102,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					returnList.add(player.getName());
 				}
 			}
-			// if subcommand is 'set', 'unset', 'bind' or 'delete', return list of destination keys
+			// if subcommand is 'set', 'unset', 'bind', "telepot" or 'delete', return list of destination keys
 			else if (args[0].equalsIgnoreCase("set")
 					|| args[0].equalsIgnoreCase("unset")
 					|| args[0].equalsIgnoreCase("bind")
+					|| args[0].equalsIgnoreCase("teleport")
 					|| args[0].equalsIgnoreCase("delete")) {
 				returnList.addAll(plugin.dataStore.selectAllKeys());
 			}
@@ -180,6 +182,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// list command
 		if (subcommand.equalsIgnoreCase("list")) {
 			return listCommand(sender, args);
+		}
+
+		// teleport command
+		if (subcommand.equalsIgnoreCase("teleport")) {
+			return teleportCommand(sender, args);
 		}
 
 		// help command
@@ -473,6 +480,80 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_SET);
+		return true;
+	}
+
+
+	/**
+	 * Teleport to named destination
+	 *
+	 * @param sender the command sender
+	 * @param args   the command arguments
+	 * @return always returns {@code true}, to prevent display of bukkit usage message
+	 */
+	private boolean teleportCommand(final CommandSender sender, final String[] args) {
+
+		// check for permission
+		if (!sender.hasPermission("lodestar.teleport")) {
+			Message.create(sender, PERMISSION_DENIED_TELEPORT).send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			return true;
+		}
+
+		// check for in game player
+		if (!(sender instanceof Player)) {
+			Message.create(sender, COMMAND_FAIL_CONSOLE).send();
+			return true;
+		}
+
+		Player player = (Player) sender;
+
+		// convert args list to ArrayList so we can remove elements as we parse them
+		List<String> arguments = new ArrayList<>(Arrays.asList(args));
+
+		// get subcommand from arguments ArrayList
+		String subcommand = arguments.get(0);
+
+		// remove subcommand from ArrayList
+		arguments.remove(0);
+
+		int minArgs = 2;
+
+		// check min arguments
+		if (args.length < minArgs) {
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			displayUsage(sender, subcommand);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			return true;
+		}
+
+		// join remaining arguments to get destination name
+		String destinationName = String.join(" ", arguments);
+
+		// test that destination name is valid
+		if (!Destination.exists(destinationName)) {
+			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
+					.setMacro(DESTINATION, destinationName)
+					.send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			return true;
+		}
+
+		// get destination from datastore
+		Destination destination = plugin.dataStore.selectRecord(destinationName);
+
+		if (destination != null && destination.getLocation() != null) {
+			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
+			player.teleport(destination.getLocation());
+			Message.create(sender, TELEPORT_SUCCESS).setMacro(DESTINATION, destination).send();
+			plugin.soundConfig.playSound(destination.getLocation(), SoundId.TELEPORT_SUCCESS_ARRIVAL);
+			return true;
+		}
+		else {
+			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION).send();
+			plugin.soundConfig.playSound(sender, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
+		}
+
 		return true;
 	}
 
@@ -773,6 +854,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		}
 		if (command.equalsIgnoreCase("status")) {
 			helpMessage = "Displays current configuration settings.";
+		}
+		if (command.equalsIgnoreCase("teleport")) {
+			helpMessage = "Teleports to a LodeStar destination.";
 		}
 		sender.sendMessage(helpColor + helpMessage);
 		displayUsage(sender, command);
@@ -1116,6 +1200,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("lodestar.delete")) {
 			sender.sendMessage(usageColor + "/lodestar delete <destination_name>");
+		}
+		if ((command.equalsIgnoreCase("teleport")
+				|| command.equalsIgnoreCase("all"))
+				&& sender.hasPermission("lodestar.teleport")) {
+			sender.sendMessage(usageColor + "/lodestar teleport <destination_name>");
 		}
 		if ((command.equalsIgnoreCase("help")
 				|| command.equalsIgnoreCase("all"))

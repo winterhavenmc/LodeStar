@@ -43,6 +43,10 @@ permissions:
     description: Allows setting a LodeStar location.
     default: op
 
+  lodestar.teleport:
+    description: Allows teleporting to a LodeStar location.
+    default: op
+
   lodestar.set.overwrite:
     description: Allows overwriting a LodeStar location.
     default: op
@@ -67,6 +71,7 @@ permissions:
       lodestar.set: true
       lodestar.set.overwrite: true
       lodestar.status: true
+      lodestar.teleport: true
 
   lodestar.default-override:
     description: Allows overriding default-item-only setting.

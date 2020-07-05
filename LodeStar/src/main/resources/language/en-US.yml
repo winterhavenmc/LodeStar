@@ -176,6 +176,10 @@ MESSAGES:
     enabled: true
     string: '&cYou do not have permission to view LodeStar settings!'
 
+  PERMISSION_DENIED_TELEPORT:
+    enabled: true
+    string: '&cYou do not have permission to teleport to LodeStar locations!'
+
   PERMISSION_DENIED_USE:
     enabled: true
     repeat-delay: 1
