@@ -263,7 +263,7 @@ MESSAGES:
 
   LIST_ITEM_INVALID:
     enabled: true
-    string: "%ITEM_NUMBER%) &7%DESTINATION% &c| &b [ &eInvalid World: %WORLD% &b]"
+    string: "%ITEM_NUMBER%) &7%DESTINATION% &c| &b[ &eInvalid World: %WORLD% &b]"
 
   LIST_EMPTY:
     enabled: true
