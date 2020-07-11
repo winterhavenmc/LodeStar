@@ -63,6 +63,7 @@ public enum MessageId {
 	LIST_HEADER,
 	LIST_FOOTER,
 	LIST_ITEM,
+	LIST_ITEM_INVALID,
 	LIST_EMPTY,
 
 }

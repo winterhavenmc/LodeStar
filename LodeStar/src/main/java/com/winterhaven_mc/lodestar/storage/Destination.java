@@ -23,7 +23,8 @@ public final class Destination {
 
 	private final String key;
 	private final String displayName;
-
+	private final boolean worldValid;
+	private final String worldName;
 	private final UUID worldUid;
 	private final double x;
 	private final double y;
@@ -45,7 +46,18 @@ public final class Destination {
 
 		this.key = deriveKey(displayName);
 		this.displayName = displayName;
-		this.worldUid = Objects.requireNonNull(location.getWorld()).getUID();
+
+		if (location.getWorld() != null) {
+			this.worldUid = location.getWorld().getUID();
+			this.worldName = location.getWorld().getName();
+			this.worldValid = true;
+		}
+		else {
+			this.worldUid = null;
+			this.worldName = "unknown";
+			this.worldValid = false;
+		}
+
 		this.x = location.getX();
 		this.y = location.getY();
 		this.z = location.getZ();
@@ -70,7 +82,18 @@ public final class Destination {
 
 		this.key = key;
 		this.displayName = displayName;
-		this.worldUid = Objects.requireNonNull(location.getWorld()).getUID();
+
+		if (location.getWorld() != null) {
+			this.worldUid = location.getWorld().getUID();
+			this.worldName = location.getWorld().getName();
+			this.worldValid = true;
+		}
+		else {
+			this.worldUid = null;
+			this.worldName = "unknown";
+			this.worldValid = false;
+		}
+
 		this.x = location.getX();
 		this.y = location.getY();
 		this.z = location.getZ();
@@ -79,8 +102,23 @@ public final class Destination {
 	}
 
 
+	/**
+	 *
+	 * @param key          the destination key
+	 * @param displayName  the destination display name
+	 * @param worldValid   destination world valid
+	 * @param worldName    destination world name
+	 * @param worldUid     destination world uid
+	 * @param x            destination x coordinate
+	 * @param y            destination y coordinate
+	 * @param z            destination z coordinate
+	 * @param yaw          destination yaw
+	 * @param pitch        destination pitch
+	 */
 	public Destination(final String key,
 					   final String displayName,
+					   final boolean worldValid,
+					   final String worldName,
 					   final UUID worldUid,
 					   final double x,
 					   final double y,
@@ -90,6 +128,8 @@ public final class Destination {
 
 		this.key = key;
 		this.displayName = displayName;
+		this.worldValid = worldValid;
+		this.worldName = worldName;
 		this.worldUid = worldUid;
 		this.x = x;
 		this.y = y;
@@ -99,6 +139,10 @@ public final class Destination {
 	}
 
 
+	/**
+	 * Get string representation of destination
+	 * @return String - destination display name
+	 */
 	@Override
 	public String toString() {
 		return getDisplayName();
@@ -144,6 +188,13 @@ public final class Destination {
 	 * @return the value of the displayName field
 	 */
 	public String getDisplayName() {
+
+		// if display name is null, return empty string
+		if (displayName == null) {
+			return "";
+		}
+
+		// return display name
 		return displayName;
 	}
 
@@ -155,12 +206,20 @@ public final class Destination {
 	 */
 	public Location getLocation() {
 
-		World world = plugin.getServer().getWorld(this.worldUid);
+		// if world uid is null, return null
+		if (worldUid == null) {
+			return null;
+		}
 
+		// get world by uid
+		World world = plugin.getServer().getWorld(worldUid);
+
+		// if world is null, return null
 		if (world == null) {
 			return null;
 		}
 
+		// return new location object for destination
 		return new Location(world, x, y, z, yaw, pitch);
 	}
 
@@ -169,6 +228,13 @@ public final class Destination {
 		return worldUid;
 	}
 
+	public String getWorldName() {
+		return worldName;
+	}
+
+	public boolean isWorldValid() {
+		return worldValid;
+	}
 
 	public double getX() {
 		return x;

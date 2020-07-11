@@ -258,6 +258,10 @@ MESSAGES:
     enabled: true
     string: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%LOCATION%"
 
+  LIST_ITEM_INVALID:
+    enabled: true
+    string: "%ITEM_NUMBER%) &7%DESTINATION% &c| &b [ &eMundo inválido: %WORLD% &b]"
+
   LIST_EMPTY:
     enabled: true
     string: '&b¡No hay destinos para enumerar!'

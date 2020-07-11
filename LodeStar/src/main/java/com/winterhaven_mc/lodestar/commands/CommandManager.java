@@ -769,13 +769,17 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			return true;
 		}
 
-		int pageCount = (allKeys.size() / itemsPerPage) + 1;
+		// get page count
+		int pageCount = ((allKeys.size() - 1) / itemsPerPage) + 1;
 		if (page > pageCount) {
 			page = pageCount;
 		}
+
+		// get item range for page
 		int startIndex = ((page - 1) * itemsPerPage);
 		int endIndex = Math.min((page * itemsPerPage), allKeys.size());
 
+		// get keys for items on page
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
 		// display list header
@@ -785,16 +789,25 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
 		for (String key : displayKeys) {
 
+			Destination destination = plugin.dataStore.selectRecord(key);
+
 			// increment item number
 			itemNumber++;
 
-			Destination destination = plugin.dataStore.selectRecord(key);
-
-			Message.create(sender, LIST_ITEM)
-					.setMacro(DESTINATION, destination.getDisplayName())
-					.setMacro(ITEM_NUMBER, itemNumber)
-					.setMacro(LOCATION, destination.getLocation())
-					.send();
+			if (destination.isWorldValid()) {
+				Message.create(sender, LIST_ITEM)
+						.setMacro(DESTINATION, destination.getDisplayName())
+						.setMacro(ITEM_NUMBER, itemNumber)
+						.setMacro(LOCATION, destination.getLocation())
+						.send();
+			}
+			else {
+				Message.create(sender, LIST_ITEM_INVALID)
+						.setMacro(DESTINATION, destination.getDisplayName())
+						.setMacro(ITEM_NUMBER, itemNumber)
+						.setMacro(WORLD, destination.getWorldName())
+						.send();
+			}
 		}
 
 		// display list footer

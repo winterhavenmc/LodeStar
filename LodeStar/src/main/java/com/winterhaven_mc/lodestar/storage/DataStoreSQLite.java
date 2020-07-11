@@ -300,15 +300,16 @@ class DataStoreSQLite extends DataStore {
 				// get world
 				World world = plugin.getServer().getWorld(worldUid);
 
-				// if world is null, skip to next record
+				boolean worldValid = true;
+
+				// if world is null, set worldValid false and log warning
 				if (world == null) {
-					plugin.getLogger().warning("Stored destination has invalid world: "
-							+ worldName + ". Skipping record.");
-					return null;
+					worldValid = false;
+					plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
 				}
 
 				// create destination
-				destination = new Destination(key, displayName, worldUid, x, y, z, yaw, pitch);
+				destination = new Destination(key, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 			}
 		}
 		catch (SQLException e) {
@@ -353,18 +354,22 @@ class DataStoreSQLite extends DataStore {
 					// get world by name
 					World world = plugin.getServer().getWorld(worldName);
 
-					// if world is null, skip to next record
+					boolean worldValid = true;
+
+					UUID worldUid = null;
+
+					// if world is null, set worldValid false and log warning
 					if (world == null) {
-						plugin.getLogger().warning("Stored destination has invalid world: "
-								+ worldName + ". Skipping record.");
-						continue;
+						worldValid = false;
+						plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
+					}
+					else {
+						// get world Uid
+						worldUid = world.getUID();
 					}
 
-					// get world Uid
-					UUID worldUid = world.getUID();
-
 					// create destination from record
-					Destination destination = new Destination(key, displayName, worldUid, x, y, z, yaw, pitch);
+					Destination destination = new Destination(key, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 
 					// add destination to return list
 					returnList.add(destination);
@@ -389,15 +394,16 @@ class DataStoreSQLite extends DataStore {
 					// get world
 					World world = plugin.getServer().getWorld(worldUid);
 
-					// if world is null, skip to next record
+					boolean worldValid = true;
+
+					// if world is null, set worldValid false and log warning
 					if (world == null) {
-						plugin.getLogger().warning("Stored destination has invalid world: "
-								+ worldName + ". Skipping record.");
-						continue;
+						worldValid = false;
+						plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
 					}
 
 					// create destination
-					Destination destination = new Destination(key, displayName, worldUid, x, y, z, yaw, pitch);
+					Destination destination = new Destination(key, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 
 					// add destination to return list
 					returnList.add(destination);
