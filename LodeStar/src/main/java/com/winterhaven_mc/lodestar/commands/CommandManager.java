@@ -144,54 +144,38 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			return true;
 		}
 
-		// status command
-		if (subcommand.equalsIgnoreCase("status")) {
-			return statusCommand(sender);
-		}
+		// handle subcommands
+		switch (subcommand.toLowerCase()) {
+			case "status":
+				return statusCommand(sender);
 
-		// reload command
-		if (subcommand.equalsIgnoreCase("reload")) {
-			return reloadCommand(sender, args);
-		}
+			case "reload":
+				return reloadCommand(sender, args);
 
-		// give command
-		if (subcommand.equalsIgnoreCase("give")) {
-			return giveCommand(sender, args);
-		}
+			case "give":
+				return giveCommand(sender, args);
 
-		// destroy command
-		if (subcommand.equalsIgnoreCase("destroy")) {
-			return destroyCommand(sender, args);
-		}
+			case "destroy":
+				return destroyCommand(sender, args);
 
-		//set command
-		if (subcommand.equalsIgnoreCase("set")) {
-			return setCommand(sender, args);
-		}
+			case "set":
+				return setCommand(sender, args);
 
-		// delete command
-		if (subcommand.equalsIgnoreCase("delete") || subcommand.equalsIgnoreCase("unset")) {
-			return deleteCommand(sender, args);
-		}
+			case "delete":
+			case "unset":
+				return deleteCommand(sender, args);
 
-		// bind command
-		if (subcommand.equalsIgnoreCase("bind")) {
-			return bindCommand(sender, args);
-		}
+			case "bind":
+				return bindCommand(sender, args);
 
-		// list command
-		if (subcommand.equalsIgnoreCase("list")) {
-			return listCommand(sender, args);
-		}
+			case "list":
+				return listCommand(sender, args);
 
-		// teleport command
-		if (subcommand.equalsIgnoreCase("teleport")) {
-			return teleportCommand(sender, args);
-		}
+			case "teleport":
+				return teleportCommand(sender, args);
 
-		// help command
-		if (subcommand.equalsIgnoreCase("help")) {
-			return helpCommand(sender, args);
+			case "help":
+				return helpCommand(sender, args);
 		}
 
 		// send invalid command message
