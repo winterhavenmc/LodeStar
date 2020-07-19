@@ -62,7 +62,6 @@ public enum SubcommandType {
 	};
 
 
-
 	abstract void register(final PluginMain plugin, final SubcommandMap subcommandMap);
 
 }
