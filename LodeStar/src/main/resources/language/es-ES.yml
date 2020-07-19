@@ -101,6 +101,56 @@ MESSAGES:
     enabled: true
     string: '&3[LodeStar]&c ¡Destino %DESTINATION% está reservado y no se puede ajustar!'
 
+
+  COMMAND_HELP_INVALID:
+    enabled: true
+    string: '&3[LodeStar]&c That is not a valid command!'
+
+  COMMAND_HELP_BIND:
+    enabled: true
+    string: '&eBind a LodeStar destination to the item you are holding.'
+
+  COMMAND_HELP_DELETE:
+    enabled: true
+    string: '&eRemove a LodeStar destination.'
+
+  COMMAND_HELP_DESTROY:
+    enabled: true
+    string: '&eDestroy the stack of LodeStars you are holding.'
+
+  COMMAND_HELP_GIVE:
+    enabled: true
+    string: '&eGive a LodeStar to a player.'
+
+  COMMAND_HELP_HELP:
+    enabled: true
+    string: '&eDisplay help for LodeStar commands.'
+
+  COMMAND_HELP_LIST:
+    enabled: true
+    string: '&eDisplay a list of LodeStar destinations.'
+
+  COMMAND_HELP_RELOAD:
+    enabled: true
+    string: '&eReloads the configuration without needing to restart the server.'
+
+  COMMAND_HELP_SET:
+    enabled: true
+    string: '&eCreate a new LodeStar destination at your current location.'
+
+  COMMAND_HELP_STATUS:
+    enabled: true
+    string: '&eDisplay plugin configuration settings.'
+
+  COMMAND_HELP_TELEPORT:
+    enabled: true
+    string: '&eTeleport to a LodeStar destination.'
+
+  COMMAND_HELP_USAGE_HEADER:
+    enabled: true
+    string: '&eCommand usage:'
+
+
   COMMAND_SUCCESS_BIND:
     enabled: true
     string: '&3[LodeStar]&bArtículo en la mano ahora vinculado a %DESTINATION%.'
@@ -131,7 +181,7 @@ MESSAGES:
     string: '&3[LodeStar]&c Advertencia: Destino comienza con una cantidad válida. Tenga en cuenta cuando se utiliza con el comando &ogive.'
 
 
-  permission-denied-bind:
+  PERMISSION_DENIED_BIND:
     enabled: true
     string: '&c¡Usted no tiene permiso para enlazar artículos LodeStar a lugares!'
 
