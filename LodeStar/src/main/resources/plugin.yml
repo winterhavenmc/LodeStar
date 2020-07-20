@@ -7,7 +7,7 @@ softdepend: [Multiverse-Core]
 
 commands:
   lodestar:
-    description: This is the LodeStar command.
+    description: Use /lodestar help [command] for help.
     usage: /lodestar [command]
 
 permissions:
