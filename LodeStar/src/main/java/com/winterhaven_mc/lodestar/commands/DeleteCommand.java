@@ -4,6 +4,7 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -23,9 +24,10 @@ public class DeleteCommand extends AbstractCommand {
 	DeleteCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		this.setName("delete");
-		this.setUsage("/lodestar delete <destination_name>");
+		this.setUsage("/lodestar delete <destination name>");
 		this.addAlias("unset");
 		this.setDescription(COMMAND_HELP_DELETE);
+		this.setMinArgs(1);
 	}
 
 
@@ -51,17 +53,18 @@ public class DeleteCommand extends AbstractCommand {
 			return true;
 		}
 
-		int minArgs = 2;
-
 		// check min arguments
-		if (args.size() < minArgs) {
+		if (args.size() < getMinArgs()) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}
 
+		// join remaining arguments into destination name
 		String destinationName = String.join(" ", args);
+
+		// get key for destination name
 		String key = Destination.deriveKey(destinationName);
 
 		// test that destination name is not reserved name

@@ -6,14 +6,13 @@ import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import com.winterhaven_mc.lodestar.util.LodeStar;
 
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.winterhaven_mc.lodestar.messages.Macro.DESTINATION;
 import static com.winterhaven_mc.lodestar.messages.MessageId.*;
@@ -23,14 +22,19 @@ public class BindCommand extends AbstractCommand {
 
 	private final PluginMain plugin;
 
-	static final String usageString = "/lodestar bind <destination_name>";
+	private final List<Material> invalidMaterials = new ArrayList<>(Arrays.asList(
+				Material.AIR,
+				Material.VOID_AIR,
+				Material.VOID_AIR
+		));
 
 
 	BindCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		this.setName("bind");
-		this.setUsage("/lodestar bind <destination_name>");
+		this.setUsage("/lodestar bind <destination name>");
 		this.setDescription(COMMAND_HELP_BIND);
+		this.setMinArgs(1);
 	}
 
 
@@ -62,17 +66,18 @@ public class BindCommand extends AbstractCommand {
 			return true;
 		}
 
-		int minArgs = 2;
-
 		// check minimum arguments
-		if (args.size() < minArgs) {
+		if (args.size() < getMinArgs()) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}
 
+		// cast sender to player
 		Player player = (Player) sender;
+
+		// join remaining arguments into destination name
 		String destinationName = String.join(" ", args);
 
 		// test that destination exists
@@ -91,12 +96,21 @@ public class BindCommand extends AbstractCommand {
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!LodeStar.isDefaultItem(playerItem)) {
-				Message.create(sender, COMMAND_FAIL_INVALID_ITEM)
+				Message.create(sender, COMMAND_FAIL_INVALID_MATERIAL)
 						.setMacro(DESTINATION, destinationName)
 						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 				return true;
 			}
+		}
+
+		// check that item in hand is valid material
+		if (invalidMaterials.contains(playerItem.getType())) {
+			Message.create(sender, COMMAND_FAIL_INVALID_MATERIAL)
+					.setMacro(DESTINATION, destinationName)
+					.send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			return true;
 		}
 
 		// try to get formatted destination name from storage

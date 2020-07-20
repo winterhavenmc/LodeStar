@@ -40,10 +40,24 @@ public enum SubcommandType {
 		}
 	},
 
+	LIST() {
+		@Override
+		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
+			subcommandMap.register(new ListCommand(plugin));
+		}
+	},
+
 	RELOAD() {
 		@Override
 		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
 			subcommandMap.register(new ReloadCommand(plugin));
+		}
+	},
+
+	SET() {
+		@Override
+		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
+			subcommandMap.register(new SetCommand(plugin));
 		}
 	},
 

@@ -31,6 +31,7 @@ public class ReloadCommand extends AbstractCommand {
 		this.setName("reload");
 		this.setUsage("/lodestar reload");
 		this.setDescription(COMMAND_HELP_RELOAD);
+		this.setMaxArgs(0);
 	}
 
 
@@ -41,6 +42,14 @@ public class ReloadCommand extends AbstractCommand {
 		if (!sender.hasPermission("lodestar.reload")) {
 			Message.create(sender, PERMISSION_DENIED_RELOAD).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			return true;
+		}
+
+		// check max arguments
+		if (args.size() > getMaxArgs()) {
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			displayUsage(sender);
 			return true;
 		}
 

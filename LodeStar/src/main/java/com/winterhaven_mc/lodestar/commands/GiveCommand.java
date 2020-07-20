@@ -30,6 +30,7 @@ public class GiveCommand extends AbstractCommand {
 		this.setName("give");
 		this.setUsage("/lodestar give <player> [quantity] [material] [destination_name]");
 		this.setDescription(COMMAND_HELP_GIVE);
+		this.setMinArgs(1);
 	}
 
 
@@ -63,11 +64,8 @@ public class GiveCommand extends AbstractCommand {
 			return true;
 		}
 
-		// argument limits
-		int minArgs = 2;
-
 		// if too few arguments, send error and usage message
-		if (args.size() < minArgs) {
+		if (args.size() < getMinArgs()) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);

@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static com.winterhaven_mc.lodestar.messages.MessageId.COMMAND_HELP_STATUS;
-import static com.winterhaven_mc.lodestar.messages.MessageId.PERMISSION_DENIED_STATUS;
+import static com.winterhaven_mc.lodestar.messages.MessageId.*;
 
 
 /**
@@ -34,6 +33,7 @@ public class StatusCommand extends AbstractCommand {
 		this.setName("status");
 		this.setUsage("/lodestar status");
 		this.setDescription(COMMAND_HELP_STATUS);
+		this.setMaxArgs(0);
 	}
 
 
@@ -44,6 +44,14 @@ public class StatusCommand extends AbstractCommand {
 		if (!sender.hasPermission("lodestar.status")) {
 			Message.create(sender, PERMISSION_DENIED_STATUS).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			return true;
+		}
+
+		// check max arguments
+		if (args.size() > getMaxArgs()) {
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			displayUsage(sender);
 			return true;
 		}
 

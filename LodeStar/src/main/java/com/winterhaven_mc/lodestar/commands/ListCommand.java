@@ -25,6 +25,7 @@ public class ListCommand extends AbstractCommand {
 		this.setName("list");
 		this.setUsage("/lodestar list [page]");
 		this.setDescription(COMMAND_HELP_LIST);
+		this.setMaxArgs(1);
 	}
 
 
@@ -38,10 +39,7 @@ public class ListCommand extends AbstractCommand {
 			return true;
 		}
 
-		// argument limits
-		int maxArgs = 2;
-
-		if (args.size() > maxArgs) {
+		if (args.size() > getMaxArgs()) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
@@ -50,16 +48,19 @@ public class ListCommand extends AbstractCommand {
 
 		int page = 1;
 
-		if (args.size() == 2) {
+		if (args.size() == 1) {
 			try {
-				page = Integer.parseInt(args.get(1));
+				page = Integer.parseInt(args.get(0));
 			}
 			catch (NumberFormatException e) {
 				// second argument not a page number, let default of 1 stand
 			}
 		}
+
+		// set page to at least 1
 		page = Math.max(1, page);
 
+		// get configured items per page
 		int itemsPerPage = plugin.getConfig().getInt("list-page-size");
 
 		// get all records from datastore

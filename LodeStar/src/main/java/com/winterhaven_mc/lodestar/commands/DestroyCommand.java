@@ -20,8 +20,6 @@ public class DestroyCommand extends AbstractCommand {
 
 	private final PluginMain plugin;
 
-	final static String usageString = "/lodestar destroy";
-
 
 	DestroyCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
@@ -47,10 +45,13 @@ public class DestroyCommand extends AbstractCommand {
 			return true;
 		}
 
+		// cast sender to player
 		Player player = (Player) sender;
+
+		// get item in hand
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
-		// check that player is holding a LodeStar item
+		// check that item player is holding is a LodeStar item
 		if (!LodeStar.isItem(playerItem)) {
 			Message.create(sender, COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);

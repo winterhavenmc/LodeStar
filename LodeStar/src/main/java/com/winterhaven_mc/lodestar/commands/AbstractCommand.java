@@ -16,6 +16,8 @@ public abstract class AbstractCommand implements com.winterhaven_mc.lodestar.com
 	private List<String> aliases = new ArrayList<>();
 	private String usageString;
 	private MessageId description;
+	private int minArgs;
+	private int maxArgs;
 
 
 	@Override
@@ -68,6 +70,21 @@ public abstract class AbstractCommand implements com.winterhaven_mc.lodestar.com
 		this.description = description;
 	}
 
+	@Override
+	public int getMinArgs() { return minArgs; }
+
+	@Override
+	public void setMinArgs(int minArgs) {
+		this.minArgs = minArgs;
+	}
+
+	@Override
+	public int getMaxArgs() { return maxArgs; }
+
+	@Override
+	public void setMaxArgs(int maxArgs) {
+		this.maxArgs = maxArgs;
+	}
 
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command,

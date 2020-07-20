@@ -10,7 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +28,7 @@ public class SetCommand extends AbstractCommand {
 		this.setName("set");
 		this.setUsage("/lodestar set <destination_name>");
 		this.setDescription(COMMAND_HELP_SET);
+		this.setMinArgs(1);
 	}
 
 
@@ -53,8 +53,6 @@ public class SetCommand extends AbstractCommand {
 			return true;
 		}
 
-		int minArgs = 2;
-
 		// check for permission
 		if (!sender.hasPermission("lodestar.set")) {
 			Message.create(sender, PERMISSION_DENIED_SET).send();
@@ -63,7 +61,7 @@ public class SetCommand extends AbstractCommand {
 		}
 
 		// check min arguments
-		if (args.size() < minArgs) {
+		if (args.size() < getMinArgs()) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);

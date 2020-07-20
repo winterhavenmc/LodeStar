@@ -25,8 +25,9 @@ public class TeleportCommand extends AbstractCommand {
 	TeleportCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		this.setName("teleport");
-		this.setUsage("/lodestar teleport <destination_name>");
+		this.setUsage("/lodestar teleport <destination name>");
 		this.setDescription(COMMAND_HELP_TELEPORT);
+		this.setMinArgs(1);
 	}
 
 
@@ -58,17 +59,16 @@ public class TeleportCommand extends AbstractCommand {
 			return true;
 		}
 
-		Player player = (Player) sender;
-
-		int minArgs = 2;
-
 		// check min arguments
-		if (args.size() < minArgs) {
+		if (args.size() < getMinArgs()) {
 			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			displayUsage(sender);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
+
+		// cast sender to player
+		Player player = (Player) sender;
 
 		// join remaining arguments to get destination name
 		String destinationName = String.join(" ", args);
