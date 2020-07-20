@@ -81,6 +81,10 @@ MESSAGES:
     enabled: true
     string: '&3[LodeStar]&c ¡El tema tiene en sus manos no es una %ITEM%!'
 
+  COMMAND_FAIL_INVALID_MATERIAL:
+    enabled: true
+    string: '&3[LodeStar]&c ¡El artículo que tienes no es un material válido!'
+
   COMMAND_FAIL_INVALID_QUANTITY:
     enabled: true
     string: '&3[LodeStar]&c ¡Cantidad no válida!'
@@ -185,7 +189,7 @@ MESSAGES:
     enabled: true
     string: '&c¡Usted no tiene permiso para enlazar artículos LodeStar a lugares!'
 
-  permission-denied-delete:
+  PERMISSION_DENIED_DELETE:
     enabled: true
     string: '&c¡Usted no tiene permiso para eliminar ubicaciones LodeStar!'
 

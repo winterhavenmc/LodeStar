@@ -81,6 +81,10 @@ MESSAGES:
     enabled: true
     string: '&3[LodeStar]&c The item you are holding is not a %ITEM%!'
 
+  COMMAND_FAIL_INVALID_MATERIAL:
+    enabled: true
+    string: '&3[LodeStar]&c The item you are holding is not a valid material!'
+
   COMMAND_FAIL_INVALID_QUANTITY:
     enabled: true
     string: '&3[LodeStar]&c Invalid quantity!'
