@@ -24,7 +24,7 @@ public class BindCommand extends AbstractCommand {
 
 	private final List<Material> invalidMaterials = new ArrayList<>(Arrays.asList(
 				Material.AIR,
-				Material.VOID_AIR,
+				Material.CAVE_AIR,
 				Material.VOID_AIR
 		));
 
