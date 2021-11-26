@@ -8,7 +8,11 @@ import com.winterhaven_mc.lodestar.teleport.TeleportManager;
 import com.winterhaven_mc.lodestar.util.LodeStarFactory;
 import com.winterhaven_mc.util.*;
 
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
+
+import java.io.File;
 
 
 /**
@@ -31,6 +35,24 @@ public final class PluginMain extends JavaPlugin {
 	public CommandManager commandManager;
 	public PlayerEventListener playerEventListener;
 	public LodeStarFactory lodeStarFactory;
+
+
+	/**
+	 * Constructor for mocking
+	 */
+	@SuppressWarnings("unused")
+	public PluginMain() {
+		super();
+	}
+
+
+	/**
+	 * Constructor for mocking
+	 */
+	@SuppressWarnings("unused")
+	private PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+		super(loader, descriptionFile, dataFolder, file);
+	}
 
 
 	@Override
