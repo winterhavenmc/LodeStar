@@ -4,7 +4,6 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
-import com.winterhaven_mc.lodestar.util.LodeStar;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -21,8 +20,6 @@ import static com.winterhaven_mc.lodestar.messages.MessageId.*;
 public class GiveCommand extends AbstractCommand {
 
 	private final PluginMain plugin;
-
-	final static String altUsageString = "/lodestar give <player> [quantity] [destination_name]";
 
 
 	GiveCommand(final PluginMain plugin) {
@@ -59,14 +56,14 @@ public class GiveCommand extends AbstractCommand {
 
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
-			Message.create(sender, PERMISSION_DENIED_GIVE).send();
+			Message.create(sender, PERMISSION_DENIED_GIVE).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// if too few arguments, send error and usage message
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -113,7 +110,7 @@ public class GiveCommand extends AbstractCommand {
 
 			// if sender is not player, send args-count-under error message
 			if (!(sender instanceof Player)) {
-				Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+				Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 				displayUsage(sender);
 				return true;
 			}
@@ -122,9 +119,9 @@ public class GiveCommand extends AbstractCommand {
 			ItemStack playerItem = player.getInventory().getItemInMainHand().clone();
 
 			// if item in hand is a LodeStar item, set destination and material from item
-			if (LodeStar.isItem(playerItem)) {
+			if (plugin.lodeStarFactory.isItem(playerItem)) {
 
-				destinationName = LodeStar.getDestinationName(playerItem);
+				destinationName = plugin.lodeStarFactory.getDestinationName(playerItem);
 				material = playerItem.getType();
 			}
 		}
@@ -172,7 +169,7 @@ public class GiveCommand extends AbstractCommand {
 			else {
 				Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
 						.setMacro(DESTINATION, testName)
-						.send();
+						.send(plugin.languageHandler);
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 				return true;
 			}
@@ -197,7 +194,7 @@ public class GiveCommand extends AbstractCommand {
 		ItemStack itemStack = new ItemStack(material, quantity);
 
 		// set item metadata on item stack
-		LodeStar.setMetaData(itemStack, destinationName);
+		plugin.lodeStarFactory.setMetaData(itemStack, destinationName);
 
 		// give item stack to target player
 		giveItem(sender, targetPlayer, itemStack);
@@ -217,7 +214,7 @@ public class GiveCommand extends AbstractCommand {
 	@SuppressWarnings("UnusedReturnValue")
 	private boolean giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack) {
 
-		String key = LodeStar.getKey(itemStack);
+		String key = plugin.lodeStarFactory.getKey(itemStack);
 		int quantity = itemStack.getAmount();
 		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
 
@@ -228,8 +225,8 @@ public class GiveCommand extends AbstractCommand {
 		}
 
 		// test that item is a LodeStar item
-		if (!LodeStar.isItem(itemStack)) {
-			Message.create(giver, COMMAND_FAIL_INVALID_ITEM).send();
+		if (!plugin.lodeStarFactory.isItem(itemStack)) {
+			Message.create(giver, COMMAND_FAIL_INVALID_ITEM).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -247,7 +244,7 @@ public class GiveCommand extends AbstractCommand {
 		if (noFitCount == quantity) {
 			Message.create(giver, COMMAND_FAIL_GIVE_INVENTORY_FULL)
 					.setMacro(ITEM_QUANTITY, quantity)
-					.send();
+					.send(plugin.languageHandler);
 			return false;
 		}
 
@@ -265,7 +262,7 @@ public class GiveCommand extends AbstractCommand {
 					.setMacro(DESTINATION, destinationName)
 					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, targetPlayer)
-					.send();
+					.send(plugin.languageHandler);
 
 			// if giver is in game, play sound
 			if (giver instanceof Player) {
@@ -277,7 +274,7 @@ public class GiveCommand extends AbstractCommand {
 					.setMacro(DESTINATION, destinationName)
 					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, giver)
-					.send();
+					.send(plugin.languageHandler);
 		}
 
 		// play sound to target player
@@ -323,10 +320,10 @@ public class GiveCommand extends AbstractCommand {
 			}
 		}
 		if (matchedPlayers.isEmpty()) {
-			Message.create(sender, COMMAND_FAIL_PLAYER_NOT_FOUND).send();
+			Message.create(sender, COMMAND_FAIL_PLAYER_NOT_FOUND).send(plugin.languageHandler);
 		}
 		else {
-			Message.create(sender, COMMAND_FAIL_PLAYER_NOT_ONLINE).send();
+			Message.create(sender, COMMAND_FAIL_PLAYER_NOT_ONLINE).send(plugin.languageHandler);
 		}
 		return null;
 	}

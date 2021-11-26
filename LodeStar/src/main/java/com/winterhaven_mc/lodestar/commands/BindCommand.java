@@ -4,7 +4,6 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
-import com.winterhaven_mc.lodestar.util.LodeStar;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -55,20 +54,20 @@ public class BindCommand extends AbstractCommand {
 
 		// command sender must be player
 		if (!(sender instanceof Player)) {
-			Message.create(sender, COMMAND_FAIL_CONSOLE).send();
+			Message.create(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
 			return true;
 		}
 
 		// check sender has permission
 		if (!sender.hasPermission("lodestar.bind")) {
-			Message.create(sender, PERMISSION_DENIED_BIND).send();
+			Message.create(sender, PERMISSION_DENIED_BIND).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check minimum arguments
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -84,7 +83,7 @@ public class BindCommand extends AbstractCommand {
 		if (!Destination.exists(destinationName)) {
 			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, destinationName)
-					.send();
+					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -95,10 +94,10 @@ public class BindCommand extends AbstractCommand {
 		// if default-item-only configured true, check that item in hand has default material and data
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
-			if (!LodeStar.isDefaultItem(playerItem)) {
+			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
 				Message.create(sender, COMMAND_FAIL_INVALID_MATERIAL)
 						.setMacro(DESTINATION, destinationName)
-						.send();
+						.send(plugin.languageHandler);
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 				return true;
 			}
@@ -108,7 +107,7 @@ public class BindCommand extends AbstractCommand {
 		if (invalidMaterials.contains(playerItem.getType())) {
 			Message.create(sender, COMMAND_FAIL_INVALID_MATERIAL)
 					.setMacro(DESTINATION, destinationName)
-					.send();
+					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -120,10 +119,12 @@ public class BindCommand extends AbstractCommand {
 		}
 
 		// set destination in item lore
-		LodeStar.setMetaData(playerItem, destinationName);
+		plugin.lodeStarFactory.setMetaData(playerItem, destinationName);
 
 		// send success message
-		Message.create(sender, COMMAND_SUCCESS_BIND).setMacro(DESTINATION, destinationName).send();
+		Message.create(sender, COMMAND_SUCCESS_BIND)
+				.setMacro(DESTINATION, destinationName)
+				.send(plugin.languageHandler);
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_BIND);

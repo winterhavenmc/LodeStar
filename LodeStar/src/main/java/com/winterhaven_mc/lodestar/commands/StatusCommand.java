@@ -3,7 +3,6 @@ package com.winterhaven_mc.lodestar.commands;
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
-import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -42,14 +41,14 @@ public class StatusCommand extends AbstractCommand {
 
 		// if command sender does not have permission to view status, output error message and return true
 		if (!sender.hasPermission("lodestar.status")) {
-			Message.create(sender, PERMISSION_DENIED_STATUS).send();
+			Message.create(sender, PERMISSION_DENIED_STATUS).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check max arguments
 		if (args.size() > getMaxArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -78,12 +77,12 @@ public class StatusCommand extends AbstractCommand {
 
 		sender.sendMessage(ChatColor.GREEN + "Warmup: "
 				+ ChatColor.RESET
-				+ LanguageManager.getInstance().getTimeString(TimeUnit.SECONDS.toMillis(
+				+ plugin.languageHandler.getTimeString(TimeUnit.SECONDS.toMillis(
 				plugin.getConfig().getInt("teleport-warmup"))));
 
 		sender.sendMessage(ChatColor.GREEN + "Cooldown: "
 				+ ChatColor.RESET
-				+ LanguageManager.getInstance().getTimeString(TimeUnit.SECONDS.toMillis(
+				+ plugin.languageHandler.getTimeString(TimeUnit.SECONDS.toMillis(
 				plugin.getConfig().getInt("teleport-cooldown"))));
 
 		sender.sendMessage(ChatColor.GREEN + "Shift-click required: "

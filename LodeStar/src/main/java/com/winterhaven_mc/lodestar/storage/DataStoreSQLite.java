@@ -138,7 +138,7 @@ class DataStoreSQLite extends DataStore {
 		// test that world in destination location is valid
 		if (world == null) {
 			plugin.getLogger().warning("An error occured while inserting"
-					+ " a destination in the " + toString() + " datastore. World invalid!");
+					+ " a destination in the " + this + " datastore. World invalid!");
 			return;
 		}
 
@@ -170,7 +170,7 @@ class DataStoreSQLite extends DataStore {
 
 					// output simple error message
 					plugin.getLogger().warning("An error occured while inserting a destination "
-							+ "into the " + toString() + " datastore.");
+							+ "into the " + this + " datastore.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
@@ -207,7 +207,7 @@ class DataStoreSQLite extends DataStore {
 			// test that world in destination location is valid
 			if (world == null) {
 				plugin.getLogger().warning("An error occured while inserting"
-						+ " a destination in the " + toString() + " datastore. World invalid!");
+						+ " a destination in the " + this + " datastore. World invalid!");
 				continue;
 			}
 
@@ -238,7 +238,7 @@ class DataStoreSQLite extends DataStore {
 
 						// output simple error message
 						plugin.getLogger().warning("An error occured while inserting a destination "
-								+ "into the " + toString() + " datastore.");
+								+ "into the " + this + " datastore.");
 						plugin.getLogger().warning(e.getLocalizedMessage());
 
 						// if debugging is enabled, output stack trace

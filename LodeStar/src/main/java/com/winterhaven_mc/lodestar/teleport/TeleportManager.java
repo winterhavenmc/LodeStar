@@ -4,9 +4,8 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
-import com.winterhaven_mc.lodestar.util.LodeStar;
 
-import com.winterhaven_mc.util.LanguageManager;
+import com.winterhaven_mc.util.LanguageHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -33,8 +32,8 @@ public class TeleportManager {
 	// reference to main class
 	private final PluginMain plugin;
 
-	// reference to LanguageManager
-	private final LanguageManager languageManager;
+	// reference to languageHandler
+	private final LanguageHandler languageHandler;
 
 	// HashMap containing player UUID as key and warmup task id as value
 	private final ConcurrentHashMap<UUID, Integer> warmupMap;
@@ -57,7 +56,7 @@ public class TeleportManager {
 		this.plugin = plugin;
 
 		// set reference to language manager
-		languageManager = LanguageManager.getInstance();
+		languageHandler = plugin.languageHandler;
 
 		// initialize warmup HashMap
 		warmupMap = new ConcurrentHashMap<>();
@@ -83,7 +82,7 @@ public class TeleportManager {
 		if (getCooldownTimeRemaining(player) > 0) {
 			Message.create(player, TELEPORT_COOLDOWN)
 					.setMacro(DURATION, getCooldownTimeRemaining(player))
-					.send();
+					.send(plugin.languageHandler);
 			return;
 		}
 
@@ -93,21 +92,21 @@ public class TeleportManager {
 		}
 
 		// get destination from player item
-		String key = LodeStar.getKey(playerItem);
+		String key = plugin.lodeStarFactory.getKey(playerItem);
 		Location location = null;
 		Destination destination = null;
 
 		// if destination key equals home, get player bed spawn location
 		if (key != null && (key.equalsIgnoreCase("home")
-				|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName())))) {
+				|| key.equals(Destination.deriveKey(languageHandler.getHomeDisplayName())))) {
 
 			location = player.getBedSpawnLocation();
 
 			// if bedspawn location is not null, create destination with bed spawn location
 			if (location != null) {
-				destination = new Destination("home", languageManager.getHomeDisplayName(), location);
+				destination = new Destination("home", languageHandler.getHomeDisplayName(), location);
 				if (plugin.debug) {
-					plugin.getLogger().info("destination is home. Location: " + location.toString());
+					plugin.getLogger().info("destination is home. Location: " + location);
 				}
 			}
 			// otherwise if bedspawn-fallback is true in config, set key to spawn
@@ -116,7 +115,7 @@ public class TeleportManager {
 			}
 			// if bedspawn location is null and bedspawn-fallback is false, send message and return
 			else {
-				Message.create(player, TELEPORT_FAIL_NO_BEDSPAWN).send();
+				Message.create(player, TELEPORT_FAIL_NO_BEDSPAWN).send(plugin.languageHandler);
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				return;
 			}
@@ -124,7 +123,7 @@ public class TeleportManager {
 
 		// if destination is spawn, get spawn location
 		if (key != null && (key.equalsIgnoreCase("spawn")
-				|| key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName())))) {
+				|| key.equals(Destination.deriveKey(languageHandler.getSpawnDisplayName())))) {
 
 			World playerWorld = player.getWorld();
 			String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
@@ -150,7 +149,7 @@ public class TeleportManager {
 			location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 
 			// create warp object to send to delayed teleport method
-			String displayName = languageManager.getSpawnDisplayName();
+			String displayName = languageHandler.getSpawnDisplayName();
 			destination = new Destination(key, displayName, location);
 		}
 
@@ -160,9 +159,6 @@ public class TeleportManager {
 			destination = plugin.dataStore.selectRecord(key);
 			if (destination != null) {
 				location = destination.getLocation();
-			}
-			else {
-				location = null;
 			}
 		}
 
@@ -181,7 +177,7 @@ public class TeleportManager {
 
 			Message.create(player, TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, displayName)
-					.send();
+					.send(plugin.languageHandler);
 					return;
 		}
 
@@ -190,13 +186,13 @@ public class TeleportManager {
 				&& location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
 			Message.create(player, TELEPORT_FAIL_PROXIMITY)
 					.setMacro(DESTINATION, destination.getDisplayName())
-					.send();
+					.send(plugin.languageHandler);
 			return;
 		}
 
 		// send debug message to log
 		if (plugin.debug) {
-			plugin.getLogger().info("Teleporting to destination: " + location.toString());
+			plugin.getLogger().info("Teleporting to destination: " + location);
 		}
 
 		// load destination chunk if not already loaded
@@ -221,14 +217,14 @@ public class TeleportManager {
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.setMacro(DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
-						.send();
+						.send(plugin.languageHandler);
 			}
 			// otherwise send regular warmup message
 			else {
 				Message.create(player, TELEPORT_WARMUP)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
-						.send();
+						.send(plugin.languageHandler);
 			}
 			// if enabled, play sound effect
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_WARMUP);
@@ -246,7 +242,7 @@ public class TeleportManager {
 
 			// write message to log
 			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
-					+ languageManager.getItemName() + ChatColor.RESET + " in "
+					+ languageHandler.getItemName() + ChatColor.RESET + " in "
 					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
 		}
 	}
@@ -353,7 +349,7 @@ public class TeleportManager {
 			public void run() {
 				cooldownMap.remove(player.getUniqueId());
 			}
-		}.runTaskLater(plugin, (cooldownSeconds * 20));
+		}.runTaskLater(plugin, (cooldownSeconds * 20L));
 	}
 
 

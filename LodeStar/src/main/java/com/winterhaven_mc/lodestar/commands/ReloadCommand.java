@@ -4,7 +4,6 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.DataStore;
-import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -40,14 +39,14 @@ public class ReloadCommand extends AbstractCommand {
 
 		// if sender does not have permission to reload config, send error message and return true
 		if (!sender.hasPermission("lodestar.reload")) {
-			Message.create(sender, PERMISSION_DENIED_RELOAD).send();
+			Message.create(sender, PERMISSION_DENIED_RELOAD).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check max arguments
 		if (args.size() > getMaxArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -66,7 +65,7 @@ public class ReloadCommand extends AbstractCommand {
 		plugin.soundConfig.reload();
 
 		// reload messages
-		LanguageManager.reload();
+		plugin.languageHandler.reload();
 
 		// reload datastore
 		DataStore.reload();
@@ -75,7 +74,7 @@ public class ReloadCommand extends AbstractCommand {
 		plugin.debug = plugin.getConfig().getBoolean("debug");
 
 		// send reloaded message
-		Message.create(sender, COMMAND_SUCCESS_RELOAD).send();
+		Message.create(sender, COMMAND_SUCCESS_RELOAD).send(plugin.languageHandler);
 
 		return true;
 	}

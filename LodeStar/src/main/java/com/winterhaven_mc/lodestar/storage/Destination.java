@@ -2,8 +2,6 @@ package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 
-import com.winterhaven_mc.lodestar.util.LodeStar;
-import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,8 +16,6 @@ public final class Destination {
 
 	// static reference to plugin main class instance, necessary for static methods
 	private static final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
-
-	private static final LanguageManager languageManager = LanguageManager.getInstance();
 
 	private final String key;
 	private final String displayName;
@@ -156,7 +152,7 @@ public final class Destination {
 	 */
 	public boolean isSpawn() {
 		return this.getKey().equalsIgnoreCase("spawn")
-				|| this.getKey().equals(deriveKey(languageManager.getSpawnDisplayName()));
+				|| this.getKey().equals(deriveKey(plugin.languageHandler.getSpawnDisplayName()));
 	}
 
 
@@ -168,7 +164,7 @@ public final class Destination {
 	@SuppressWarnings("unused")
 	public boolean isHome() {
 		return this.getKey().equalsIgnoreCase("home")
-				|| this.getKey().equals(deriveKey(languageManager.getHomeDisplayName()));
+				|| this.getKey().equals(deriveKey(plugin.languageHandler.getHomeDisplayName()));
 	}
 
 
@@ -348,7 +344,7 @@ public final class Destination {
 		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
 		String derivedKey = Destination.deriveKey(key);
 		return derivedKey.equalsIgnoreCase("home")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(languageManager.getHomeDisplayName()));
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.languageHandler.getHomeDisplayName()));
 	}
 
 
@@ -369,7 +365,7 @@ public final class Destination {
 		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
 		String derivedKey = Destination.deriveKey(key);
 		return derivedKey.equalsIgnoreCase("spawn")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(languageManager.getSpawnDisplayName()));
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName()));
 	}
 
 
@@ -385,12 +381,12 @@ public final class Destination {
 
 		// if key matches spawn key, get spawn display name from messages files
 		if (isSpawn(key)) {
-			return languageManager.getSpawnDisplayName();
+			return plugin.languageHandler.getSpawnDisplayName();
 		}
 
 		// if key matches home key, get home display name from messages file
 		if (isHome(key)) {
-			return languageManager.getHomeDisplayName();
+			return plugin.languageHandler.getHomeDisplayName();
 		}
 
 		// else try to get destination name from datastore
@@ -415,19 +411,19 @@ public final class Destination {
 	public static String getDisplayName(final ItemStack itemStack) {
 
 		// get persistent key from item stack
-		String key = LodeStar.getKey(itemStack);
+		String key = plugin.lodeStarFactory.getKey(itemStack);
 
 		// if item stack persistent key is not null null, attempt to get display name for destination
 		if (key != null) {
 
 			// if key matches spawn key, get spawn display name from language file
 			if (isSpawn(key)) {
-				return languageManager.getSpawnDisplayName();
+				return plugin.languageHandler.getSpawnDisplayName();
 			}
 
 			// if destination is home get home display name from messages file
 			else if (isHome(key)) {
-				return languageManager.getHomeDisplayName();
+				return plugin.languageHandler.getHomeDisplayName();
 			}
 
 			// else get destination name from datastore

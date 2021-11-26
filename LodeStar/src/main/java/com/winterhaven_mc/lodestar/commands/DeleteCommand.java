@@ -48,14 +48,14 @@ public class DeleteCommand extends AbstractCommand {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.delete")) {
-			Message.create(sender, PERMISSION_DENIED_DELETE).send();
+			Message.create(sender, PERMISSION_DENIED_DELETE).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -71,7 +71,7 @@ public class DeleteCommand extends AbstractCommand {
 		if (Destination.isReserved(destinationName)) {
 			Message.create(sender, COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(DESTINATION, destinationName)
-					.send();
+					.send(plugin.languageHandler);
 
 			// play sound effect
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -82,7 +82,7 @@ public class DeleteCommand extends AbstractCommand {
 		if (!Destination.exists(destinationName)) {
 			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, destinationName)
-					.send();
+					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -93,7 +93,7 @@ public class DeleteCommand extends AbstractCommand {
 		// send success message to player
 		Message.create(sender, COMMAND_SUCCESS_DELETE)
 				.setMacro(DESTINATION, destinationName)
-				.send();
+				.send(plugin.languageHandler);
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);

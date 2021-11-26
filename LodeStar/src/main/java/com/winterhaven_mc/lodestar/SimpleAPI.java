@@ -2,8 +2,6 @@ package com.winterhaven_mc.lodestar;
 
 import com.winterhaven_mc.lodestar.storage.Destination;
 
-import com.winterhaven_mc.lodestar.util.LodeStar;
-import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.Material;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,9 +24,6 @@ public final class SimpleAPI {
 	// static reference to main class
 	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
-	// static reference to language manager
-	private final static LanguageManager languageManager = LanguageManager.getInstance();
-
 	/**
 	 * Private constructor to prevent instantiation
 	 *
@@ -44,10 +39,10 @@ public final class SimpleAPI {
 	 *
 	 * @param destinationName the destination name
 	 * @return ItemStack with destination name and quantity
-	 * @deprecated use {@code LodeStar.create()} method
+	 * @deprecated use {@code plugin.lodeStarFactory.create()} method
 	 */
 	public static ItemStack create(final String destinationName) {
-		return LodeStar.create(destinationName, 1);
+		return plugin.lodeStarFactory.create(destinationName, 1);
 	}
 
 
@@ -57,10 +52,10 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name
 	 * @param quantity the quantity of items
 	 * @return ItemStack with destination name and quantity
-	 * @deprecated use {@code LodeStar.create()} method
+	 * @deprecated use {@code plugin.lodeStarFactory.create()} method
 	 */
 	public static ItemStack create(final String destinationName, final int quantity) {
-		return LodeStar.create(destinationName, quantity);
+		return plugin.lodeStarFactory.create(destinationName, quantity);
 	}
 
 
@@ -69,10 +64,10 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack       the ItemStack to encode with destination key
 	 * @param destinationName the destination name used to create the encoded key
-	 * @deprecated use {@code LodeStar.setMetaData()} method
+	 * @deprecated use {@code plugin.lodeStarFactory.setMetaData()} method
 	 */
 	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
-		LodeStar.setMetaData(itemStack, destinationName);
+		plugin.lodeStarFactory.setMetaData(itemStack, destinationName);
 	}
 
 
@@ -81,10 +76,10 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the ItemStack to test if LodeStar item
 	 * @return boolean - {@code true} if ItemStack is LodeStar item, {@code false} if it is not
-	 * @deprecated use {@code LodeStar.isItem()} method
+	 * @deprecated use {@code plugin.lodeStarFactory.isItem()} method
 	 */
 	public static boolean isLodeStar(final ItemStack itemStack) {
-		return LodeStar.isItem(itemStack);
+		return plugin.lodeStarFactory.isItem(itemStack);
 	}
 
 
@@ -93,10 +88,10 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the ItemStack to test if default LodeStar item
 	 * @return boolean - {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
-	 * @deprecated use {@code LodeStar.isDefaultItem(itemStack)} method
+	 * @deprecated use {@code plugin.lodeStarFactory.isDefaultItem(itemStack)} method
 	 */
 	public static boolean isDefaultItem(final ItemStack itemStack) {
-		return LodeStar.isDefaultItem(itemStack);
+		return plugin.lodeStarFactory.isDefaultItem(itemStack);
 	}
 
 
@@ -105,10 +100,10 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the item to get destination from
 	 * @return String - the destination key
-	 * @deprecated use {@code LodeStar.getKey(itemStack)} method
+	 * @deprecated use {@code plugin.lodeStarFactory.getKey(itemStack)} method
 	 */
 	public static String getDestination(final ItemStack itemStack) {
-		return LodeStar.getKey(itemStack);
+		return plugin.lodeStarFactory.getKey(itemStack);
 	}
 
 
@@ -181,7 +176,7 @@ public final class SimpleAPI {
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
 		String key = Destination.deriveKey(destinationName);
 		return key.equals("spawn")
-				|| key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()));
+				|| key.equals(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName()));
 	}
 
 
@@ -192,7 +187,7 @@ public final class SimpleAPI {
 	 * @deprecated use {@code LodeStar.getItemName()} method
 	 */
 	public static String getItemName() {
-		return languageManager.getItemName();
+		return plugin.languageHandler.getItemName();
 	}
 
 

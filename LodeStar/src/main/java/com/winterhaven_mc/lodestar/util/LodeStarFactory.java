@@ -2,30 +2,45 @@ package com.winterhaven_mc.lodestar.util;
 
 import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.storage.Destination;
-import com.winterhaven_mc.util.LanguageManager;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
  * Utility class with static methods for creating and using LodeStar item stacks
  */
-public final class LodeStar {
+@SuppressWarnings("FieldCanBeLocal")
+public final class LodeStarFactory {
 
 	// static reference to main class instance
-	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
-
-	// reference to language manager
-	private final static LanguageManager languageManager = LanguageManager.getInstance();
+	private final PluginMain plugin;
 
 	// name spaced key for persistent data
-	public final static NamespacedKey PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
+	public final NamespacedKey PERSISTENT_KEY;
+
+	// item metadata fields
+	private final Material defaultMaterial = Material.NETHER_STAR;
+	private final Material material;
+	private final int quantity;
+	private final String itemStackName;
+	private final List<String> itemStackLore;
+
+	// item metadata flags
+	private static final Set<ItemFlag> itemFlagSet =
+			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+					ItemFlag.HIDE_ATTRIBUTES,
+					ItemFlag.HIDE_ENCHANTS,
+					ItemFlag.HIDE_UNBREAKABLE)));
+
+	// the proto item
+	private final ItemStack protoItem;
 
 
 	/**
@@ -33,8 +48,58 @@ public final class LodeStar {
 	 *
 	 * @throws AssertionError on attempt to instantiate
 	 */
-	private LodeStar() {
-		throw new AssertionError();
+	public LodeStarFactory(PluginMain plugin) {
+
+		this.plugin = plugin;
+
+		PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
+
+		this.quantity = 1;
+		this.itemStackName = plugin.languageHandler.getItemName();
+		this.itemStackLore = plugin.languageHandler.getItemLore();
+
+		// get default material string from configuration file
+		String configMaterialString = plugin.getConfig().getString("item-material");
+
+		// if config material string is null, set material to default material
+		if (configMaterialString == null) {
+			material = defaultMaterial;
+		} else {
+			// try to match material
+			Material matchedMaterial = Material.matchMaterial(configMaterialString);
+
+			// if no match or unobtainable item material, set material to default material
+			if (matchedMaterial == null || !matchedMaterial.isItem()) {
+				material = defaultMaterial;
+			} else {
+				// set material to matched material
+				material = matchedMaterial;
+			}
+		}
+
+		// assign new item stack of specified material and quantity to proto item
+		this.protoItem = new ItemStack(material, quantity);
+
+		// get item metadata for proto item
+		final ItemMeta itemMeta = protoItem.getItemMeta();
+
+		// set item metadata display name to value from language file
+		//noinspection ConstantConditions
+		itemMeta.setDisplayName(itemStackName);
+
+		// set item metadata Lore to value from language file
+		itemMeta.setLore(itemStackLore);
+
+		// set persistent data in item metadata
+		itemMeta.getPersistentDataContainer().set(PERSISTENT_KEY, PersistentDataType.STRING, "");
+
+		// set metadata flags in item metadata
+		for (ItemFlag itemFlag : itemFlagSet) {
+			itemMeta.addItemFlags(itemFlag);
+		}
+
+		// save new proto item metadata
+		protoItem.setItemMeta(itemMeta);
 	}
 
 
@@ -44,8 +109,7 @@ public final class LodeStar {
 	 * @param destinationName the destination name
 	 * @return ItemStack with destination name and quantity
 	 */
-	@SuppressWarnings("unused")
-	public static ItemStack create(final String destinationName) {
+	public ItemStack create(final String destinationName) {
 		return create(destinationName, 1);
 	}
 
@@ -57,7 +121,7 @@ public final class LodeStar {
 	 * @param quantity the number of items in the stack
 	 * @return ItemStack with destination name and quantity
 	 */
-	public static ItemStack create(final String destinationName, final int quantity) {
+	public ItemStack create(final String destinationName, final int quantity) {
 
 		// validate quantity is at least one
 		int newQuantity = Math.max(1, quantity);
@@ -100,10 +164,10 @@ public final class LodeStar {
 	 * @param itemStack       the ItemStack to encode with destination key
 	 * @param destinationName the destination name used to create the encoded key
 	 */
-	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
+	public void setMetaData(final ItemStack itemStack, final String destinationName) {
 
 		// retrieve item name from language file
-		String itemName = languageManager.getInventoryItemName();
+		String itemName = plugin.languageHandler.getInventoryItemName();
 
 		// replace destination placeholder with destination name
 		itemName = itemName.replace("%DESTINATION%", destinationName);
@@ -112,7 +176,7 @@ public final class LodeStar {
 		itemName = ChatColor.translateAlternateColorCodes('&', itemName);
 
 		// retrieve item lore from language file
-		List<String> configLore = languageManager.getItemLore();
+		List<String> configLore = plugin.languageHandler.getItemLore();
 
 		// list of strings for formatted item lore
 		List<String> itemLore = new ArrayList<>();
@@ -149,7 +213,7 @@ public final class LodeStar {
 	 * @param itemStack the ItemStack to test if LodeStar item
 	 * @return {@code true} if ItemStack is LodeStar item, {@code false} if it is not
 	 */
-	public static boolean isItem(final ItemStack itemStack) {
+	public boolean isItem(final ItemStack itemStack) {
 
 		// if item stack is empty (null or air) return false
 		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
@@ -163,8 +227,7 @@ public final class LodeStar {
 
 		// if item stack has persistent data tag, return true; otherwise return false
 		//noinspection ConstantConditions
-		return itemStack.getItemMeta().getPersistentDataContainer()
-				.has(PERSISTENT_KEY, PersistentDataType.STRING);
+		return itemStack.getItemMeta().getPersistentDataContainer().has(PERSISTENT_KEY, PersistentDataType.STRING);
 	}
 
 
@@ -174,9 +237,9 @@ public final class LodeStar {
 	 * @param itemStack the item whose destination name is being retrieved
 	 * @return String - destination display name
 	 */
-	public static String getDestinationName(final ItemStack itemStack) {
+	public String getDestinationName(final ItemStack itemStack) {
 
-		String key = LodeStar.getKey(itemStack);
+		String key = this.getKey(itemStack);
 
 		// if key is null, return empty string
 		if (key == null) {
@@ -186,13 +249,13 @@ public final class LodeStar {
 		String destinationName = null;
 
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(languageManager.getSpawnDisplayName()))) {
-			destinationName = languageManager.getSpawnDisplayName();
+		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName()))) {
+			destinationName = plugin.languageHandler.getSpawnDisplayName();
 		}
 		// if destination is home get home display name from messages file
 		else if (key.equals("home")
-				|| key.equals(Destination.deriveKey(languageManager.getHomeDisplayName()))) {
-			destinationName = languageManager.getHomeDisplayName();
+				|| key.equals(Destination.deriveKey(plugin.languageHandler.getHomeDisplayName()))) {
+			destinationName = plugin.languageHandler.getHomeDisplayName();
 		}
 		// else get destination name from datastore
 		else {
@@ -217,7 +280,7 @@ public final class LodeStar {
 	 * @param itemStack the item stack from which to retrieve stored key
 	 * @return String - destination key, or null if item does not have key in persistent meta data
 	 */
-	public static String getKey(final ItemStack itemStack) {
+	public String getKey(final ItemStack itemStack) {
 
 		// if item stack does not have metadata, return null
 		if (!itemStack.hasItemMeta()) {
@@ -241,7 +304,7 @@ public final class LodeStar {
 	 * @param itemStack the ItemStack to test if default LodeStar item
 	 * @return {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
 	 */
-	public static boolean isDefaultItem(final ItemStack itemStack) {
+	public boolean isDefaultItem(final ItemStack itemStack) {
 
 		if (plugin.debug) {
 			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
@@ -269,7 +332,5 @@ public final class LodeStar {
 		// if material and data match defaults return true
 		return itemStack.getType().equals(material);
 	}
-
-
 
 }

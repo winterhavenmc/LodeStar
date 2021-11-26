@@ -4,7 +4,6 @@ import com.winterhaven_mc.lodestar.PluginMain;
 import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.messages.MessageId;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
-import com.winterhaven_mc.lodestar.util.LodeStar;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -97,7 +96,7 @@ public class PlayerEventListener implements Listener {
 					plugin.teleportManager.cancelTeleport(player);
 
 					// send cancelled teleport message
-					Message.create(player, TELEPORT_CANCELLED_INTERACTION).send();
+					Message.create(player, TELEPORT_CANCELLED_INTERACTION).send(plugin.languageHandler);
 
 					// play cancelled teleport sound
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
@@ -107,7 +106,7 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// if item used is not a LodeStar, do nothing and return
-		if (!LodeStar.isItem(event.getItem())) {
+		if (!plugin.lodeStarFactory.isItem(event.getItem())) {
 			return;
 		}
 
@@ -165,14 +164,14 @@ public class PlayerEventListener implements Listener {
 
 			// if players current world is not enabled in config, do nothing and return
 			if (!plugin.worldManager.isEnabled(player.getWorld())) {
-				Message.create(player, TELEPORT_FAIL_WORLD_DISABLED).send();
+				Message.create(player, TELEPORT_FAIL_WORLD_DISABLED).send(plugin.languageHandler);
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 				return;
 			}
 
 			// if player does not have lodestar.use permission, send message and return
 			if (!player.hasPermission("lodestar.use")) {
-				Message.create(player, MessageId.PERMISSION_DENIED_USE).send();
+				Message.create(player, MessageId.PERMISSION_DENIED_USE).send(plugin.languageHandler);
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
 				return;
 			}
@@ -181,7 +180,7 @@ public class PlayerEventListener implements Listener {
 			// send teleport fail shift-click message, cancel event and return
 			if (plugin.getConfig().getBoolean("shift-click")
 					&& !player.isSneaking()) {
-				Message.create(player, TELEPORT_FAIL_SHIFT_CLICK).send();
+				Message.create(player, TELEPORT_FAIL_SHIFT_CLICK).send(plugin.languageHandler);
 				return;
 			}
 
@@ -236,7 +235,7 @@ public class PlayerEventListener implements Listener {
 
 		// if crafting inventory contains LodeStar item, set result item to null
 		for (ItemStack itemStack : event.getInventory()) {
-			if (LodeStar.isItem(itemStack)) {
+			if (plugin.lodeStarFactory.isItem(itemStack)) {
 				event.getInventory().setResult(null);
 			}
 		}
@@ -269,7 +268,7 @@ public class PlayerEventListener implements Listener {
 				// if player is in warmup hashmap, cancel teleport and send player message
 				if (plugin.teleportManager.isWarmingUp(player)) {
 					plugin.teleportManager.cancelTeleport(player);
-					Message.create(player, TELEPORT_CANCELLED_DAMAGE).send();
+					Message.create(player, TELEPORT_CANCELLED_DAMAGE).send(plugin.languageHandler);
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				}
 			}
@@ -298,7 +297,7 @@ public class PlayerEventListener implements Listener {
 			// check for player movement other than head turning
 			if (event.getFrom().distanceSquared(Objects.requireNonNull(event.getTo())) > 0) {
 				plugin.teleportManager.cancelTeleport(player);
-				Message.create(player, TELEPORT_CANCELLED_MOVEMENT).send();
+				Message.create(player, TELEPORT_CANCELLED_MOVEMENT).send(plugin.languageHandler);
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 			}
 		}

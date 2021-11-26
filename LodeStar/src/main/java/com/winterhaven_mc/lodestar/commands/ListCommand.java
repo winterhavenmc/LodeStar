@@ -34,13 +34,13 @@ public class ListCommand extends AbstractCommand {
 
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission("lodestar.list")) {
-			Message.create(sender, PERMISSION_DENIED_LIST).send();
+			Message.create(sender, PERMISSION_DENIED_LIST).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		if (args.size() > getMaxArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -72,7 +72,7 @@ public class ListCommand extends AbstractCommand {
 
 		// if display list is empty, output list empty message and return
 		if (allKeys.isEmpty()) {
-			Message.create(sender, LIST_EMPTY).send();
+			Message.create(sender, LIST_EMPTY).send(plugin.languageHandler);
 			return true;
 		}
 
@@ -90,7 +90,7 @@ public class ListCommand extends AbstractCommand {
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
 		// display list header
-		Message.create(sender, LIST_HEADER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send();
+		Message.create(sender, LIST_HEADER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send(plugin.languageHandler);
 
 		int itemNumber = startIndex;
 
@@ -106,19 +106,19 @@ public class ListCommand extends AbstractCommand {
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(ITEM_NUMBER, itemNumber)
 						.setMacro(LOCATION, destination.getLocation())
-						.send();
+						.send(plugin.languageHandler);
 			}
 			else {
 				Message.create(sender, LIST_ITEM_INVALID)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(ITEM_NUMBER, itemNumber)
 						.setMacro(WORLD, destination.getWorldName())
-						.send();
+						.send(plugin.languageHandler);
 			}
 		}
 
 		// display list footer
-		Message.create(sender, LIST_FOOTER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send();
+		Message.create(sender, LIST_FOOTER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send(plugin.languageHandler);
 
 		return true;
 	}

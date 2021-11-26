@@ -5,10 +5,8 @@ import com.winterhaven_mc.lodestar.listeners.PlayerEventListener;
 import com.winterhaven_mc.lodestar.storage.DataStore;
 import com.winterhaven_mc.lodestar.teleport.TeleportManager;
 
-import com.winterhaven_mc.util.LanguageManager;
-import com.winterhaven_mc.util.WorldManager;
-import com.winterhaven_mc.util.SoundConfiguration;
-import com.winterhaven_mc.util.YamlSoundConfiguration;
+import com.winterhaven_mc.lodestar.util.LodeStarFactory;
+import com.winterhaven_mc.util.*;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,10 +23,14 @@ public final class PluginMain extends JavaPlugin {
 	// global debug field
 	public Boolean debug = getConfig().getBoolean("debug");
 
+	public LanguageHandler languageHandler;
 	public DataStore dataStore;
 	public TeleportManager teleportManager;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
+	public CommandManager commandManager;
+	public PlayerEventListener playerEventListener;
+	public LodeStarFactory lodeStarFactory;
 
 
 	@Override
@@ -37,8 +39,8 @@ public final class PluginMain extends JavaPlugin {
 		// install default config.yml if not present
 		saveDefaultConfig();
 
-		// initialize language manager
-		LanguageManager.init();
+		// instantiate language handler
+		languageHandler = new LanguageHandler(this);
 
 		// instantiate world manager
 		worldManager = new WorldManager(this);
@@ -53,10 +55,13 @@ public final class PluginMain extends JavaPlugin {
 		teleportManager = new TeleportManager(this);
 
 		// instantiate command manager
-		new CommandManager(this);
+		commandManager = new CommandManager(this);
 
 		// instantiate player listener
-		new PlayerEventListener(this);
+		playerEventListener = new PlayerEventListener(this);
+
+		// instantiate lodestar factory
+		lodeStarFactory = new LodeStarFactory(this);
 	}
 
 
