@@ -333,4 +333,13 @@ public final class LodeStarFactory {
 		return itemStack.getType().equals(material);
 	}
 
+
+	/**
+	 * Reload plugin's LodeStarFactory. Replaces existing plugin.LodeStarFactory with new instance.
+	 */
+	public void reload() {
+		plugin.lodeStarFactory = new LodeStarFactory(plugin);
+		plugin.getLogger().info("SpawnStarFactory reloaded.");
+	}
+
 }
