@@ -2,7 +2,7 @@ name: LodeStar
 main: com.winterhaven_mc.lodestar.PluginMain
 author: ${project.author}
 version: ${project.version}
-api-version: 1.16
+api-version: 1.17
 softdepend: [Multiverse-Core]
 
 commands:
