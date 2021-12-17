@@ -5,12 +5,30 @@
 	<version>1.17.0</version>
 	<name>LodeStar</name>
 
+	<url>https://github.com/tim-savage/LodeStar</url>
+
+	<description>
+		A minecraft plugin that provides configurable items to be used to teleport
+		a player to configured locations, in place of the /warp command.
+	</description>
+
 	<properties>
 		<project.author>Tim Savage</project.author>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 	</properties>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License v3.0</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/tim-savage/LodeStar/issues</url>
+	</issueManagement>
 
 	<distributionManagement>
 		<repository>
@@ -82,7 +100,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.8.1</version>
+			<version>5.8.2</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -90,12 +108,16 @@
 		<dependency>
 			<groupId>com.github.seeseemelk</groupId>
 			<artifactId>MockBukkit-v1.16</artifactId>
+			<!--suppress MavenPackageUpdate -->
 			<version>1.0.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<!-- jar filename -->
+		<finalName>${project.name}-${project.version}</finalName>
+
 		<!-- Rewources -->
 		<resources>
 			<resource>
