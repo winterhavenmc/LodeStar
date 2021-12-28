@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
@@ -34,13 +33,13 @@ public class ListCommand extends AbstractCommand {
 
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission("lodestar.list")) {
-			Message.create(sender, PERMISSION_DENIED_LIST).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_LIST).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		if (args.size() > getMaxArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_OVER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -72,7 +71,7 @@ public class ListCommand extends AbstractCommand {
 
 		// if display list is empty, output list empty message and return
 		if (allKeys.isEmpty()) {
-			Message.create(sender, LIST_EMPTY).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, LIST_EMPTY).send(plugin.languageHandler);
 			return true;
 		}
 
@@ -90,7 +89,7 @@ public class ListCommand extends AbstractCommand {
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
 		// display list header
-		Message.create(sender, LIST_HEADER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send(plugin.languageHandler);
+		plugin.messageBuilder.build(sender, LIST_HEADER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send(plugin.languageHandler);
 
 		int itemNumber = startIndex;
 
@@ -102,14 +101,14 @@ public class ListCommand extends AbstractCommand {
 			itemNumber++;
 
 			if (destination.isWorldValid()) {
-				Message.create(sender, LIST_ITEM)
+				plugin.messageBuilder.build(sender, LIST_ITEM)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(ITEM_NUMBER, itemNumber)
 						.setMacro(LOCATION, destination.getLocation())
 						.send(plugin.languageHandler);
 			}
 			else {
-				Message.create(sender, LIST_ITEM_INVALID)
+				plugin.messageBuilder.build(sender, LIST_ITEM_INVALID)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(ITEM_NUMBER, itemNumber)
 						.setMacro(WORLD, destination.getWorldName())
@@ -118,7 +117,7 @@ public class ListCommand extends AbstractCommand {
 		}
 
 		// display list footer
-		Message.create(sender, LIST_FOOTER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send(plugin.languageHandler);
+		plugin.messageBuilder.build(sender, LIST_FOOTER).setMacro(PAGE_NUMBER, page).setMacro(PAGE_TOTAL, pageCount).send(plugin.languageHandler);
 
 		return true;
 	}

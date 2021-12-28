@@ -2,13 +2,13 @@ package com.winterhaven_mc.lodestar;
 
 import com.winterhaven_mc.lodestar.commands.CommandManager;
 import com.winterhaven_mc.lodestar.listeners.PlayerEventListener;
-import com.winterhaven_mc.lodestar.storage.DataStore;
+// import com.winterhaven_mc.lodestar.storage.DataStore;
 import com.winterhaven_mc.lodestar.teleport.TeleportManager;
 import com.winterhaven_mc.lodestar.util.LodeStarFactory;
-import com.winterhaven_mc.util.LanguageHandler;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.WorldManager;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
+import com.winterhavenmc.util.messagebuilder.LanguageHandler;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -25,11 +25,8 @@ import java.io.File;
  */
 public final class PluginMain extends JavaPlugin {
 
-	// global debug field
-	public Boolean debug = getConfig().getBoolean("debug");
-
 	public LanguageHandler languageHandler;
-	public DataStore dataStore;
+//	public DataStore dataStore;
 	public TeleportManager teleportManager;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;

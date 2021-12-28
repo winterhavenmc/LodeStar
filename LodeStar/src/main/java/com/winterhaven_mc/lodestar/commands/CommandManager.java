@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -101,7 +100,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// if subcommand is null, get help command from map
 		if (subcommand == null) {
 			subcommand = subcommandMap.getCommand("help");
-			Message.create(sender, COMMAND_FAIL_INVALID_COMMAND).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_COMMAND).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, COMMAND_INVALID);
 		}
 

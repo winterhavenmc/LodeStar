@@ -1,11 +1,9 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
-import com.winterhaven_mc.util.LanguageHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -32,9 +30,6 @@ public class TeleportManager {
 	// reference to main class
 	private final PluginMain plugin;
 
-	// reference to languageHandler
-	private final LanguageHandler languageHandler;
-
 	// HashMap containing player UUID as key and warmup task id as value
 	private final ConcurrentHashMap<UUID, Integer> warmupMap;
 
@@ -54,9 +49,6 @@ public class TeleportManager {
 
 		// set reference to main class
 		this.plugin = plugin;
-
-		// set reference to language manager
-		languageHandler = plugin.languageHandler;
 
 		// initialize warmup HashMap
 		warmupMap = new ConcurrentHashMap<>();
@@ -80,7 +72,7 @@ public class TeleportManager {
 
 		// if player cooldown has not expired, send player cooldown message and return
 		if (getCooldownTimeRemaining(player) > 0) {
-			Message.create(player, TELEPORT_COOLDOWN)
+			plugin.messageBuilder.build(player, TELEPORT_COOLDOWN)
 					.setMacro(DURATION, getCooldownTimeRemaining(player))
 					.send(plugin.languageHandler);
 			return;
@@ -98,13 +90,13 @@ public class TeleportManager {
 
 		// if destination key equals home, get player bed spawn location
 		if (key != null && (key.equalsIgnoreCase("home")
-				|| key.equals(Destination.deriveKey(languageHandler.getHomeDisplayName())))) {
+				|| key.equals(Destination.deriveKey(plugin.languageHandler.getHomeDisplayName())))) {
 
 			location = player.getBedSpawnLocation();
 
 			// if bedspawn location is not null, create destination with bed spawn location
 			if (location != null) {
-				destination = new Destination("home", languageHandler.getHomeDisplayName(), location);
+				destination = new Destination("home", plugin.languageHandler.getHomeDisplayName(), location);
 				if (plugin.debug) {
 					plugin.getLogger().info("destination is home. Location: " + location);
 				}
@@ -115,7 +107,7 @@ public class TeleportManager {
 			}
 			// if bedspawn location is null and bedspawn-fallback is false, send message and return
 			else {
-				Message.create(player, TELEPORT_FAIL_NO_BEDSPAWN).send(plugin.languageHandler);
+				plugin.messageBuilder.build(player, TELEPORT_FAIL_NO_BEDSPAWN).send(plugin.languageHandler);
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				return;
 			}
@@ -123,7 +115,7 @@ public class TeleportManager {
 
 		// if destination is spawn, get spawn location
 		if (key != null && (key.equalsIgnoreCase("spawn")
-				|| key.equals(Destination.deriveKey(languageHandler.getSpawnDisplayName())))) {
+				|| key.equals(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName())))) {
 
 			World playerWorld = player.getWorld();
 			String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
@@ -149,7 +141,7 @@ public class TeleportManager {
 			location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 
 			// create warp object to send to delayed teleport method
-			String displayName = languageHandler.getSpawnDisplayName();
+			String displayName = plugin.languageHandler.getSpawnDisplayName();
 			destination = new Destination(key, displayName, location);
 		}
 
@@ -175,7 +167,7 @@ public class TeleportManager {
 				displayName = key;
 			}
 
-			Message.create(player, TELEPORT_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.build(player, TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, displayName)
 					.send(plugin.languageHandler);
 					return;
@@ -184,7 +176,7 @@ public class TeleportManager {
 		// if player is less than config min-distance from destination, send player proximity message and return
 		if (player.getWorld() == location.getWorld()
 				&& location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
-			Message.create(player, TELEPORT_FAIL_PROXIMITY)
+			plugin.messageBuilder.build(player, TELEPORT_FAIL_PROXIMITY)
 					.setMacro(DESTINATION, destination.getDisplayName())
 					.send(plugin.languageHandler);
 			return;
@@ -213,7 +205,7 @@ public class TeleportManager {
 
 			// if destination is spawn send spawn specific warmup message
 			if (destination.isSpawn()) {
-				Message.create(player, TELEPORT_WARMUP_SPAWN)
+				plugin.messageBuilder.build(player, TELEPORT_WARMUP_SPAWN)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.setMacro(DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
@@ -221,7 +213,7 @@ public class TeleportManager {
 			}
 			// otherwise send regular warmup message
 			else {
-				Message.create(player, TELEPORT_WARMUP)
+				plugin.messageBuilder.build(player, TELEPORT_WARMUP)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
 						.send(plugin.languageHandler);
@@ -242,7 +234,7 @@ public class TeleportManager {
 
 			// write message to log
 			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
-					+ languageHandler.getItemName() + ChatColor.RESET + " in "
+					+ plugin.languageHandler.getItemName() + ChatColor.RESET + " in "
 					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
 		}
 	}

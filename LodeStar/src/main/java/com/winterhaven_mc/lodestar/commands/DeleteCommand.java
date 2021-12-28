@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
@@ -48,14 +47,14 @@ public class DeleteCommand extends AbstractCommand {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.delete")) {
-			Message.create(sender, PERMISSION_DENIED_DELETE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_DELETE).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -69,7 +68,7 @@ public class DeleteCommand extends AbstractCommand {
 
 		// test that destination name is not reserved name
 		if (Destination.isReserved(destinationName)) {
-			Message.create(sender, COMMAND_FAIL_DELETE_RESERVED)
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 
@@ -80,7 +79,7 @@ public class DeleteCommand extends AbstractCommand {
 
 		// test that destination name is valid
 		if (!Destination.exists(destinationName)) {
-			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -91,7 +90,7 @@ public class DeleteCommand extends AbstractCommand {
 		plugin.dataStore.deleteRecord(key);
 
 		// send success message to player
-		Message.create(sender, COMMAND_SUCCESS_DELETE)
+		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_DELETE)
 				.setMacro(DESTINATION, destinationName)
 				.send(plugin.languageHandler);
 

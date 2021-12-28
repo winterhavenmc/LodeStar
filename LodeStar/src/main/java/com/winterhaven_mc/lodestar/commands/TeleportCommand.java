@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.command.Command;
@@ -48,20 +47,20 @@ public class TeleportCommand extends AbstractCommand {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.teleport")) {
-			Message.create(sender, PERMISSION_DENIED_TELEPORT).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_TELEPORT).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check for in game player
 		if (!(sender instanceof Player)) {
-			Message.create(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			displayUsage(sender);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -75,7 +74,7 @@ public class TeleportCommand extends AbstractCommand {
 
 		// test that destination name is valid
 		if (!Destination.exists(destinationName)) {
-			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -88,12 +87,12 @@ public class TeleportCommand extends AbstractCommand {
 		if (destination != null && destination.getLocation() != null) {
 			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 			player.teleport(destination.getLocation());
-			Message.create(sender, TELEPORT_SUCCESS).setMacro(DESTINATION, destination).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, TELEPORT_SUCCESS).setMacro(DESTINATION, destination).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(destination.getLocation(), SoundId.TELEPORT_SUCCESS_ARRIVAL);
 			return true;
 		}
 		else {
-			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_DESTINATION).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 		}
 

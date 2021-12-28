@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
@@ -49,20 +48,20 @@ public class SetCommand extends AbstractCommand {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			Message.create(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
 			return true;
 		}
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.set")) {
-			Message.create(sender, PERMISSION_DENIED_SET).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_SET).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -76,7 +75,7 @@ public class SetCommand extends AbstractCommand {
 
 		// check if destination name is a reserved name
 		if (Destination.isReserved(destinationName)) {
-			Message.create(sender, COMMAND_FAIL_SET_RESERVED)
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_SET_RESERVED)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -88,7 +87,7 @@ public class SetCommand extends AbstractCommand {
 
 		// check for overwrite permission if destination already exists
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
-			Message.create(sender, PERMISSION_DENIED_OVERWRITE)
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_OVERWRITE)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 
@@ -99,7 +98,7 @@ public class SetCommand extends AbstractCommand {
 
 		// send warning message if name begins with a number
 		if (Destination.deriveKey(destinationName).matches("^\\d*_.*")) {
-			Message.create(sender, COMMAND_WARN_SET_NUMERIC_PREFIX)
+			plugin.messageBuilder.build(sender, COMMAND_WARN_SET_NUMERIC_PREFIX)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 		}
@@ -111,7 +110,7 @@ public class SetCommand extends AbstractCommand {
 		plugin.dataStore.insertRecord(destination);
 
 		// send success message to player
-		Message.create(sender, COMMAND_SUCCESS_SET).setMacro(DESTINATION, destinationName).send(plugin.languageHandler);
+		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_SET).setMacro(DESTINATION, destinationName).send(plugin.languageHandler);
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_SET);

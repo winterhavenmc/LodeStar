@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
@@ -54,20 +53,20 @@ public class BindCommand extends AbstractCommand {
 
 		// command sender must be player
 		if (!(sender instanceof Player)) {
-			Message.create(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
 			return true;
 		}
 
 		// check sender has permission
 		if (!sender.hasPermission("lodestar.bind")) {
-			Message.create(sender, PERMISSION_DENIED_BIND).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_BIND).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check minimum arguments
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -81,7 +80,7 @@ public class BindCommand extends AbstractCommand {
 
 		// test that destination exists
 		if (!Destination.exists(destinationName)) {
-			Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -95,7 +94,7 @@ public class BindCommand extends AbstractCommand {
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
-				Message.create(sender, COMMAND_FAIL_INVALID_MATERIAL)
+				plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_MATERIAL)
 						.setMacro(DESTINATION, destinationName)
 						.send(plugin.languageHandler);
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -105,7 +104,7 @@ public class BindCommand extends AbstractCommand {
 
 		// check that item in hand is valid material
 		if (invalidMaterials.contains(playerItem.getType())) {
-			Message.create(sender, COMMAND_FAIL_INVALID_MATERIAL)
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_MATERIAL)
 					.setMacro(DESTINATION, destinationName)
 					.send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -122,7 +121,7 @@ public class BindCommand extends AbstractCommand {
 		plugin.lodeStarFactory.setMetaData(playerItem, destinationName);
 
 		// send success message
-		Message.create(sender, COMMAND_SUCCESS_BIND)
+		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_BIND)
 				.setMacro(DESTINATION, destinationName)
 				.send(plugin.languageHandler);
 

@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.teleport;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 
@@ -95,7 +94,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
 				if (notRemoved) {
-					Message.create(player, TELEPORT_CANCELLED_NO_ITEM).send(plugin.languageHandler);
+					plugin.messageBuilder.build(player, TELEPORT_CANCELLED_NO_ITEM).send(plugin.languageHandler);
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
 					plugin.teleportManager.setPlayerCooldown(player);
 					return;
@@ -109,14 +108,14 @@ class DelayedTeleportTask extends BukkitRunnable {
 
 			// if destination is spawn, send spawn specific success message
 			if (destination.isSpawn()) {
-				Message.create(player, TELEPORT_SUCCESS_SPAWN)
+				plugin.messageBuilder.build(player, TELEPORT_SUCCESS_SPAWN)
 						.setMacro(DESTINATION, plugin.languageHandler.getSpawnDisplayName())
 						.setMacro(WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.send(plugin.languageHandler);
 			}
 			// otherwise send regular success message
 			else {
-				Message.create(player, TELEPORT_SUCCESS)
+				plugin.messageBuilder.build(player, TELEPORT_SUCCESS)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.send(plugin.languageHandler);
 			}

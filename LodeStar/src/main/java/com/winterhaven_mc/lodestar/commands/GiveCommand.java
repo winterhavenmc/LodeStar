@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import com.winterhaven_mc.lodestar.storage.Destination;
 import org.bukkit.Material;
@@ -56,14 +55,14 @@ public class GiveCommand extends AbstractCommand {
 
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
-			Message.create(sender, PERMISSION_DENIED_GIVE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_GIVE).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// if too few arguments, send error and usage message
 		if (args.size() < getMinArgs()) {
-			Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -110,7 +109,7 @@ public class GiveCommand extends AbstractCommand {
 
 			// if sender is not player, send args-count-under error message
 			if (!(sender instanceof Player)) {
-				Message.create(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+				plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
 				displayUsage(sender);
 				return true;
 			}
@@ -167,7 +166,7 @@ public class GiveCommand extends AbstractCommand {
 
 			// else given destination is invalid (but not blank), so send error message
 			else {
-				Message.create(sender, COMMAND_FAIL_INVALID_DESTINATION)
+				plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_DESTINATION)
 						.setMacro(DESTINATION, testName)
 						.send(plugin.languageHandler);
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -226,7 +225,7 @@ public class GiveCommand extends AbstractCommand {
 
 		// test that item is a LodeStar item
 		if (!plugin.lodeStarFactory.isItem(itemStack)) {
-			Message.create(giver, COMMAND_FAIL_INVALID_ITEM).send(plugin.languageHandler);
+			plugin.messageBuilder.build(giver, COMMAND_FAIL_INVALID_ITEM).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -242,7 +241,7 @@ public class GiveCommand extends AbstractCommand {
 
 		// if remaining items equals quantity given, send player-inventory-full message and return
 		if (noFitCount == quantity) {
-			Message.create(giver, COMMAND_FAIL_GIVE_INVENTORY_FULL)
+			plugin.messageBuilder.build(giver, COMMAND_FAIL_GIVE_INVENTORY_FULL)
 					.setMacro(ITEM_QUANTITY, quantity)
 					.send(plugin.languageHandler);
 			return false;
@@ -258,7 +257,7 @@ public class GiveCommand extends AbstractCommand {
 		if (!giver.getName().equals(targetPlayer.getName())) {
 
 			// send message and play sound to giver
-			Message.create(giver, COMMAND_SUCCESS_GIVE)
+			plugin.messageBuilder.build(giver, COMMAND_SUCCESS_GIVE)
 					.setMacro(DESTINATION, destinationName)
 					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, targetPlayer)
@@ -270,7 +269,7 @@ public class GiveCommand extends AbstractCommand {
 			}
 
 			// send message to target player
-			Message.create(targetPlayer, COMMAND_SUCCESS_GIVE_TARGET)
+			plugin.messageBuilder.build(targetPlayer, COMMAND_SUCCESS_GIVE_TARGET)
 					.setMacro(DESTINATION, destinationName)
 					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, giver)
@@ -320,10 +319,10 @@ public class GiveCommand extends AbstractCommand {
 			}
 		}
 		if (matchedPlayers.isEmpty()) {
-			Message.create(sender, COMMAND_FAIL_PLAYER_NOT_FOUND).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_PLAYER_NOT_FOUND).send(plugin.languageHandler);
 		}
 		else {
-			Message.create(sender, COMMAND_FAIL_PLAYER_NOT_ONLINE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_PLAYER_NOT_ONLINE).send(plugin.languageHandler);
 		}
 		return null;
 	}

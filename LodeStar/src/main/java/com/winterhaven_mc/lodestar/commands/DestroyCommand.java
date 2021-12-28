@@ -1,7 +1,6 @@
 package com.winterhaven_mc.lodestar.commands;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import com.winterhaven_mc.lodestar.messages.Message;
 import com.winterhaven_mc.lodestar.sounds.SoundId;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,13 +32,13 @@ public class DestroyCommand extends AbstractCommand {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			Message.create(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
 			return true;
 		}
 
 		// check that sender has permission
 		if (!sender.hasPermission("lodestar.destroy")) {
-			Message.create(sender, PERMISSION_DENIED_DESTROY).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_DESTROY).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -52,7 +51,7 @@ public class DestroyCommand extends AbstractCommand {
 
 		// check that item player is holding is a LodeStar item
 		if (!plugin.lodeStarFactory.isItem(playerItem)) {
-			Message.create(sender, COMMAND_FAIL_INVALID_ITEM).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_ITEM).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -61,7 +60,7 @@ public class DestroyCommand extends AbstractCommand {
 		String destinationName = plugin.lodeStarFactory.getDestinationName(playerItem);
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
-		Message.create(sender, COMMAND_SUCCESS_DESTROY)
+		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_DESTROY)
 				.setMacro(ITEM_QUANTITY, quantity)
 				.setMacro(DESTINATION, destinationName)
 				.send(plugin.languageHandler);
