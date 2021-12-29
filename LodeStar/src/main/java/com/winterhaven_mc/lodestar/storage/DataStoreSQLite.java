@@ -40,7 +40,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 	@Override
 	public String toString() {
-		return type.getName();
+		return type.toString();
 	}
 
 
@@ -49,7 +49,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
-			plugin.getLogger().info(this.getName() + " datastore already initialized.");
+			plugin.getLogger().info(this + " datastore already initialized.");
 			return;
 		}
 
@@ -71,7 +71,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 		// set initialized true
 		setInitialized(true);
-		plugin.getLogger().info(this.getName() + " datastore initialized.");
+		plugin.getLogger().info(this + " datastore initialized.");
 	}
 
 
@@ -190,7 +190,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public synchronized int insertRecords(final Collection<Destination> destinations) {
+	synchronized public int insertRecords(final Collection<Destination> destinations) {
 
 		// if destination is null return zero record count
 		if (destinations == null) {
@@ -536,9 +536,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 	@Override
 	public void sync() {
-
 		// no action necessary for this storage type
-
 	}
 
 

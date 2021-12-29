@@ -42,22 +42,28 @@ enum DataStoreType {
 	}
 
 
-	public String getName() {
-		return displayName;
-	}
-
-
 	@Override
 	public String toString() {
 		return displayName;
 	}
 
 
+	/**
+	 * set the display name for a data store type
+	 *
+	 * @param displayName the string to set as datastore type name
+	 */
 	public void setDisplayName(final String displayName) {
 		this.displayName = displayName;
 	}
 
 
+	/**
+	 * attempt get a datastore type by matching the name to a string; returns default type if no match
+	 *
+	 * @param displayName the string to match
+	 * @return DataStoreType - the matched datastore type, or the default type if no match
+	 */
 	public static DataStoreType match(final String displayName) {
 		for (DataStoreType type : DataStoreType.values()) {
 			if (type.toString().equalsIgnoreCase(displayName)) {
@@ -69,6 +75,11 @@ enum DataStoreType {
 	}
 
 
+	/**
+	 * get the default datastore type
+	 *
+	 * @return DataStoreType - the default datastore type
+	 */
 	public static DataStoreType getDefaultType() {
 		return defaultType;
 	}
@@ -100,7 +111,7 @@ enum DataStoreType {
 				}
 				catch (Exception e) {
 					plugin.getLogger().warning("Could not initialize "
-							+ oldDataStore.getName() + " datastore for conversion.");
+							+ oldDataStore + " datastore for conversion.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 					return;
 				}
@@ -117,7 +128,7 @@ enum DataStoreType {
 				newDataStore.insertRecord(record);
 				count++;
 			}
-			plugin.getLogger().info(count + " records converted to " + newDataStore.getName() + " datastore.");
+			plugin.getLogger().info(count + " records converted to " + newDataStore + " datastore.");
 
 			newDataStore.sync();
 

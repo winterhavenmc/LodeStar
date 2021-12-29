@@ -18,6 +18,14 @@ public interface DataStore {
 
 
 	/**
+	 * Get datastore initialized field
+	 *
+	 * @return boolean
+	 */
+	boolean isInitialized();
+
+
+	/**
 	 * Get record
 	 *
 	 * @param destinationName the name string key of the destination to be retrieved from the datastore
@@ -97,33 +105,9 @@ public interface DataStore {
 
 
 	/**
-	 * Get datastore filename or equivalent
-	 *
-	 * @return the filename or equivalent of the current datastore
-	 */
-	String getFilename();
-
-
-	/**
 	 * Get datastore type
 	 */
 	DataStoreType getType();
-
-
-	/**
-	 * Get datastore name
-	 *
-	 * @return the formatted display name of the current datastore
-	 */
-	String getName();
-
-
-	/**
-	 * Get datastore initialized field
-	 *
-	 * @return boolean
-	 */
-	boolean isInitialized();
 
 
 	/**
