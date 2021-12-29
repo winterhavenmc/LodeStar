@@ -80,7 +80,7 @@ enum DataStoreType {
 	 * @param oldDataStore the old datastore to convert from
 	 * @param newDataStore the new datastore to convert to
 	 */
-	static void convertDataStore(final JavaPlugin plugin, final DataStore oldDataStore, final DataStore newDataStore) {
+	static void convert(final JavaPlugin plugin, final DataStore oldDataStore, final DataStore newDataStore) {
 
 		// if datastores are same type, do not convert
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
@@ -140,20 +140,9 @@ enum DataStoreType {
 		// remove newDataStore from list of types to convert
 		dataStores.remove(newDataStore.getType());
 
+		// convert each datastore type in list to new datastore type
 		for (DataStoreType type : dataStores) {
-
-			// create oldDataStore holder
-			DataStore oldDataStore = null;
-
-			if (type.equals(DataStoreType.SQLITE)) {
-				oldDataStore = new DataStoreSQLite(plugin);
-			}
-
-			// add additional datastore types here as they become available
-
-			if (oldDataStore != null) {
-				convertDataStore(plugin, oldDataStore, newDataStore);
-			}
+			convert(plugin, type.create(plugin), newDataStore);
 		}
 	}
 

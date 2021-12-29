@@ -1,6 +1,7 @@
 package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.List;
@@ -140,7 +141,7 @@ public interface DataStore {
 	 *
 	 * @return new datastore of configured type
 	 */
-	static DataStore create(final PluginMain plugin) {
+	static DataStore create(final JavaPlugin plugin) {
 
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
@@ -159,7 +160,7 @@ public interface DataStore {
 	 * @param oldDataStore  existing datastore reference
 	 * @return the initialized new datastore
 	 */
-	static DataStore create(final PluginMain plugin, final DataStoreType dataStoreType, final DataStore oldDataStore) {
+	static DataStore create(final JavaPlugin plugin, final DataStoreType dataStoreType, final DataStore oldDataStore) {
 
 		// get new data store of specified type
 		DataStore newDataStore = dataStoreType.create(plugin);
@@ -177,7 +178,7 @@ public interface DataStore {
 
 		// if old data store was passed, convert to new data store
 		if (oldDataStore != null) {
-			DataStoreType.convertDataStore(plugin, oldDataStore, newDataStore);
+			DataStoreType.convert(plugin, oldDataStore, newDataStore);
 		}
 		else {
 			DataStoreType.convertAll(plugin, newDataStore);
