@@ -28,9 +28,6 @@ import java.io.File;
  */
 public final class PluginMain extends JavaPlugin {
 
-	// global debug field
-	public Boolean debug = getConfig().getBoolean("debug");
-
 	public LanguageHandler languageHandler;
 	public MessageBuilder<MessageId, Macro> messageBuilder;
 	public DataStore dataStore;
@@ -68,6 +65,8 @@ public final class PluginMain extends JavaPlugin {
 
 		// instantiate language handler
 		languageHandler = new LanguageHandler(this);
+
+		// instantiate message builder
 		messageBuilder = new MessageBuilder<>();
 
 		// instantiate world manager
@@ -77,7 +76,7 @@ public final class PluginMain extends JavaPlugin {
 		soundConfig = new YamlSoundConfiguration(this);
 
 		// get initialized destination storage object
-		dataStore = DataStore.create();
+		dataStore = DataStore.create(this);
 
 		// instantiate teleport manager
 		teleportManager = new TeleportManager(this);

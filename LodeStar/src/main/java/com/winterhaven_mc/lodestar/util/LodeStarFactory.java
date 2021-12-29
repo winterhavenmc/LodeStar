@@ -306,7 +306,7 @@ public final class LodeStarFactory {
 	 */
 	public boolean isDefaultItem(final ItemStack itemStack) {
 
-		if (plugin.debug) {
+		if (plugin.getConfig().getBoolean("debug")) {
 			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
 		}
 

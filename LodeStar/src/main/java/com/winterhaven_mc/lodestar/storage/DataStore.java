@@ -1,31 +1,19 @@
 package com.winterhaven_mc.lodestar.storage;
 
 import com.winterhaven_mc.lodestar.PluginMain;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 
-public abstract class DataStore {
-
-	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
-
-	private boolean initialized;
-
-	DataStoreType type;
-
-	String filename;
-
+public interface DataStore {
 
 	/**
 	 * Initialize storage
 	 *
 	 * @throws Exception on error
 	 */
-	abstract void initialize() throws Exception;
+	void initialize() throws Exception;
 
 
 	/**
@@ -34,7 +22,7 @@ public abstract class DataStore {
 	 * @param destinationName the name string key of the destination to be retrieved from the datastore
 	 * @return destination object or null if no matching record
 	 */
-	public abstract Destination selectRecord(final String destinationName);
+	Destination selectRecord(final String destinationName);
 
 
 	/**
@@ -42,7 +30,7 @@ public abstract class DataStore {
 	 *
 	 * @param destination the destination object to be inserted in the datastore
 	 */
-	public abstract void insertRecord(final Destination destination);
+	void insertRecord(final Destination destination);
 
 
 	/**
@@ -51,7 +39,7 @@ public abstract class DataStore {
 	 *
 	 * @return count of records inserted
 	 */
-	public abstract int insertRecords(final Collection<Destination> destinations);
+	int insertRecords(final Collection<Destination> destinations);
 
 
 	/**
@@ -59,7 +47,7 @@ public abstract class DataStore {
 	 *
 	 * @return List of all destination display name strings
 	 */
-	public abstract List<String> selectAllKeys();
+	List<String> selectAllKeys();
 
 
 	/**
@@ -67,7 +55,7 @@ public abstract class DataStore {
 	 *
 	 * @return List of all destination records
 	 */
-	abstract List<Destination> selectAllRecords();
+	List<Destination> selectAllRecords();
 
 
 	/**
@@ -77,26 +65,26 @@ public abstract class DataStore {
 	 * @return the destination record that was deleted
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	public abstract Destination deleteRecord(final String destinationName);
+	Destination deleteRecord(final String destinationName);
 
 
 	/**
 	 * Close storage
 	 */
-	public abstract void close();
+	void close();
 
 
 	/**
 	 * Sync datastore to disk if supported
 	 */
-	abstract void sync();
+	void sync();
 
 
 	/**
 	 * Delete datastore
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	abstract boolean delete();
+	boolean delete();
 
 
 	/**
@@ -104,7 +92,7 @@ public abstract class DataStore {
 	 *
 	 * @return boolean
 	 */
-	abstract boolean exists();
+	boolean exists();
 
 
 	/**
@@ -112,17 +100,13 @@ public abstract class DataStore {
 	 *
 	 * @return the filename or equivalent of the current datastore
 	 */
-	String getFilename() {
-		return this.filename;
-	}
+	String getFilename();
 
 
 	/**
 	 * Get datastore type
 	 */
-	private DataStoreType getType() {
-		return this.type;
-	}
+	DataStoreType getType();
 
 
 	/**
@@ -130,9 +114,7 @@ public abstract class DataStore {
 	 *
 	 * @return the formatted display name of the current datastore
 	 */
-	public String getName() {
-		return this.getType().toString();
-	}
+	String getName();
 
 
 	/**
@@ -140,9 +122,7 @@ public abstract class DataStore {
 	 *
 	 * @return boolean
 	 */
-	boolean isInitialized() {
-		return this.initialized;
-	}
+	boolean isInitialized();
 
 
 	/**
@@ -150,9 +130,7 @@ public abstract class DataStore {
 	 *
 	 * @param initialized the boolean value to set initialized field
 	 */
-	void setInitialized(final boolean initialized) {
-		this.initialized = initialized;
-	}
+	void setInitialized(final boolean initialized);
 
 
 	/**
@@ -162,14 +140,14 @@ public abstract class DataStore {
 	 *
 	 * @return new datastore of configured type
 	 */
-	public static DataStore create() {
+	static DataStore create(final PluginMain plugin) {
 
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
 		if (dataStoreType == null) {
 			dataStoreType = DataStoreType.getDefaultType();
 		}
-		return create(dataStoreType, null);
+		return create(plugin, dataStoreType, null);
 	}
 
 
@@ -181,28 +159,28 @@ public abstract class DataStore {
 	 * @param oldDataStore  existing datastore reference
 	 * @return the initialized new datastore
 	 */
-	private static DataStore create(final DataStoreType dataStoreType, final DataStore oldDataStore) {
+	static DataStore create(final PluginMain plugin, final DataStoreType dataStoreType, final DataStore oldDataStore) {
 
 		// get new data store of specified type
-		DataStore newDataStore = dataStoreType.create();
+		DataStore newDataStore = dataStoreType.create(plugin);
 
 		// initialize new data store
 		try {
 			newDataStore.initialize();
 		}
 		catch (Exception e) {
-			plugin.getLogger().severe("Could not initialize " + newDataStore.toString() + " datastore!");
-			if (plugin.debug) {
+			plugin.getLogger().severe("Could not initialize the " + newDataStore + " datastore!");
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.printStackTrace();
 			}
 		}
 
 		// if old data store was passed, convert to new data store
 		if (oldDataStore != null) {
-			convertDataStore(oldDataStore, newDataStore);
+			DataStoreType.convertDataStore(plugin, oldDataStore, newDataStore);
 		}
 		else {
-			convertAll(newDataStore);
+			DataStoreType.convertAll(plugin, newDataStore);
 		}
 		// return initialized data store
 		return newDataStore;
@@ -210,93 +188,9 @@ public abstract class DataStore {
 
 
 	/**
-	 * convert old data store to new data store
-	 *
-	 * @param oldDataStore the old datastore to convert from
-	 * @param newDataStore the new datastore to convert to
-	 */
-	private static void convertDataStore(final DataStore oldDataStore, final DataStore newDataStore) {
-
-		// if datastores are same type, do not convert
-		if (oldDataStore.getType().equals(newDataStore.getType())) {
-			return;
-		}
-
-		// if old datastore file exists, attempt to read all records
-		if (oldDataStore.exists()) {
-
-			plugin.getLogger().info("Converting existing " + oldDataStore + " datastore to "
-					+ newDataStore + " datastore...");
-
-			// initialize old datastore if necessary
-			if (!oldDataStore.isInitialized()) {
-				try {
-					oldDataStore.initialize();
-				}
-				catch (Exception e) {
-					plugin.getLogger().warning("Could not initialize "
-							+ oldDataStore.getName() + " datastore for conversion.");
-					plugin.getLogger().warning(e.getLocalizedMessage());
-					return;
-				}
-			}
-
-			// get List of all records from old datastore
-			List<Destination> allRecords = oldDataStore.selectAllRecords();
-
-			// initialize counter
-			int count = 0;
-
-			// insert each record into new datastore
-			for (Destination record : allRecords) {
-				newDataStore.insertRecord(record);
-				count++;
-			}
-			plugin.getLogger().info(count + " records converted to " + newDataStore.getName() + " datastore.");
-
-			newDataStore.sync();
-
-			oldDataStore.close();
-			oldDataStore.delete();
-		}
-	}
-
-
-	/**
-	 * convert all existing data stores to new data store
-	 *
-	 * @param newDataStore the new datastore to convert all other datastore into
-	 */
-	private static void convertAll(final DataStore newDataStore) {
-
-		// get array list of all data store types
-		ArrayList<DataStoreType> dataStores = new ArrayList<>(Arrays.asList(DataStoreType.values()));
-
-		// remove newDataStore from list of types to convert
-		dataStores.remove(newDataStore.getType());
-
-		for (DataStoreType type : dataStores) {
-
-			// create oldDataStore holder
-			DataStore oldDataStore = null;
-
-			if (type.equals(DataStoreType.SQLITE)) {
-				oldDataStore = new DataStoreSQLite(plugin);
-			}
-
-			// add additional datastore types here as they become available
-
-			if (oldDataStore != null) {
-				convertDataStore(oldDataStore, newDataStore);
-			}
-		}
-	}
-
-
-	/**
 	 * Reload datastore
 	 */
-	public static void reload() {
+	static void reload(final PluginMain plugin) {
 
 		// get current datastore type
 		final DataStoreType currentType = plugin.dataStore.getType();
@@ -308,7 +202,7 @@ public abstract class DataStore {
 		if (!currentType.equals(newType)) {
 
 			// create new datastore
-			plugin.dataStore = create(newType, plugin.dataStore);
+			plugin.dataStore = create(plugin, newType, plugin.dataStore);
 		}
 	}
 

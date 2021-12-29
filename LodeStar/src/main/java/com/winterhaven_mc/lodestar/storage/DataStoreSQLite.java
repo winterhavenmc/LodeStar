@@ -1,7 +1,7 @@
 package com.winterhaven_mc.lodestar.storage;
 
-import com.winterhaven_mc.lodestar.PluginMain;
 import org.bukkit.World;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -9,10 +9,10 @@ import java.sql.*;
 import java.util.*;
 
 
-class DataStoreSQLite extends DataStore {
+class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 	// reference to main class
-	private final PluginMain plugin;
+	private final JavaPlugin plugin;
 
 	// database connection object
 	private Connection connection;
@@ -25,7 +25,7 @@ class DataStoreSQLite extends DataStore {
 	 *
 	 * @param plugin reference to main class
 	 */
-	DataStoreSQLite(final PluginMain plugin) {
+	DataStoreSQLite(final JavaPlugin plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
@@ -39,7 +39,13 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	void initialize() throws SQLException, ClassNotFoundException {
+	public String toString() {
+		return type.getName();
+	}
+
+
+	@Override
+	public void initialize() throws SQLException, ClassNotFoundException {
 
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
@@ -174,7 +180,7 @@ class DataStoreSQLite extends DataStore {
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
-					if (plugin.debug) {
+					if (plugin.getConfig().getBoolean("debug")) {
 						e.getStackTrace();
 					}
 				}
@@ -242,7 +248,7 @@ class DataStoreSQLite extends DataStore {
 						plugin.getLogger().warning(e.getLocalizedMessage());
 
 						// if debugging is enabled, output stack trace
-						if (plugin.debug) {
+						if (plugin.getConfig().getBoolean("debug")) {
 							e.getStackTrace();
 						}
 					}
@@ -319,7 +325,7 @@ class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 			return null;
@@ -329,7 +335,7 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	List<Destination> selectAllRecords() {
+	public List<Destination> selectAllRecords() {
 
 		List<Destination> returnList = new ArrayList<>();
 
@@ -418,7 +424,7 @@ class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 		}
@@ -452,7 +458,7 @@ class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 		}
@@ -486,7 +492,7 @@ class DataStoreSQLite extends DataStore {
 			int rowsAffected = preparedStatement.executeUpdate();
 
 			// output debugging information
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				plugin.getLogger().info(rowsAffected + " rows deleted.");
 			}
 		}
@@ -498,7 +504,7 @@ class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 		}
@@ -520,7 +526,7 @@ class DataStoreSQLite extends DataStore {
 			plugin.getLogger().warning(e.getMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 		}
@@ -529,7 +535,7 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	void sync() {
+	public void sync() {
 
 		// no action necessary for this storage type
 
@@ -537,7 +543,7 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	boolean delete() {
+	public boolean delete() {
 
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		boolean result = false;
@@ -549,7 +555,7 @@ class DataStoreSQLite extends DataStore {
 
 
 	@Override
-	boolean exists() {
+	public boolean exists() {
 
 		// get path name to data store file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());

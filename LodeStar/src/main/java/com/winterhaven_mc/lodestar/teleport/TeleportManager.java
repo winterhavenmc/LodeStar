@@ -97,7 +97,7 @@ public class TeleportManager {
 			// if bedspawn location is not null, create destination with bed spawn location
 			if (location != null) {
 				destination = new Destination("home", plugin.languageHandler.getHomeDisplayName(), location);
-				if (plugin.debug) {
+				if (plugin.getConfig().getBoolean("debug")) {
 					plugin.getLogger().info("destination is home. Location: " + location);
 				}
 			}
@@ -183,7 +183,7 @@ public class TeleportManager {
 		}
 
 		// send debug message to log
-		if (plugin.debug) {
+		if (plugin.getConfig().getBoolean("debug")) {
 			plugin.getLogger().info("Teleporting to destination: " + location);
 		}
 

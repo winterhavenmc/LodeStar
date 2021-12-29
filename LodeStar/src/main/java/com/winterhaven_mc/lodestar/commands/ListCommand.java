@@ -65,7 +65,7 @@ public class ListCommand extends AbstractCommand {
 		// get all records from datastore
 		final List<String> allKeys = plugin.dataStore.selectAllKeys();
 
-		if (plugin.debug) {
+		if (plugin.getConfig().getBoolean("debug")) {
 			plugin.getLogger().info("Total records fetched from db: " + allKeys.size());
 		}
 
