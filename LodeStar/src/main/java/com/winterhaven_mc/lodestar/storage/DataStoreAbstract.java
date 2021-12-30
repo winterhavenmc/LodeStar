@@ -44,7 +44,6 @@ abstract class DataStoreAbstract implements DataStore {
 	 *
 	 * @param initialized the boolean value to set initialized field
 	 */
-	@Override
 	public void setInitialized(final boolean initialized) {
 		this.initialized = initialized;
 	}

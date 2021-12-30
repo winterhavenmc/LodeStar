@@ -111,14 +111,6 @@ public interface DataStore {
 
 
 	/**
-	 * Set initialized field
-	 *
-	 * @param initialized the boolean value to set initialized field
-	 */
-	void setInitialized(final boolean initialized);
-
-
-	/**
 	 * Create new data store of given type.<br>
 	 * No parameter version used when no current datastore exists
 	 * and datastore type should be read from configuration
