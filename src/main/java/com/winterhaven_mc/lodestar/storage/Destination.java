@@ -152,7 +152,7 @@ public final class Destination {
 	 */
 	public boolean isSpawn() {
 		return this.getKey().equalsIgnoreCase("spawn")
-				|| this.getKey().equals(deriveKey(plugin.languageHandler.getSpawnDisplayName()));
+				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
 	}
 
 
@@ -164,7 +164,7 @@ public final class Destination {
 	@SuppressWarnings("unused")
 	public boolean isHome() {
 		return this.getKey().equalsIgnoreCase("home")
-				|| this.getKey().equals(deriveKey(plugin.languageHandler.getHomeDisplayName()));
+				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getHomeDisplayName()));
 	}
 
 
@@ -344,7 +344,7 @@ public final class Destination {
 		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
 		String derivedKey = Destination.deriveKey(key);
 		return derivedKey.equalsIgnoreCase("home")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.languageHandler.getHomeDisplayName()));
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName()));
 	}
 
 
@@ -365,7 +365,7 @@ public final class Destination {
 		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
 		String derivedKey = Destination.deriveKey(key);
 		return derivedKey.equalsIgnoreCase("spawn")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName()));
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
 	}
 
 
@@ -381,12 +381,12 @@ public final class Destination {
 
 		// if key matches spawn key, get spawn display name from messages files
 		if (isSpawn(key)) {
-			return plugin.languageHandler.getSpawnDisplayName();
+			return plugin.messageBuilder.getSpawnDisplayName();
 		}
 
 		// if key matches home key, get home display name from messages file
 		if (isHome(key)) {
-			return plugin.languageHandler.getHomeDisplayName();
+			return plugin.messageBuilder.getHomeDisplayName();
 		}
 
 		// else try to get destination name from datastore
@@ -418,12 +418,12 @@ public final class Destination {
 
 			// if key matches spawn key, get spawn display name from language file
 			if (isSpawn(key)) {
-				return plugin.languageHandler.getSpawnDisplayName();
+				return plugin.messageBuilder.getSpawnDisplayName();
 			}
 
 			// if destination is home get home display name from messages file
 			else if (isHome(key)) {
-				return plugin.languageHandler.getHomeDisplayName();
+				return plugin.messageBuilder.getHomeDisplayName();
 			}
 
 			// else get destination name from datastore

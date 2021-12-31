@@ -55,14 +55,14 @@ public class GiveCommand extends AbstractCommand {
 
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
-			plugin.messageBuilder.build(sender, PERMISSION_DENIED_GIVE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_GIVE).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// if too few arguments, send error and usage message
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -109,7 +109,7 @@ public class GiveCommand extends AbstractCommand {
 
 			// if sender is not player, send args-count-under error message
 			if (!(sender instanceof Player)) {
-				plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+				plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 				displayUsage(sender);
 				return true;
 			}
@@ -168,7 +168,7 @@ public class GiveCommand extends AbstractCommand {
 			else {
 				plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_DESTINATION)
 						.setMacro(DESTINATION, testName)
-						.send(plugin.languageHandler);
+						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 				return true;
 			}
@@ -225,7 +225,7 @@ public class GiveCommand extends AbstractCommand {
 
 		// test that item is a LodeStar item
 		if (!plugin.lodeStarFactory.isItem(itemStack)) {
-			plugin.messageBuilder.build(giver, COMMAND_FAIL_INVALID_ITEM).send(plugin.languageHandler);
+			plugin.messageBuilder.build(giver, COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -243,7 +243,7 @@ public class GiveCommand extends AbstractCommand {
 		if (noFitCount == quantity) {
 			plugin.messageBuilder.build(giver, COMMAND_FAIL_GIVE_INVENTORY_FULL)
 					.setMacro(ITEM_QUANTITY, quantity)
-					.send(plugin.languageHandler);
+					.send();
 			return false;
 		}
 
@@ -261,7 +261,7 @@ public class GiveCommand extends AbstractCommand {
 					.setMacro(DESTINATION, destinationName)
 					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, targetPlayer)
-					.send(plugin.languageHandler);
+					.send();
 
 			// if giver is in game, play sound
 			if (giver instanceof Player) {
@@ -273,7 +273,7 @@ public class GiveCommand extends AbstractCommand {
 					.setMacro(DESTINATION, destinationName)
 					.setMacro(ITEM_QUANTITY, quantity)
 					.setMacro(TARGET_PLAYER, giver)
-					.send(plugin.languageHandler);
+					.send();
 		}
 
 		// play sound to target player
@@ -319,10 +319,10 @@ public class GiveCommand extends AbstractCommand {
 			}
 		}
 		if (matchedPlayers.isEmpty()) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_PLAYER_NOT_FOUND).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_PLAYER_NOT_FOUND).send();
 		}
 		else {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_PLAYER_NOT_ONLINE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_PLAYER_NOT_ONLINE).send();
 		}
 		return null;
 	}

@@ -32,13 +32,13 @@ public class DestroyCommand extends AbstractCommand {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check that sender has permission
 		if (!sender.hasPermission("lodestar.destroy")) {
-			plugin.messageBuilder.build(sender, PERMISSION_DENIED_DESTROY).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_DESTROY).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -51,7 +51,7 @@ public class DestroyCommand extends AbstractCommand {
 
 		// check that item player is holding is a LodeStar item
 		if (!plugin.lodeStarFactory.isItem(playerItem)) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_ITEM).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -63,7 +63,7 @@ public class DestroyCommand extends AbstractCommand {
 		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_DESTROY)
 				.setMacro(ITEM_QUANTITY, quantity)
 				.setMacro(DESTINATION, destinationName)
-				.send(plugin.languageHandler);
+				.send();
 		plugin.soundConfig.playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
 
 		return true;

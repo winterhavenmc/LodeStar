@@ -74,7 +74,7 @@ public class TeleportManager {
 		if (getCooldownTimeRemaining(player) > 0) {
 			plugin.messageBuilder.build(player, TELEPORT_COOLDOWN)
 					.setMacro(DURATION, getCooldownTimeRemaining(player))
-					.send(plugin.languageHandler);
+					.send();
 			return;
 		}
 
@@ -90,13 +90,13 @@ public class TeleportManager {
 
 		// if destination key equals home, get player bed spawn location
 		if (key != null && (key.equalsIgnoreCase("home")
-				|| key.equals(Destination.deriveKey(plugin.languageHandler.getHomeDisplayName())))) {
+				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName())))) {
 
 			location = player.getBedSpawnLocation();
 
 			// if bedspawn location is not null, create destination with bed spawn location
 			if (location != null) {
-				destination = new Destination("home", plugin.languageHandler.getHomeDisplayName(), location);
+				destination = new Destination("home", plugin.messageBuilder.getHomeDisplayName(), location);
 				if (plugin.getConfig().getBoolean("debug")) {
 					plugin.getLogger().info("destination is home. Location: " + location);
 				}
@@ -107,7 +107,7 @@ public class TeleportManager {
 			}
 			// if bedspawn location is null and bedspawn-fallback is false, send message and return
 			else {
-				plugin.messageBuilder.build(player, TELEPORT_FAIL_NO_BEDSPAWN).send(plugin.languageHandler);
+				plugin.messageBuilder.build(player, TELEPORT_FAIL_NO_BEDSPAWN).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				return;
 			}
@@ -115,7 +115,7 @@ public class TeleportManager {
 
 		// if destination is spawn, get spawn location
 		if (key != null && (key.equalsIgnoreCase("spawn")
-				|| key.equals(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName())))) {
+				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName())))) {
 
 			World playerWorld = player.getWorld();
 			String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
@@ -141,7 +141,7 @@ public class TeleportManager {
 			location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 
 			// create warp object to send to delayed teleport method
-			String displayName = plugin.languageHandler.getSpawnDisplayName();
+			String displayName = plugin.messageBuilder.getSpawnDisplayName();
 			destination = new Destination(key, displayName, location);
 		}
 
@@ -169,7 +169,7 @@ public class TeleportManager {
 
 			plugin.messageBuilder.build(player, TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, displayName)
-					.send(plugin.languageHandler);
+					.send();
 					return;
 		}
 
@@ -178,7 +178,7 @@ public class TeleportManager {
 				&& location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
 			plugin.messageBuilder.build(player, TELEPORT_FAIL_PROXIMITY)
 					.setMacro(DESTINATION, destination.getDisplayName())
-					.send(plugin.languageHandler);
+					.send();
 			return;
 		}
 
@@ -209,14 +209,14 @@ public class TeleportManager {
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.setMacro(DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
-						.send(plugin.languageHandler);
+						.send();
 			}
 			// otherwise send regular warmup message
 			else {
 				plugin.messageBuilder.build(player, TELEPORT_WARMUP)
 						.setMacro(DESTINATION, destination.getDisplayName())
 						.setMacro(DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
-						.send(plugin.languageHandler);
+						.send();
 			}
 			// if enabled, play sound effect
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_WARMUP);
@@ -234,7 +234,7 @@ public class TeleportManager {
 
 			// write message to log
 			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
-					+ plugin.languageHandler.getItemName() + ChatColor.RESET + " in "
+					+ plugin.messageBuilder.getItemName() + ChatColor.RESET + " in "
 					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
 		}
 	}

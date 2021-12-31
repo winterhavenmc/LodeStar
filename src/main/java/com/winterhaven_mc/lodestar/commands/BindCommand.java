@@ -53,20 +53,20 @@ public class BindCommand extends AbstractCommand {
 
 		// command sender must be player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check sender has permission
 		if (!sender.hasPermission("lodestar.bind")) {
-			plugin.messageBuilder.build(sender, PERMISSION_DENIED_BIND).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_BIND).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check minimum arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -82,7 +82,7 @@ public class BindCommand extends AbstractCommand {
 		if (!Destination.exists(destinationName)) {
 			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(DESTINATION, destinationName)
-					.send(plugin.languageHandler);
+					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -96,7 +96,7 @@ public class BindCommand extends AbstractCommand {
 			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
 				plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_MATERIAL)
 						.setMacro(DESTINATION, destinationName)
-						.send(plugin.languageHandler);
+						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 				return true;
 			}
@@ -106,7 +106,7 @@ public class BindCommand extends AbstractCommand {
 		if (invalidMaterials.contains(playerItem.getType())) {
 			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_MATERIAL)
 					.setMacro(DESTINATION, destinationName)
-					.send(plugin.languageHandler);
+					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -123,7 +123,7 @@ public class BindCommand extends AbstractCommand {
 		// send success message
 		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_BIND)
 				.setMacro(DESTINATION, destinationName)
-				.send(plugin.languageHandler);
+				.send();
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_BIND);

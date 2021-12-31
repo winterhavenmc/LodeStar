@@ -10,7 +10,6 @@ import com.winterhaven_mc.lodestar.teleport.TeleportManager;
 import com.winterhaven_mc.lodestar.util.LodeStarFactory;
 import com.winterhaven_mc.util.*;
 
-import com.winterhavenmc.util.messagebuilder.LanguageHandler;
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +27,6 @@ import java.io.File;
  */
 public final class PluginMain extends JavaPlugin {
 
-	public LanguageHandler languageHandler;
 	public MessageBuilder<MessageId, Macro> messageBuilder;
 	public DataStore dataStore;
 	public TeleportManager teleportManager;
@@ -63,11 +61,8 @@ public final class PluginMain extends JavaPlugin {
 		// install default config.yml if not present
 		saveDefaultConfig();
 
-		// instantiate language handler
-		languageHandler = new LanguageHandler(this);
-
 		// instantiate message builder
-		messageBuilder = new MessageBuilder<>();
+		messageBuilder = new MessageBuilder<>(this);
 
 		// instantiate world manager
 		worldManager = new WorldManager(this);

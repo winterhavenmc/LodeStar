@@ -48,20 +48,20 @@ public class SetCommand extends AbstractCommand {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.set")) {
-			plugin.messageBuilder.build(sender, PERMISSION_DENIED_SET).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, PERMISSION_DENIED_SET).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -77,7 +77,7 @@ public class SetCommand extends AbstractCommand {
 		if (Destination.isReserved(destinationName)) {
 			plugin.messageBuilder.build(sender, COMMAND_FAIL_SET_RESERVED)
 					.setMacro(DESTINATION, destinationName)
-					.send(plugin.languageHandler);
+					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -89,7 +89,7 @@ public class SetCommand extends AbstractCommand {
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
 			plugin.messageBuilder.build(sender, PERMISSION_DENIED_OVERWRITE)
 					.setMacro(DESTINATION, destinationName)
-					.send(plugin.languageHandler);
+					.send();
 
 			// play sound effect
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -100,7 +100,7 @@ public class SetCommand extends AbstractCommand {
 		if (Destination.deriveKey(destinationName).matches("^\\d*_.*")) {
 			plugin.messageBuilder.build(sender, COMMAND_WARN_SET_NUMERIC_PREFIX)
 					.setMacro(DESTINATION, destinationName)
-					.send(plugin.languageHandler);
+					.send();
 		}
 
 		// create destination object
@@ -110,7 +110,7 @@ public class SetCommand extends AbstractCommand {
 		plugin.dataStore.insertRecord(destination);
 
 		// send success message to player
-		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_SET).setMacro(DESTINATION, destinationName).send(plugin.languageHandler);
+		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_SET).setMacro(DESTINATION, destinationName).send();
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_SET);

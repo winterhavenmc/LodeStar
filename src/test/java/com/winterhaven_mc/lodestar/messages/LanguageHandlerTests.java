@@ -40,14 +40,14 @@ public class LanguageHandlerTests {
 		@Test
 		@DisplayName("item name is not null.")
 		void ItemNameNotNull() {
-			Assertions.assertNotNull(plugin.languageHandler.getItemName(),
+			Assertions.assertNotNull(plugin.messageBuilder.getItemName(),
 					"item name is null.");
 		}
 
 		@Test
 		@DisplayName("item lore is not null.")
 		void ItemLoreNotNull() {
-			Assertions.assertNotNull(plugin.languageHandler.getItemLore(),
+			Assertions.assertNotNull(plugin.messageBuilder.getItemLore(),
 					"item lore is null.");
 		}
 	}
@@ -73,7 +73,7 @@ public class LanguageHandlerTests {
 		@DisplayName("enum member MessageId is contained in getConfig() keys.")
 		void FileKeysContainsEnumValue(MessageId messageId) {
 			Assertions.assertNotNull(messageId);
-			Assertions.assertNotNull(plugin.languageHandler.getMessage(messageId),
+			Assertions.assertNotNull(plugin.messageBuilder.getMessage(messageId),
 					"config file message is null.");
 		}
 

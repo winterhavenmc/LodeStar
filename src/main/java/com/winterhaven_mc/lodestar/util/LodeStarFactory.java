@@ -55,8 +55,8 @@ public final class LodeStarFactory {
 		PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
 
 		this.quantity = 1;
-		this.itemStackName = plugin.languageHandler.getItemName();
-		this.itemStackLore = plugin.languageHandler.getItemLore();
+		this.itemStackName = plugin.messageBuilder.getItemName();
+		this.itemStackLore = plugin.messageBuilder.getItemLore();
 
 		// get default material string from configuration file
 		String configMaterialString = plugin.getConfig().getString("item-material");
@@ -167,7 +167,7 @@ public final class LodeStarFactory {
 	public void setMetaData(final ItemStack itemStack, final String destinationName) {
 
 		// retrieve item name from language file
-		String itemName = plugin.languageHandler.getInventoryItemName();
+		String itemName = plugin.messageBuilder.getInventoryItemName();
 
 		// replace destination placeholder with destination name
 		itemName = itemName.replace("%DESTINATION%", destinationName);
@@ -176,7 +176,7 @@ public final class LodeStarFactory {
 		itemName = ChatColor.translateAlternateColorCodes('&', itemName);
 
 		// retrieve item lore from language file
-		List<String> configLore = plugin.languageHandler.getItemLore();
+		List<String> configLore = plugin.messageBuilder.getItemLore();
 
 		// list of strings for formatted item lore
 		List<String> itemLore = new ArrayList<>();
@@ -249,13 +249,13 @@ public final class LodeStarFactory {
 		String destinationName = null;
 
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName()))) {
-			destinationName = plugin.languageHandler.getSpawnDisplayName();
+		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()))) {
+			destinationName = plugin.messageBuilder.getSpawnDisplayName();
 		}
 		// if destination is home get home display name from messages file
 		else if (key.equals("home")
-				|| key.equals(Destination.deriveKey(plugin.languageHandler.getHomeDisplayName()))) {
-			destinationName = plugin.languageHandler.getHomeDisplayName();
+				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName()))) {
+			destinationName = plugin.messageBuilder.getHomeDisplayName();
 		}
 		// else get destination name from datastore
 		else {

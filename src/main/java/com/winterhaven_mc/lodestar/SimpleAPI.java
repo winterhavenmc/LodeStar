@@ -176,7 +176,7 @@ public final class SimpleAPI {
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
 		String key = Destination.deriveKey(destinationName);
 		return key.equals("spawn")
-				|| key.equals(Destination.deriveKey(plugin.languageHandler.getSpawnDisplayName()));
+				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
 	}
 
 
@@ -187,7 +187,7 @@ public final class SimpleAPI {
 	 * @deprecated use {@code LodeStar.getItemName()} method
 	 */
 	public static String getItemName() {
-		return plugin.languageHandler.getItemName();
+		return plugin.messageBuilder.getItemName();
 	}
 
 
