@@ -76,7 +76,7 @@ public final class PluginMain extends JavaPlugin {
 		soundConfig = new YamlSoundConfiguration(this);
 
 		// get initialized destination storage object
-		dataStore = DataStore.create(this);
+		dataStore = DataStore.connect(this);
 
 		// instantiate teleport manager
 		teleportManager = new TeleportManager(this);

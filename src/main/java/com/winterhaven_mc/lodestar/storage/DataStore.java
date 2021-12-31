@@ -26,6 +26,12 @@ public interface DataStore {
 
 
 	/**
+	 * Get datastore type
+	 */
+	DataStoreType getType();
+
+
+	/**
 	 * Get record
 	 *
 	 * @param destinationName the name string key of the destination to be retrieved from the datastore
@@ -97,49 +103,19 @@ public interface DataStore {
 
 
 	/**
-	 * Check that datastore exists
-	 *
-	 * @return boolean
-	 */
-	boolean exists();
-
-
-	/**
-	 * Get datastore type
-	 */
-	DataStoreType getType();
-
-
-	/**
 	 * Create new data store of given type.<br>
 	 * No parameter version used when no current datastore exists
 	 * and datastore type should be read from configuration
 	 *
 	 * @return new datastore of configured type
 	 */
-	static DataStore create(final JavaPlugin plugin) {
+	static DataStore connect(final JavaPlugin plugin) {
 
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-		if (dataStoreType == null) {
-			dataStoreType = DataStoreType.getDefaultType();
-		}
-		return create(plugin, dataStoreType, null);
-	}
-
-
-	/**
-	 * Create new data store of given type and convert old data store.<br>
-	 * Two parameter version used when a datastore instance already exists
-	 *
-	 * @param dataStoreType new datastore type
-	 * @param oldDataStore  existing datastore reference
-	 * @return the initialized new datastore
-	 */
-	static DataStore create(final JavaPlugin plugin, final DataStoreType dataStoreType, final DataStore oldDataStore) {
 
 		// get new data store of specified type
-		DataStore newDataStore = dataStoreType.create(plugin);
+		DataStore newDataStore = dataStoreType.connect(plugin);
 
 		// initialize new data store
 		try {
@@ -147,18 +123,15 @@ public interface DataStore {
 		}
 		catch (Exception e) {
 			plugin.getLogger().severe("Could not initialize the " + newDataStore + " datastore!");
+			plugin.getLogger().severe(e.getLocalizedMessage());
 			if (plugin.getConfig().getBoolean("debug")) {
 				e.printStackTrace();
 			}
 		}
 
-		// if old data store was passed, convert to new data store
-		if (oldDataStore != null) {
-			DataStoreType.convert(plugin, oldDataStore, newDataStore);
-		}
-		else {
-			DataStoreType.convertAll(plugin, newDataStore);
-		}
+		// convert any existing data stores to new type
+		DataStoreType.convertAll(plugin, newDataStore);
+
 		// return initialized data store
 		return newDataStore;
 	}
@@ -179,7 +152,7 @@ public interface DataStore {
 		if (!currentType.equals(newType)) {
 
 			// create new datastore
-			plugin.dataStore = create(plugin, newType, plugin.dataStore);
+			plugin.dataStore = connect(plugin);
 		}
 	}
 

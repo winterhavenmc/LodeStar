@@ -2,34 +2,38 @@ package com.winterhaven_mc.lodestar.storage;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 enum DataStoreType {
 
-	SQLITE("SQLite") {
-		@Override
-		public DataStore create(final JavaPlugin plugin) {
+	SQLITE("SQLite", "destinations.db") {
 
-			// create new sqlite datastore object
+		@Override
+		public DataStore connect(final JavaPlugin plugin) {
+
+			// return new sqlite datastore object
 			return new DataStoreSQLite(plugin);
+		}
+
+		@Override
+		boolean storageObjectExists(JavaPlugin plugin) {
+			// get path name to data store file
+			File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getStorageName());
+			return dataStoreFile.exists();
 		}
 	};
 
 	// DataStore display name
-	private String displayName;
+	private final String displayName;
+
+	// datastore object name
+	private final String storageName;
 
 	// default datastore type
 	private final static DataStoreType defaultType = DataStoreType.SQLITE;
-
-
-	/**
-	 * Create datastore
-	 * @return DataStore object
-	 */
-	public abstract DataStore create(final JavaPlugin plugin);
 
 
 	/**
@@ -37,9 +41,17 @@ enum DataStoreType {
 	 *
 	 * @param displayName the formatted display name of the datastore type
 	 */
-	DataStoreType(final String displayName) {
-		this.setDisplayName(displayName);
+	DataStoreType(final String displayName, final String storageName) {
+		this.displayName = displayName;
+		this.storageName = storageName;
 	}
+
+
+	/**
+	 * Create datastore
+	 * @return DataStore object
+	 */
+	public abstract DataStore connect(final JavaPlugin plugin);
 
 
 	@Override
@@ -49,13 +61,22 @@ enum DataStoreType {
 
 
 	/**
-	 * set the display name for a data store type
+	 * Getter for storage object name.
 	 *
-	 * @param displayName the string to set as datastore type name
+	 * @return the name of the backing store object for a data store type
 	 */
-	public void setDisplayName(final String displayName) {
-		this.displayName = displayName;
+	String getStorageName() {
+		return storageName;
 	}
+
+
+	/**
+	 * Test if datastore backing object (file, database) exists
+	 *
+	 * @param plugin reference to plugin main class
+	 * @return true if backing object exists, false if not
+	 */
+	abstract boolean storageObjectExists(JavaPlugin plugin);
 
 
 	/**
@@ -76,16 +97,6 @@ enum DataStoreType {
 
 
 	/**
-	 * get the default datastore type
-	 *
-	 * @return DataStoreType - the default datastore type
-	 */
-	public static DataStoreType getDefaultType() {
-		return defaultType;
-	}
-
-
-	/**
 	 * convert old data store to new data store
 	 *
 	 * @param oldDataStore the old datastore to convert from
@@ -99,7 +110,7 @@ enum DataStoreType {
 		}
 
 		// if old datastore file exists, attempt to read all records
-		if (oldDataStore.exists()) {
+		if (oldDataStore.getType().storageObjectExists(plugin)) {
 
 			plugin.getLogger().info("Converting existing " + oldDataStore + " datastore to "
 					+ newDataStore + " datastore...");
@@ -117,22 +128,19 @@ enum DataStoreType {
 				}
 			}
 
-			// get List of all records from old datastore
-			List<Destination> allRecords = oldDataStore.selectAllRecords();
+			// get count of records inserted in new datastore from old datastore
+			int count = newDataStore.insertRecords(oldDataStore.selectAllRecords());
 
-			// initialize counter
-			int count = 0;
-
-			// insert each record into new datastore
-			for (Destination record : allRecords) {
-				newDataStore.insertRecord(record);
-				count++;
-			}
+			// log record count message
 			plugin.getLogger().info(count + " records converted to " + newDataStore + " datastore.");
 
+			// flush new datastore to disk if applicable
 			newDataStore.sync();
 
+			// close old datastore
 			oldDataStore.close();
+
+			// delete old datastore
 			oldDataStore.delete();
 		}
 	}
@@ -153,7 +161,7 @@ enum DataStoreType {
 
 		// convert each datastore type in list to new datastore type
 		for (DataStoreType type : dataStores) {
-			convert(plugin, type.create(plugin), newDataStore);
+			convert(plugin, type.connect(plugin), newDataStore);
 		}
 	}
 

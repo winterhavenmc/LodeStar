@@ -17,6 +17,9 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 	// database connection object
 	private Connection connection;
 
+	// file path for datastore file
+	private final String dataFilePath;
+
 	// schema version
 	private int schemaVersion;
 
@@ -33,14 +36,8 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		// set datastore type
 		this.type = DataStoreType.SQLITE;
 
-		// set datastore filename
-		this.filename = "destinations.db";
-	}
-
-
-	@Override
-	public String toString() {
-		return type.toString();
+		// set file path for datastore file
+		dataFilePath = plugin.getDataFolder() + File.separator + type.getStorageName();
 	}
 
 
@@ -59,9 +56,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		Class.forName(jdbcDriverName);
 
 		// create database url
-		String destinationsDb = plugin.getDataFolder() + File.separator + filename;
-		String jdbc = "jdbc:sqlite";
-		String dbUrl = jdbc + ":" + destinationsDb;
+		final String dbUrl = "jdbc:sqlite" + ":" + dataFilePath;
 
 		// create a database connection
 		connection = DriverManager.getConnection(dbUrl);
@@ -543,21 +538,12 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 	@Override
 	public boolean delete() {
 
-		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
+		File dataStoreFile = new File(dataFilePath);
 		boolean result = false;
 		if (dataStoreFile.exists()) {
 			result = dataStoreFile.delete();
 		}
 		return result;
-	}
-
-
-	@Override
-	public boolean exists() {
-
-		// get path name to data store file
-		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
-		return dataStoreFile.exists();
 	}
 
 }
