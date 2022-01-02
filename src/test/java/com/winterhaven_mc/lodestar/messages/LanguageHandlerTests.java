@@ -34,8 +34,8 @@ public class LanguageHandlerTests {
 	}
 
 	@Nested
-	@DisplayName("test language handler.")
-	class LanguageHandler {
+	@DisplayName("test message builder.")
+	class MessageBuilderTests {
 
 		@Test
 		@DisplayName("item name is not null.")
@@ -55,13 +55,13 @@ public class LanguageHandlerTests {
 	@Nested
 	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 	@DisplayName("Test messages.")
-	class Messages {
+	class MessageTests {
 
 		// collection of enum sound name strings
 		Collection<String> enumMessageNames = new HashSet<>();
 
 		// class constructor
-		Messages() {
+		MessageTests() {
 			// add all MessageId enum values to collection
 			for (MessageId MessageId : MessageId.values()) {
 				enumMessageNames.add(MessageId.name());
