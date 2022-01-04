@@ -1,5 +1,5 @@
 name: LodeStar
-main: com.winterhaven_mc.lodestar.PluginMain
+main: com.winterhavenmc.lodestar.PluginMain
 author: ${project.author}
 version: ${project.version}
 api-version: 1.17
