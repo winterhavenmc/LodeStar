@@ -411,7 +411,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 				}
 			}
 		}
-		catch (SQLException e) {
+		catch (final SQLException e) {
 
 			// output simple error message
 			plugin.getLogger().warning("An error occurred while trying to "
@@ -464,15 +464,15 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public Destination deleteRecord(String key) {
+	public Destination deleteRecord(final String passedKey) {
 
 		// if key is null return null record
-		if (key == null) {
+		if (passedKey == null) {
 			return null;
 		}
 
 		// derive key in case destination name was passed
-		key = Destination.deriveKey(key);
+		String key = Destination.deriveKey(passedKey);
 
 		// get destination record to be deleted, for return
 		Destination destination = this.selectRecord(key);

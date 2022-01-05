@@ -109,7 +109,7 @@ public class HelpCommand extends AbstractCommand {
 	 * Display usage message for all commands
 	 * @param sender the command sender
 	 */
-	void displayUsageAll(CommandSender sender) {
+	void displayUsageAll(final CommandSender sender) {
 
 		plugin.messageBuilder.build(sender, MessageId.COMMAND_HELP_USAGE_HEADER).send();
 

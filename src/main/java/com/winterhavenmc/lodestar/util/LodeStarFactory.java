@@ -44,11 +44,11 @@ public final class LodeStarFactory {
 
 
 	/**
-	 * Private constructor to prevent instantiation
+	 * class constructor
 	 *
-	 * @throws AssertionError on attempt to instantiate
+	 * @param plugin reference to plugin main class
 	 */
-	public LodeStarFactory(PluginMain plugin) {
+	public LodeStarFactory(final PluginMain plugin) {
 
 		this.plugin = plugin;
 

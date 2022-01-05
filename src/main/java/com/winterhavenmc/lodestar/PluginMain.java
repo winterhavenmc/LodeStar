@@ -52,7 +52,10 @@ public final class PluginMain extends JavaPlugin {
 	 * Constructor for mocking
 	 */
 	@SuppressWarnings("unused")
-	private PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+	private PluginMain(final JavaPluginLoader loader,
+	                   final PluginDescriptionFile descriptionFile,
+	                   final File dataFolder,
+	                   final File file) {
 		super(loader, descriptionFile, dataFolder, file);
 	}
 

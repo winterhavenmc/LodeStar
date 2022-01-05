@@ -19,7 +19,7 @@ enum DataStoreType {
 		}
 
 		@Override
-		boolean storageObjectExists(JavaPlugin plugin) {
+		boolean storageObjectExists(final JavaPlugin plugin) {
 			// get path name to data store file
 			File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getStorageName());
 			return dataStoreFile.exists();
@@ -76,7 +76,7 @@ enum DataStoreType {
 	 * @param plugin reference to plugin main class
 	 * @return true if backing object exists, false if not
 	 */
-	abstract boolean storageObjectExists(JavaPlugin plugin);
+	abstract boolean storageObjectExists(final JavaPlugin plugin);
 
 
 	/**
