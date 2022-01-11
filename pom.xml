@@ -75,6 +75,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- bStats -->
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
 		<!-- MessengerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
@@ -193,6 +200,15 @@
 							<minimizeJar>true</minimizeJar>
 							<filters>
 								<filter>
+									<artifact>org.bstats:bstats-*</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+								<filter>
 									<artifact>com.winterhaven-mc:*-lib</artifact>
 									<excludes>
 										<exclude>META-INF/MANIFEST.MF</exclude>
@@ -207,12 +223,17 @@
 									<include>com.winterhaven-mc:message-builder-lib</include>
 									<include>com.winterhaven-mc:sound-config-lib</include>
 									<include>com.winterhaven-mc:world-manager-lib</include>
+									<include>org.bstats</include>
 								</includes>
 							</artifactSet>
 							<relocations>
 								<relocation>
 									<pattern>com.winterhavenmc.util</pattern>
 									<shadedPattern>com.winterhavenmc.lodestar.shaded</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.bstats</pattern>
+									<shadedPattern>com.winterhavenmc.deathchest.shaded</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
