@@ -19,17 +19,17 @@ public class HelpCommand extends AbstractCommand {
 	private final PluginMain plugin;
 
 	// reference to subcommand map
-	private final SubcommandMap subcommandMap;
+	private final SubcommandRegistry subcommandRegistry;
 
 
 	/**
 	 * Class constructor
 	 * @param plugin reference to plugin main class instance
-	 * @param subcommandMap reference to subcommand map
+	 * @param subcommandRegistry reference to subcommand map
 	 */
-	HelpCommand(final PluginMain plugin, final SubcommandMap subcommandMap) {
+	HelpCommand(final PluginMain plugin, final SubcommandRegistry subcommandRegistry) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.subcommandMap = Objects.requireNonNull(subcommandMap);
+		this.subcommandRegistry = Objects.requireNonNull(subcommandRegistry);
 		this.setName("help");
 		this.setUsage("/lodestar help [command]");
 		this.setDescription(MessageId.COMMAND_HELP_HELP);
@@ -44,7 +44,7 @@ public class HelpCommand extends AbstractCommand {
 
 		if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("help")) {
-				for (String subcommand : subcommandMap.getKeys()) {
+				for (String subcommand : subcommandRegistry.getKeys()) {
 					if (sender.hasPermission("lodestar." + subcommand)
 							&& subcommand.startsWith(args[1].toLowerCase())
 							&& !subcommand.equalsIgnoreCase("help")) {
@@ -88,7 +88,7 @@ public class HelpCommand extends AbstractCommand {
 	void displayHelp(final CommandSender sender, final String commandName) {
 
 		// get subcommand from map by name
-		Subcommand subcommand = subcommandMap.getCommand(commandName);
+		Subcommand subcommand = subcommandRegistry.getCommand(commandName);
 
 		// if subcommand found in map, display help message and usage
 		if (subcommand != null) {
@@ -113,9 +113,9 @@ public class HelpCommand extends AbstractCommand {
 
 		plugin.messageBuilder.build(sender, MessageId.COMMAND_HELP_USAGE_HEADER).send();
 
-		for (String subcommandName : subcommandMap.getKeys()) {
-			if (subcommandMap.getCommand(subcommandName) != null) {
-				subcommandMap.getCommand(subcommandName).displayUsage(sender);
+		for (String subcommandName : subcommandRegistry.getKeys()) {
+			if (subcommandRegistry.getCommand(subcommandName) != null) {
+				subcommandRegistry.getCommand(subcommandName).displayUsage(sender);
 			}
 		}
 	}
