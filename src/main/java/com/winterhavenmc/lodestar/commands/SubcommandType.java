@@ -7,75 +7,68 @@ public enum SubcommandType {
 
 	BIND() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new BindCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new BindCommand(plugin);
 		}
 	},
 
 	DELETE() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new DeleteCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new DeleteCommand(plugin);
 		}
 	},
 
 	DESTROY() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new DestroyCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new DestroyCommand(plugin);
 		}
 	},
 
 	GIVE() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new GiveCommand(plugin));
-		}
-	},
-
-	HELP() {
-		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new HelpCommand(plugin, subcommandMap));
+		Subcommand create(final PluginMain plugin) {
+			return new GiveCommand(plugin);
 		}
 	},
 
 	LIST() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new ListCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new ListCommand(plugin);
 		}
 	},
 
 	RELOAD() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new ReloadCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new ReloadCommand(plugin);
 		}
 	},
 
 	SET() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new SetCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new SetCommand(plugin);
 		}
 	},
 
 	STATUS() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new StatusCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new StatusCommand(plugin);
 		}
 	},
 
 	TELEPORT() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new TeleportCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new TeleportCommand(plugin);
 		}
 	};
 
 
-	abstract void register(final PluginMain plugin, final SubcommandMap subcommandMap);
+	abstract Subcommand create(final PluginMain plugin);
 
 }
