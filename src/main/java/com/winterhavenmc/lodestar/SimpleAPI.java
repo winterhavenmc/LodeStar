@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -39,7 +41,6 @@ public final class SimpleAPI {
 	 *
 	 * @param destinationName the destination name
 	 * @return ItemStack with destination name and quantity
-	 * @deprecated use {@code plugin.lodeStarFactory.create()} method
 	 */
 	public static ItemStack create(final String destinationName) {
 		return plugin.lodeStarFactory.create(destinationName, 1);
@@ -52,7 +53,6 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name
 	 * @param quantity the quantity of items
 	 * @return ItemStack with destination name and quantity
-	 * @deprecated use {@code plugin.lodeStarFactory.create()} method
 	 */
 	public static ItemStack create(final String destinationName, final int quantity) {
 		return plugin.lodeStarFactory.create(destinationName, quantity);
@@ -64,7 +64,6 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack       the ItemStack to encode with destination key
 	 * @param destinationName the destination name used to create the encoded key
-	 * @deprecated use {@code plugin.lodeStarFactory.setMetaData()} method
 	 */
 	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
 		plugin.lodeStarFactory.setMetaData(itemStack, destinationName);
@@ -76,7 +75,6 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the ItemStack to test if LodeStar item
 	 * @return boolean - {@code true} if ItemStack is LodeStar item, {@code false} if it is not
-	 * @deprecated use {@code plugin.lodeStarFactory.isItem()} method
 	 */
 	public static boolean isLodeStar(final ItemStack itemStack) {
 		return plugin.lodeStarFactory.isItem(itemStack);
@@ -88,7 +86,6 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the ItemStack to test if default LodeStar item
 	 * @return boolean - {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
-	 * @deprecated use {@code plugin.lodeStarFactory.isDefaultItem(itemStack)} method
 	 */
 	public static boolean isDefaultItem(final ItemStack itemStack) {
 		return plugin.lodeStarFactory.isDefaultItem(itemStack);
@@ -100,7 +97,6 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the item to get destination from
 	 * @return String - the destination key
-	 * @deprecated use {@code plugin.lodeStarFactory.getKey(itemStack)} method
 	 */
 	public static String getDestination(final ItemStack itemStack) {
 		return plugin.lodeStarFactory.getKey(itemStack);
@@ -112,7 +108,6 @@ public final class SimpleAPI {
 	 *
 	 * @param destinationName the destination name to check
 	 * @return {@code true} if destination exists, {@code false} if it does not
-	 * @deprecated use {@code Destination.isValid()} method
 	 */
 	public static boolean isValidDestination(final String destinationName) {
 		return Destination.exists(destinationName);
@@ -124,7 +119,6 @@ public final class SimpleAPI {
 	 *
 	 * @param destinationName the destination name to test for validity
 	 * @return {@code true} if destination name is a valid name, {@code false} if it is not
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static boolean isAllowedName(final String destinationName) {
 
@@ -145,7 +139,6 @@ public final class SimpleAPI {
 	 *
 	 * @param destinationName the destination name to test for reserved name
 	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
-	 * @deprecated use {@code Destination.isReserved()} method
 	 */
 	static public boolean isReservedName(final String destinationName) {
 		return Destination.isReserved(destinationName);
@@ -157,7 +150,6 @@ public final class SimpleAPI {
 	 *
 	 * @param destinationName the destination name to check
 	 * @return {@code true} if destination name is reserved home name, {@code false} if not
-	 * @deprecated this method is likely to be removed from this plugin
 	 */
 	public static boolean isHomeName(final String destinationName) {
 		return Destination.isHome(destinationName);
@@ -169,7 +161,6 @@ public final class SimpleAPI {
 	 *
 	 * @param destinationName the destination name to check
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
-	 * @deprecated this method is likely to be removed from this plugin
 	 */
 	public static boolean isSpawnName(final String destinationName) {
 
@@ -184,7 +175,6 @@ public final class SimpleAPI {
 	 * Get item name from configuration file
 	 *
 	 * @return item name as specified in configuration file
-	 * @deprecated use {@code LodeStar.getItemName()} method
 	 */
 	public static String getItemName() {
 		return plugin.messageBuilder.getItemName();
@@ -196,7 +186,6 @@ public final class SimpleAPI {
 	 *
 	 * @param key the key for which to get destination name
 	 * @return String name of destination, or null if no matching destination found
-	 * @deprecated use {@code Destination.getStoredName(key)} method
 	 */
 	public static String getDestinationName(final String key) {
 		return Destination.getDisplayName(key);
@@ -220,7 +209,6 @@ public final class SimpleAPI {
 	 * Get configuration setting for allowing items to be used in recipes
 	 *
 	 * @return Boolean - {@code true} if items can be used in recipes, {@code false} if they cannot
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static Boolean isValidIngredient() {
 		return plugin.getConfig().getBoolean("allow-in-recipes");
@@ -231,7 +219,6 @@ public final class SimpleAPI {
 	 * Get configuration setting for cooldown time
 	 *
 	 * @return int - the cooldown time (in seconds) before another item can be used
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static int getCooldownTime() {
 		return plugin.getConfig().getInt("cooldown-time");
@@ -242,7 +229,6 @@ public final class SimpleAPI {
 	 * Get configuration setting for warmup time
 	 *
 	 * @return int - the warmup time (in seconds) before teleportation occurs when an item is used
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static int getWarmupTime() {
 		return plugin.getConfig().getInt("warmup-time");
@@ -253,7 +239,6 @@ public final class SimpleAPI {
 	 * Get configuration setting for minimum distance
 	 *
 	 * @return int - the minimum distance from a destination required to use an item
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static int getMinDistance() {
 		return plugin.getConfig().getInt("minimum-distance");
@@ -265,7 +250,6 @@ public final class SimpleAPI {
 	 *
 	 * @return Boolean - {@code true} if teleportation will be cancelled when player takes damage
 	 * during warmup time, {@code false} if not
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static Boolean isCancelledOnDamage() {
 		return plugin.getConfig().getBoolean("cancel-on-damage");
@@ -277,7 +261,6 @@ public final class SimpleAPI {
 	 *
 	 * @return Boolean - {@code true} if teleportation will be cancelled when player moves
 	 * during warmup time, {@code false} if not
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static Boolean isCancelledOnMovement() {
 		return plugin.getConfig().getBoolean("cancel-on-movement");
@@ -289,7 +272,6 @@ public final class SimpleAPI {
 	 *
 	 * @return Boolean - {@code true} if teleportation will be cancelled when player interacts with objects
 	 * during warmup time, {@code false} if not
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static Boolean isCancelledOnInteraction() {
 		return plugin.getConfig().getBoolean("cancel-on-interaction");
@@ -301,7 +283,6 @@ public final class SimpleAPI {
 	 *
 	 * @param player the player to check
 	 * @return Boolean - {@code true} if player is warming up, {@code false} if not
-	 * @deprecated use {@code teleportManager.isWarmingUp(player)} method
 	 */
 	public static Boolean isWarmingUp(final Player player) {
 		return plugin.teleportManager.isWarmingUp(player);
@@ -313,7 +294,6 @@ public final class SimpleAPI {
 	 *
 	 * @param player the player to check
 	 * @return Boolean - {@code true} if player is cooling down, {@code false} if not
-	 * @deprecated use {@code teleportManager.isCooling(player)} method
 	 */
 	public static Boolean isCoolingDown(final Player player) {
 		return plugin.teleportManager.isCoolingDown(player);
@@ -325,7 +305,6 @@ public final class SimpleAPI {
 	 *
 	 * @param player the player to check
 	 * @return long - cooldown time remaining in milliseconds
-	 * @deprecated use {@code teleportManager.getCooldownTimeRemaining(player)} method
 	 */
 	public static long cooldownTimeRemaining(final Player player) {
 		return plugin.teleportManager.getCooldownTimeRemaining(player);
@@ -333,12 +312,31 @@ public final class SimpleAPI {
 
 
 	/**
-	 * Get List of String containing worlds where plugin is enabled
+	 * Get List of String containing world names where plugin is enabled
 	 *
 	 * @return List of Strings containing enabled world names
-	 * @deprecated use {@code worldManager.getEnabledWorldNames()} method
 	 */
 	public static List<String> getEnabledWorlds() {
+		return getEnabledWorldsList();
+	}
+
+
+	/**
+	 * Get List of String containing world names where plugin is enabled
+	 *
+	 * @return List of Strings containing enabled world names
+	 */
+	public static List<String> getEnabledWorldsList() {
+		return new ArrayList<>(plugin.worldManager.getEnabledWorldNames());
+	}
+
+
+	/**
+	 * Get Collection of String containing world names where plugin is enabled
+	 *
+	 * @return Collection of Strings containing enabled world names
+	 */
+	public static Collection<String> getEnabledWorldsCollection() {
 		return plugin.worldManager.getEnabledWorldNames();
 	}
 
@@ -347,7 +345,6 @@ public final class SimpleAPI {
 	 * Cancel a pending teleport for a player
 	 *
 	 * @param player the player to cancel teleporting
-	 * @deprecated use {@code teleportManager.cancelTeleport(player)} method
 	 */
 	public static void cancelTeleport(final Player player) {
 		plugin.teleportManager.cancelTeleport(player);
@@ -358,7 +355,6 @@ public final class SimpleAPI {
 	 * Create an itemStack with default material from config
 	 *
 	 * @return ItemStack
-	 * @deprecated this method will likely be removed from future versions of this plugin
 	 */
 	public static ItemStack getDefaultItem() {
 
@@ -388,7 +384,6 @@ public final class SimpleAPI {
 	 *
 	 * @param location the integer block location to center
 	 * @return Location the centered on block location
-	 * @deprecated this method will be removed from future versions of this plugin
 	 */
 	public static Location getBlockCenteredLocation(final Location location) {
 
