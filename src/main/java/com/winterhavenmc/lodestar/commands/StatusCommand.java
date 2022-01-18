@@ -64,9 +64,6 @@ final class StatusCommand extends AbstractCommand {
 		sender.sendMessage(ChatColor.GREEN + "Language: "
 				+ ChatColor.RESET + plugin.getConfig().getString("language"));
 
-		sender.sendMessage(ChatColor.GREEN + "Storage type: "
-				+ ChatColor.RESET + plugin.dataStore);
-
 		sender.sendMessage(ChatColor.GREEN + "Default material: "
 				+ ChatColor.RESET + plugin.getConfig().getString("default-material"));
 
