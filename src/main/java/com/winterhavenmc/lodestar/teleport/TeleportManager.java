@@ -373,7 +373,7 @@ public final class TeleportManager {
 	 * @param key the destination key to examine
 	 * @return true if key is for home destination, false if not
 	 */
-	private boolean destinationIsHome(String key) {
+	private boolean destinationIsHome(final String key) {
 		// if key is null, return false
 		if (key == null) {
 			return false;
@@ -393,7 +393,7 @@ public final class TeleportManager {
 	 * @param key the destination key to examine
 	 * @return true if key is for spawn destination, false if not
 	 */
-	private boolean destinationIsSpawn(String key) {
+	private boolean destinationIsSpawn(final String key) {
 		// if key is null, return false
 		if (key == null) {
 			return false;
