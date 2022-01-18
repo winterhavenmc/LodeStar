@@ -40,7 +40,7 @@ class ParticleTask extends BukkitRunnable {
 		if (plugin.teleportManager.isWarmingUp(player)) {
 			player.getWorld().playEffect(player.getLocation().add(0.0d, 1.0d, 0.0d), Effect.ENDER_SIGNAL, 0, 10);
 		}
-		// otherwise cancel this repeating task if the player is not in the warmup hashmap
+		// otherwise, cancel this repeating task if the player is not in the warmup hashmap
 		else {
 			this.cancel();
 		}

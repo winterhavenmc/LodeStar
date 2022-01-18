@@ -138,7 +138,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 		// test that world in destination location is valid
 		if (world == null) {
-			plugin.getLogger().warning("An error occured while inserting"
+			plugin.getLogger().warning("An error occurred while inserting"
 					+ " a destination in the " + this + " datastore. World invalid!");
 			return;
 		}
@@ -170,7 +170,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 				catch (SQLException e) {
 
 					// output simple error message
-					plugin.getLogger().warning("An error occured while inserting a destination "
+					plugin.getLogger().warning("An error occurred while inserting a destination "
 							+ "into the " + this + " datastore.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
@@ -207,7 +207,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 			// test that world in destination location is valid
 			if (world == null) {
-				plugin.getLogger().warning("An error occured while inserting"
+				plugin.getLogger().warning("An error occurred while inserting"
 						+ " a destination in the " + this + " datastore. World invalid!");
 				continue;
 			}
@@ -238,7 +238,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 					catch (Exception e) {
 
 						// output simple error message
-						plugin.getLogger().warning("An error occured while inserting a destination "
+						plugin.getLogger().warning("An error occurred while inserting a destination "
 								+ "into the " + this + " datastore.");
 						plugin.getLogger().warning(e.getLocalizedMessage());
 
@@ -517,7 +517,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occured while closing the SQLite datastore.");
+			plugin.getLogger().warning("An error occurred while closing the SQLite datastore.");
 			plugin.getLogger().warning(e.getMessage());
 
 			// if debugging is enabled, output stack trace

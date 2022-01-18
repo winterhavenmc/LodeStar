@@ -50,7 +50,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 		// start repeating task for generating particles at player location
 		if (plugin.getConfig().getBoolean("particle-effects")) {
 
-			// start particle task, with 2 tick delay so it doesn't self cancel on first run
+			// start particle task with 2 tick delay, so it doesn't self cancel on first run
 			particleTask = new ParticleTask(plugin, player).runTaskTimer(plugin, 2L, 10);
 
 		}
@@ -112,7 +112,7 @@ class DelayedTeleportTask extends BukkitRunnable {
 						.setMacro(Macro.WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.send();
 			}
-			// otherwise send regular success message
+			// otherwise, send regular success message
 			else {
 				plugin.messageBuilder.build(player, MessageId.TELEPORT_SUCCESS)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())

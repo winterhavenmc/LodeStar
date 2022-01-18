@@ -148,7 +148,7 @@ public final class Destination {
 	/**
 	 * Check if destination is spawn location
 	 *
-	 * @return true if spawn, else false
+	 * @return true if destination is spawn, else false
 	 */
 	public boolean isSpawn() {
 		return this.getKey().equalsIgnoreCase("spawn")
@@ -290,7 +290,7 @@ public final class Destination {
 
 	/**
 	 * Check if destination exists in storage or is reserved name; accepts key or display name.<br>
-	 * Matching is case insensitive.
+	 * Matching is case-insensitive.
 	 *
 	 * @param key the destination name to check
 	 * @return {@code true} if destination exists, {@code false} if it does not
@@ -310,7 +310,7 @@ public final class Destination {
 
 	/**
 	 * Check if destination key or display name is a reserved name<br>
-	 * Matching is case insensitive.
+	 * Matching is case-insensitive.
 	 *
 	 * @param key the key or destination name to test for reserved name
 	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
@@ -329,7 +329,7 @@ public final class Destination {
 
 	/**
 	 * Check if passed key is reserved name for home location; accepts key or display name<br>
-	 * Matching is case insensitive.
+	 * Matching is case-insensitive.
 	 *
 	 * @param key the destination name to check
 	 * @return {@code true} if destination name is reserved home name, {@code false} if not
@@ -350,7 +350,7 @@ public final class Destination {
 
 	/**
 	 * Check if passed key is reserved name for spawn location; accepts key or display name.<br>
-	 * Matching is case insensitive.
+	 * Matching is case-insensitive.
 	 *
 	 * @param key the destination name to check
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
@@ -372,7 +372,7 @@ public final class Destination {
 	/**
 	 * Get destination display name from destination represented by passed key.
 	 * Accepts key or display name.<br>
-	 * Matching is case insensitive. Reserved names are tried first.
+	 * Matching is case-insensitive. Reserved names are tried first.
 	 *
 	 * @param key the key of the destination for which to retrieve display name
 	 * @return String - the formatted display name for the destination, or null if no record exists
@@ -402,7 +402,7 @@ public final class Destination {
 
 	/**
 	 * get destination display name for persistent key stored in item stack<br>
-	 * Matching is case insensitive. Reserved names are tried first.
+	 * Matching is case-insensitive. Reserved names are tried first.
 	 *
 	 * @param itemStack the item stack from which to get name
 	 * @return String destination display name, or null if no matching destination found
@@ -413,7 +413,7 @@ public final class Destination {
 		// get persistent key from item stack
 		String key = plugin.lodeStarFactory.getKey(itemStack);
 
-		// if item stack persistent key is not null null, attempt to get display name for destination
+		// if item stack persistent key is not null, attempt to get display name for destination
 		if (key != null) {
 
 			// if key matches spawn key, get spawn display name from language file
@@ -421,7 +421,7 @@ public final class Destination {
 				return plugin.messageBuilder.getSpawnDisplayName();
 			}
 
-			// if destination is home get home display name from messages file
+			// if destination is home, get home display name from messages file
 			else if (isHome(key)) {
 				return plugin.messageBuilder.getHomeDisplayName();
 			}
