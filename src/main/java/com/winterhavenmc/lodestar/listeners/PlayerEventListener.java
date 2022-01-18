@@ -111,7 +111,7 @@ public class PlayerEventListener implements Listener {
 		// get event action
 		Action action = event.getAction();
 
-		// if event action is PHYSICAL (not left click or right click), do nothing and return
+		// if event action is PHYSICAL (not left-click or right click), do nothing and return
 		if (action.equals(Action.PHYSICAL)) {
 			return;
 		}

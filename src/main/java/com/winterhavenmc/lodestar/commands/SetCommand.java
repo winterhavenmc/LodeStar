@@ -81,7 +81,7 @@ final class SetCommand extends AbstractCommand {
 			return true;
 		}
 
-		// check if destination name exists and if so if player has overwrite permission
+		// check if destination name exists and if so, check if player has overwrite permission
 		Destination destination = plugin.dataStore.selectRecord(destinationName);
 
 		// check for overwrite permission if destination already exists
