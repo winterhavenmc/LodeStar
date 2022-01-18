@@ -100,7 +100,7 @@ public class TeleportManager {
 					plugin.getLogger().info("destination is home. Location: " + location);
 				}
 			}
-			// otherwise if bedspawn-fallback is true in config, set key to spawn
+			// otherwise, if bedspawn-fallback is true in config, set key to spawn
 			else if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
 				key = "spawn";
 			}
@@ -136,7 +136,7 @@ public class TeleportManager {
 				location = overworld.getSpawnLocation();
 			}
 
-			// if multiverse is enabled, get spawn location from it so we have pitch and yaw
+			// if multiverse is enabled get spawn location from it, so we have pitch and yaw
 			location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 
 			// create warp object to send to delayed teleport method
@@ -210,7 +210,7 @@ public class TeleportManager {
 						.setMacro(Macro.DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
 						.send();
 			}
-			// otherwise send regular warmup message
+			// otherwise, send regular warmup message
 			else {
 				plugin.messageBuilder.build(player, MessageId.TELEPORT_WARMUP)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
@@ -324,7 +324,7 @@ public class TeleportManager {
 
 
 	/**
-	 * Insert player uuid into cooldown hashmap with <code>expiretime</code> as value.<br>
+	 * Insert player uuid into cooldown hashmap with {@code expiretime} as value.<br>
 	 * Schedule task to remove player uuid from cooldown hashmap when time expires.
 	 *
 	 * @param player the player being inserted into the cooldown map
