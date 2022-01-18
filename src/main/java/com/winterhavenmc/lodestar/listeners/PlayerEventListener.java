@@ -33,7 +33,7 @@ import static com.winterhavenmc.lodestar.messages.MessageId.*;
  * @author Tim Savage
  * @version 1.0
  */
-public class PlayerEventListener implements Listener {
+public final class PlayerEventListener implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
