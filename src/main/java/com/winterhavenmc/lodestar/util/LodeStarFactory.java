@@ -251,7 +251,7 @@ public final class LodeStarFactory {
 		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()))) {
 			destinationName = plugin.messageBuilder.getSpawnDisplayName();
 		}
-		// if destination is home get home display name from messages file
+		// if destination is home, get home display name from messages file
 		else if (key.equals("home")
 				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName()))) {
 			destinationName = plugin.messageBuilder.getHomeDisplayName();
