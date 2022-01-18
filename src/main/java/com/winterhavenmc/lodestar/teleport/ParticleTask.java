@@ -15,7 +15,7 @@ import java.util.Objects;
  *
  * @author savage
  */
-class ParticleTask extends BukkitRunnable {
+final class ParticleTask extends BukkitRunnable {
 
 	private final PluginMain plugin;
 	private final Player player;

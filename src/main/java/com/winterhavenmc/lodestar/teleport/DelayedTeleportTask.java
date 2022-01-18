@@ -19,7 +19,7 @@ import java.util.Objects;
  * Class that extends BukkitRunnable to teleport a player to a predefined location
  * after a configured warmup period.
  */
-class DelayedTeleportTask extends BukkitRunnable {
+final class DelayedTeleportTask extends BukkitRunnable {
 
 	private final PluginMain plugin;
 	private final Player player;
