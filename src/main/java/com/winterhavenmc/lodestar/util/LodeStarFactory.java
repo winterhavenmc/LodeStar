@@ -33,11 +33,10 @@ public final class LodeStarFactory {
 	private final List<String> itemStackLore;
 
 	// item metadata flags
-	private static final Set<ItemFlag> itemFlagSet =
-			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-					ItemFlag.HIDE_ATTRIBUTES,
-					ItemFlag.HIDE_ENCHANTS,
-					ItemFlag.HIDE_UNBREAKABLE)));
+	private static final Set<ItemFlag> itemFlagSet = Set.of(
+			ItemFlag.HIDE_ATTRIBUTES,
+			ItemFlag.HIDE_ENCHANTS,
+			ItemFlag.HIDE_UNBREAKABLE );
 
 	// the proto item
 	private final ItemStack protoItem;
