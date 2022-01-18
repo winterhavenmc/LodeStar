@@ -120,7 +120,7 @@ public final class SimpleAPI {
 
 
 	/**
-	 * Check if a string is an valid destination name
+	 * Check if a string is a valid destination name
 	 *
 	 * @param destinationName the destination name to test for validity
 	 * @return {@code true} if destination name is a valid name, {@code false} if it is not
@@ -192,7 +192,7 @@ public final class SimpleAPI {
 
 
 	/**
-	 * Get destination name from passed key. Matching is case insensitive.
+	 * Get destination name from passed key. Matching is case-insensitive.
 	 *
 	 * @param key the key for which to get destination name
 	 * @return String name of destination, or null if no matching destination found
@@ -384,7 +384,7 @@ public final class SimpleAPI {
 
 
 	/**
-	 * Get location centered on x,z coordinates from a block location (where coords are integers)
+	 * Get location centered on x,z coordinates from a block location (where coordinates are integers)
 	 *
 	 * @param location the integer block location to center
 	 * @return Location the centered on block location
