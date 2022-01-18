@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Class that manages player teleportation, including warmup and cooldown.
  */
-public class TeleportManager {
+public final class TeleportManager {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -65,7 +65,7 @@ public class TeleportManager {
 	 *
 	 * @param player the player being teleported
 	 */
-	public final void initiateTeleport(final Player player) {
+	public void initiateTeleport(final Player player) {
 
 		final ItemStack playerItem = player.getInventory().getItemInMainHand();
 
@@ -87,13 +87,12 @@ public class TeleportManager {
 		Location location = null;
 		Destination destination = null;
 
-		// if destination key equals home, get player bed spawn location
-		if (key != null && (key.equalsIgnoreCase("home")
-				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName())))) {
+		// if destination key is home, get player bed spawn location
+		if (destinationIsHome(key)) {
 
 			location = player.getBedSpawnLocation();
 
-			// if bedspawn location is not null, create destination with bed spawn location
+			// if bedspawn location is not null, create destination with bedspawn location
 			if (location != null) {
 				destination = new Destination("home", plugin.messageBuilder.getHomeDisplayName(), location);
 				if (plugin.getConfig().getBoolean("debug")) {
@@ -112,9 +111,8 @@ public class TeleportManager {
 			}
 		}
 
-		// if destination is spawn, get spawn location
-		if (key != null && (key.equalsIgnoreCase("spawn")
-				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName())))) {
+		// if destination key is spawn, get spawn location
+		if (destinationIsSpawn(key)) {
 
 			World playerWorld = player.getWorld();
 			String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
@@ -144,7 +142,7 @@ public class TeleportManager {
 			destination = new Destination(key, displayName, location);
 		}
 
-		// if destination is not set to home or spawn get destination from storage
+		// if destination did not get set to home or spawn, get destination from storage
 		if (destination == null) {
 			// get destination from storage
 			destination = plugin.dataStore.selectRecord(key);
@@ -169,7 +167,7 @@ public class TeleportManager {
 			plugin.messageBuilder.build(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, displayName)
 					.send();
-					return;
+			return;
 		}
 
 		// if player is less than config min-distance from destination, send player proximity message and return
@@ -229,13 +227,7 @@ public class TeleportManager {
 		putPlayer(player, teleportTask.getTaskId());
 
 		// if log-use is enabled in config, write log entry
-		if (plugin.getConfig().getBoolean("log-use")) {
-
-			// write message to log
-			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
-					+ plugin.messageBuilder.getItemName() + ChatColor.RESET + " in "
-					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
-		}
+		logUsage(player);
 	}
 
 
@@ -318,7 +310,6 @@ public class TeleportManager {
 
 			// remove player from warmup hashmap
 			warmupMap.remove(player.getUniqueId());
-
 		}
 	}
 
@@ -365,7 +356,7 @@ public class TeleportManager {
 	 * @param player the player to check if teleport is initiated
 	 * @return {@code true} if teleport been initiated, {@code false} if it has not
 	 */
-	public final boolean isInitiated(final Player player) {
+	public boolean isInitiated(final Player player) {
 
 		// check for null parameter
 		if (player == null) {
@@ -373,6 +364,62 @@ public class TeleportManager {
 		}
 
 		return !teleportInitiated.contains(player.getUniqueId());
+	}
+
+
+	/**
+	 * Test if destination key represents home location
+	 *
+	 * @param key the destination key to examine
+	 * @return true if key is for home destination, false if not
+	 */
+	private boolean destinationIsHome(String key) {
+		// if key is null, return false
+		if (key == null) {
+			return false;
+		}
+		// if key is literal string "home", return true
+		if (key.equalsIgnoreCase("home")) {
+			return true;
+		}
+		// if key matches configured home display name, return true; otherwise return false
+		return key.equals(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName()));
+	}
+
+
+	/**
+	 * Test if destination key represents spawn location
+	 *
+	 * @param key the destination key to examine
+	 * @return true if key is for spawn destination, false if not
+	 */
+	private boolean destinationIsSpawn(String key) {
+		// if key is null, return false
+		if (key == null) {
+			return false;
+		}
+		// if key is literal string "spawn" return true
+		if (key.equalsIgnoreCase("spawn")) {
+			return true;
+		}
+		// if key matches configured spawn display name, return true; otherwise return false
+		return key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
+	}
+
+
+	/**
+	 * Log teleport item use
+	 *
+	 * @param player the player being logged as using a lodestar item
+	 */
+	private void logUsage(final Player player) {
+		if (plugin.getConfig().getBoolean("log-use")) {
+
+			// write message to log
+			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
+					+ plugin.messageBuilder.getItemName() + ChatColor.RESET + " in "
+					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
+		}
 	}
 
 }
