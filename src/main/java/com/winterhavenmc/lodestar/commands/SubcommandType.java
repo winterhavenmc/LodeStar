@@ -3,7 +3,7 @@ package com.winterhavenmc.lodestar.commands;
 import com.winterhavenmc.lodestar.PluginMain;
 
 
-public enum SubcommandType {
+enum SubcommandType {
 
 	BIND() {
 		@Override

@@ -13,7 +13,7 @@ import java.util.Objects;
 import static com.winterhavenmc.lodestar.sounds.SoundId.COMMAND_INVALID;
 
 
-public class HelpCommand extends AbstractCommand {
+final class HelpCommand extends AbstractCommand {
 
 	// reference to plugin main class instance
 	private final PluginMain plugin;

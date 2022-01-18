@@ -16,7 +16,7 @@ import static com.winterhavenmc.lodestar.sounds.SoundId.COMMAND_INVALID;
  * Implements command executor for LodeStar commands.
  */
 @SuppressWarnings("NullableProblems")
-public class CommandManager implements CommandExecutor, TabCompleter {
+public final class CommandManager implements CommandExecutor, TabCompleter {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -52,7 +52,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * Tab completer for LodeStar
 	 */
 	@Override
-	public final List<String> onTabComplete(final CommandSender sender, final Command command,
+	public List<String> onTabComplete(final CommandSender sender, final Command command,
 											final String alias, final String[] args) {
 
 		// if more than one argument, use tab completer of subcommand

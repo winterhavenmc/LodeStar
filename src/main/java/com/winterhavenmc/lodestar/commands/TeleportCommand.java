@@ -16,7 +16,7 @@ import static com.winterhavenmc.lodestar.messages.MessageId.*;
 import static com.winterhavenmc.lodestar.messages.MessageId.COMMAND_FAIL_INVALID_DESTINATION;
 
 
-public class TeleportCommand extends AbstractCommand {
+final class TeleportCommand extends AbstractCommand {
 
 	private final PluginMain plugin;
 

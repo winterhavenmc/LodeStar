@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 
-public class BindCommand extends AbstractCommand {
+final class BindCommand extends AbstractCommand {
 
 	private final PluginMain plugin;
 

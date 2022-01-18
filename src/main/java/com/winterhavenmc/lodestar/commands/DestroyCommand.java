@@ -14,7 +14,7 @@ import static com.winterhavenmc.lodestar.messages.Macro.ITEM_QUANTITY;
 import static com.winterhavenmc.lodestar.messages.MessageId.*;
 
 
-public class DestroyCommand extends AbstractCommand {
+final class DestroyCommand extends AbstractCommand {
 
 	private final PluginMain plugin;
 

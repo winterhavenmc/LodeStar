@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class ListCommand extends AbstractCommand {
+final class ListCommand extends AbstractCommand {
 
 	private final PluginMain plugin;
 
