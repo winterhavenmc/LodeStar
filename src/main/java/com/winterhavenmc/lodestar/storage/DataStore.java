@@ -70,7 +70,7 @@ public interface DataStore {
 	 *
 	 * @return List of all destination records
 	 */
-	List<Destination> selectAllRecords();
+	Collection<Destination> selectAllRecords();
 
 
 	/**

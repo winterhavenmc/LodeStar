@@ -178,7 +178,7 @@ public final class LodeStarFactory {
 		List<String> configLore = plugin.messageBuilder.getItemLore();
 
 		// list of strings for formatted item lore
-		List<String> itemLore = new ArrayList<>();
+		List<String> itemLore = new LinkedList<>();
 
 		// iterate over lines of lore and translate color codes and replace destination placeholder
 		for (String line : configLore) {

@@ -330,9 +330,9 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public List<Destination> selectAllRecords() {
+	public Collection<Destination> selectAllRecords() {
 
-		List<Destination> returnList = new ArrayList<>();
+		Collection<Destination> returnList = new ArrayList<>();
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllRecords"));
