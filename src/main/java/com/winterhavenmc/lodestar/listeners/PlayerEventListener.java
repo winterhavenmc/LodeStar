@@ -245,13 +245,8 @@ public final class PlayerEventListener implements Listener {
 	 *
 	 * @param event the event being handled by this method
 	 */
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	void onEntityDamage(final EntityDamageEvent event) {
-
-		// if event is already cancelled, do nothing and return
-		if (event.isCancelled()) {
-			return;
-		}
 
 		// if cancel-on-damage configuration is true, check if damaged entity is player
 		if (plugin.getConfig().getBoolean("cancel-on-damage")) {
