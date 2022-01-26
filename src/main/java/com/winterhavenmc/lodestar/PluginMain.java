@@ -14,11 +14,7 @@ import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
 import com.winterhavenmc.util.worldmanager.WorldManager;
 
 import org.bstats.bukkit.Metrics;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-
-import java.io.File;
 
 
 /**
@@ -43,10 +39,8 @@ public final class PluginMain extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-		// bstats
-		final int pluginId = 13927;
-		@SuppressWarnings("unused")
-		Metrics metrics = new Metrics(this, pluginId);
+		// bStats
+		new Metrics(this, 13927);
 
 		// install default config.yml if not present
 		saveDefaultConfig();
