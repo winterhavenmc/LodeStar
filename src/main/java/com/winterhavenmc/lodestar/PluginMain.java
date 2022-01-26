@@ -40,27 +40,6 @@ public final class PluginMain extends JavaPlugin {
 	public LodeStarFactory lodeStarFactory;
 
 
-	/**
-	 * Constructor for mocking
-	 */
-	@SuppressWarnings("unused")
-	public PluginMain() {
-		super();
-	}
-
-
-	/**
-	 * Constructor for mocking
-	 */
-	@SuppressWarnings("unused")
-	private PluginMain(final JavaPluginLoader loader,
-	                   final PluginDescriptionFile descriptionFile,
-	                   final File dataFolder,
-	                   final File file) {
-		super(loader, descriptionFile, dataFolder, file);
-	}
-
-
 	@Override
 	public void onEnable() {
 
