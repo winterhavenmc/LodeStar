@@ -83,11 +83,11 @@
 			<version>2.2.1</version>
 		</dependency>
 
-		<!-- MessengerLib -->
+		<!-- MessageBuilderLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>message-builder-lib</artifactId>
-			<version>1.11.0</version>
+			<version>1.11.1</version>
 		</dependency>
 
 		<!-- SoundConfigLib -->
