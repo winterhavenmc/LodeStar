@@ -1,17 +1,16 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.messages.Macro;
+import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Objects;
-
-import static com.winterhavenmc.lodestar.messages.Macro.DESTINATION;
-import static com.winterhavenmc.lodestar.messages.Macro.ITEM_QUANTITY;
-import static com.winterhavenmc.lodestar.messages.MessageId.*;
 
 
 final class DestroyCommand extends AbstractCommand {
@@ -23,7 +22,7 @@ final class DestroyCommand extends AbstractCommand {
 		this.plugin = Objects.requireNonNull(plugin);
 		this.setName("destroy");
 		this.setUsage("/lodestar destroy");
-		this.setDescription(COMMAND_HELP_DESTROY);
+		this.setDescription(MessageId.COMMAND_HELP_DESTROY);
 	}
 
 
@@ -32,13 +31,13 @@ final class DestroyCommand extends AbstractCommand {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_CONSOLE).send();
+			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check that sender has permission
 		if (!sender.hasPermission("lodestar.destroy")) {
-			plugin.messageBuilder.build(sender, PERMISSION_DENIED_DESTROY).send();
+			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_DESTROY).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -51,7 +50,7 @@ final class DestroyCommand extends AbstractCommand {
 
 		// check that item player is holding is a LodeStar item
 		if (!plugin.lodeStarFactory.isItem(playerItem)) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_ITEM).send();
+			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -60,9 +59,9 @@ final class DestroyCommand extends AbstractCommand {
 		String destinationName = plugin.lodeStarFactory.getDestinationName(playerItem);
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
-		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_DESTROY)
-				.setMacro(ITEM_QUANTITY, quantity)
-				.setMacro(DESTINATION, destinationName)
+		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_DESTROY)
+				.setMacro(Macro.ITEM_QUANTITY, quantity)
+				.setMacro(Macro.DESTINATION, destinationName)
 				.send();
 		plugin.soundConfig.playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
 

@@ -1,8 +1,9 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.sounds.SoundId;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.winterhavenmc.lodestar.sounds.SoundId.COMMAND_INVALID;
 
 
 final class HelpCommand extends AbstractCommand {
@@ -99,7 +99,7 @@ final class HelpCommand extends AbstractCommand {
 		// else display invalid command help message and usage for all commands
 		else {
 			plugin.messageBuilder.build(sender, MessageId.COMMAND_HELP_INVALID).send();
-			plugin.soundConfig.playSound(sender, COMMAND_INVALID);
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_INVALID);
 			displayUsageAll(sender);
 		}
 	}
