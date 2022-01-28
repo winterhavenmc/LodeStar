@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-final class SetCommand extends AbstractCommand {
+final class SetCommand extends SubcommandAbstract {
 
 	private final PluginMain plugin;
 

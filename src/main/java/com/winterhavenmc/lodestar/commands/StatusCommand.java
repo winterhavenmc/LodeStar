@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * Status command implementation<br>
  * displays plugin settings
  */
-final class StatusCommand extends AbstractCommand {
+final class StatusCommand extends SubcommandAbstract {
 
 	private final PluginMain plugin;
 

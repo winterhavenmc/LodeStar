@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-final class DeleteCommand extends AbstractCommand {
+final class DeleteCommand extends SubcommandAbstract {
 
 	private final PluginMain plugin;
 

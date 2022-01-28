@@ -13,7 +13,7 @@ import java.util.Objects;
 
 
 
-final class HelpCommand extends AbstractCommand {
+final class HelpCommand extends SubcommandAbstract {
 
 	// reference to plugin main class instance
 	private final PluginMain plugin;
