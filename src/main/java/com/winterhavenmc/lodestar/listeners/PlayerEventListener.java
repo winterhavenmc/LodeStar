@@ -41,7 +41,10 @@ public final class PlayerEventListener implements Listener {
 			Material.CARTOGRAPHY_TABLE,
 			Material.CRAFTING_TABLE,
 			Material.FLETCHING_TABLE,
-			Material.SMITHING_TABLE );
+			Material.SMITHING_TABLE,
+			Material.LOOM,
+			Material.STONECUTTER );
+
 
 
 	/**
