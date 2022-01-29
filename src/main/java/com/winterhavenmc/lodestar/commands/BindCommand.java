@@ -27,10 +27,10 @@ final class BindCommand extends SubcommandAbstract {
 
 	BindCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("bind");
-		this.setUsage("/lodestar bind <destination name>");
-		this.setDescription(MessageId.COMMAND_HELP_BIND);
-		this.setMinArgs(1);
+		this.name = "bind";
+		this.usageString ="/lodestar bind <destination name>";
+		this.description = MessageId.COMMAND_HELP_BIND;
+		this.minArgs = 1;
 	}
 
 

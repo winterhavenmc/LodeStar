@@ -27,10 +27,9 @@ final class StatusCommand extends SubcommandAbstract {
 	 */
 	StatusCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("status");
-		this.setUsage("/lodestar status");
-		this.setDescription(MessageId.COMMAND_HELP_STATUS);
-		this.setMaxArgs(0);
+		this.name = "status";
+		this.usageString = "/lodestar status";
+		this.description = MessageId.COMMAND_HELP_STATUS;
 	}
 
 

@@ -20,9 +20,9 @@ final class DestroyCommand extends SubcommandAbstract {
 
 	DestroyCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("destroy");
-		this.setUsage("/lodestar destroy");
-		this.setDescription(MessageId.COMMAND_HELP_DESTROY);
+		this.name = "destroy";
+		this.usageString = "/lodestar destroy";
+		this.description = MessageId.COMMAND_HELP_DESTROY;
 	}
 
 

@@ -9,9 +9,7 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 final class DeleteCommand extends SubcommandAbstract {
@@ -21,11 +19,11 @@ final class DeleteCommand extends SubcommandAbstract {
 
 	DeleteCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("delete");
-		this.setUsage("/lodestar delete <destination name>");
-		this.addAlias("unset");
-		this.setDescription(MessageId.COMMAND_HELP_DELETE);
-		this.setMinArgs(1);
+		this.name ="delete";
+		this.usageString ="/lodestar delete <destination name>";
+		this.description = MessageId.COMMAND_HELP_DELETE;
+		this.minArgs = 1;
+		this.aliases = Set.of("unset");
 	}
 
 

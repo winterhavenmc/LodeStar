@@ -19,10 +19,10 @@ final class ListCommand extends SubcommandAbstract {
 
 	ListCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("list");
-		this.setUsage("/lodestar list [page]");
-		this.setDescription(MessageId.COMMAND_HELP_LIST);
-		this.setMaxArgs(1);
+		this.name = "list";
+		this.usageString = "/lodestar list [page]";
+		this.description = MessageId.COMMAND_HELP_LIST;
+		this.maxArgs = 1;
 	}
 
 

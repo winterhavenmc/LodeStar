@@ -30,9 +30,9 @@ final class HelpCommand extends SubcommandAbstract {
 	HelpCommand(final PluginMain plugin, final SubcommandRegistry subcommandRegistry) {
 		this.plugin = Objects.requireNonNull(plugin);
 		this.subcommandRegistry = Objects.requireNonNull(subcommandRegistry);
-		this.setName("help");
-		this.setUsage("/lodestar help [command]");
-		this.setDescription(MessageId.COMMAND_HELP_HELP);
+		this.name = "help";
+		this.usageString = "/lodestar help [command]";
+		this.description = MessageId.COMMAND_HELP_HELP;
 	}
 
 

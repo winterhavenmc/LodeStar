@@ -22,10 +22,10 @@ final class TeleportCommand extends SubcommandAbstract {
 
 	TeleportCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("teleport");
-		this.setUsage("/lodestar teleport <destination name>");
-		this.setDescription(MessageId.COMMAND_HELP_TELEPORT);
-		this.setMinArgs(1);
+		this.name = "teleport";
+		this.usageString = "/lodestar teleport <destination name>";
+		this.description = MessageId.COMMAND_HELP_TELEPORT;
+		this.minArgs = 1;
 	}
 
 

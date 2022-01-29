@@ -22,10 +22,10 @@ final class GiveCommand extends SubcommandAbstract {
 
 	GiveCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("give");
-		this.setUsage("/lodestar give <player> [quantity] [material] [destination_name]");
-		this.setDescription(MessageId.COMMAND_HELP_GIVE);
-		this.setMinArgs(1);
+		this.name = "give";
+		this.usageString = "/lodestar give <player> [quantity] [material] [destination_name]";
+		this.description = MessageId.COMMAND_HELP_GIVE;
+		this.minArgs = 1;
 	}
 
 

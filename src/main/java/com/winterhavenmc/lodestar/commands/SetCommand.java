@@ -23,10 +23,10 @@ final class SetCommand extends SubcommandAbstract {
 
 	SetCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.setName("set");
-		this.setUsage("/lodestar set <destination_name>");
-		this.setDescription(MessageId.COMMAND_HELP_SET);
-		this.setMinArgs(1);
+		this.name = "set";
+		this.usageString = "/lodestar set <destination_name>";
+		this.description = MessageId.COMMAND_HELP_SET;
+		this.minArgs = 1;
 	}
 
 
