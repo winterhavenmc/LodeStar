@@ -10,12 +10,12 @@ import java.util.*;
 
 abstract class SubcommandAbstract implements Subcommand {
 
-	private String name;
-	private Collection<String> aliases = new HashSet<>();
-	private String usageString;
-	private MessageId description;
-	private int minArgs;
-	private int maxArgs;
+	protected String name;
+	protected Collection<String> aliases = new HashSet<>();
+	protected String usageString;
+	protected MessageId description;
+	protected int minArgs;
+	protected int maxArgs;
 
 
 	@Override
@@ -24,18 +24,8 @@ abstract class SubcommandAbstract implements Subcommand {
 	}
 
 	@Override
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	@Override
 	public Collection<String> getAliases() {
 		return aliases;
-	}
-
-	@Override
-	public void setAliases(final Collection<String> aliases) {
-		this.aliases = aliases;
 	}
 
 	@Override
@@ -54,35 +44,15 @@ abstract class SubcommandAbstract implements Subcommand {
 	}
 
 	@Override
-	public void setUsage(final String usageString) {
-		this.usageString = usageString;
-	}
-
-	@Override
 	public MessageId getDescription() {
 		return description;
-	}
-
-	@Override
-	public void setDescription(final MessageId description) {
-		this.description = description;
 	}
 
 	@Override
 	public int getMinArgs() { return minArgs; }
 
 	@Override
-	public void setMinArgs(int minArgs) {
-		this.minArgs = minArgs;
-	}
-
-	@Override
 	public int getMaxArgs() { return maxArgs; }
-
-	@Override
-	public void setMaxArgs(int maxArgs) {
-		this.maxArgs = maxArgs;
-	}
 
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command,
