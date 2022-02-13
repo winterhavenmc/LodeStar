@@ -400,7 +400,7 @@ public final class TeleportManager {
 			return true;
 		}
 		// if key matches configured home display name, return true; otherwise return false
-		return key.equals(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName()));
+		return key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getHomeDisplayName()));
 	}
 
 
@@ -420,7 +420,7 @@ public final class TeleportManager {
 			return true;
 		}
 		// if key matches configured spawn display name, return true; otherwise return false
-		return key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
+		return key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
 	}
 
 

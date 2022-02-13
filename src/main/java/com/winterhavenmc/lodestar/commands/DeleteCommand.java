@@ -78,7 +78,7 @@ final class DeleteCommand extends SubcommandAbstract {
 		String destinationName = String.join(" ", args);
 
 		// get key for destination name
-		String key = Destination.deriveKey(destinationName);
+		String key = plugin.lodeStarFactory.deriveKey(destinationName);
 
 		// test that destination name is not reserved name
 		if (Destination.isReserved(destinationName)) {
