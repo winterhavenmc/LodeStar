@@ -133,16 +133,17 @@ public final class SimpleAPI {
 
 	/**
 	 * Check if a string is a valid destination name
+	 * <ul>
+	 *     <li>destination name must not be null</li>
+	 *     <li>destination name must not be empty</li>
+	 *     <li>destination name must not start with a digit</li>
+	 *     <li>destination name must not contain a colon</li>
+	 * </ul>
 	 *
 	 * @param destinationName the destination name to test for validity
 	 * @return {@code true} if destination name is a valid name, {@code false} if it is not
 	 */
 	public static boolean isAllowedName(final String destinationName) {
-
-		// destination name cannot be null
-		// destination name cannot be empty
-		// destination name cannot start with a digit
-		// destination name cannot contain a colon
 
 		return !(destinationName == null
 				|| destinationName.isEmpty()
@@ -182,9 +183,9 @@ public final class SimpleAPI {
 	public static boolean isSpawnName(final String destinationName) {
 
 		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
-		String key = Destination.deriveKey(destinationName);
+		String key = plugin.lodeStarFactory.deriveKey(destinationName);
 		return key.equals("spawn")
-				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
+				|| key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
 	}
 
 
@@ -214,9 +215,7 @@ public final class SimpleAPI {
 	 *
 	 * @param itemStack the item stack from which to get name
 	 * @return String destination name
-	 * @deprecated use {@code Destination.getStoredName(itemStack)} method
 	 */
-	@Deprecated
 	public static String getDestinationName(final ItemStack itemStack) {
 		return Destination.getDisplayName(itemStack);
 	}

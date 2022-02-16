@@ -22,18 +22,17 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 
 /**
  * Implements command executor for LodeStar commands.
  */
-@SuppressWarnings("NullableProblems")
-public final class CommandManager implements CommandExecutor, TabCompleter {
+public final class CommandManager implements TabExecutor {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -69,8 +68,8 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 	 * Tab completer for LodeStar
 	 */
 	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command command,
-											final String alias, final String[] args) {
+	public List<String> onTabComplete(@Nonnull final CommandSender sender, @Nonnull final Command command,
+	                                  @Nonnull final String alias, final String[] args) {
 
 		// if more than one argument, use tab completer of subcommand
 		if (args.length > 1) {
@@ -96,8 +95,8 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 	 * command executor method for LodeStar
 	 */
 	@Override
-	public boolean onCommand(final CommandSender sender, final Command cmd,
-							 final String label, final String[] args) {
+	public boolean onCommand(@Nonnull final CommandSender sender, @Nonnull final Command cmd,
+							 @Nonnull final String label, final String[] args) {
 
 		// convert args array to list
 		List<String> argsList = new ArrayList<>(Arrays.asList(args));

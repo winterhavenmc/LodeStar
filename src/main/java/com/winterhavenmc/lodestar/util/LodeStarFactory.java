@@ -31,9 +31,8 @@ import java.util.*;
 
 
 /**
- * Utility class with static methods for creating and using LodeStar item stacks
+ * Utility class with methods for creating and using LodeStar item stacks
  */
-@SuppressWarnings("FieldCanBeLocal")
 public final class LodeStarFactory {
 
 	// static reference to main class instance
@@ -42,13 +41,6 @@ public final class LodeStarFactory {
 	// name spaced key for persistent data
 	public final NamespacedKey PERSISTENT_KEY;
 
-	// item metadata fields
-	private final Material defaultMaterial = Material.NETHER_STAR;
-	private final Material material;
-	private final int quantity;
-	private final String itemStackName;
-	private final List<String> itemStackLore;
-
 	// item metadata flags
 	private static final Set<ItemFlag> itemFlagSet = Set.of(
 			ItemFlag.HIDE_ATTRIBUTES,
@@ -56,7 +48,7 @@ public final class LodeStarFactory {
 			ItemFlag.HIDE_UNBREAKABLE );
 
 	// the proto item
-	private final ItemStack protoItem;
+	private ItemStack protoItem;
 
 
 	/**
@@ -65,57 +57,10 @@ public final class LodeStarFactory {
 	 * @param plugin reference to plugin main class
 	 */
 	public LodeStarFactory(final PluginMain plugin) {
-
 		this.plugin = plugin;
-
-		PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
-
-		this.quantity = 1;
-		this.itemStackName = plugin.messageBuilder.getItemName();
-		this.itemStackLore = plugin.messageBuilder.getItemLore();
-
-		// get default material string from configuration file
-		String configMaterialString = plugin.getConfig().getString("item-material");
-
-		// if config material string is null, set material to default material
-		if (configMaterialString == null) {
-			material = defaultMaterial;
-		} else {
-			// try to match material
-			Material matchedMaterial = Material.matchMaterial(configMaterialString);
-
-			// if no match or unobtainable item material, set material to default material
-			if (matchedMaterial == null || !matchedMaterial.isItem()) {
-				material = defaultMaterial;
-			} else {
-				// set material to matched material
-				material = matchedMaterial;
-			}
-		}
-
-		// assign new item stack of specified material and quantity to proto item
-		this.protoItem = new ItemStack(material, quantity);
-
-		// get item metadata for proto item
-		final ItemMeta itemMeta = protoItem.getItemMeta();
-
-		// set item metadata display name to value from language file
-		//noinspection ConstantConditions
-		itemMeta.setDisplayName(itemStackName);
-
-		// set item metadata Lore to value from language file
-		itemMeta.setLore(itemStackLore);
-
-		// set persistent data in item metadata
-		itemMeta.getPersistentDataContainer().set(PERSISTENT_KEY, PersistentDataType.STRING, "");
-
-		// set metadata flags in item metadata
-		for (ItemFlag itemFlag : itemFlagSet) {
-			itemMeta.addItemFlags(itemFlag);
-		}
-
-		// save new proto item metadata
-		protoItem.setItemMeta(itemMeta);
+		this.PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
+		this.protoItem = getDefaultItemStack();
+		setMetaData(this.protoItem, "");
 	}
 
 
@@ -139,38 +84,54 @@ public final class LodeStarFactory {
 	 */
 	public ItemStack create(final String destinationName, final int quantity) {
 
-		// validate quantity is at least one
+		// clone proto item
+		ItemStack newItem = protoItem.clone();
+
+		// validate quantity is between 1 and max item stack size
 		int newQuantity = Math.max(1, quantity);
+		newQuantity = Math.min(newQuantity, protoItem.getMaxStackSize());
 
 		// if configured max give quantity is positive, validate quantity
 		if (plugin.getConfig().getInt("max-give-amount") > 0) {
 			newQuantity = Math.min(plugin.getConfig().getInt("max-give-amount"), newQuantity);
 		}
 
-		// get configured material
-		String configMaterial = plugin.getConfig().getString("default-material");
+		// set quantity
+		newItem.setAmount(newQuantity);
 
-		// if no configuration for default material, set string to NETHER_STAR
-		if (configMaterial == null) {
-			configMaterial = "NETHER_STAR";
-		}
-
-		// try to match material
-		Material material = Material.matchMaterial(configMaterial);
-
-		// if no match, set material type to NETHER_STAR
-		if (material == null) {
-			material = Material.NETHER_STAR;
-		}
-
-		// create item stack with configured material
-		ItemStack newItem = new ItemStack(material, newQuantity);
-
-		// set item display name and lore
+		// set item meta data
 		setMetaData(newItem, destinationName);
 
 		// return new item
 		return newItem;
+	}
+
+
+	/**
+	 * Create an itemStack with default material and data from config
+	 *
+	 * @return ItemStack
+	 */
+	public ItemStack getDefaultItemStack() {
+
+		// get configured material string
+		String configMaterialString = plugin.getConfig().getString("default-material");
+
+		// if string is null, use default
+		if (configMaterialString == null) {
+			configMaterialString = "NETHER_STAR";
+		}
+
+		// match material to configured string
+		Material configMaterial = Material.matchMaterial(configMaterialString);
+
+		// if no match or unobtainable material, default to nether star
+		if (configMaterial == null || !configMaterial.isItem()) {
+			configMaterial = Material.NETHER_STAR;
+		}
+
+		// return item stack of configured material
+		return new ItemStack(configMaterial, 1);
 	}
 
 
@@ -215,8 +176,12 @@ public final class LodeStarFactory {
 		itemMeta.setLore(itemLore);
 
 		// set persistent data in item metadata
-		itemMeta.getPersistentDataContainer()
-				.set(PERSISTENT_KEY, PersistentDataType.STRING, Destination.deriveKey(destinationName));
+		itemMeta.getPersistentDataContainer().set(PERSISTENT_KEY, PersistentDataType.STRING, deriveKey(destinationName));
+
+		// set item metadata flags
+		for (ItemFlag itemFlag : itemFlagSet) {
+			itemMeta.addItemFlags(itemFlag);
+		}
 
 		// save new item metadata
 		itemStack.setItemMeta(itemMeta);
@@ -265,12 +230,12 @@ public final class LodeStarFactory {
 		String destinationName = null;
 
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()))) {
+		if (key.equals("spawn") || key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName()))) {
 			destinationName = plugin.messageBuilder.getSpawnDisplayName();
 		}
 		// if destination is home, get home display name from messages file
 		else if (key.equals("home")
-				|| key.equals(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName()))) {
+				|| key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName()))) {
 			destinationName = plugin.messageBuilder.getHomeDisplayName();
 		}
 		// else get destination name from datastore
@@ -354,8 +319,37 @@ public final class LodeStarFactory {
 	 * Reload plugin's LodeStarFactory. Replaces existing plugin.LodeStarFactory with new instance.
 	 */
 	public void reload() {
-		plugin.lodeStarFactory = new LodeStarFactory(plugin);
-		plugin.getLogger().info("SpawnStarFactory reloaded.");
+		this.protoItem = getDefaultItemStack();
+		setMetaData(this.protoItem, "");
+	}
+
+
+	/**
+	 * Derive key from destination display name<br>
+	 * strips color codes and replaces spaces with underscores<br>
+	 * if a destination key is passed, it will be returned unaltered
+	 *
+	 * @param destinationName the destination name to convert to a key
+	 * @return String - the key derived from the destination name
+	 */
+	public String deriveKey(final String destinationName) {
+
+		// validate parameter
+		Objects.requireNonNull(destinationName);
+
+		// copy passed in destination name to derivedKey
+		String derivedKey = destinationName;
+
+		// translate alternate color codes
+		derivedKey = ChatColor.translateAlternateColorCodes('&', derivedKey);
+
+		// strip all color codes
+		derivedKey = ChatColor.stripColor(derivedKey);
+
+		// replace spaces with underscores
+		derivedKey = derivedKey.replace(' ', '_');
+
+		return derivedKey;
 	}
 
 }

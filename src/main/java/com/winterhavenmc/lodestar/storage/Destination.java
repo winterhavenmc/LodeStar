@@ -89,12 +89,10 @@ public final class Destination {
 	public Destination(final String key, final String displayName, final Location location) {
 
 		// validate parameters
-		Objects.requireNonNull(key);
-		Objects.requireNonNull(displayName);
 		Objects.requireNonNull(location);
 
-		this.key = key;
-		this.displayName = displayName;
+		this.key = Objects.requireNonNull(key);
+		this.displayName = Objects.requireNonNull(displayName);
 
 		if (location.getWorld() != null) {
 			this.worldUid = location.getWorld().getUID();
@@ -424,7 +422,6 @@ public final class Destination {
 	 * @param itemStack the item stack from which to get name
 	 * @return String destination display name, or null if no matching destination found
 	 */
-	@SuppressWarnings("unused")
 	public static String getDisplayName(final ItemStack itemStack) {
 
 		// get persistent key from item stack

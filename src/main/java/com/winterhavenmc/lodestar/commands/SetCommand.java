@@ -113,7 +113,7 @@ final class SetCommand extends SubcommandAbstract {
 		}
 
 		// send warning message if name begins with a number
-		if (Destination.deriveKey(destinationName).matches("^\\d*_.*")) {
+		if (plugin.lodeStarFactory.deriveKey(destinationName).matches("^\\d*_.*")) {
 			plugin.messageBuilder.build(sender, MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
