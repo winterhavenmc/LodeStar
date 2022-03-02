@@ -20,9 +20,9 @@ package com.winterhavenmc.lodestar.teleport;
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
-
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -35,7 +35,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+
+import static com.winterhavenmc.lodestar.util.BukkitTime.SECONDS;
 
 
 /**
@@ -222,14 +223,14 @@ public final class TeleportManager {
 				plugin.messageBuilder.build(player, MessageId.TELEPORT_WARMUP_SPAWN)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
 						.setMacro(Macro.WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
-						.setMacro(Macro.DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
+						.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
 						.send();
 			}
 			// otherwise, send regular warmup message
 			else {
 				plugin.messageBuilder.build(player, MessageId.TELEPORT_WARMUP)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.setMacro(Macro.DURATION, TimeUnit.SECONDS.toMillis(warmupTime))
+						.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
 						.send();
 			}
 			// if enabled, play sound effect
@@ -238,7 +239,7 @@ public final class TeleportManager {
 
 		// initiate delayed teleport for player to destination
 		BukkitTask teleportTask = new DelayedTeleportTask(plugin, player, destination,
-				playerItem.clone()).runTaskLater(plugin, warmupTime * 20);
+				playerItem.clone()).runTaskLater(plugin, SECONDS.toTicks(warmupTime));
 
 		// insert player and taskId into warmup hashmap
 		putPlayer(player, teleportTask.getTaskId());
@@ -341,14 +342,14 @@ public final class TeleportManager {
 
 		int cooldownSeconds = plugin.getConfig().getInt("teleport-cooldown");
 
-		Long expireTime = System.currentTimeMillis() + (TimeUnit.SECONDS.toMillis(cooldownSeconds));
+		Long expireTime = System.currentTimeMillis() + (SECONDS.toMillis(cooldownSeconds));
 		cooldownMap.put(player.getUniqueId(), expireTime);
 		new BukkitRunnable() {
 
 			public void run() {
 				cooldownMap.remove(player.getUniqueId());
 			}
-		}.runTaskLater(plugin, (cooldownSeconds * 20L));
+		}.runTaskLater(plugin, (SECONDS.toTicks(cooldownSeconds)));
 	}
 
 
