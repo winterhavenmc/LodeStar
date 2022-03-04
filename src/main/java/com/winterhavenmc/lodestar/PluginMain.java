@@ -25,6 +25,7 @@ import com.winterhavenmc.lodestar.storage.DataStore;
 import com.winterhavenmc.lodestar.teleport.TeleportManager;
 import com.winterhavenmc.lodestar.util.LodeStarFactory;
 
+import com.winterhavenmc.lodestar.util.MetricsHandler;
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import com.winterhavenmc.util.soundconfig.SoundConfiguration;
 import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
@@ -85,6 +86,10 @@ public final class PluginMain extends JavaPlugin {
 
 		// instantiate lodestar factory
 		lodeStarFactory = new LodeStarFactory(this);
+
+		// instantiate metrics handler
+		new MetricsHandler(this);
+
 	}
 
 
