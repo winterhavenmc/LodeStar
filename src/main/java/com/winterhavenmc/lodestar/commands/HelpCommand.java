@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Objects;
 
 
-
 final class HelpCommand extends SubcommandAbstract {
 
 	// reference to plugin main class instance
@@ -91,34 +90,37 @@ final class HelpCommand extends SubcommandAbstract {
 			return true;
 		}
 
-		// get subcommand name
-		String subcommandName = args.get(0);
-		displayHelp(sender, subcommandName);
+		// display subcommand help message or invalid command message
+		subcommandRegistry.getCommand(args.get(0)).ifPresentOrElse(
+				subcommand -> sendCommandHelpMessage(sender, subcommand),
+				() -> sendCommandInvalidMessage(sender)
+		);
+
 		return true;
 	}
 
+
 	/**
-	 * Display help message and usage for a command
+	 * Send help description for subcommand to command sender
+	 *
 	 * @param sender the command sender
-	 * @param commandName the name of the command for which to show help and usage
+	 * @param subcommand the subcommand to display help description
 	 */
-	void displayHelp(final CommandSender sender, final String commandName) {
+	private void sendCommandHelpMessage(CommandSender sender, Subcommand subcommand) {
+		plugin.messageBuilder.compose(sender, subcommand.getDescription()).send();
+		subcommand.displayUsage(sender);
+	}
 
-		// get subcommand from map by name
-		Subcommand subcommand = subcommandRegistry.getCommand(commandName);
 
-		// if subcommand found in map, display help message and usage
-		if (subcommand != null) {
-			plugin.messageBuilder.build(sender, subcommand.getDescription()).send();
-			subcommand.displayUsage(sender);
-		}
-
-		// else display invalid command help message and usage for all commands
-		else {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_HELP_INVALID).send();
-			plugin.soundConfig.playSound(sender, SoundId.COMMAND_INVALID);
-			displayUsageAll(sender);
-		}
+	/**
+	 * Send invalid subcommand message to command sender
+	 *
+	 * @param sender the command sender
+	 */
+	private void sendCommandInvalidMessage(CommandSender sender) {
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_HELP_INVALID).send();
+		plugin.soundConfig.playSound(sender, SoundId.COMMAND_INVALID);
+		displayUsageAll(sender);
 	}
 
 
@@ -128,12 +130,10 @@ final class HelpCommand extends SubcommandAbstract {
 	 */
 	void displayUsageAll(final CommandSender sender) {
 
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_HELP_USAGE_HEADER).send();
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_HELP_USAGE_HEADER).send();
 
 		for (String subcommandName : subcommandRegistry.getKeys()) {
-			if (subcommandRegistry.getCommand(subcommandName) != null) {
-				subcommandRegistry.getCommand(subcommandName).displayUsage(sender);
-			}
+			subcommandRegistry.getCommand(subcommandName).ifPresent(subcommand -> subcommand.displayUsage(sender));
 		}
 	}
 
