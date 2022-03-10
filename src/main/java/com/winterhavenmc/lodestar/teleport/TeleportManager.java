@@ -32,6 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -163,8 +164,13 @@ public final class TeleportManager {
 		// if destination did not get set to home or spawn, get destination from storage
 		if (destination == null) {
 			// get destination from storage
-			destination = plugin.dataStore.selectRecord(key);
-			if (destination != null) {
+			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
+			if (optionalDestination.isPresent()) {
+
+				// unwrap optional destination
+				destination = optionalDestination.get();
+
+				// get location from destination
 				location = destination.getLocation();
 			}
 		}

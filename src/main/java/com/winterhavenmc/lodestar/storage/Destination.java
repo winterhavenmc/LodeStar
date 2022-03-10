@@ -319,7 +319,7 @@ public final class Destination {
 
 		String derivedKey = Destination.deriveKey(key);
 
-		return isReserved(key) || plugin.dataStore.selectRecord(derivedKey) != null;
+		return isReserved(key) || plugin.dataStore.selectRecord(derivedKey).isPresent();
 	}
 
 
@@ -405,13 +405,7 @@ public final class Destination {
 		}
 
 		// else try to get destination name from datastore
-		Destination destination = plugin.dataStore.selectRecord(Destination.deriveKey(key));
-		if (destination != null) {
-			return destination.getDisplayName();
-		}
-
-		// no matching record found, return null
-		return null;
+		return plugin.dataStore.selectRecord(Destination.deriveKey(key)).map(Destination::getDisplayName).orElse(null);
 	}
 
 
@@ -427,30 +421,29 @@ public final class Destination {
 		// get persistent key from item stack
 		String key = plugin.lodeStarFactory.getKey(itemStack);
 
-		// if item stack persistent key is not null, attempt to get display name for destination
-		if (key != null) {
-
-			// if key matches spawn key, get spawn display name from language file
-			if (isSpawn(key)) {
-				return plugin.messageBuilder.getSpawnDisplayName();
-			}
-
-			// if destination is home, get home display name from messages file
-			else if (isHome(key)) {
-				return plugin.messageBuilder.getHomeDisplayName();
-			}
-
-			// else get destination name from datastore
-			else {
-				Destination destination = plugin.dataStore.selectRecord(key);
-				if (destination != null) {
-					return destination.getDisplayName();
-				}
-			}
+		// if item stack persistent key is null, return null
+		if (key == null) {
+			return null;
 		}
 
-		// no matching record found, return null
-		return null;
+		String resultString = null;
+
+		// if key matches spawn key, get spawn display name from language file
+		if (isSpawn(key)) {
+			resultString = plugin.messageBuilder.getSpawnDisplayName();
+		}
+
+		// if destination is home, get home display name from messages file
+		else if (isHome(key)) {
+			resultString = plugin.messageBuilder.getHomeDisplayName();
+		}
+
+		// else get destination name from datastore
+		else if (plugin.dataStore.selectRecord(key).isPresent()) {
+			resultString = plugin.dataStore.selectRecord(key).get().getDisplayName();
+		}
+
+		return resultString;
 	}
 
 }

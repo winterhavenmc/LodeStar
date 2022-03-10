@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 final class TeleportCommand extends SubcommandAbstract {
@@ -98,9 +99,13 @@ final class TeleportCommand extends SubcommandAbstract {
 		}
 
 		// get destination from datastore
-		Destination destination = plugin.dataStore.selectRecord(destinationName);
+		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
 
-		if (destination != null && destination.getLocation() != null) {
+		if (optionalDestination.isPresent() && optionalDestination.get().getLocation() != null) {
+
+			// unwrap optional destination
+			Destination destination = optionalDestination.get();
+
 			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 			player.teleport(destination.getLocation());
 			plugin.messageBuilder.compose(sender, MessageId.TELEPORT_SUCCESS)

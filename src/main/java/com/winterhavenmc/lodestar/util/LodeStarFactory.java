@@ -240,9 +240,9 @@ public final class LodeStarFactory {
 		}
 		// else get destination name from datastore
 		else {
-			Destination destination = plugin.dataStore.selectRecord(key);
-			if (destination != null) {
-				destinationName = destination.getDisplayName();
+			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
+			if (optionalDestination.isPresent()) {
+				destinationName = optionalDestination.get().getDisplayName();
 			}
 		}
 

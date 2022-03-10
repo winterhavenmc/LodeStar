@@ -273,11 +273,11 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public Destination selectRecord(final String key) {
+	public Optional<Destination> selectRecord(final String key) {
 
 		// if key is null return null record
 		if (key == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// derive key in case destination name was passed
@@ -340,9 +340,10 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
-			return null;
+			return Optional.empty();
 		}
-		return destination;
+
+		return Optional.ofNullable(destination);
 	}
 
 
@@ -481,18 +482,18 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public Destination deleteRecord(final String passedKey) {
+	public Optional<Destination> deleteRecord(final String passedKey) {
 
 		// if key is null return null record
 		if (passedKey == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// derive key in case destination name was passed
 		String key = Destination.deriveKey(passedKey);
 
 		// get destination record to be deleted, for return
-		Destination destination = this.selectRecord(key);
+		Optional<Destination> destination = this.selectRecord(key);
 
 		try {
 			// create prepared statement

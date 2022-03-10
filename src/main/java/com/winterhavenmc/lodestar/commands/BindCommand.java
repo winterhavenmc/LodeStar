@@ -127,9 +127,9 @@ final class BindCommand extends SubcommandAbstract {
 		}
 
 		// try to get formatted destination name from storage
-		Destination destination = plugin.dataStore.selectRecord(destinationName);
-		if (destination != null) {
-			destinationName = destination.getDisplayName();
+		Optional<Destination> destination = plugin.dataStore.selectRecord(destinationName);
+		if (destination.isPresent()) {
+			destinationName = destination.get().getDisplayName();
 		}
 
 		// set destination in item lore

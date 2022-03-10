@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 final class ListCommand extends SubcommandAbstract {
@@ -110,24 +111,30 @@ final class ListCommand extends SubcommandAbstract {
 
 		for (String key : displayKeys) {
 
-			Destination destination = plugin.dataStore.selectRecord(key);
+			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
 
-			// increment item number
-			itemNumber++;
+			if (optionalDestination.isPresent()) {
 
-			if (destination.isWorldValid()) {
-				plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.setMacro(Macro.ITEM_NUMBER, itemNumber)
-						.setMacro(Macro.LOCATION, destination.getLocation())
-						.send();
-			}
-			else {
-				plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.setMacro(Macro.ITEM_NUMBER, itemNumber)
-						.setMacro(Macro.WORLD, destination.getWorldName())
-						.send();
+				// unwrap optional destination
+				Destination destination = optionalDestination.get();
+
+				// increment item number
+				itemNumber++;
+
+				if (destination.isWorldValid()) {
+					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
+							.setMacro(Macro.DESTINATION, destination.getDisplayName())
+							.setMacro(Macro.ITEM_NUMBER, itemNumber)
+							.setMacro(Macro.LOCATION, destination.getLocation())
+							.send();
+				}
+				else {
+					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
+							.setMacro(Macro.DESTINATION, destination.getDisplayName())
+							.setMacro(Macro.ITEM_NUMBER, itemNumber)
+							.setMacro(Macro.WORLD, destination.getWorldName())
+							.send();
+				}
 			}
 		}
 

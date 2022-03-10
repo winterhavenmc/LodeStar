@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 final class SetCommand extends SubcommandAbstract {
@@ -99,10 +100,10 @@ final class SetCommand extends SubcommandAbstract {
 		}
 
 		// check if destination name exists and if so, check if player has overwrite permission
-		Destination destination = plugin.dataStore.selectRecord(destinationName);
+		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
 
 		// check for overwrite permission if destination already exists
-		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
+		if (optionalDestination.isPresent() && sender.hasPermission("lodestar.set.overwrite")) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
@@ -120,7 +121,7 @@ final class SetCommand extends SubcommandAbstract {
 		}
 
 		// create destination object
-		destination = new Destination(destinationName, location);
+		Destination destination = new Destination(destinationName, location);
 
 		// store destination object
 		plugin.dataStore.insertRecord(destination);
