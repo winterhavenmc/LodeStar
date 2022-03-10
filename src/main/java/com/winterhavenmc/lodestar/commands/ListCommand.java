@@ -48,13 +48,13 @@ final class ListCommand extends SubcommandAbstract {
 
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission("lodestar.list")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_LIST).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_LIST).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		if (args.size() > getMaxArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -86,7 +86,7 @@ final class ListCommand extends SubcommandAbstract {
 
 		// if display list is empty, output list empty message and return
 		if (allKeys.isEmpty()) {
-			plugin.messageBuilder.build(sender, MessageId.LIST_EMPTY).send();
+			plugin.messageBuilder.compose(sender, MessageId.LIST_EMPTY).send();
 			return true;
 		}
 
@@ -104,7 +104,7 @@ final class ListCommand extends SubcommandAbstract {
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
 		// display list header
-		plugin.messageBuilder.build(sender, MessageId.LIST_HEADER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
+		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
 
 		int itemNumber = startIndex;
 
@@ -116,14 +116,14 @@ final class ListCommand extends SubcommandAbstract {
 			itemNumber++;
 
 			if (destination.isWorldValid()) {
-				plugin.messageBuilder.build(sender, MessageId.LIST_ITEM)
+				plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.setMacro(Macro.LOCATION, destination.getLocation())
 						.send();
 			}
 			else {
-				plugin.messageBuilder.build(sender, MessageId.LIST_ITEM_INVALID)
+				plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.setMacro(Macro.WORLD, destination.getWorldName())
@@ -132,7 +132,7 @@ final class ListCommand extends SubcommandAbstract {
 		}
 
 		// display list footer
-		plugin.messageBuilder.build(sender, MessageId.LIST_FOOTER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
+		plugin.messageBuilder.compose(sender, MessageId.LIST_FOOTER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
 
 		return true;
 	}

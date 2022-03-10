@@ -48,13 +48,13 @@ final class DestroyCommand extends SubcommandAbstract {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check that sender has permission
 		if (!sender.hasPermission("lodestar.destroy")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_DESTROY).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_DESTROY).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -67,7 +67,7 @@ final class DestroyCommand extends SubcommandAbstract {
 
 		// check that item player is holding is a LodeStar item
 		if (!plugin.lodeStarFactory.isItem(playerItem)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -76,7 +76,7 @@ final class DestroyCommand extends SubcommandAbstract {
 		String destinationName = plugin.lodeStarFactory.getDestinationName(playerItem);
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_DESTROY)
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
 				.setMacro(Macro.ITEM_QUANTITY, quantity)
 				.setMacro(Macro.DESTINATION, destinationName)
 				.send();

@@ -79,7 +79,7 @@ final class HelpCommand extends SubcommandAbstract {
 
 		// if command sender does not have permission to display help, output error message and return true
 		if (!sender.hasPermission("lodestar.help")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_HELP).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_HELP).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

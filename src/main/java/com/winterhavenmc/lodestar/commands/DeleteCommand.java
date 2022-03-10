@@ -61,14 +61,14 @@ final class DeleteCommand extends SubcommandAbstract {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.delete")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_DELETE).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_DELETE).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -82,7 +82,7 @@ final class DeleteCommand extends SubcommandAbstract {
 
 		// test that destination name is not reserved name
 		if (Destination.isReserved(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 
@@ -93,7 +93,7 @@ final class DeleteCommand extends SubcommandAbstract {
 
 		// test that destination name is valid
 		if (!Destination.exists(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -104,7 +104,7 @@ final class DeleteCommand extends SubcommandAbstract {
 		plugin.dataStore.deleteRecord(key);
 
 		// send success message to player
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_DELETE)
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
 				.setMacro(Macro.DESTINATION, destinationName)
 				.send();
 

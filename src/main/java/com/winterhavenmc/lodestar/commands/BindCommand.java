@@ -68,20 +68,20 @@ final class BindCommand extends SubcommandAbstract {
 
 		// command sender must be player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check sender has permission
 		if (!sender.hasPermission("lodestar.bind")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_BIND).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_BIND).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check minimum arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -95,7 +95,7 @@ final class BindCommand extends SubcommandAbstract {
 
 		// test that destination exists
 		if (!Destination.exists(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -109,7 +109,7 @@ final class BindCommand extends SubcommandAbstract {
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
-				plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
+				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
 						.setMacro(Macro.DESTINATION, destinationName)
 						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -119,7 +119,7 @@ final class BindCommand extends SubcommandAbstract {
 
 		// check that item in hand is valid material
 		if (invalidMaterials.contains(playerItem.getType())) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -136,7 +136,7 @@ final class BindCommand extends SubcommandAbstract {
 		plugin.lodeStarFactory.setMetaData(playerItem, destinationName);
 
 		// send success message
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_BIND)
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_BIND)
 				.setMacro(Macro.DESTINATION, destinationName)
 				.send();
 

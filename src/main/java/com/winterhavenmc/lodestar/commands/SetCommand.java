@@ -64,20 +64,20 @@ final class SetCommand extends SubcommandAbstract {
 
 		// sender must be in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.set")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_SET).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_SET).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -91,7 +91,7 @@ final class SetCommand extends SubcommandAbstract {
 
 		// check if destination name is a reserved name
 		if (Destination.isReserved(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -103,7 +103,7 @@ final class SetCommand extends SubcommandAbstract {
 
 		// check for overwrite permission if destination already exists
 		if (destination != null && sender.hasPermission("lodestar.set.overwrite")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 
@@ -114,7 +114,7 @@ final class SetCommand extends SubcommandAbstract {
 
 		// send warning message if name begins with a number
 		if (plugin.lodeStarFactory.deriveKey(destinationName).matches("^\\d*_.*")) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 		}
@@ -126,7 +126,7 @@ final class SetCommand extends SubcommandAbstract {
 		plugin.dataStore.insertRecord(destination);
 
 		// send success message to player
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_SET).setMacro(Macro.DESTINATION, destinationName).send();
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_SET).setMacro(Macro.DESTINATION, destinationName).send();
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_SET);

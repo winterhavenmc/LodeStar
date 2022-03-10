@@ -89,7 +89,7 @@ public final class TeleportManager {
 
 		// if player cooldown has not expired, send player cooldown message and return
 		if (getCooldownTimeRemaining(player) > 0) {
-			plugin.messageBuilder.build(player, MessageId.TELEPORT_COOLDOWN)
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_COOLDOWN)
 					.setMacro(Macro.DURATION, getCooldownTimeRemaining(player))
 					.send();
 			return;
@@ -123,7 +123,7 @@ public final class TeleportManager {
 			}
 			// if bedspawn location is null and bedspawn-fallback is false, send message and return
 			else {
-				plugin.messageBuilder.build(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN).send();
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				return;
 			}
@@ -182,7 +182,7 @@ public final class TeleportManager {
 				displayName = key;
 			}
 
-			plugin.messageBuilder.build(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, displayName)
 					.send();
 			return;
@@ -191,7 +191,7 @@ public final class TeleportManager {
 		// if player is less than config min-distance from destination, send player proximity message and return
 		if (player.getWorld() == location.getWorld()
 				&& location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
-			plugin.messageBuilder.build(player, MessageId.TELEPORT_FAIL_PROXIMITY)
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_PROXIMITY)
 					.setMacro(Macro.DESTINATION, destination.getDisplayName())
 					.send();
 			return;
@@ -220,7 +220,7 @@ public final class TeleportManager {
 
 			// if destination is spawn send spawn specific warmup message
 			if (destination.isSpawn()) {
-				plugin.messageBuilder.build(player, MessageId.TELEPORT_WARMUP_SPAWN)
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_WARMUP_SPAWN)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
 						.setMacro(Macro.WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
@@ -228,7 +228,7 @@ public final class TeleportManager {
 			}
 			// otherwise, send regular warmup message
 			else {
-				plugin.messageBuilder.build(player, MessageId.TELEPORT_WARMUP)
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_WARMUP)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
 						.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
 						.send();

@@ -71,14 +71,14 @@ final class GiveCommand extends SubcommandAbstract {
 
 		// if command sender does not have permission to give LodeStars, output error message and return true
 		if (!sender.hasPermission("lodestar.give")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_GIVE).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_GIVE).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// if too few arguments, send error and usage message
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -125,7 +125,7 @@ final class GiveCommand extends SubcommandAbstract {
 
 			// if sender is not player, send args-count-under error message
 			if (!(sender instanceof Player)) {
-				plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 				displayUsage(sender);
 				return true;
 			}
@@ -182,7 +182,7 @@ final class GiveCommand extends SubcommandAbstract {
 
 			// else given destination is invalid (but not blank), so send error message
 			else {
-				plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 						.setMacro(Macro.DESTINATION, testName)
 						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -241,7 +241,7 @@ final class GiveCommand extends SubcommandAbstract {
 
 		// test that item is a LodeStar item
 		if (!plugin.lodeStarFactory.isItem(itemStack)) {
-			plugin.messageBuilder.build(giver, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
+			plugin.messageBuilder.compose(giver, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -257,7 +257,7 @@ final class GiveCommand extends SubcommandAbstract {
 
 		// if remaining items equals quantity given, send player-inventory-full message and return
 		if (noFitCount == quantity) {
-			plugin.messageBuilder.build(giver, MessageId.COMMAND_FAIL_GIVE_INVENTORY_FULL)
+			plugin.messageBuilder.compose(giver, MessageId.COMMAND_FAIL_GIVE_INVENTORY_FULL)
 					.setMacro(Macro.ITEM_QUANTITY, quantity)
 					.send();
 			return false;
@@ -273,7 +273,7 @@ final class GiveCommand extends SubcommandAbstract {
 		if (!giver.getName().equals(targetPlayer.getName())) {
 
 			// send message and play sound to giver
-			plugin.messageBuilder.build(giver, MessageId.COMMAND_SUCCESS_GIVE)
+			plugin.messageBuilder.compose(giver, MessageId.COMMAND_SUCCESS_GIVE)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.setMacro(Macro.ITEM_QUANTITY, quantity)
 					.setMacro(Macro.TARGET_PLAYER, targetPlayer)
@@ -285,7 +285,7 @@ final class GiveCommand extends SubcommandAbstract {
 			}
 
 			// send message to target player
-			plugin.messageBuilder.build(targetPlayer, MessageId.COMMAND_SUCCESS_GIVE_TARGET)
+			plugin.messageBuilder.compose(targetPlayer, MessageId.COMMAND_SUCCESS_GIVE_TARGET)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.setMacro(Macro.ITEM_QUANTITY, quantity)
 					.setMacro(Macro.TARGET_PLAYER, giver)
@@ -335,10 +335,10 @@ final class GiveCommand extends SubcommandAbstract {
 			}
 		}
 		if (matchedPlayers.isEmpty()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND).send();
 		}
 		else {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_ONLINE).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_ONLINE).send();
 		}
 		return null;
 	}

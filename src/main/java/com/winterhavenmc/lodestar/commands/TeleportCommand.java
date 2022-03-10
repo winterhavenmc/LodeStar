@@ -63,20 +63,20 @@ final class TeleportCommand extends SubcommandAbstract {
 
 		// check for permission
 		if (!sender.hasPermission("lodestar.teleport")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_TELEPORT).send();
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_TELEPORT).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check for in game player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			displayUsage(sender);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -90,7 +90,7 @@ final class TeleportCommand extends SubcommandAbstract {
 
 		// test that destination name is valid
 		if (!Destination.exists(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -103,14 +103,14 @@ final class TeleportCommand extends SubcommandAbstract {
 		if (destination != null && destination.getLocation() != null) {
 			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 			player.teleport(destination.getLocation());
-			plugin.messageBuilder.build(sender, MessageId.TELEPORT_SUCCESS)
+			plugin.messageBuilder.compose(sender, MessageId.TELEPORT_SUCCESS)
 					.setMacro(Macro.DESTINATION, destination)
 					.send();
 			plugin.soundConfig.playSound(destination.getLocation(), SoundId.TELEPORT_SUCCESS_ARRIVAL);
 			return true;
 		}
 		else {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION).send();
 			plugin.soundConfig.playSound(sender, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 		}
 
