@@ -40,10 +40,10 @@ final class DelayedTeleportTask extends BukkitRunnable {
 
 	private final PluginMain plugin;
 	private final Player player;
-	private Location location;
-	private BukkitTask particleTask;
 	private final Destination destination;
 	private final ItemStack playerItem;
+	private Location location;
+	private BukkitTask particleTask;
 
 	/**
 	 * Class constructor method
@@ -57,12 +57,11 @@ final class DelayedTeleportTask extends BukkitRunnable {
 						final Destination destination,
 						final ItemStack playerItem) {
 
-		// check for null parameters
-		Objects.requireNonNull(this.plugin = plugin);
-		Objects.requireNonNull(this.player = player);
-		Objects.requireNonNull(this.destination = destination);
-		Objects.requireNonNull(this.playerItem = playerItem);
-		Objects.requireNonNull(this.location = destination.getLocation());
+		this.plugin = plugin;
+		this.player = player;
+		this.destination = destination;
+		this.playerItem = playerItem;
+		this.location = destination.getLocation();
 
 		// start repeating task for generating particles at player location
 		if (plugin.getConfig().getBoolean("particle-effects")) {
@@ -92,24 +91,22 @@ final class DelayedTeleportTask extends BukkitRunnable {
 			}
 
 			// if remove-from-inventory is configured on-success, take one LodeStar item from inventory now
-			if (Objects.requireNonNull(plugin.getConfig().getString("remove-from-inventory"))
-					.equalsIgnoreCase("on-success")) {
+			if ("on-success".equalsIgnoreCase(plugin.getConfig().getString("remove-from-inventory"))) {
 
 				// try to remove one LodeStar item from player inventory
-				//HashMap<Integer,ItemStack> notRemoved = new HashMap<Integer,ItemStack>();
-				boolean notRemoved = true;
+				boolean wasRemoved = false;
 				for (ItemStack itemStack : player.getInventory()) {
 					if (playerItem.isSimilar(itemStack)) {
-						ItemStack removeItem = itemStack.clone();
-						removeItem.setAmount(1);
-						player.getInventory().removeItem(removeItem);
-						notRemoved = false;
+						ItemStack itemToRemove = itemStack.clone();
+						itemToRemove.setAmount(1);
+						player.getInventory().removeItem(itemToRemove);
+						wasRemoved = true;
 						break;
 					}
 				}
 
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
-				if (notRemoved) {
+				if (!wasRemoved) {
 					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_NO_ITEM).send();
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
 					plugin.teleportManager.setPlayerCooldown(player);

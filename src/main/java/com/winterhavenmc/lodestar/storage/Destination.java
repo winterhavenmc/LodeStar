@@ -114,28 +114,27 @@ public final class Destination {
 
 
 	/**
-	 *
-	 * @param key          the destination key
-	 * @param displayName  the destination display name
-	 * @param worldValid   destination world valid
-	 * @param worldName    destination world name
-	 * @param worldUid     destination world uid
-	 * @param x            destination x coordinate
-	 * @param y            destination y coordinate
-	 * @param z            destination z coordinate
-	 * @param yaw          destination yaw
-	 * @param pitch        destination pitch
+	 * @param key         the destination key
+	 * @param displayName the destination display name
+	 * @param worldValid  destination world valid
+	 * @param worldName   destination world name
+	 * @param worldUid    destination world uid
+	 * @param x           destination x coordinate
+	 * @param y           destination y coordinate
+	 * @param z           destination z coordinate
+	 * @param yaw         destination yaw
+	 * @param pitch       destination pitch
 	 */
 	public Destination(final String key,
-					   final String displayName,
-					   final boolean worldValid,
-					   final String worldName,
-					   final UUID worldUid,
-					   final double x,
-					   final double y,
-					   final double z,
-					   final float yaw,
-					   final float pitch) {
+	                   final String displayName,
+	                   final boolean worldValid,
+	                   final String worldName,
+	                   final UUID worldUid,
+	                   final double x,
+	                   final double y,
+	                   final double z,
+	                   final float yaw,
+	                   final float pitch) {
 
 		this.key = key;
 		this.displayName = displayName;
@@ -152,22 +151,12 @@ public final class Destination {
 
 	/**
 	 * Get string representation of destination
+	 *
 	 * @return String - destination display name
 	 */
 	@Override
 	public String toString() {
 		return getDisplayName();
-	}
-
-
-	/**
-	 * Check if destination is spawn location
-	 *
-	 * @return true if destination is spawn, else false
-	 */
-	public boolean isSpawn() {
-		return this.getKey().equalsIgnoreCase("spawn")
-				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
 	}
 
 
@@ -179,7 +168,18 @@ public final class Destination {
 	@SuppressWarnings("unused")
 	public boolean isHome() {
 		return this.getKey().equalsIgnoreCase("home")
-				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getHomeDisplayName()));
+				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+	}
+
+
+	/**
+	 * Check if destination is spawn location
+	 *
+	 * @return true if destination is spawn, else false
+	 */
+	public boolean isSpawn() {
+		return this.getKey().equalsIgnoreCase("spawn")
+				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")));
 	}
 
 
@@ -239,13 +239,16 @@ public final class Destination {
 		return worldUid;
 	}
 
+
 	public String getWorldName() {
 		return worldName;
 	}
 
+
 	public boolean isWorldValid() {
 		return worldValid;
 	}
+
 
 	public double getX() {
 		return x;
@@ -359,7 +362,7 @@ public final class Destination {
 		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
 		String derivedKey = Destination.deriveKey(key);
 		return derivedKey.equalsIgnoreCase("home")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName()));
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
 	}
 
 
@@ -380,7 +383,7 @@ public final class Destination {
 		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
 		String derivedKey = Destination.deriveKey(key);
 		return derivedKey.equalsIgnoreCase("spawn")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
+				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Home")));
 	}
 
 
@@ -396,12 +399,12 @@ public final class Destination {
 
 		// if key matches spawn key, get spawn display name from messages files
 		if (isSpawn(key)) {
-			return plugin.messageBuilder.getSpawnDisplayName();
+			return plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 		}
 
 		// if key matches home key, get home display name from messages file
 		if (isHome(key)) {
-			return plugin.messageBuilder.getHomeDisplayName();
+			return plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 		}
 
 		// else try to get destination name from datastore
@@ -430,12 +433,12 @@ public final class Destination {
 
 		// if key matches spawn key, get spawn display name from language file
 		if (isSpawn(key)) {
-			resultString = plugin.messageBuilder.getSpawnDisplayName();
+			resultString = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 		}
 
 		// if destination is home, get home display name from messages file
 		else if (isHome(key)) {
-			resultString = plugin.messageBuilder.getHomeDisplayName();
+			resultString = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 		}
 
 		// else get destination name from datastore

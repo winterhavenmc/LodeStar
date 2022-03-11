@@ -135,7 +135,7 @@ public final class SimpleAPI {
 	 * Check if a string is a valid destination name
 	 * <ul>
 	 *     <li>destination name must not be null</li>
-	 *     <li>destination name must not be empty</li>
+	 *     <li>destination name must not be blank</li>
 	 *     <li>destination name must not start with a digit</li>
 	 *     <li>destination name must not contain a colon</li>
 	 * </ul>
@@ -146,7 +146,7 @@ public final class SimpleAPI {
 	public static boolean isAllowedName(final String destinationName) {
 
 		return !(destinationName == null
-				|| destinationName.isEmpty()
+				|| destinationName.isBlank()
 				|| destinationName.matches("^\\d.*")
 				|| destinationName.matches(".*:.*"));
 	}
@@ -181,11 +181,7 @@ public final class SimpleAPI {
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
 	 */
 	public static boolean isSpawnName(final String destinationName) {
-
-		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
-		String key = plugin.lodeStarFactory.deriveKey(destinationName);
-		return key.equals("spawn")
-				|| key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
+		return Destination.isSpawn(destinationName);
 	}
 
 

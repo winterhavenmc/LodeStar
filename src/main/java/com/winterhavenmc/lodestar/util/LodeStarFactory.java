@@ -45,7 +45,7 @@ public final class LodeStarFactory {
 	private static final Set<ItemFlag> itemFlagSet = Set.of(
 			ItemFlag.HIDE_ATTRIBUTES,
 			ItemFlag.HIDE_ENCHANTS,
-			ItemFlag.HIDE_UNBREAKABLE );
+			ItemFlag.HIDE_UNBREAKABLE);
 
 	// the proto item
 	private ItemStack protoItem;
@@ -79,7 +79,7 @@ public final class LodeStarFactory {
 	 * Create an item stack with encoded destination
 	 *
 	 * @param destinationName the destination name
-	 * @param quantity the number of items in the stack
+	 * @param quantity        the number of items in the stack
 	 * @return ItemStack with destination name and quantity
 	 */
 	public ItemStack create(final String destinationName, final int quantity) {
@@ -230,13 +230,12 @@ public final class LodeStarFactory {
 		String destinationName = null;
 
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName()))) {
-			destinationName = plugin.messageBuilder.getSpawnDisplayName();
+		if (key.equals("spawn") || key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")))) {
+			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 		}
 		// if destination is home, get home display name from messages file
-		else if (key.equals("home")
-				|| key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName()))) {
-			destinationName = plugin.messageBuilder.getHomeDisplayName();
+		else if (key.equals("home") || key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
+			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 		}
 		// else get destination name from datastore
 		else {

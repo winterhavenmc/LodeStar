@@ -31,10 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.winterhavenmc.lodestar.util.BukkitTime.SECONDS;
@@ -86,10 +83,8 @@ public final class TeleportManager {
 	 */
 	public void initiateTeleport(final Player player) {
 
-		final ItemStack playerItem = player.getInventory().getItemInMainHand();
-
 		// if player cooldown has not expired, send player cooldown message and return
-		if (getCooldownTimeRemaining(player) > 0) {
+		if (isCoolingDown(player)) {
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_COOLDOWN)
 					.setMacro(Macro.DURATION, getCooldownTimeRemaining(player))
 					.send();
@@ -101,157 +96,207 @@ public final class TeleportManager {
 			return;
 		}
 
-		// get destination from player item
-		String key = plugin.lodeStarFactory.getKey(playerItem);
-		Location location = null;
-		Destination destination = null;
+		// get key from player item
+		String key = plugin.lodeStarFactory.getKey(player.getInventory().getItemInMainHand());
 
-		// if destination key is home, get player bed spawn location
-		if (destinationIsHome(key)) {
-
-			location = player.getBedSpawnLocation();
-
-			// if bedspawn location is not null, create destination with bedspawn location
-			if (location != null) {
-				destination = new Destination("home", plugin.messageBuilder.getHomeDisplayName(), location);
-				if (plugin.getConfig().getBoolean("debug")) {
-					plugin.getLogger().info("destination is home. Location: " + location);
-				}
-			}
-			// otherwise, if bedspawn-fallback is true in config, set key to spawn
-			else if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
-				key = "spawn";
-			}
-			// if bedspawn location is null and bedspawn-fallback is false, send message and return
-			else {
-				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN).send();
-				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
-				return;
-			}
+		// if destination key is home, teleport to bed spawn location
+		if (isHomeKey(key)) {
+			teleportToHome(player);
 		}
+		// if destination key is spawn, teleport to world spawn location
+		else if (isSpawnKey(key)) {
+			teleportToSpawn(player);
+		}
+		// teleport to destination for key
+		else {
+			teleportToDestination(player);
+		}
+	}
 
-		// if destination key is spawn, get spawn location
-		if (destinationIsSpawn(key)) {
 
-			World playerWorld = player.getWorld();
-			String overworldName = playerWorld.getName().replaceFirst("(_nether|_the_end)$", "");
-			World overworld = plugin.getServer().getWorld(overworldName);
+	/**
+	 * Begin teleport to players bedspawn destination
+	 *
+	 * @param player the player to teleport
+	 */
+	private void teleportToHome(final Player player) {
 
-			location = playerWorld.getSpawnLocation();
+		// get player item in hand
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
+
+		// get home destination
+		Optional<Destination> optionalDestination = getHomeDestination(player);
+
+		if (optionalDestination.isPresent()) {
+
+			Location location = optionalDestination.get().getLocation();
+
+			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
+			String removeItem = plugin.getConfig().getString("remove-from-inventory");
+			if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
+				playerItem.setAmount(playerItem.getAmount() - 1);
+				player.getInventory().setItemInMainHand(playerItem);
+			}
+
+			// create final destination object
+			Destination finalDestination = new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location);
+
+			// initiate delayed teleport for player to final destination
+			executeTeleport(player, finalDestination, playerItem, MessageId.TELEPORT_WARMUP);
+		}
+		else if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
+			teleportToSpawn(player);
+		}
+		else {
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN).send();
+			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
+		}
+	}
+
+
+	/**
+	 * Begin teleport to world spawn destination
+	 *
+	 * @param player the player to teleport
+	 */
+	private void teleportToSpawn(final Player player) {
+
+		// get player item in hand
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
+
+		// get spawn destination
+		Optional<Destination> optionalDestination = getSpawnDestination(player);
+
+		if (optionalDestination.isPresent()) {
+
+			// get location from destination
+			Location location = optionalDestination.get().getLocation();
 
 			// if from-nether is enabled in config and player is in nether, try to get overworld spawn location
-			if (plugin.getConfig().getBoolean("from-nether") &&
-					playerWorld.getName().endsWith("_nether") &&
-					overworld != null) {
-				location = overworld.getSpawnLocation();
+			if (plugin.getConfig().getBoolean("from-nether") && isInNetherWorld(player)) {
+				location = getOverworldSpawnLocation(player).orElse(location);
+			}
+			// if from-end is enabled in config and player is in end, try to get overworld spawn location
+			else if (plugin.getConfig().getBoolean("from-end") && isInEndWorld(player)) {
+				location = getOverworldSpawnLocation(player).orElse(location);
 			}
 
-			// if from-end is enabled in config, and player is in end, try to get overworld spawn location
-			if (plugin.getConfig().getBoolean("from-end") &&
-					playerWorld.getName().endsWith("_the_end") &&
-					overworld != null) {
-				location = overworld.getSpawnLocation();
+			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
+			String removeItem = plugin.getConfig().getString("remove-from-inventory");
+			if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
+				playerItem.setAmount(playerItem.getAmount() - 1);
+				player.getInventory().setItemInMainHand(playerItem);
 			}
 
-			// if multiverse is enabled get spawn location from it, so we have pitch and yaw
-			location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
+			// create final destination object
+			Destination finalDestination = new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location);
 
-			// create warp object to send to delayed teleport method
-			String displayName = plugin.messageBuilder.getSpawnDisplayName();
-			destination = new Destination(key, displayName, location);
+			// initiate delayed teleport for player to final destination
+			executeTeleport(player, finalDestination, playerItem, MessageId.TELEPORT_WARMUP_SPAWN);
 		}
-
-		// if destination did not get set to home or spawn, get destination from storage
-		if (destination == null) {
-			// get destination from storage
-			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
-			if (optionalDestination.isPresent()) {
-
-				// unwrap optional destination
-				destination = optionalDestination.get();
-
-				// get location from destination
-				location = destination.getLocation();
-			}
-		}
-
-		// if location is null, send player message and return
-		if (location == null) {
-
-			String displayName;
-
-			// get display name
-			if (destination != null) {
-				displayName = destination.getDisplayName();
-			}
-			else {
-				displayName = key;
-			}
-
+		else {
+			// send invalid destination message
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, displayName)
+					.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
 					.send();
-			return;
 		}
+	}
 
-		// if player is less than config min-distance from destination, send player proximity message and return
-		if (player.getWorld() == location.getWorld()
-				&& location.distance(player.getLocation()) < plugin.getConfig().getInt("minimum-distance")) {
-			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_PROXIMITY)
-					.setMacro(Macro.DESTINATION, destination.getDisplayName())
+
+	/**
+	 * Begin teleport to destination determined by LodeStar item key
+	 *
+	 * @param player the player to teleport
+	 */
+	private void teleportToDestination(final Player player) {
+
+		// get player item in hand
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
+
+		// get item key
+		String key = plugin.lodeStarFactory.getKey(playerItem);
+
+		// get spawn destination for key
+		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
+
+		if (optionalDestination.isPresent()) {
+
+			// get location for destination
+			Location location = optionalDestination.get().getLocation();
+
+			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
+			String removeItem = plugin.getConfig().getString("remove-from-inventory");
+			if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
+				playerItem.setAmount(playerItem.getAmount() - 1);
+				player.getInventory().setItemInMainHand(playerItem);
+			}
+
+			// create final destination object
+			Destination finalDestination = new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location);
+
+			executeTeleport(player, finalDestination, playerItem, MessageId.TELEPORT_WARMUP);
+		}
+		else {
+			// send invalid destination message
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
+					.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
 					.send();
-			return;
 		}
+	}
 
-		// send debug message to log
-		if (plugin.getConfig().getBoolean("debug")) {
-			plugin.getLogger().info("Teleporting to destination: " + location);
-		}
 
-		// load destination chunk if not already loaded
-		String worldName = Objects.requireNonNull(location.getWorld()).getName();
-		if (!Objects.requireNonNull(plugin.getServer().getWorld(worldName)).getChunkAt(location).isLoaded()) {
-			Objects.requireNonNull(plugin.getServer().getWorld(worldName)).getChunkAt(location).load();
-		}
+	/**
+	 * Execute the teleport to destination
+	 *
+	 * @param player the player to teleport
+	 * @param finalDestination the destination
+	 * @param playerItem the LodeStar item used to initiate teleport
+	 * @param messageId the teleport warmup message to send to player
+	 */
+	private void executeTeleport(final Player player, final Destination finalDestination, final ItemStack playerItem, final MessageId messageId) {
 
-		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-		if (Objects.requireNonNull(plugin.getConfig().getString("remove-from-inventory")).equalsIgnoreCase("on-use")) {
-			playerItem.setAmount(playerItem.getAmount() - 1);
-			player.getInventory().setItemInMainHand(playerItem);
-		}
+		// initiate delayed teleport for player to final destination
+		BukkitTask teleportTask = new DelayedTeleportTask(plugin, player, finalDestination, playerItem.clone())
+				.runTaskLater(plugin, SECONDS.toTicks(plugin.getConfig().getLong("teleport-warmup")));
 
-		// if warmup setting is greater than zero, send warmup message
+		// if configured warmup time is greater than zero, send warmup message
 		long warmupTime = plugin.getConfig().getLong("teleport-warmup");
 		if (warmupTime > 0) {
+			plugin.messageBuilder.compose(player, messageId)
+					.setMacro(Macro.DESTINATION, finalDestination.getDisplayName())
+					.setMacro(Macro.WORLD, plugin.getServer().getWorld(finalDestination.getWorldUid()))
+					.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
+					.send();
 
-			// if destination is spawn send spawn specific warmup message
-			if (destination.isSpawn()) {
-				plugin.messageBuilder.compose(player, MessageId.TELEPORT_WARMUP_SPAWN)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.setMacro(Macro.WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
-						.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
-						.send();
-			}
-			// otherwise, send regular warmup message
-			else {
-				plugin.messageBuilder.compose(player, MessageId.TELEPORT_WARMUP)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
-						.send();
-			}
-			// if enabled, play sound effect
+			// if enabled, play teleport warmup sound effect
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_WARMUP);
 		}
-
-		// initiate delayed teleport for player to destination
-		BukkitTask teleportTask = new DelayedTeleportTask(plugin, player, destination,
-				playerItem.clone()).runTaskLater(plugin, SECONDS.toTicks(warmupTime));
 
 		// insert player and taskId into warmup hashmap
 		putPlayer(player, teleportTask.getTaskId());
 
+		// load destination chunk if not already loaded
+		loadDestinationChunk(finalDestination);
+
 		// if log-use is enabled in config, write log entry
 		logUsage(player);
+	}
+
+
+	/**
+	 * Preload chunk at teleport destination if not already loaded
+	 *
+	 * @param destination the destination location
+	 */
+	private void loadDestinationChunk(final Destination destination) {
+
+		Location location = destination.getLocation();
+
+		if (location != null && location.getWorld() != null) {
+			if (!location.getWorld().getChunkAt(location).isLoaded()) {
+				location.getWorld().getChunkAt(location).load();
+			}
+		}
 	}
 
 
@@ -355,7 +400,7 @@ public final class TeleportManager {
 			public void run() {
 				cooldownMap.remove(player.getUniqueId());
 			}
-		}.runTaskLater(plugin, (SECONDS.toTicks(cooldownSeconds)));
+		}.runTaskLater(plugin, SECONDS.toTicks(cooldownSeconds));
 	}
 
 
@@ -397,17 +442,20 @@ public final class TeleportManager {
 	 * @param key the destination key to examine
 	 * @return true if key is for home destination, false if not
 	 */
-	private boolean destinationIsHome(final String key) {
+	private boolean isHomeKey(final String key) {
+
 		// if key is null, return false
 		if (key == null) {
 			return false;
 		}
+
 		// if key is literal string "home", return true
 		if (key.equalsIgnoreCase("home")) {
 			return true;
 		}
+
 		// if key matches configured home display name, return true; otherwise return false
-		return key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getHomeDisplayName()));
+		return key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("home")));
 	}
 
 
@@ -417,17 +465,161 @@ public final class TeleportManager {
 	 * @param key the destination key to examine
 	 * @return true if key is for spawn destination, false if not
 	 */
-	private boolean destinationIsSpawn(final String key) {
+	private boolean isSpawnKey(final String key) {
+
 		// if key is null, return false
 		if (key == null) {
 			return false;
 		}
+
 		// if key is literal string "spawn" return true
 		if (key.equalsIgnoreCase("spawn")) {
 			return true;
 		}
+
 		// if key matches configured spawn display name, return true; otherwise return false
-		return key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
+		return key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("spawn")));
+	}
+
+
+	/**
+	 * Get bedspawn location for a player
+	 *
+	 * @param player the player
+	 * @return the player bedspawn location wrapped in an {@link Optional}
+	 */
+	private Optional<Location> getHomeLocation(final Player player) {
+
+		// if player is null, return empty optional
+		if (player == null) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(player.getBedSpawnLocation());
+	}
+
+
+	/**
+	 * Get spawn location for a player
+	 *
+	 * @param player the player
+	 * @return the player spawn location wrapped in an {@link Optional}
+	 */
+	private Optional<Location> getSpawnLocation(final Player player) {
+
+		// if player is null, return empty optional
+		if (player == null) {
+			return Optional.empty();
+		}
+		return Optional.of(player.getWorld().getSpawnLocation());
+	}
+
+
+	/**
+	 * Get bedspawn destination for a player
+	 *
+	 * @param player the player
+	 * @return the player bedspawn destination wrapped in an {@link Optional}
+	 */
+	private Optional<Destination> getHomeDestination(final Player player) {
+
+		// if player is null, return empty optional
+		if (player == null) {
+			return Optional.empty();
+		}
+
+		Optional<Location> optionalLocation = getHomeLocation(player);
+		if (optionalLocation.isEmpty()) {
+			return Optional.empty();
+		}
+
+		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), optionalLocation.get()));
+	}
+
+
+	/**
+	 * Get spawn destination for a player
+	 *
+	 * @param player the player
+	 * @return the player spawn destination wrapped in an {@link Optional}
+	 */
+	private Optional<Destination> getSpawnDestination(final Player player) {
+
+		// if player is null, return empty optional
+		if (player == null) {
+			return Optional.empty();
+		}
+
+		Optional<Location> optionalLocation = getSpawnLocation(player);
+		if (optionalLocation.isEmpty()) {
+			return Optional.empty();
+		}
+
+		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), optionalLocation.get()));
+	}
+
+
+	/**
+	 * Get overworld spawn location corresponding to a player nether or end world.
+	 *
+	 * @param player the passed player whose current world will be used to find a matching over world spawn location
+	 * @return {@link Optional} wrapped spawn location of the normal world associated with the passed player
+	 * nether or end world, or the current player world spawn location if no matching normal world found
+	 */
+	private Optional<Location> getOverworldSpawnLocation(final Player player) {
+
+		// check for null parameter
+		if (player == null) {
+			return Optional.empty();
+		}
+
+		// create list to store normal environment worlds
+		List<World> normalWorlds = new ArrayList<>();
+
+		// iterate through all server worlds
+		for (World checkWorld : plugin.getServer().getWorlds()) {
+
+			// if world is normal environment, try to match name to passed world
+			if (checkWorld.getEnvironment().equals(World.Environment.NORMAL)) {
+
+				// check if normal world matches passed world minus nether/end suffix
+				if (checkWorld.getName().equals(player.getWorld().getName().replaceFirst("(_nether$|_the_end$)", ""))) {
+					return Optional.of(checkWorld.getSpawnLocation());
+				}
+
+				// if no match, add to list of normal worlds
+				normalWorlds.add(checkWorld);
+			}
+		}
+
+		// if only one normal world exists, return that world
+		if (normalWorlds.size() == 1) {
+			return Optional.of(normalWorlds.get(0).getSpawnLocation());
+		}
+
+		// if no matching normal world found and more than one normal world exists, return passed world spawn location
+		return Optional.of(player.getWorld().getSpawnLocation());
+	}
+
+
+	/**
+	 * Check if a player is in a nether world
+	 *
+	 * @param player the player
+	 * @return true if player is in a nether world, false if not
+	 */
+	private boolean isInNetherWorld(final Player player) {
+		return player.getWorld().getEnvironment().equals(World.Environment.NETHER);
+	}
+
+
+	/**
+	 * Check if a player is in an end world
+	 *
+	 * @param player the player
+	 * @return true if player is in an end world, false if not
+	 */
+	private boolean isInEndWorld(final Player player) {
+		return player.getWorld().getEnvironment().equals(World.Environment.THE_END);
 	}
 
 
