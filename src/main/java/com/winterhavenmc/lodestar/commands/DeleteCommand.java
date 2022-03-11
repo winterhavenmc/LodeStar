@@ -35,8 +35,9 @@ final class DeleteCommand extends SubcommandAbstract {
 
 
 	DeleteCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name ="delete";
+		this.permissionNode = "lodestar.delete";
 		this.usageString ="/lodestar delete <destination name>";
 		this.description = MessageId.COMMAND_HELP_DELETE;
 		this.minArgs = 1;
@@ -60,7 +61,7 @@ final class DeleteCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// check for permission
-		if (!sender.hasPermission("lodestar.delete")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_DELETE).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -85,32 +86,21 @@ final class DeleteCommand extends SubcommandAbstract {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
-
-			// play sound effect
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-			return true;
 		}
-
-		// test that destination name is valid
-		if (!Destination.exists(destinationName)) {
+		// if delete method returns valid destination, delete was successful
+		else if (plugin.dataStore.deleteRecord(key).isPresent()) {
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
+					.setMacro(Macro.DESTINATION, destinationName)
+					.send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
+		}
+		else {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-			return true;
 		}
-
-		// remove destination record from storage
-		plugin.dataStore.deleteRecord(key);
-
-		// send success message to player
-		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
-				.setMacro(Macro.DESTINATION, destinationName)
-				.send();
-
-		// play sound effect
-		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
-
 		return true;
 	}
 

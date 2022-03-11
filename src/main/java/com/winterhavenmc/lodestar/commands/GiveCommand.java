@@ -38,8 +38,9 @@ final class GiveCommand extends SubcommandAbstract {
 
 
 	GiveCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "give";
+		this.permissionNode = "lodestar.give";
 		this.usageString = "/lodestar give <player> [quantity] [material] [destination_name]";
 		this.description = MessageId.COMMAND_HELP_GIVE;
 		this.minArgs = 1;
@@ -48,7 +49,7 @@ final class GiveCommand extends SubcommandAbstract {
 
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command,
-									  final String alias, final String[] args) {
+	                                  final String alias, final String[] args) {
 
 		List<String> returnList = new ArrayList<>();
 
@@ -70,7 +71,7 @@ final class GiveCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// if command sender does not have permission to give LodeStars, output error message and return true
-		if (!sender.hasPermission("lodestar.give")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_GIVE).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -130,8 +131,8 @@ final class GiveCommand extends SubcommandAbstract {
 				return true;
 			}
 
-			Player player = (Player) sender;
-			ItemStack playerItem = player.getInventory().getItemInMainHand().clone();
+			// get clone of item in player hand
+			ItemStack playerItem = ((Player) sender).getInventory().getItemInMainHand().clone();
 
 			// if item in hand is a LodeStar item, set destination and material from item
 			if (plugin.lodeStarFactory.isItem(playerItem)) {

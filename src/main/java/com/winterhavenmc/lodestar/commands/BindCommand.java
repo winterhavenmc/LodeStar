@@ -43,8 +43,9 @@ final class BindCommand extends SubcommandAbstract {
 
 
 	BindCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "bind";
+		this.permissionNode = "lodestar.bind";
 		this.usageString ="/lodestar bind <destination name>";
 		this.description = MessageId.COMMAND_HELP_BIND;
 		this.minArgs = 1;
@@ -73,7 +74,7 @@ final class BindCommand extends SubcommandAbstract {
 		}
 
 		// check sender has permission
-		if (!sender.hasPermission("lodestar.bind")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_BIND).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -93,7 +94,7 @@ final class BindCommand extends SubcommandAbstract {
 		// join remaining arguments into destination name
 		String destinationName = String.join(" ", args);
 
-		// test that destination exists
+		// check if destination exists
 		if (!Destination.exists(destinationName)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
@@ -130,6 +131,14 @@ final class BindCommand extends SubcommandAbstract {
 		Optional<Destination> destination = plugin.dataStore.selectRecord(destinationName);
 		if (destination.isPresent()) {
 			destinationName = destination.get().getDisplayName();
+		}
+
+		if ("spawn".equalsIgnoreCase(destinationName)) {
+			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
+		}
+
+		else if ("home".equalsIgnoreCase(destinationName)) {
+			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 		}
 
 		// set destination in item lore

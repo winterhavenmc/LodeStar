@@ -29,6 +29,7 @@ abstract class SubcommandAbstract implements Subcommand {
 
 	protected String name;
 	protected Collection<String> aliases = new HashSet<>();
+	protected String permissionNode;
 	protected String usageString;
 	protected MessageId description;
 	protected int minArgs;
@@ -38,6 +39,11 @@ abstract class SubcommandAbstract implements Subcommand {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String getPermissionNode() {
+		return permissionNode;
 	}
 
 	@Override

@@ -26,7 +26,6 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -36,8 +35,9 @@ final class ListCommand extends SubcommandAbstract {
 
 
 	ListCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "list";
+		this.permissionNode = "lodestar.list";
 		this.usageString = "/lodestar list [page]";
 		this.description = MessageId.COMMAND_HELP_LIST;
 		this.maxArgs = 1;
@@ -48,7 +48,7 @@ final class ListCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// if command sender does not have permission to list destinations, output error message and return true
-		if (!sender.hasPermission("lodestar.list")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_LIST).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;

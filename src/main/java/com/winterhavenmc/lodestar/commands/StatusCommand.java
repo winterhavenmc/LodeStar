@@ -24,7 +24,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.winterhavenmc.lodestar.util.BukkitTime.SECONDS;
 
@@ -44,8 +43,9 @@ final class StatusCommand extends SubcommandAbstract {
 	 * @param plugin reference to plugin main class instance
 	 */
 	StatusCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "status";
+		this.permissionNode = "lodestar.status";
 		this.usageString = "/lodestar status";
 		this.description = MessageId.COMMAND_HELP_STATUS;
 	}
@@ -55,7 +55,7 @@ final class StatusCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// if command sender does not have permission to view status, output error message and return true
-		if (!sender.hasPermission("lodestar.status")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_STATUS).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;

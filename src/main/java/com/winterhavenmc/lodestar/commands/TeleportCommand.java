@@ -29,7 +29,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -39,8 +38,9 @@ final class TeleportCommand extends SubcommandAbstract {
 
 
 	TeleportCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "teleport";
+		this.permissionNode = "lodestar.teleport";
 		this.usageString = "/lodestar teleport <destination name>";
 		this.description = MessageId.COMMAND_HELP_TELEPORT;
 		this.minArgs = 1;
@@ -63,7 +63,7 @@ final class TeleportCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// check for permission
-		if (!sender.hasPermission("lodestar.teleport")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_TELEPORT).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;

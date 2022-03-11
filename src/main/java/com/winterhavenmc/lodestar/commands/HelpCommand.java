@@ -26,7 +26,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 
 final class HelpCommand extends SubcommandAbstract {
@@ -44,9 +44,10 @@ final class HelpCommand extends SubcommandAbstract {
 	 * @param subcommandRegistry reference to subcommand map
 	 */
 	HelpCommand(final PluginMain plugin, final SubcommandRegistry subcommandRegistry) {
-		this.plugin = Objects.requireNonNull(plugin);
-		this.subcommandRegistry = Objects.requireNonNull(subcommandRegistry);
+		this.plugin = plugin;
+		this.subcommandRegistry = subcommandRegistry;
 		this.name = "help";
+		this.permissionNode = "lodestar.help";
 		this.usageString = "/lodestar help [command]";
 		this.description = MessageId.COMMAND_HELP_HELP;
 	}
@@ -58,13 +59,15 @@ final class HelpCommand extends SubcommandAbstract {
 
 		List<String> returnList = new ArrayList<>();
 
+		// return list of subcommands for which sender has permission
 		if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("help")) {
-				for (String subcommand : subcommandRegistry.getKeys()) {
-					if (sender.hasPermission("lodestar." + subcommand)
-							&& subcommand.startsWith(args[1].toLowerCase())
-							&& !subcommand.equalsIgnoreCase("help")) {
-						returnList.add(subcommand);
+				for (String subcommandName : subcommandRegistry.getKeys()) {
+					Optional<Subcommand> subcommand = subcommandRegistry.getSubcommand(subcommandName);
+					if (subcommand.isPresent() && sender.hasPermission(subcommand.get().getPermissionNode())
+							&& subcommandName.startsWith(args[1].toLowerCase())
+							&& !subcommandName.equalsIgnoreCase("help")) {
+						returnList.add(subcommandName);
 					}
 				}
 			}
@@ -78,7 +81,7 @@ final class HelpCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// if command sender does not have permission to display help, output error message and return true
-		if (!sender.hasPermission("lodestar.help")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_HELP).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -91,7 +94,7 @@ final class HelpCommand extends SubcommandAbstract {
 		}
 
 		// display subcommand help message or invalid command message
-		subcommandRegistry.getCommand(args.get(0)).ifPresentOrElse(
+		subcommandRegistry.getSubcommand(args.get(0)).ifPresentOrElse(
 				subcommand -> sendCommandHelpMessage(sender, subcommand),
 				() -> sendCommandInvalidMessage(sender)
 		);
@@ -126,14 +129,13 @@ final class HelpCommand extends SubcommandAbstract {
 
 	/**
 	 * Display usage message for all commands
+	 *
 	 * @param sender the command sender
 	 */
 	void displayUsageAll(final CommandSender sender) {
-
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_HELP_USAGE_HEADER).send();
-
 		for (String subcommandName : subcommandRegistry.getKeys()) {
-			subcommandRegistry.getCommand(subcommandName).ifPresent(subcommand -> subcommand.displayUsage(sender));
+			subcommandRegistry.getSubcommand(subcommandName).ifPresent(subcommand -> subcommand.displayUsage(sender));
 		}
 	}
 

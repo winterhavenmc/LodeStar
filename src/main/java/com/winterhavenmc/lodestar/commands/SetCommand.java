@@ -30,7 +30,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -40,8 +39,9 @@ final class SetCommand extends SubcommandAbstract {
 
 
 	SetCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "set";
+		this.permissionNode = "lodestar.set";
 		this.usageString = "/lodestar set <destination_name>";
 		this.description = MessageId.COMMAND_HELP_SET;
 		this.minArgs = 1;
@@ -70,7 +70,7 @@ final class SetCommand extends SubcommandAbstract {
 		}
 
 		// check for permission
-		if (!sender.hasPermission("lodestar.set")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_SET).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -84,8 +84,8 @@ final class SetCommand extends SubcommandAbstract {
 			return true;
 		}
 
-		Player player = (Player) sender;
-		Location location = player.getLocation();
+		// get player location
+		Location location = ((Player) sender).getLocation();
 
 		// set destinationName to passed argument
 		String destinationName = String.join(" ", args);
@@ -99,16 +99,14 @@ final class SetCommand extends SubcommandAbstract {
 			return true;
 		}
 
-		// check if destination name exists and if so, check if player has overwrite permission
+		// get optional destination from data store
 		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
 
 		// check for overwrite permission if destination already exists
-		if (optionalDestination.isPresent() && sender.hasPermission("lodestar.set.overwrite")) {
+		if (optionalDestination.isPresent() && sender.hasPermission(permissionNode + ".overwrite")) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
-
-			// play sound effect
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

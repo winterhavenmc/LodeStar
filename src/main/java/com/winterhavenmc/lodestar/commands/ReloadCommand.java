@@ -24,7 +24,6 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -41,8 +40,9 @@ final class ReloadCommand extends SubcommandAbstract {
 	 * @param plugin reference to plugin main class instance
 	 */
 	ReloadCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "reload";
+		this.permissionNode = "lodestar.reload";
 		this.usageString = "/lodestar reload";
 		this.description = MessageId.COMMAND_HELP_RELOAD;
 	}
@@ -52,7 +52,7 @@ final class ReloadCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// if sender does not have permission to reload config, send error message and return true
-		if (!sender.hasPermission("lodestar.reload")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_RELOAD).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;

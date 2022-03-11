@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Objects;
 
 
 final class DestroyCommand extends SubcommandAbstract {
@@ -36,8 +35,9 @@ final class DestroyCommand extends SubcommandAbstract {
 
 
 	DestroyCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+		this.plugin = plugin;
 		this.name = "destroy";
+		this.permissionNode = "lodestar.destroy";
 		this.usageString = "/lodestar destroy";
 		this.description = MessageId.COMMAND_HELP_DESTROY;
 	}
@@ -53,7 +53,7 @@ final class DestroyCommand extends SubcommandAbstract {
 		}
 
 		// check that sender has permission
-		if (!sender.hasPermission("lodestar.destroy")) {
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_DESTROY).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -72,17 +72,32 @@ final class DestroyCommand extends SubcommandAbstract {
 			return true;
 		}
 
-		int quantity = playerItem.getAmount();
-		String destinationName = plugin.lodeStarFactory.getDestinationName(playerItem);
-		playerItem.setAmount(0);
-		player.getInventory().setItemInMainHand(playerItem);
+		// destroy item stack, getting number of items destroyed
+		int quantity = destroyItemStack(player, playerItem);
+
+		// send item destroyed message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
 				.setMacro(Macro.ITEM_QUANTITY, quantity)
-				.setMacro(Macro.DESTINATION, destinationName)
+				.setMacro(Macro.DESTINATION, plugin.lodeStarFactory.getDestinationName(playerItem))
 				.send();
 		plugin.soundConfig.playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
 
 		return true;
+	}
+
+
+	/**
+	 * Set item stack quantity to zero
+	 *
+	 * @param player the player whose item stack is to be destroyed
+	 * @param playerItem the itemstack to destroy
+	 * @return the number of items destroyed
+	 */
+	private int destroyItemStack(final Player player, final ItemStack playerItem) {
+		int quantity = playerItem.getAmount();
+		playerItem.setAmount(0);
+		player.getInventory().setItemInMainHand(playerItem);
+		return quantity;
 	}
 
 }
