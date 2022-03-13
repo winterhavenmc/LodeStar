@@ -34,6 +34,9 @@ particle-effects: true
 # play sound effects
 sound-effects: true
 
+# display titles
+titles-enabled: true
+
 # lightning strike at destination on use
 lightning: false
 

@@ -285,11 +285,13 @@ MESSAGES:
 
   TELEPORT_SUCCESS:
     enabled: true
-    string: '&3Con éxito teletransportado a &b%DESTINATION%.'
+    message: '&3Con éxito teletransportado a &b%DESTINATION%.'
+    title: '&b%DESTINATION%'
 
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
-    string: '&3Volviendo al origen de &b%WORLD%.'
+    message: '&3Volviendo al origen de &b%WORLD%.'
+    title: '&b%DESTINATION%'
 
   TELEPORT_WARMUP:
     enabled: true

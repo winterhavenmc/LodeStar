@@ -5,7 +5,7 @@ import com.winterhavenmc.lodestar.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.DataStore;
-import com.winterhavenmc.lodestar.teleport.TeleportManager;
+import com.winterhavenmc.lodestar.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.util.LodeStarFactory;
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import com.winterhavenmc.util.soundconfig.SoundConfiguration;
@@ -29,7 +29,7 @@ public final class PluginMain extends JavaPlugin {
 
 	public MessageBuilder<MessageId, Macro> messageBuilder;
 	public DataStore dataStore;
-	public TeleportManager teleportManager;
+	public TeleportHandler teleportHandler;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public CommandManager commandManager;
@@ -77,7 +77,7 @@ public final class PluginMain extends JavaPlugin {
 		dataStore = DataStore.connect(this);
 
 		// instantiate teleport manager
-		teleportManager = new TeleportManager(this);
+		teleportHandler = new TeleportHandler(this);
 
 		// instantiate command manager
 		commandManager = new CommandManager(this);

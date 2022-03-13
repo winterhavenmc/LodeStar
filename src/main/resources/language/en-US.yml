@@ -63,7 +63,7 @@ MESSAGES:
 
   COMMAND_FAIL_DELETE_RESERVED:
     enabled: true
-    string: '&3[LodeStar]&c Destination &6%DESTINATION%&c cannot be deleted!'
+    string: '&3[LodeStar]&c Built-in destination &6%DESTINATION%&c cannot be deleted!'
 
   COMMAND_FAIL_GIVE_INVENTORY_FULL:
     enabled: true
@@ -287,11 +287,13 @@ MESSAGES:
 
   TELEPORT_SUCCESS:
     enabled: true
-    string: '&3Successfully teleported to &b%DESTINATION%&r&3.'
+    message: '&3Successfully teleported to &b%DESTINATION%&r&3.'
+    title: '&b%DESTINATION%'
 
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
-    string: '&3Returned to &b%WORLD% spawn&3.'
+    message: '&3Returned to &b%WORLD% spawn&3.'
+    title: '&b%DESTINATION%'
 
   TELEPORT_WARMUP:
     enabled: true

@@ -20,9 +20,9 @@ package com.winterhavenmc.lodestar.teleport;
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
-
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -44,6 +44,7 @@ final class DelayedTeleportTask extends BukkitRunnable {
 	private final ItemStack playerItem;
 	private Location location;
 	private BukkitTask particleTask;
+
 
 	/**
 	 * Class constructor method
@@ -80,10 +81,10 @@ final class DelayedTeleportTask extends BukkitRunnable {
 		particleTask.cancel();
 
 		// if player is in warmup map
-		if (plugin.teleportManager.isWarmingUp(player)) {
+		if (plugin.teleportHandler.isWarmingUp(player)) {
 
 			// remove player from warmup map
-			plugin.teleportManager.removePlayer(player);
+			plugin.teleportHandler.removeWarmingUpPlayer(player);
 
 			// if destination is spawn, get spawn location from world manager
 			if (destination.isSpawn()) {
@@ -109,7 +110,7 @@ final class DelayedTeleportTask extends BukkitRunnable {
 				if (!wasRemoved) {
 					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_NO_ITEM).send();
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
-					plugin.teleportManager.setPlayerCooldown(player);
+					plugin.teleportHandler.startPlayerCooldown(player);
 					return;
 				}
 			}
@@ -141,7 +142,7 @@ final class DelayedTeleportTask extends BukkitRunnable {
 			}
 
 			// set player cooldown
-			plugin.teleportManager.setPlayerCooldown(player);
+			plugin.teleportHandler.startPlayerCooldown(player);
 		}
 	}
 

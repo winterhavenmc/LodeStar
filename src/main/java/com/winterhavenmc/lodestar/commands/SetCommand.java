@@ -31,6 +31,8 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 final class SetCommand extends SubcommandAbstract {
@@ -53,7 +55,12 @@ final class SetCommand extends SubcommandAbstract {
 									  final String alias, final String[] args) {
 
 		if (args.length == 2) {
-			return plugin.dataStore.selectAllKeys();
+
+			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
+
+			return plugin.dataStore.selectAllKeys().stream()
+					.filter(startsWith)
+					.collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();

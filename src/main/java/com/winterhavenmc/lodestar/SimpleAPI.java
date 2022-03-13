@@ -207,13 +207,40 @@ public final class SimpleAPI {
 
 
 	/**
-	 * get destination name from passed item stack
+	 * get destination display name for persistent key stored in item stack<br>
+	 * Matching is case-insensitive. Reserved names are tried first.
 	 *
 	 * @param itemStack the item stack from which to get name
-	 * @return String destination name
+	 * @return String destination display name, or null if no matching destination found
 	 */
 	public static String getDestinationName(final ItemStack itemStack) {
-		return Destination.getDisplayName(itemStack);
+
+		// get persistent key from item stack
+		String key = plugin.lodeStarFactory.getKey(itemStack);
+
+		// if item stack persistent key is null, return null
+		if (key == null) {
+			return null;
+		}
+
+		String resultString = null;
+
+		// if key matches spawn key, get spawn display name from language file
+		if (Destination.isSpawn(key)) {
+			resultString = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
+		}
+
+		// if destination is home, get home display name from messages file
+		else if (Destination.isHome(key)) {
+			resultString = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
+		}
+
+		// else get destination name from datastore
+		else if (plugin.dataStore.selectRecord(key).isPresent()) {
+			resultString = plugin.dataStore.selectRecord(key).get().getDisplayName();
+		}
+
+		return resultString;
 	}
 
 
@@ -297,29 +324,7 @@ public final class SimpleAPI {
 	 * @return Boolean - {@code true} if player is warming up, {@code false} if not
 	 */
 	public static Boolean isWarmingUp(final Player player) {
-		return plugin.teleportManager.isWarmingUp(player);
-	}
-
-
-	/**
-	 * Check if a player is currently cooling down for item use
-	 *
-	 * @param player the player to check
-	 * @return Boolean - {@code true} if player is cooling down, {@code false} if not
-	 */
-	public static Boolean isCoolingDown(final Player player) {
-		return plugin.teleportManager.isCoolingDown(player);
-	}
-
-
-	/**
-	 * Get a player's cooldown time remaining for item use
-	 *
-	 * @param player the player to check
-	 * @return long - cooldown time remaining in milliseconds
-	 */
-	public static long cooldownTimeRemaining(final Player player) {
-		return plugin.teleportManager.getCooldownTimeRemaining(player);
+		return plugin.teleportHandler.isWarmingUp(player);
 	}
 
 
@@ -329,16 +334,6 @@ public final class SimpleAPI {
 	 * @return List of Strings containing enabled world names
 	 */
 	public static List<String> getEnabledWorlds() {
-		return getEnabledWorldsList();
-	}
-
-
-	/**
-	 * Get List of String containing world names where plugin is enabled
-	 *
-	 * @return List of Strings containing enabled world names
-	 */
-	public static List<String> getEnabledWorldsList() {
 		return new ArrayList<>(plugin.worldManager.getEnabledWorldNames());
 	}
 
@@ -359,7 +354,7 @@ public final class SimpleAPI {
 	 * @param player the player to cancel teleporting
 	 */
 	public static void cancelTeleport(final Player player) {
-		plugin.teleportManager.cancelTeleport(player);
+		plugin.teleportHandler.cancelTeleport(player);
 	}
 
 

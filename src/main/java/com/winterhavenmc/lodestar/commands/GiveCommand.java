@@ -26,10 +26,13 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 final class GiveCommand extends SubcommandAbstract {
@@ -51,19 +54,20 @@ final class GiveCommand extends SubcommandAbstract {
 	public List<String> onTabComplete(final CommandSender sender, final Command command,
 	                                  final String alias, final String[] args) {
 
-		List<String> returnList = new ArrayList<>();
-
 		if (args.length == 2) {
-			for (Player player : plugin.getServer().getOnlinePlayers()) {
-				returnList.add(player.getName());
-			}
+
+			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
+
+			return plugin.getServer().getOnlinePlayers().stream()
+					.map(HumanEntity::getName)
+					.filter(startsWith).collect(Collectors.toList());
 		}
 
 		else if (args.length == 3) {
 			return plugin.dataStore.selectAllKeys();
 		}
 
-		return returnList;
+		return Collections.emptyList();
 	}
 
 

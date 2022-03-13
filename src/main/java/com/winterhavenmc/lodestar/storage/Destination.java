@@ -287,22 +287,23 @@ public final class Destination {
 	 */
 	public static String deriveKey(final String destinationName) {
 
-		// validate parameter
-		Objects.requireNonNull(destinationName);
-
-		// copy passed in destination name to derivedKey
-		String derivedKey = destinationName;
-
-		// translate alternate color codes
-		derivedKey = ChatColor.translateAlternateColorCodes('&', derivedKey);
-
-		// strip all color codes
-		derivedKey = ChatColor.stripColor(derivedKey);
-
-		// replace spaces with underscores
-		derivedKey = derivedKey.replace(' ', '_');
-
-		return derivedKey;
+		return plugin.lodeStarFactory.deriveKey(destinationName);
+//		// validate parameter
+//		Objects.requireNonNull(destinationName);
+//
+//		// copy passed in destination name to derivedKey
+//		String derivedKey = destinationName;
+//
+//		// translate alternate color codes
+//		derivedKey = ChatColor.translateAlternateColorCodes('&', derivedKey);
+//
+//		// strip all color codes
+//		derivedKey = ChatColor.stripColor(derivedKey);
+//
+//		// replace spaces with underscores
+//		derivedKey = derivedKey.replace(' ', '_');
+//
+//		return derivedKey;
 	}
 
 
@@ -315,8 +316,8 @@ public final class Destination {
 	 */
 	public static boolean exists(final String key) {
 
-		// if parameter is null or empty string, return false
-		if (key == null || key.isEmpty()) {
+		// if parameter is null or blank string, return false
+		if (key == null || key.isBlank()) {
 			return false;
 		}
 
@@ -335,8 +336,8 @@ public final class Destination {
 	 */
 	public static boolean isReserved(final String key) {
 
-		// if parameter is null or empty string, return false
-		if (key == null || key.isEmpty()) {
+		// if parameter is null or blank string, return false
+		if (key == null || key.isBlank()) {
 			return false;
 		}
 
@@ -354,15 +355,18 @@ public final class Destination {
 	 */
 	public static boolean isHome(final String key) {
 
-		// if parameter is null or empty string, return false
-		if (key == null || key.isEmpty()) {
+		// if key is null or blank string, return false
+		if (key == null || key.isBlank()) {
 			return false;
 		}
 
-		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
-		String derivedKey = Destination.deriveKey(key);
-		return derivedKey.equalsIgnoreCase("home")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+		// if key is literal string "home", return true
+		if (key.equalsIgnoreCase("home")) {
+			return true;
+		}
+
+		// if key matches configured home display name, return true; otherwise return false
+		return key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("home")));
 	}
 
 
@@ -375,15 +379,18 @@ public final class Destination {
 	 */
 	public static boolean isSpawn(final String key) {
 
-		// if parameter is null or empty string, return false
-		if (key == null || key.isEmpty()) {
+		// if key is null or blank string, return false
+		if (key == null || key.isBlank()) {
 			return false;
 		}
 
-		// derive key from destination name to normalize string (strip colors, replace spaces with underscores)
-		String derivedKey = Destination.deriveKey(key);
-		return derivedKey.equalsIgnoreCase("spawn")
-				|| derivedKey.equalsIgnoreCase(Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Home")));
+		// if key is literal string "spawn" return true
+		if (key.equalsIgnoreCase("spawn")) {
+			return true;
+		}
+
+		// if key matches configured spawn display name, return true; otherwise return false
+		return key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("spawn")));
 	}
 
 
@@ -409,44 +416,6 @@ public final class Destination {
 
 		// else try to get destination name from datastore
 		return plugin.dataStore.selectRecord(Destination.deriveKey(key)).map(Destination::getDisplayName).orElse(null);
-	}
-
-
-	/**
-	 * get destination display name for persistent key stored in item stack<br>
-	 * Matching is case-insensitive. Reserved names are tried first.
-	 *
-	 * @param itemStack the item stack from which to get name
-	 * @return String destination display name, or null if no matching destination found
-	 */
-	public static String getDisplayName(final ItemStack itemStack) {
-
-		// get persistent key from item stack
-		String key = plugin.lodeStarFactory.getKey(itemStack);
-
-		// if item stack persistent key is null, return null
-		if (key == null) {
-			return null;
-		}
-
-		String resultString = null;
-
-		// if key matches spawn key, get spawn display name from language file
-		if (isSpawn(key)) {
-			resultString = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-		}
-
-		// if destination is home, get home display name from messages file
-		else if (isHome(key)) {
-			resultString = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-		}
-
-		// else get destination name from datastore
-		else if (plugin.dataStore.selectRecord(key).isPresent()) {
-			resultString = plugin.dataStore.selectRecord(key).get().getDisplayName();
-		}
-
-		return resultString;
 	}
 
 }

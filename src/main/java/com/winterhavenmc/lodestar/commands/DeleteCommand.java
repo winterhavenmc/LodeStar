@@ -27,6 +27,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 final class DeleteCommand extends SubcommandAbstract {
@@ -50,7 +52,13 @@ final class DeleteCommand extends SubcommandAbstract {
 									  final String alias, final String[] args) {
 
 		if (args.length == 2) {
-			return plugin.dataStore.selectAllKeys();
+
+			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
+
+			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
+			resultList.add(0, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			resultList.add(0, plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+			return resultList.stream().filter(startsWith).collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();

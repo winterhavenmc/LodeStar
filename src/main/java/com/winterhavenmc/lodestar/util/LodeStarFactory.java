@@ -47,9 +47,6 @@ public final class LodeStarFactory {
 			ItemFlag.HIDE_ENCHANTS,
 			ItemFlag.HIDE_UNBREAKABLE);
 
-	// the proto item
-	private ItemStack protoItem;
-
 
 	/**
 	 * class constructor
@@ -59,8 +56,6 @@ public final class LodeStarFactory {
 	public LodeStarFactory(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
-		this.protoItem = getDefaultItemStack();
-		setMetaData(this.protoItem, "");
 	}
 
 
@@ -85,11 +80,11 @@ public final class LodeStarFactory {
 	public ItemStack create(final String destinationName, final int quantity) {
 
 		// clone proto item
-		ItemStack newItem = protoItem.clone();
+		ItemStack newItem = getDefaultItemStack();
 
 		// validate quantity is between 1 and max item stack size
 		int newQuantity = Math.max(1, quantity);
-		newQuantity = Math.min(newQuantity, protoItem.getMaxStackSize());
+		newQuantity = Math.min(newQuantity, newItem.getMaxStackSize());
 
 		// if configured max give quantity is positive, validate quantity
 		if (plugin.getConfig().getInt("max-give-amount") > 0) {
@@ -315,15 +310,6 @@ public final class LodeStarFactory {
 
 
 	/**
-	 * Reload plugin's LodeStarFactory. Replaces existing plugin.LodeStarFactory with new instance.
-	 */
-	public void reload() {
-		this.protoItem = getDefaultItemStack();
-		setMetaData(this.protoItem, "");
-	}
-
-
-	/**
 	 * Derive key from destination display name<br>
 	 * strips color codes and replaces spaces with underscores<br>
 	 * if a destination key is passed, it will be returned unaltered
@@ -334,7 +320,9 @@ public final class LodeStarFactory {
 	public String deriveKey(final String destinationName) {
 
 		// validate parameter
-		Objects.requireNonNull(destinationName);
+		if (destinationName == null || destinationName.isBlank()) {
+			return "";
+		}
 
 		// copy passed in destination name to derivedKey
 		String derivedKey = destinationName;
