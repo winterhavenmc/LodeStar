@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
+final class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
 
 	private final TeleportExecutor teleportExecutor;
 
@@ -102,7 +102,7 @@ class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
 	 * @return {@link Optional} wrapped spawn location of the normal world associated with the passed player
 	 * nether or end world, or the current player world spawn location if no matching normal world found
 	 */
-	protected Optional<Location> getOverworldSpawnLocation(final Player player) {
+	private Optional<Location> getOverworldSpawnLocation(final Player player) {
 
 		// check for null parameter
 		if (player == null) {
@@ -144,7 +144,7 @@ class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
 	 * @param player the player
 	 * @return true if player is in a nether world, false if not
 	 */
-	protected boolean isInNetherWorld(final Player player) {
+	private boolean isInNetherWorld(final Player player) {
 		return player.getWorld().getEnvironment().equals(World.Environment.NETHER);
 	}
 
@@ -155,7 +155,7 @@ class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
 	 * @param player the player
 	 * @return true if player is in an end world, false if not
 	 */
-	protected boolean isInEndWorld(final Player player) {
+	private boolean isInEndWorld(final Player player) {
 		return player.getWorld().getEnvironment().equals(World.Environment.THE_END);
 	}
 

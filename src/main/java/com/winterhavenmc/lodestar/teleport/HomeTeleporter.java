@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 
-class HomeTeleporter extends AbstractTeleporter implements Teleporter {
+final class HomeTeleporter extends AbstractTeleporter implements Teleporter {
 
 	private final TeleportExecutor teleportExecutor;
 

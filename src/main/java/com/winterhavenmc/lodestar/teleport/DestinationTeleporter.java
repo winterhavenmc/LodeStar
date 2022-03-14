@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 
-class DestinationTeleporter extends AbstractTeleporter implements Teleporter {
+final class DestinationTeleporter extends AbstractTeleporter implements Teleporter {
 
 	private final TeleportExecutor teleportExecutor;
 
