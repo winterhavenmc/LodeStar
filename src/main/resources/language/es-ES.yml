@@ -286,12 +286,12 @@ MESSAGES:
   TELEPORT_SUCCESS:
     enabled: true
     message: '&3Con éxito teletransportado a &b%DESTINATION%.'
-    title: '&b%DESTINATION%'
+    subtitle: '&b%DESTINATION%'
 
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
     message: '&3Volviendo al origen de &b%WORLD%.'
-    title: '&b%DESTINATION%'
+    subtitle: '&b%WORLD% %DESTINATION%'
 
   TELEPORT_WARMUP:
     enabled: true
