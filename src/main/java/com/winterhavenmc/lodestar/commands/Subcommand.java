@@ -38,12 +38,6 @@ interface Subcommand {
 
 	Collection<String> getAliases();
 
-	@SuppressWarnings("unused")
-	void addAlias(final String alias);
-
-	@SuppressWarnings("unused")
-	String getUsage();
-
 	void displayUsage(final CommandSender sender);
 
 	MessageId getDescription();

@@ -52,16 +52,6 @@ abstract class SubcommandAbstract implements Subcommand {
 	}
 
 	@Override
-	public void addAlias(final String alias) {
-		this.aliases.add(alias);
-	}
-
-	@Override
-	public String getUsage() {
-		return usageString;
-	}
-
-	@Override
 	public void displayUsage(final CommandSender sender) {
 		sender.sendMessage(usageString);
 	}
