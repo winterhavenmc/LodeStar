@@ -25,6 +25,7 @@ import com.winterhavenmc.lodestar.storage.Destination;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -75,6 +76,27 @@ class TeleportExecutor {
 				.runTaskLater(plugin, SECONDS.toTicks(plugin.getConfig().getLong("teleport-warmup")));
 
 		// if configured warmup time is greater than zero, send warmup message
+		sendWarmupMessage(player, destination, messageId);
+
+		// insert player and taskId into warmup hashmap
+		warmupMap.startPlayerWarmUp(player, teleportTask.getTaskId());
+
+		// load destination chunk if not already loaded
+		loadDestinationChunk(destination);
+
+		// if log-use is enabled in config, write log entry
+		logUsage(player, destination);
+	}
+
+
+	/**
+	 * Send teleport warmup message if warmup time is greater than zero
+	 *
+	 * @param player the teleporting player
+	 * @param destination the teleport destination
+	 * @param messageId the message identifier
+	 */
+	private void sendWarmupMessage(Player player, Destination destination, MessageId messageId) {
 		long warmupTime = plugin.getConfig().getLong("teleport-warmup");
 		if (warmupTime > 0) {
 			plugin.messageBuilder.compose(player, messageId)
@@ -86,15 +108,6 @@ class TeleportExecutor {
 			// if enabled, play teleport warmup sound effect
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_WARMUP);
 		}
-
-		// insert player and taskId into warmup hashmap
-		warmupMap.startPlayerWarmUp(player, teleportTask.getTaskId());
-
-		// load destination chunk if not already loaded
-		loadDestinationChunk(destination);
-
-		// if log-use is enabled in config, write log entry
-		logUsage(player);
 	}
 
 
@@ -116,22 +129,6 @@ class TeleportExecutor {
 
 
 	/**
-	 * Log teleport item use
-	 *
-	 * @param player the player being logged as using a lodestar item
-	 */
-	private void logUsage(final Player player) {
-		if (plugin.getConfig().getBoolean("log-use")) {
-
-			// write message to log
-			plugin.getLogger().info(player.getName() + ChatColor.RESET + " used a "
-					+ plugin.messageBuilder.getItemName() + ChatColor.RESET + " in "
-					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
-		}
-	}
-
-
-	/**
 	 * Check if player is within configured minimum distance from destination
 	 *
 	 * @param player      the player
@@ -143,6 +140,28 @@ class TeleportExecutor {
 				&& destination.getLocation().getWorld() != null
 				&& player.getWorld().equals(destination.getLocation().getWorld())
 				&& player.getLocation().distanceSquared(destination.getLocation()) < Math.pow(plugin.getConfig().getInt("minimum-distance"), 2);
+	}
+
+
+	/**
+	 * Log teleport item use
+	 *
+	 * @param player the player being logged as using a lodestar item
+	 */
+	private void logUsage(final Player player, final Destination destination) {
+		if (plugin.getConfig().getBoolean("log-use")) {
+
+			CommandSender console = plugin.getServer().getConsoleSender();
+
+			// get destination name
+			String destinationName = destination.getDisplayName();
+
+			// write message to log
+			console.sendMessage(player.getName() + ChatColor.RESET + " used a "
+					+ plugin.messageBuilder.getItemName() + ChatColor.RESET  + " to "
+					+ ChatColor.AQUA + destinationName + ChatColor.RESET + " in "
+					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
+		}
 	}
 
 }

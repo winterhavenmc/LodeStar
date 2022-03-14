@@ -57,15 +57,13 @@ class DestinationTeleporter implements Teleporter {
 		// get destination for key
 		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
 
+		// if destination is valid, execute teleport
 		if (optionalDestination.isPresent()) {
 
 			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-			String removeItem = plugin.getConfig().getString("remove-from-inventory");
-			if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
-				playerItem.setAmount(playerItem.getAmount() - 1);
-				player.getInventory().setItemInMainHand(playerItem);
-			}
+			plugin.teleportHandler.removeFromInventory(player, playerItem);
 
+			// execute teleport
 			execute(player, optionalDestination.get(), playerItem, MessageId.TELEPORT_WARMUP);
 		}
 		else {

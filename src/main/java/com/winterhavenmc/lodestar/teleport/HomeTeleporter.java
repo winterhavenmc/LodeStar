@@ -57,14 +57,11 @@ class HomeTeleporter implements Teleporter {
 
 		if (optionalDestination.isPresent()) {
 
+			// get location from destination
 			Location location = optionalDestination.get().getLocation();
 
 			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-			String removeItem = plugin.getConfig().getString("remove-from-inventory");
-			if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
-				playerItem.setAmount(playerItem.getAmount() - 1);
-				player.getInventory().setItemInMainHand(playerItem);
-			}
+			plugin.teleportHandler.removeFromInventory(player, playerItem);
 
 			// create final destination object
 			Destination finalDestination = new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location);
@@ -89,7 +86,6 @@ class HomeTeleporter implements Teleporter {
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 		}
 	}
-
 
 	@Override
 	public void execute(final Player player, final Destination finalDestination, final ItemStack playerItem, final MessageId messageId) {

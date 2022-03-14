@@ -24,6 +24,7 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
@@ -36,10 +37,10 @@ public final class TeleportHandler {
 	// reference to main class
 	private final PluginMain plugin;
 
-	// HashMap containing player UUID as key and warmup task id as value
+	// map containing player UUID as key and warmup task id as value
 	private final WarmupMap warmupMap;
 
-	// hashmap to store player UUID and cooldown expire time in milliseconds
+	// map to store player UUID and cooldown expire time in milliseconds
 	private final CooldownMap cooldownMap;
 
 
@@ -211,6 +212,21 @@ public final class TeleportHandler {
 
 		// return destination for player spawn
 		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location));
+	}
+
+
+	/**
+	 * remove one lode star item from player inventory
+	 * @param player     the player
+	 * @param playerItem the item
+	 */
+	void removeFromInventory(Player player, ItemStack playerItem) {
+		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
+		String removeItem = plugin.getConfig().getString("remove-from-inventory");
+		if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
+			playerItem.setAmount(playerItem.getAmount() - 1);
+			player.getInventory().setItemInMainHand(playerItem);
+		}
 	}
 
 }
