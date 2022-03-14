@@ -19,9 +19,6 @@ package com.winterhavenmc.lodestar;
 
 import com.winterhavenmc.lodestar.storage.Destination;
 
-import org.bukkit.Material;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -128,27 +125,6 @@ public final class SimpleAPI {
 	 */
 	public static boolean isValidDestination(final String destinationName) {
 		return Destination.exists(destinationName);
-	}
-
-
-	/**
-	 * Check if a string is a valid destination name
-	 * <ul>
-	 *     <li>destination name must not be null</li>
-	 *     <li>destination name must not be blank</li>
-	 *     <li>destination name must not start with a digit</li>
-	 *     <li>destination name must not contain a colon</li>
-	 * </ul>
-	 *
-	 * @param destinationName the destination name to test for validity
-	 * @return {@code true} if destination name is a valid name, {@code false} if it is not
-	 */
-	public static boolean isAllowedName(final String destinationName) {
-
-		return !(destinationName == null
-				|| destinationName.isBlank()
-				|| destinationName.matches("^\\d.*")
-				|| destinationName.matches(".*:.*"));
 	}
 
 
@@ -364,46 +340,7 @@ public final class SimpleAPI {
 	 * @return ItemStack
 	 */
 	public static ItemStack getDefaultItem() {
-
-		// get configured material
-		String configMaterial = plugin.getConfig().getString("default-material");
-
-		// if no configuration for default material, set string to NETHER_STAR
-		if (configMaterial == null) {
-			configMaterial = "NETHER_STAR";
-		}
-
-		// try to match material
-		Material material = Material.matchMaterial(configMaterial);
-
-		// if no match, set material type to NETHER_STAR
-		if (material == null) {
-			material = Material.NETHER_STAR;
-		}
-
-		// create a one item stack with configured material
-		return new ItemStack(material, 1);
-	}
-
-
-	/**
-	 * Get location centered on x,z coordinates from a block location (where coordinates are integers)
-	 *
-	 * @param location the integer block location to center
-	 * @return Location the centered on block location
-	 */
-	public static Location getBlockCenteredLocation(final Location location) {
-
-		// if location is null, return null
-		if (location == null) {
-			return null;
-		}
-
-		final World world = location.getWorld();
-		int x = location.getBlockX();
-		int y = (int) Math.round(location.getY());
-		int z = location.getBlockZ();
-		return new Location(world, x + 0.5, y, z + 0.5, location.getYaw(), location.getPitch());
+		return plugin.lodeStarFactory.getDefaultItemStack();
 	}
 
 }
