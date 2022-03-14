@@ -288,12 +288,12 @@ MESSAGES:
   TELEPORT_SUCCESS:
     enabled: true
     message: '&3Successfully teleported to &b%DESTINATION%&r&3.'
-    title: '&b%DESTINATION%'
+    subtitle: '&b%DESTINATION%'
 
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
     message: '&3Returned to &b%WORLD% spawn&3.'
-    title: '&b%DESTINATION%'
+    subtitle: '&b%DESTINATION%'
 
   TELEPORT_WARMUP:
     enabled: true
