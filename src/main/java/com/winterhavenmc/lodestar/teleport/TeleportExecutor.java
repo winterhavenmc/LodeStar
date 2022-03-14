@@ -97,7 +97,11 @@ class TeleportExecutor {
 	 * @param messageId the message identifier
 	 */
 	private void sendWarmupMessage(final Player player, final Destination destination, final MessageId messageId) {
+
+		// get configured warmup time
 		long warmupTime = plugin.getConfig().getLong("teleport-warmup");
+
+		// if warmup time is greater than zero, send player warmup message
 		if (warmupTime > 0) {
 			plugin.messageBuilder.compose(player, messageId)
 					.setMacro(Macro.DESTINATION, destination.getDisplayName())
