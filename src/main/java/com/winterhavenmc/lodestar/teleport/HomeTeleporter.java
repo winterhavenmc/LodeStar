@@ -29,14 +29,13 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 
-class HomeTeleporter implements Teleporter {
+class HomeTeleporter extends AbstractTeleporter implements Teleporter {
 
-	private final PluginMain plugin;
 	private final TeleportExecutor teleportExecutor;
 
 
 	HomeTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
-		this.plugin = plugin;
+		super(plugin);
 		this.teleportExecutor = teleportExecutor;
 	}
 
@@ -53,7 +52,7 @@ class HomeTeleporter implements Teleporter {
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// get home destination
-		Optional<Destination> optionalDestination = plugin.teleportHandler.getHomeDestination(player);
+		Optional<Destination> optionalDestination = getHomeDestination(player);
 
 		if (optionalDestination.isPresent()) {
 
@@ -61,7 +60,7 @@ class HomeTeleporter implements Teleporter {
 			Location location = optionalDestination.get().getLocation();
 
 			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-			plugin.teleportHandler.removeFromInventory(player, playerItem);
+			removeFromInventoryOnUse(player, playerItem);
 
 			// create final destination object
 			Destination finalDestination = new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location);
@@ -71,7 +70,7 @@ class HomeTeleporter implements Teleporter {
 		}
 		else if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
 
-			Optional<Destination> spawnDestination = plugin.teleportHandler.getSpawnDestination(player);
+			Optional<Destination> spawnDestination = getSpawnDestination(player);
 			if (spawnDestination.isPresent()) {
 				Teleporter teleporterSpawn = new SpawnTeleporter(plugin, teleportExecutor);
 				teleporterSpawn.initiate(player);

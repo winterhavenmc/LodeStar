@@ -32,14 +32,13 @@ import java.util.List;
 import java.util.Optional;
 
 
-class SpawnTeleporter implements Teleporter {
+class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
 
-	private final PluginMain plugin;
 	private final TeleportExecutor teleportExecutor;
 
 
 	SpawnTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
-		this.plugin = plugin;
+		super(plugin);
 		this.teleportExecutor = teleportExecutor;
 	}
 
@@ -56,7 +55,7 @@ class SpawnTeleporter implements Teleporter {
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// get spawn destination
-		Optional<Destination> optionalDestination = plugin.teleportHandler.getSpawnDestination(player);
+		Optional<Destination> optionalDestination = getSpawnDestination(player);
 
 		if (optionalDestination.isPresent()) {
 
@@ -73,7 +72,7 @@ class SpawnTeleporter implements Teleporter {
 			}
 
 			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-			plugin.teleportHandler.removeFromInventory(player, playerItem);
+			removeFromInventoryOnUse(player, playerItem);
 
 			// create final destination object
 			Destination finalDestination = new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location);

@@ -28,14 +28,13 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 
-class DestinationTeleporter implements Teleporter {
+class DestinationTeleporter extends AbstractTeleporter implements Teleporter {
 
-	private final PluginMain plugin;
 	private final TeleportExecutor teleportExecutor;
 
 
 	DestinationTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
-		this.plugin = plugin;
+		super(plugin);
 		this.teleportExecutor = teleportExecutor;
 	}
 
@@ -61,7 +60,7 @@ class DestinationTeleporter implements Teleporter {
 		if (optionalDestination.isPresent()) {
 
 			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-			plugin.teleportHandler.removeFromInventory(player, playerItem);
+			removeFromInventoryOnUse(player, playerItem);
 
 			// execute teleport
 			execute(player, optionalDestination.get(), playerItem, MessageId.TELEPORT_WARMUP);

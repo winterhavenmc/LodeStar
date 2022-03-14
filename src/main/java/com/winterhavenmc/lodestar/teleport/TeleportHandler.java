@@ -20,13 +20,9 @@ package com.winterhavenmc.lodestar.teleport;
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-
 import com.winterhavenmc.lodestar.storage.Destination;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.Optional;
+import org.bukkit.entity.Player;
 
 
 /**
@@ -160,73 +156,6 @@ public final class TeleportHandler {
 	 */
 	public void removeWarmingUpPlayer(final Player player) {
 		warmupMap.removePlayer(player);
-	}
-
-
-	/**
-	 * Get bedspawn destination for a player
-	 *
-	 * @param player the player
-	 * @return the player bedspawn destination wrapped in an {@link Optional}
-	 */
-	Optional<Destination> getHomeDestination(final Player player) {
-
-		// if player is null, return empty optional
-		if (player == null) {
-			return Optional.empty();
-		}
-
-		// get player bed spawn location
-		Location location = player.getBedSpawnLocation();
-
-		// if location is null, return empty optional
-		if (location == null) {
-			return Optional.empty();
-		}
-
-		// return optional wrapped destination for player bed spawn location
-		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location));
-	}
-
-
-	/**
-	 * Get spawn destination for a player
-	 *
-	 * @param player the player
-	 * @return the player spawn destination wrapped in an {@link Optional}
-	 */
-	Optional<Destination> getSpawnDestination(final Player player) {
-
-		// if player is null, return empty optional
-		if (player == null) {
-			return Optional.empty();
-		}
-
-		// get spawn location for player
-		Location location = plugin.worldManager.getSpawnLocation(player);
-
-		// if location is null, return empty optional
-		if (location == null) {
-			return Optional.empty();
-		}
-
-		// return destination for player spawn
-		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location));
-	}
-
-
-	/**
-	 * remove one lode star item from player inventory
-	 * @param player     the player
-	 * @param playerItem the item
-	 */
-	void removeFromInventory(Player player, ItemStack playerItem) {
-		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-		String removeItem = plugin.getConfig().getString("remove-from-inventory");
-		if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
-			playerItem.setAmount(playerItem.getAmount() - 1);
-			player.getInventory().setItemInMainHand(playerItem);
-		}
 	}
 
 }
