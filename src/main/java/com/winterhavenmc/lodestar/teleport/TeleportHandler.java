@@ -100,7 +100,7 @@ public final class TeleportHandler {
 	 *
 	 * @param player the player being inserted into the cooldown map
 	 */
-	public void startPlayerCooldown(final Player player) {
+	void startPlayerCooldown(final Player player) {
 		cooldownMap.startPlayerCooldown(player);
 	}
 
