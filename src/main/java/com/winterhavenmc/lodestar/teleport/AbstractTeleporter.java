@@ -100,7 +100,7 @@ abstract class AbstractTeleporter {
 	 * @param player     the player
 	 * @param playerItem the item
 	 */
-	final void removeFromInventoryOnUse(Player player, ItemStack playerItem) {
+	final void removeFromInventoryOnUse(final Player player, final ItemStack playerItem) {
 		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
 		String removeItem = plugin.getConfig().getString("remove-from-inventory");
 		if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {

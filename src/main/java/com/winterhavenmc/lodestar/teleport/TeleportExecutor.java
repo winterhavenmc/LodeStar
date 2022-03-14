@@ -96,7 +96,7 @@ class TeleportExecutor {
 	 * @param destination the teleport destination
 	 * @param messageId the message identifier
 	 */
-	private void sendWarmupMessage(Player player, Destination destination, MessageId messageId) {
+	private void sendWarmupMessage(final Player player, final Destination destination, final MessageId messageId) {
 		long warmupTime = plugin.getConfig().getLong("teleport-warmup");
 		if (warmupTime > 0) {
 			plugin.messageBuilder.compose(player, messageId)
