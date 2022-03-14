@@ -18,8 +18,8 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
 import org.bukkit.Location;
@@ -29,41 +29,35 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 
-class TeleporterSpawn extends Teleporter {
+class HomeTeleporter implements Teleporter {
+
+	private final PluginMain plugin;
+	private final TeleportExecutor teleportExecutor;
 
 
-	TeleporterSpawn(final PluginMain plugin, final WarmupMap warmupMap) {
-		super(plugin, warmupMap);
+	HomeTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
+		this.plugin = plugin;
+		this.teleportExecutor = teleportExecutor;
 	}
 
 
 	/**
-	 * Begin teleport to world spawn destination
+	 * Begin teleport to players bedspawn destination
 	 *
 	 * @param player the player to teleport
 	 */
 	@Override
-	void initiate(final Player player) {
+	public void initiate(final Player player) {
 
 		// get player item in hand
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
-		// get spawn destination
-		Optional<Destination> optionalDestination = getSpawnDestination(player);
+		// get home destination
+		Optional<Destination> optionalDestination = plugin.teleportHandler.getHomeDestination(player);
 
 		if (optionalDestination.isPresent()) {
 
-			// get location from destination
 			Location location = optionalDestination.get().getLocation();
-
-			// if from-nether is enabled in config and player is in nether, try to get overworld spawn location
-			if (plugin.getConfig().getBoolean("from-nether") && isInNetherWorld(player)) {
-				location = getOverworldSpawnLocation(player).orElse(location);
-			}
-			// if from-end is enabled in config and player is in end, try to get overworld spawn location
-			else if (plugin.getConfig().getBoolean("from-end") && isInEndWorld(player)) {
-				location = getOverworldSpawnLocation(player).orElse(location);
-			}
 
 			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
 			String removeItem = plugin.getConfig().getString("remove-from-inventory");
@@ -73,17 +67,33 @@ class TeleporterSpawn extends Teleporter {
 			}
 
 			// create final destination object
-			Destination finalDestination = new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location);
+			Destination finalDestination = new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location);
 
 			// initiate delayed teleport for player to final destination
-			execute(player, finalDestination, playerItem, MessageId.TELEPORT_WARMUP_SPAWN);
+			execute(player, finalDestination, playerItem, MessageId.TELEPORT_WARMUP);
+		}
+		else if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
+
+			Optional<Destination> spawnDestination = plugin.teleportHandler.getSpawnDestination(player);
+			if (spawnDestination.isPresent()) {
+				Teleporter teleporterSpawn = new SpawnTeleporter(plugin, teleportExecutor);
+				teleporterSpawn.initiate(player);
+			}
+			else {
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION).send();
+				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
+			}
 		}
 		else {
-			// send invalid destination message
-			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
-					.send();
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN).send();
+			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 		}
+	}
+
+
+	@Override
+	public void execute(final Player player, final Destination finalDestination, final ItemStack playerItem, final MessageId messageId) {
+		teleportExecutor.execute(player, finalDestination, playerItem, messageId);
 	}
 
 }

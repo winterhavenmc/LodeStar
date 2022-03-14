@@ -22,7 +22,10 @@ import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
 import com.winterhavenmc.lodestar.storage.Destination;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 
 /**
@@ -79,17 +82,18 @@ public final class TeleportHandler {
 
 		// if item key is home key, teleport to bed spawn location
 		if (Destination.isHome(key)) {
-			teleporter = new TeleporterHome(plugin, warmupMap);
+			teleporter = new HomeTeleporter(plugin, new TeleportExecutor(plugin, warmupMap));
 		}
 		// if item key is spawn key, teleport to world spawn location
 		else if (Destination.isSpawn(key)) {
-			teleporter = new TeleporterSpawn(plugin, warmupMap);
+			teleporter = new SpawnTeleporter(plugin, new TeleportExecutor(plugin, warmupMap));
 		}
 		// teleport to destination for key
 		else {
-			teleporter = new TeleporterDestination(plugin, warmupMap);
+			teleporter = new DestinationTeleporter(plugin, new TeleportExecutor(plugin, warmupMap));
 		}
 
+		// initiate teleport
 		teleporter.initiate(player);
 	}
 
@@ -99,7 +103,7 @@ public final class TeleportHandler {
 	 *
 	 * @param player the player being inserted into the cooldown map
 	 */
-	void startPlayerCooldown(final Player player) {
+	public void startPlayerCooldown(final Player player) {
 		cooldownMap.startPlayerCooldown(player);
 	}
 
@@ -155,6 +159,58 @@ public final class TeleportHandler {
 	 */
 	public void removeWarmingUpPlayer(final Player player) {
 		warmupMap.removePlayer(player);
+	}
+
+
+	/**
+	 * Get bedspawn destination for a player
+	 *
+	 * @param player the player
+	 * @return the player bedspawn destination wrapped in an {@link Optional}
+	 */
+	Optional<Destination> getHomeDestination(final Player player) {
+
+		// if player is null, return empty optional
+		if (player == null) {
+			return Optional.empty();
+		}
+
+		// get player bed spawn location
+		Location location = player.getBedSpawnLocation();
+
+		// if location is null, return empty optional
+		if (location == null) {
+			return Optional.empty();
+		}
+
+		// return optional wrapped destination for player bed spawn location
+		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location));
+	}
+
+
+	/**
+	 * Get spawn destination for a player
+	 *
+	 * @param player the player
+	 * @return the player spawn destination wrapped in an {@link Optional}
+	 */
+	Optional<Destination> getSpawnDestination(final Player player) {
+
+		// if player is null, return empty optional
+		if (player == null) {
+			return Optional.empty();
+		}
+
+		// get spawn location for player
+		Location location = plugin.worldManager.getSpawnLocation(player);
+
+		// if location is null, return empty optional
+		if (location == null) {
+			return Optional.empty();
+		}
+
+		// return destination for player spawn
+		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location));
 	}
 
 }

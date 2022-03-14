@@ -49,14 +49,11 @@ final class DelayedTeleportTask extends BukkitRunnable {
 	/**
 	 * Class constructor method
 	 *
-	 * @param player the player to be teleported
+	 * @param player      the player to be teleported
 	 * @param destination the teleport destination
-	 * @param playerItem the item used to initiate teleport
+	 * @param playerItem  the item used to initiate teleport
 	 */
-	DelayedTeleportTask(final PluginMain plugin,
-						final Player player,
-						final Destination destination,
-						final ItemStack playerItem) {
+	DelayedTeleportTask(final PluginMain plugin, final Player player, final Destination destination, final ItemStack playerItem) {
 
 		this.plugin = plugin;
 		this.player = player;
@@ -122,16 +119,11 @@ final class DelayedTeleportTask extends BukkitRunnable {
 
 			// if destination is spawn, send spawn specific success message
 			if (destination.isSpawn()) {
-				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
-						.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
-						.setMacro(Macro.WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
-						.send();
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS_SPAWN).setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName()).setMacro(Macro.WORLD, plugin.getServer().getWorld(destination.getWorldUid())).send();
 			}
 			// otherwise, send regular success message
 			else {
-				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.send();
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS).setMacro(Macro.DESTINATION, destination.getDisplayName()).send();
 			}
 			// play post-teleport sound if sound effects are enabled
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_SUCCESS_ARRIVAL);

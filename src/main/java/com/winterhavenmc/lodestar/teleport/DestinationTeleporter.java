@@ -28,11 +28,15 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 
-class TeleporterDestination extends Teleporter {
+class DestinationTeleporter implements Teleporter {
+
+	private final PluginMain plugin;
+	private final TeleportExecutor teleportExecutor;
 
 
-	TeleporterDestination(final PluginMain plugin, final WarmupMap warmupMap) {
-		super(plugin, warmupMap);
+	DestinationTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
+		this.plugin = plugin;
+		this.teleportExecutor = teleportExecutor;
 	}
 
 
@@ -42,7 +46,7 @@ class TeleporterDestination extends Teleporter {
 	 * @param player the player to teleport
 	 */
 	@Override
-	void initiate(final Player player) {
+	public void initiate(final Player player) {
 
 		// get player item in hand
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
@@ -66,10 +70,14 @@ class TeleporterDestination extends Teleporter {
 		}
 		else {
 			// send invalid destination message
-			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
-					.send();
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION).setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName()).send();
 		}
+	}
+
+
+	@Override
+	public void execute(final Player player, final Destination finalDestination, final ItemStack playerItem, final MessageId messageId) {
+		teleportExecutor.execute(player, finalDestination, playerItem, messageId);
 	}
 
 }

@@ -38,7 +38,6 @@ class WarmupMap {
 	private final Set<UUID> teleportInitiated;
 
 
-
 	WarmupMap(final JavaPlugin plugin) {
 
 		// set reference to main class
