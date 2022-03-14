@@ -133,7 +133,7 @@ final class DelayedTeleportTask extends BukkitRunnable {
 				player.getWorld().strikeLightningEffect(location);
 			}
 
-			// set player cooldown
+			// start player cooldown
 			plugin.teleportHandler.startPlayerCooldown(player);
 		}
 	}
