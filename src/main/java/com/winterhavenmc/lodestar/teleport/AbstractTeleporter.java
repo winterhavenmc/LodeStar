@@ -26,6 +26,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
+
+/**
+ * This class provides methods that are common to the concrete Teleporter classes.
+ * It is not intended to be subclassed, except to provide these common methods to
+ * the Teleporter classes within this package. The methods are declared final to
+ * prevent them being overridden, and the class and methods are declared package-private
+ * to prevent their use outside this package.
+ */
 abstract class AbstractTeleporter {
 
 	protected PluginMain plugin;
@@ -41,7 +49,7 @@ abstract class AbstractTeleporter {
 	 * @param player the player
 	 * @return the player bedspawn destination wrapped in an {@link Optional}
 	 */
-	Optional<Destination> getHomeDestination(final Player player) {
+	final Optional<Destination> getHomeDestination(final Player player) {
 
 		// if player is null, return empty optional
 		if (player == null) {
@@ -67,7 +75,7 @@ abstract class AbstractTeleporter {
 	 * @param player the player
 	 * @return the player spawn destination wrapped in an {@link Optional}
 	 */
-	Optional<Destination> getSpawnDestination(final Player player) {
+	final Optional<Destination> getSpawnDestination(final Player player) {
 
 		// if player is null, return empty optional
 		if (player == null) {
@@ -92,7 +100,7 @@ abstract class AbstractTeleporter {
 	 * @param player     the player
 	 * @param playerItem the item
 	 */
-	void removeFromInventoryOnUse(Player player, ItemStack playerItem) {
+	final void removeFromInventoryOnUse(Player player, ItemStack playerItem) {
 		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
 		String removeItem = plugin.getConfig().getString("remove-from-inventory");
 		if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
@@ -100,7 +108,5 @@ abstract class AbstractTeleporter {
 			player.getInventory().setItemInMainHand(playerItem);
 		}
 	}
-
-
 
 }
