@@ -109,7 +109,7 @@ final class HelpCommand extends SubcommandAbstract {
 	 * @param sender the command sender
 	 * @param subcommand the subcommand to display help description
 	 */
-	private void sendCommandHelpMessage(CommandSender sender, Subcommand subcommand) {
+	private void sendCommandHelpMessage(final CommandSender sender, final Subcommand subcommand) {
 		plugin.messageBuilder.compose(sender, subcommand.getDescription()).send();
 		subcommand.displayUsage(sender);
 	}
@@ -120,7 +120,7 @@ final class HelpCommand extends SubcommandAbstract {
 	 *
 	 * @param sender the command sender
 	 */
-	private void sendCommandInvalidMessage(CommandSender sender) {
+	private void sendCommandInvalidMessage(final CommandSender sender) {
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_HELP_INVALID).send();
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_INVALID);
 		displayUsageAll(sender);
