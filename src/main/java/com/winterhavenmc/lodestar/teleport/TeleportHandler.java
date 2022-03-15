@@ -79,15 +79,15 @@ public final class TeleportHandler {
 
 		// if item key is home key, teleport to bed spawn location
 		if (Destination.isHome(key)) {
-			teleporter = new HomeTeleporter(plugin, new TeleportExecutor(plugin, warmupMap));
+			teleporter = new HomeTeleporter(plugin, warmupMap);
 		}
 		// if item key is spawn key, teleport to world spawn location
 		else if (Destination.isSpawn(key)) {
-			teleporter = new SpawnTeleporter(plugin, new TeleportExecutor(plugin, warmupMap));
+			teleporter = new SpawnTeleporter(plugin, warmupMap);
 		}
 		// teleport to destination for key
 		else {
-			teleporter = new DestinationTeleporter(plugin, new TeleportExecutor(plugin, warmupMap));
+			teleporter = new DestinationTeleporter(plugin, warmupMap);
 		}
 
 		// initiate teleport

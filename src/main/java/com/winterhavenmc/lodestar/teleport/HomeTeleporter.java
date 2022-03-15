@@ -31,12 +31,12 @@ import java.util.Optional;
 
 final class HomeTeleporter extends AbstractTeleporter implements Teleporter {
 
-	private final TeleportExecutor teleportExecutor;
+	private final WarmupMap warmupMap;
 
 
-	HomeTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
+	HomeTeleporter(final PluginMain plugin, final WarmupMap warmupMap) {
 		super(plugin);
-		this.teleportExecutor = teleportExecutor;
+		this.warmupMap = warmupMap;
 	}
 
 
@@ -54,7 +54,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter {
 		// get home destination
 		Optional<Destination> optionalDestination = getHomeDestination(player);
 
-		if (optionalDestination.isPresent()) {
+		if (optionalDestination.isPresent() && optionalDestination.get().getLocation() != null) {
 
 			// get location from destination
 			Location location = optionalDestination.get().getLocation();
@@ -72,7 +72,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter {
 
 			Optional<Destination> spawnDestination = getSpawnDestination(player);
 			if (spawnDestination.isPresent()) {
-				Teleporter teleporterSpawn = new SpawnTeleporter(plugin, teleportExecutor);
+				Teleporter teleporterSpawn = new SpawnTeleporter(plugin, warmupMap);
 				teleporterSpawn.initiate(player);
 			}
 			else {
@@ -88,7 +88,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter {
 
 	@Override
 	public void execute(final Player player, final Destination finalDestination, final ItemStack playerItem, final MessageId messageId) {
-		teleportExecutor.execute(player, finalDestination, playerItem, messageId);
+		new TeleportExecutor(plugin, warmupMap).execute(player, finalDestination, playerItem, messageId);
 	}
 
 }
