@@ -23,6 +23,7 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -113,12 +114,15 @@ final class TeleportCommand extends SubcommandAbstract {
 			// unwrap optional destination
 			Destination destination = optionalDestination.get();
 
+			// get location
+			Location location = destination.getLocation();
+
 			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
-			player.teleport(destination.getLocation());
+			player.teleport(location);
 			plugin.messageBuilder.compose(sender, MessageId.TELEPORT_SUCCESS)
 					.setMacro(Macro.DESTINATION, destination)
 					.send();
-			plugin.soundConfig.playSound(destination.getLocation(), SoundId.TELEPORT_SUCCESS_ARRIVAL);
+			plugin.soundConfig.playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 			return true;
 		}
 		else {
