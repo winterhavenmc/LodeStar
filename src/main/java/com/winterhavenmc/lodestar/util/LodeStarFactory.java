@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.util;
 
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.storage.Destination;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -139,7 +140,7 @@ public final class LodeStarFactory {
 	public void setMetaData(final ItemStack itemStack, final String destinationName) {
 
 		// retrieve item name from language file
-		String itemName = plugin.messageBuilder.getInventoryItemName();
+		String itemName = plugin.messageBuilder.getInventoryItemName().orElse("LodeStar: " + destinationName);
 
 		// replace destination placeholder with destination name
 		itemName = itemName.replace("%DESTINATION%", destinationName);
