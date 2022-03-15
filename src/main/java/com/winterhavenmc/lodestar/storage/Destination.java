@@ -19,12 +19,11 @@ package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,7 +50,7 @@ public final class Destination {
 	 * @param displayName the destination display name string
 	 * @param location    the destination location
 	 */
-	public Destination(final String displayName, final Location location) {
+	public Destination(@Nonnull final String displayName, @Nonnull final Location location) {
 
 		// validate parameters
 		Objects.requireNonNull(displayName);
@@ -86,7 +85,7 @@ public final class Destination {
 	 * @param displayName the destination display name string
 	 * @param location    the destination location
 	 */
-	public Destination(final String key, final String displayName, final Location location) {
+	public Destination(@Nonnull final String key, @Nonnull final String displayName, @Nonnull final Location location) {
 
 		// validate parameters
 		Objects.requireNonNull(location);
@@ -286,24 +285,7 @@ public final class Destination {
 	 * @return String - the key derived from the destination name
 	 */
 	public static String deriveKey(final String destinationName) {
-
 		return plugin.lodeStarFactory.deriveKey(destinationName);
-//		// validate parameter
-//		Objects.requireNonNull(destinationName);
-//
-//		// copy passed in destination name to derivedKey
-//		String derivedKey = destinationName;
-//
-//		// translate alternate color codes
-//		derivedKey = ChatColor.translateAlternateColorCodes('&', derivedKey);
-//
-//		// strip all color codes
-//		derivedKey = ChatColor.stripColor(derivedKey);
-//
-//		// replace spaces with underscores
-//		derivedKey = derivedKey.replace(' ', '_');
-//
-//		return derivedKey;
 	}
 
 
