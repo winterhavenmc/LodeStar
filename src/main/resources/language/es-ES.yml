@@ -301,6 +301,10 @@ MESSAGES:
     enabled: true
     string: '&3Teletransportarse a origen en &b%DURATION%&3 segundos...'
 
+  TELEPORT_LOG_USAGE:
+    enabled: true
+    message: '&b%TARGET_PLAYER%&r usó un %ITEM%&r para &b%DESTINATION%&r en &3%WORLD%&r.'
+
 
   LIST_HEADER:
     enabled: true

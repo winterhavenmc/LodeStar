@@ -303,6 +303,10 @@ MESSAGES:
     enabled: true
     string: '&3Teleporting to &b%WORLD% spawn&3 in &b%DURATION%...'
 
+  TELEPORT_LOG_USAGE:
+    enabled: true
+    message: "&b%TARGET_PLAYER%&r used a %ITEM%&r to &b%DESTINATION%&r in &3%WORLD%&r."
+
 
   LIST_HEADER:
     enabled: true
