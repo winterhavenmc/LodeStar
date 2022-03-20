@@ -23,7 +23,7 @@ import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.entity.Player;
 
 
-public interface Teleporter {
+interface Teleporter {
 
 	void initiate(final Player player);
 
