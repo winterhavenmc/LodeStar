@@ -210,7 +210,7 @@ public class LodeStarPluginTests {
 		@Test
 		@DisplayName("item lore is not null.")
 		void ItemLoreNotEmpty() {
-			Assertions.assertTrue(plugin.messageBuilder.getItemLore().isEmpty(),
+			Assertions.assertFalse(plugin.messageBuilder.getItemLore().isEmpty(),
 					"item lore is empty.");
 		}
 	}
