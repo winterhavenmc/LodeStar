@@ -28,7 +28,28 @@ public class MetricsHandler {
 		Metrics metrics = new Metrics(plugin, 13927);
 
 		// pie chart of configured language
-		metrics.addCustomChart(new SimplePie("language", () -> Config.LANGUAGE.asOptionalString().orElse("en-US")));
+		metrics.addCustomChart(new SimplePie("language", Config.LANGUAGE::asString));
+
+		// pie chart of titles enabled
+		metrics.addCustomChart(new SimplePie("titles_enabled", Config.TITLES_ENABLED::asString));
+
+		// pie chart of particle effects enabled
+		metrics.addCustomChart(new SimplePie("particle_effects", Config.PARTICLE_EFFECTS::asString));
+
+		// pie chart of sound effects enabled
+		metrics.addCustomChart(new SimplePie("sound_effects", Config.SOUND_EFFECTS::asString));
+
+		// pie chart of from-nether enabled
+		metrics.addCustomChart(new SimplePie("from_nether", Config.FROM_NETHER::asString));
+
+		// pie chart of from-end enabled
+		metrics.addCustomChart(new SimplePie("from_end", Config.FROM_END::asString));
+
+		// pie chart of teleport cooldown time
+		metrics.addCustomChart(new SimplePie("teleport_cooldown", Config.TELEPORT_COOLDOWN::asString));
+
+		// pie chart of teleport warmup time
+		metrics.addCustomChart(new SimplePie("teleport_warmup", Config.TELEPORT_WARMUP::asString));
 
 	}
 
