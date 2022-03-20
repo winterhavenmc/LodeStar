@@ -182,16 +182,22 @@ public class LodeStarPluginTests {
 	}
 
 
-
 	@Nested
 	@DisplayName("test message builder.")
 	class MessageBuilderTests {
 
 		@Test
 		@DisplayName("item name is not null.")
-		void ItemNameNotNull() {
-			Assertions.assertNotNull(plugin.messageBuilder.getItemName(),
-					"item name is null.");
+		void ItemNameNotIsSet() {
+			Assertions.assertTrue(plugin.messageBuilder.getItemName().isPresent(),
+					"item name is empty optional.");
+		}
+
+		@Test
+		@DisplayName("item name is not null.")
+		void ItemNamePluralIsSet() {
+			Assertions.assertTrue(plugin.messageBuilder.getItemNamePlural().isPresent(),
+					"item name plural is empty optional.");
 		}
 
 		@Test
@@ -199,6 +205,13 @@ public class LodeStarPluginTests {
 		void ItemLoreNotNull() {
 			Assertions.assertNotNull(plugin.messageBuilder.getItemLore(),
 					"item lore is null.");
+		}
+
+		@Test
+		@DisplayName("item lore is not null.")
+		void ItemLoreNotEmpty() {
+			Assertions.assertTrue(plugin.messageBuilder.getItemLore().isEmpty(),
+					"item lore is empty.");
 		}
 	}
 
