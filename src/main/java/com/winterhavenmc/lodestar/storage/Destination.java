@@ -25,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -88,10 +89,9 @@ public final class Destination {
 	public Destination(@Nonnull final String key, @Nonnull final String displayName, @Nonnull final Location location) {
 
 		// validate parameters
-		Objects.requireNonNull(location);
-
 		this.key = Objects.requireNonNull(key);
 		this.displayName = Objects.requireNonNull(displayName);
+		Objects.requireNonNull(location);
 
 		if (location.getWorld() != null) {
 			this.worldUid = location.getWorld().getUID();
@@ -100,7 +100,7 @@ public final class Destination {
 		}
 		else {
 			this.worldUid = null;
-			this.worldName = "unknown";
+			this.worldName = "???";
 			this.worldValid = false;
 		}
 
@@ -210,15 +210,15 @@ public final class Destination {
 
 
 	/**
-	 * Getter for destination location field
+	 * Getter for destination location
 	 *
-	 * @return the value of the location field
+	 * @return {@link Optional} Location
 	 */
-	public Location getLocation() {
+	public Optional<Location> getLocation() {
 
 		// if world uid is null, return null
 		if (worldUid == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// get world by uid
@@ -226,11 +226,11 @@ public final class Destination {
 
 		// if world is null, return null
 		if (world == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// return new location object for destination
-		return new Location(world, x, y, z, yaw, pitch);
+		return Optional.of(new Location(world, x, y, z, yaw, pitch));
 	}
 
 
