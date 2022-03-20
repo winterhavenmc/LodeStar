@@ -64,6 +64,9 @@ cancel-on-movement: false
 # cancel teleport if player interacts with another block
 cancel-on-interaction: false
 
+# number of ticks to delay checking for interaction, to prevent initial item use from triggering interaction
+interact-delay: 3
+
 # maximum number of LodeStar items that can be given at once (-1 for no limit)
 max-give-amount: -1
 
