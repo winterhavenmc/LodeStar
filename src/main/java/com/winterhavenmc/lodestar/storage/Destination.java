@@ -67,7 +67,7 @@ public final class Destination {
 		}
 		else {
 			this.worldUid = null;
-			this.worldName = "unknown";
+			this.worldName = "???";
 			this.worldValid = false;
 		}
 
@@ -82,37 +82,6 @@ public final class Destination {
 	/**
 	 * Class constructor
 	 *
-	 * @param key         the destination key value
-	 * @param displayName the destination display name string
-	 * @param location    the destination location
-	 */
-	public Destination(@Nonnull final String key, @Nonnull final String displayName, @Nonnull final Location location) {
-
-		// validate parameters
-		this.key = Objects.requireNonNull(key);
-		this.displayName = Objects.requireNonNull(displayName);
-		Objects.requireNonNull(location);
-
-		if (location.getWorld() != null) {
-			this.worldUid = location.getWorld().getUID();
-			this.worldName = location.getWorld().getName();
-			this.worldValid = true;
-		}
-		else {
-			this.worldUid = null;
-			this.worldName = "???";
-			this.worldValid = false;
-		}
-
-		this.x = location.getX();
-		this.y = location.getY();
-		this.z = location.getZ();
-		this.yaw = location.getYaw();
-		this.pitch = location.getPitch();
-	}
-
-
-	/**
 	 * @param key         the destination key
 	 * @param displayName the destination display name
 	 * @param worldValid  destination world valid
