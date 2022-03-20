@@ -22,26 +22,24 @@ import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.util.Config;
 
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-final class GiveCommand extends SubcommandAbstract {
+final class GiveSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
-	GiveCommand(final PluginMain plugin) {
+	GiveSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name = "give";
 		this.permissionNode = "lodestar.give";
@@ -56,16 +54,24 @@ final class GiveCommand extends SubcommandAbstract {
 	                                  final String alias, final String[] args) {
 
 		if (args.length == 2) {
-
-			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
-
+			// return all matching online players, including invisible players
 			return plugin.getServer().getOnlinePlayers().stream()
-					.map(HumanEntity::getName)
-					.filter(startsWith).collect(Collectors.toList());
+					.map(Player::getName)
+					.filter(playerName -> matchPrefix(playerName, args[1]))
+					.collect(Collectors.toList());
 		}
 
 		else if (args.length == 3) {
-			return plugin.dataStore.selectAllKeys();
+
+			// get all destination keys in list
+			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
+
+			// add home and spawn destinations to list
+			resultList.add(0, Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")));
+			resultList.add(0, Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+
+			// return list filtered by matching prefix to argument
+			return resultList.stream().filter(destinationKey -> matchPrefix(destinationKey, args[2])).collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();
@@ -90,19 +96,19 @@ final class GiveCommand extends SubcommandAbstract {
 			return true;
 		}
 
-		// get required argument target player name
-		String targetPlayerName = args.get(0);
+		// get required argument target player name and remove from ArrayList
+		String targetPlayerName = args.remove(0);
 
-		// remove targetPlayerName from ArrayList
-		args.remove(0);
+		// get player by name
+		Player targetPlayer = plugin.getServer().getPlayer(targetPlayerName);
 
-		// try to match target player name to currently online player
-		Player targetPlayer = matchPlayer(sender, targetPlayerName);
-
-		// if no match, do nothing and return (message was output by matchPlayer method)
+		// if no match, send player not found message and return
 		if (targetPlayer == null) {
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND).send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
+
 
 		// initialize destinationName to empty string
 		String destinationName = "";
@@ -237,7 +243,7 @@ final class GiveCommand extends SubcommandAbstract {
 
 		String key = plugin.lodeStarFactory.getKey(itemStack);
 		int quantity = itemStack.getAmount();
-		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
+		int maxGiveAmount = Config.MAX_GIVE_AMOUNT.asInt();
 
 		// check quantity against configured max give amount
 		if (maxGiveAmount >= 0) {
@@ -301,52 +307,6 @@ final class GiveCommand extends SubcommandAbstract {
 		// play sound to target player
 		plugin.soundConfig.playSound(targetPlayer, SoundId.COMMAND_SUCCESS_GIVE_TARGET);
 		return true;
-	}
-
-
-	/**
-	 * Match a player name to player object
-	 *
-	 * @param sender           the player issuing the command
-	 * @param targetPlayerName the player name to match
-	 * @return the matched player object, or null if no match
-	 */
-	private Player matchPlayer(final CommandSender sender, final String targetPlayerName) {
-
-		Player targetPlayer;
-
-		// check exact match first
-		targetPlayer = plugin.getServer().getPlayer(targetPlayerName);
-
-		// if no match, try substring match
-		if (targetPlayer == null) {
-			List<Player> playerList = plugin.getServer().matchPlayer(targetPlayerName);
-
-			// if only one matching player, use it, otherwise send error message (no match or more than 1 match)
-			if (playerList.size() == 1) {
-				targetPlayer = playerList.get(0);
-			}
-		}
-
-		// if match found, return target player object
-		if (targetPlayer != null) {
-			return targetPlayer;
-		}
-
-		// check if name matches known offline player
-		HashSet<OfflinePlayer> matchedPlayers = new HashSet<>();
-		for (OfflinePlayer offlinePlayer : plugin.getServer().getOfflinePlayers()) {
-			if (targetPlayerName.equalsIgnoreCase(offlinePlayer.getName())) {
-				matchedPlayers.add(offlinePlayer);
-			}
-		}
-		if (matchedPlayers.isEmpty()) {
-			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND).send();
-		}
-		else {
-			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_ONLINE).send();
-		}
-		return null;
 	}
 
 }

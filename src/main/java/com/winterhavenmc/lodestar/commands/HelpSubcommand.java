@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-final class HelpCommand extends SubcommandAbstract {
+final class HelpSubcommand extends AbstractSubcommand {
 
 	// reference to plugin main class instance
 	private final PluginMain plugin;
@@ -43,7 +43,7 @@ final class HelpCommand extends SubcommandAbstract {
 	 * @param plugin reference to plugin main class instance
 	 * @param subcommandRegistry reference to subcommand map
 	 */
-	HelpCommand(final PluginMain plugin, final SubcommandRegistry subcommandRegistry) {
+	HelpSubcommand(final PluginMain plugin, final SubcommandRegistry subcommandRegistry) {
 		this.plugin = plugin;
 		this.subcommandRegistry = subcommandRegistry;
 		this.name = "help";

@@ -23,18 +23,19 @@ import com.winterhavenmc.lodestar.storage.Destination;
 
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Optional;
 
 
-final class ListCommand extends SubcommandAbstract {
+final class ListSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
-	ListCommand(final PluginMain plugin) {
+	ListSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name = "list";
 		this.permissionNode = "lodestar.list";
@@ -76,12 +77,12 @@ final class ListCommand extends SubcommandAbstract {
 		page = Math.max(1, page);
 
 		// get configured items per page
-		int itemsPerPage = plugin.getConfig().getInt("list-page-size");
+		int itemsPerPage = Config.LIST_PAGE_SIZE.asInt();
 
 		// get all records from datastore
 		final List<String> allKeys = plugin.dataStore.selectAllKeys();
 
-		if (plugin.getConfig().getBoolean("debug")) {
+		if (Config.DEBUG.isTrue()) {
 			plugin.getLogger().info("Total records fetched from db: " + allKeys.size());
 		}
 

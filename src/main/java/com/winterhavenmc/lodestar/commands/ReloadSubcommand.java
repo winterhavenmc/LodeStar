@@ -30,7 +30,7 @@ import java.util.List;
  * Reload command implementation<br>
  * reloads plugin configuration
  */
-final class ReloadCommand extends SubcommandAbstract {
+final class ReloadSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
@@ -39,7 +39,7 @@ final class ReloadCommand extends SubcommandAbstract {
 	 * Class constructor
 	 * @param plugin reference to plugin main class instance
 	 */
-	ReloadCommand(final PluginMain plugin) {
+	ReloadSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name = "reload";
 		this.permissionNode = "lodestar.reload";

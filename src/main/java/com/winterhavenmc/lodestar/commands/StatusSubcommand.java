@@ -21,6 +21,7 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
+import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -33,7 +34,7 @@ import static com.winterhavenmc.util.TimeUnit.SECONDS;
  * Status command implementation<br>
  * displays plugin settings
  */
-final class StatusCommand extends SubcommandAbstract {
+final class StatusSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
@@ -43,7 +44,7 @@ final class StatusCommand extends SubcommandAbstract {
 	 *
 	 * @param plugin reference to plugin main class instance
 	 */
-	StatusCommand(final PluginMain plugin) {
+	StatusSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name = "status";
 		this.permissionNode = "lodestar.status";
@@ -75,50 +76,50 @@ final class StatusCommand extends SubcommandAbstract {
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + "Version: "
 				+ ChatColor.RESET + versionString);
 
-		if (plugin.getConfig().getBoolean("debug")) {
+		if (Config.DEBUG.isTrue()) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
 
 		sender.sendMessage(ChatColor.GREEN + "Language: "
-				+ ChatColor.RESET + plugin.getConfig().getString("language"));
+				+ ChatColor.RESET + Config.LANGUAGE.asOptionalString());
 
 		sender.sendMessage(ChatColor.GREEN + "Default material: "
-				+ ChatColor.RESET + plugin.getConfig().getString("default-material"));
+				+ ChatColor.RESET + Config.DEFAULT_MATERIAL.asOptionalString());
 
 		sender.sendMessage(ChatColor.GREEN + "Minimum distance: "
-				+ ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
+				+ ChatColor.RESET + Config.MINIMUM_DISTANCE.asInt());
 
 		sender.sendMessage(ChatColor.GREEN + "Warmup: "
 				+ ChatColor.RESET
-				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(plugin.getConfig().getInt("teleport-warmup"))));
+				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(Config.TELEPORT_WARMUP.asInt())));
 
 		sender.sendMessage(ChatColor.GREEN + "Cooldown: "
 				+ ChatColor.RESET
-				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(plugin.getConfig().getInt("teleport-cooldown"))));
+				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(Config.TELEPORT_COOLDOWN.asInt())));
 
 		sender.sendMessage(ChatColor.GREEN + "Shift-click required: "
-				+ ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));
+				+ ChatColor.RESET + Config.SHIFT_CLICK.isTrue());
 
 		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: "
 				+ ChatColor.RESET + "[ "
-				+ plugin.getConfig().getBoolean("cancel-on-damage") + "/"
-				+ plugin.getConfig().getBoolean("cancel-on-movement") + "/"
-				+ plugin.getConfig().getBoolean("cancel-on-interaction") + " ]");
+				+ Config.CANCEL_ON_DAMAGE.isTrue() + "/"
+				+ Config.CANCEL_ON_MOVEMENT.isTrue() + "/"
+				+ Config.CANCEL_ON_INTERACTION.isTrue() + " ]");
 
 		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: "
-				+ ChatColor.RESET + plugin.getConfig().getString("remove-from-inventory"));
+				+ ChatColor.RESET + Config.REMOVE_FROM_INVENTORY.asOptionalString());
 
 		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET
-				+ plugin.getConfig().getBoolean("allow-in-recipes"));
+				+ Config.ALLOW_IN_RECIPES.isTrue());
 
 		sender.sendMessage(ChatColor.GREEN + "From nether: "
-				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-nether"));
+				+ ChatColor.RESET + Config.FROM_NETHER.isTrue());
 
 		sender.sendMessage(ChatColor.GREEN + "From end: "
-				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-end"));
+				+ ChatColor.RESET + Config.FROM_END.isTrue());
 
 		sender.sendMessage(ChatColor.GREEN + "Lightning: "
-				+ ChatColor.RESET + plugin.getConfig().getBoolean("lightning"));
+				+ ChatColor.RESET + Config.LIGHTNING.isTrue());
 
 		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
 				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString());

@@ -27,16 +27,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-final class DeleteCommand extends SubcommandAbstract {
+final class DeleteSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
-	DeleteCommand(final PluginMain plugin) {
+	DeleteSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name ="delete";
 		this.permissionNode = "lodestar.delete";
@@ -52,13 +51,10 @@ final class DeleteCommand extends SubcommandAbstract {
 									  final String alias, final String[] args) {
 
 		if (args.length == 2) {
-
-			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
-
 			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
 			resultList.add(0, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
 			resultList.add(0, plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
-			return resultList.stream().filter(startsWith).collect(Collectors.toList());
+			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();

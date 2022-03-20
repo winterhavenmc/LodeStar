@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 import java.util.*;
 
 
-abstract class SubcommandAbstract implements Subcommand {
+abstract class AbstractSubcommand implements Subcommand {
 
 	protected String name;
 	protected Collection<String> aliases = new HashSet<>();
@@ -72,6 +72,10 @@ abstract class SubcommandAbstract implements Subcommand {
 									  final String alias, final String[] args) {
 
 		return Collections.emptyList();
+	}
+
+	protected boolean matchPrefix(String string1, String string2) {
+		return string1.toLowerCase().startsWith(string2.toLowerCase());
 	}
 
 }

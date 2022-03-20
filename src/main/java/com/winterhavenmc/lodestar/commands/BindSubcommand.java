@@ -23,6 +23,8 @@ import com.winterhavenmc.lodestar.storage.Destination;
 
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.util.Config;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -30,11 +32,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-final class BindCommand extends SubcommandAbstract {
+final class BindSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
@@ -44,7 +45,7 @@ final class BindCommand extends SubcommandAbstract {
 				Material.VOID_AIR ));
 
 
-	BindCommand(final PluginMain plugin) {
+	BindSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name = "bind";
 		this.permissionNode = "lodestar.bind";
@@ -59,13 +60,10 @@ final class BindCommand extends SubcommandAbstract {
 									  final String alias, final String[] args) {
 
 		if (args.length == 2) {
-
-			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
-
 			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
 			resultList.add(0, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
 			resultList.add(0, plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
-			return resultList.stream().filter(startsWith).collect(Collectors.toList());
+			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();
@@ -115,7 +113,7 @@ final class BindCommand extends SubcommandAbstract {
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// if default-item-only configured true, check that item in hand has default material and data
-		if (plugin.getConfig().getBoolean("default-material-only")
+		if (Config.DEFAULT_MATERIAL_ONLY.isTrue()
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)

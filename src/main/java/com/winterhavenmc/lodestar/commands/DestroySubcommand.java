@@ -29,12 +29,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 
-final class DestroyCommand extends SubcommandAbstract {
+final class DestroySubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
-	DestroyCommand(final PluginMain plugin) {
+	DestroySubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name = "destroy";
 		this.permissionNode = "lodestar.destroy";
