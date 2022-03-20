@@ -21,6 +21,7 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 
+import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
@@ -93,7 +94,7 @@ public final class PlayerEventListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// if cancel-on-interaction is configured true, check if player is in warmup hashmap
-		if (plugin.getConfig().getBoolean("cancel-on-interaction")) {
+		if (Config.CANCEL_ON_INTERACTION.isTrue()) {
 
 			// if player is in warmup hashmap, check if they are interacting with a block (not air)
 			if (plugin.teleportHandler.isWarmingUp(player)) {
@@ -137,7 +138,7 @@ public final class PlayerEventListener implements Listener {
 		// if event action is left-click, and left-click is config disabled, do nothing and return
 		if (action.equals(Action.LEFT_CLICK_BLOCK)
 				|| action.equals(Action.LEFT_CLICK_AIR)
-				&& !plugin.getConfig().getBoolean("left-click")) {
+				&& !Config.LEFT_CLICK.isTrue()) {
 			return;
 		}
 
@@ -194,8 +195,7 @@ public final class PlayerEventListener implements Listener {
 
 			// if shift-click configured and player is not sneaking,
 			// send teleport fail shift-click message, cancel event and return
-			if (plugin.getConfig().getBoolean("shift-click")
-					&& !player.isSneaking()) {
+			if (Config.SHIFT_CLICK.isTrue() && !player.isSneaking()) {
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_SHIFT_CLICK).send();
 				return;
 			}
@@ -217,7 +217,7 @@ public final class PlayerEventListener implements Listener {
 		Player player = event.getEntity();
 
 		// cancel any pending teleport for player
-		plugin.teleportHandler.removeWarmingUpPlayer(player);
+		plugin.teleportHandler.cancelTeleport(player);
 	}
 
 
@@ -232,7 +232,7 @@ public final class PlayerEventListener implements Listener {
 		Player player = event.getPlayer();
 
 		// cancel any pending teleport for player
-		plugin.teleportHandler.removeWarmingUpPlayer(player);
+		plugin.teleportHandler.cancelTeleport(player);
 	}
 
 
@@ -245,7 +245,7 @@ public final class PlayerEventListener implements Listener {
 	void onCraftPrepare(final PrepareItemCraftEvent event) {
 
 		// if allow-in-recipes is true in configuration, do nothing and return
-		if (plugin.getConfig().getBoolean("allow-in-recipes")) {
+		if (Config.ALLOW_IN_RECIPES.isTrue()) {
 			return;
 		}
 
@@ -267,7 +267,7 @@ public final class PlayerEventListener implements Listener {
 	void onEntityDamage(final EntityDamageEvent event) {
 
 		// if cancel-on-damage configuration is true, check if damaged entity is player
-		if (plugin.getConfig().getBoolean("cancel-on-damage")) {
+		if (Config.CANCEL_ON_DAMAGE.isTrue()) {
 
 			Entity entity = event.getEntity();
 
@@ -296,7 +296,7 @@ public final class PlayerEventListener implements Listener {
 	void onPlayerMovement(final PlayerMoveEvent event) {
 
 		// if cancel-on-movement configuration is false, do nothing and return
-		if (!plugin.getConfig().getBoolean("cancel-on-movement")) {
+		if (!Config.CANCEL_ON_MOVEMENT.isTrue()) {
 			return;
 		}
 

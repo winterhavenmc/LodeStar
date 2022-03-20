@@ -28,7 +28,7 @@ public class MetricsHandler {
 		Metrics metrics = new Metrics(plugin, 13927);
 
 		// pie chart of configured language
-		metrics.addCustomChart(new SimplePie("language", () -> plugin.getConfig().getString("language")));
+		metrics.addCustomChart(new SimplePie("language", () -> Config.LANGUAGE.asOptionalString().orElse("en-US")));
 
 	}
 

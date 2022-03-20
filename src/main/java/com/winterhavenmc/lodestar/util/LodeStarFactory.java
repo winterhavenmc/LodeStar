@@ -88,8 +88,8 @@ public final class LodeStarFactory {
 		newQuantity = Math.min(newQuantity, newItem.getMaxStackSize());
 
 		// if configured max give quantity is positive, validate quantity
-		if (plugin.getConfig().getInt("max-give-amount") > 0) {
-			newQuantity = Math.min(plugin.getConfig().getInt("max-give-amount"), newQuantity);
+		if (Config.MAX_GIVE_AMOUNT.asInt() > 0) {
+			newQuantity = Math.min(Config.MAX_GIVE_AMOUNT.asInt(), newQuantity);
 		}
 
 		// set quantity
@@ -111,12 +111,7 @@ public final class LodeStarFactory {
 	public ItemStack getDefaultItemStack() {
 
 		// get configured material string
-		String configMaterialString = plugin.getConfig().getString("default-material");
-
-		// if string is null, use default
-		if (configMaterialString == null) {
-			configMaterialString = "NETHER_STAR";
-		}
+		String configMaterialString = Config.DEFAULT_MATERIAL.asOptionalString().orElse("NETHER_STAR");
 
 		// match material to configured string
 		Material configMaterial = Material.matchMaterial(configMaterialString);
@@ -282,7 +277,7 @@ public final class LodeStarFactory {
 	 */
 	public boolean isDefaultItem(final ItemStack itemStack) {
 
-		if (plugin.getConfig().getBoolean("debug")) {
+		if (Config.DEBUG.isTrue()) {
 			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
 		}
 
@@ -291,13 +286,10 @@ public final class LodeStarFactory {
 			return false;
 		}
 
+		// get default material name from config
+		String defaultMaterialString = Config.DEFAULT_MATERIAL.asOptionalString().orElse("NETHER_STAR");
+
 		// try to match material
-		String defaultMaterialString = plugin.getConfig().getString("default-material");
-
-		if (defaultMaterialString == null) {
-			defaultMaterialString = "NETHER_STAR";
-		}
-
 		Material material = Material.matchMaterial(defaultMaterialString);
 
 		// if no match set to nether star

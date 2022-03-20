@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar;
 
 import com.winterhavenmc.lodestar.storage.Destination;
 
+import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -167,7 +168,7 @@ public final class SimpleAPI {
 	 * @return item name as specified in configuration file
 	 */
 	public static String getItemName() {
-		return plugin.messageBuilder.getItemName();
+		return plugin.messageBuilder.getItemName().orElse("LodeStar");
 	}
 
 
@@ -226,7 +227,7 @@ public final class SimpleAPI {
 	 * @return Boolean - {@code true} if items can be used in recipes, {@code false} if they cannot
 	 */
 	public static Boolean isValidIngredient() {
-		return plugin.getConfig().getBoolean("allow-in-recipes");
+		return Config.ALLOW_IN_RECIPES.isTrue();
 	}
 
 
@@ -256,7 +257,7 @@ public final class SimpleAPI {
 	 * @return int - the minimum distance from a destination required to use an item
 	 */
 	public static int getMinDistance() {
-		return plugin.getConfig().getInt("minimum-distance");
+		return Config.MINIMUM_DISTANCE.asInt();
 	}
 
 
@@ -267,7 +268,7 @@ public final class SimpleAPI {
 	 * during warmup time, {@code false} if not
 	 */
 	public static Boolean isCancelledOnDamage() {
-		return plugin.getConfig().getBoolean("cancel-on-damage");
+		return Config.CANCEL_ON_DAMAGE.isTrue();
 	}
 
 
@@ -278,7 +279,7 @@ public final class SimpleAPI {
 	 * during warmup time, {@code false} if not
 	 */
 	public static Boolean isCancelledOnMovement() {
-		return plugin.getConfig().getBoolean("cancel-on-movement");
+		return Config.CANCEL_ON_MOVEMENT.isTrue();
 	}
 
 
@@ -289,7 +290,7 @@ public final class SimpleAPI {
 	 * during warmup time, {@code false} if not
 	 */
 	public static Boolean isCancelledOnInteraction() {
-		return plugin.getConfig().getBoolean("cancel-on-interaction");
+		return Config.CANCEL_ON_INTERACTION.isTrue();
 	}
 
 
