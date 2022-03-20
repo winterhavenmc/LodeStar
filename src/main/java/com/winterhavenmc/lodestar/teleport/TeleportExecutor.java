@@ -23,9 +23,8 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
-import org.bukkit.ChatColor;
+import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -50,13 +49,14 @@ class TeleportExecutor {
 	 *
 	 * @param player      the player to teleport
 	 * @param destination the destination
-	 * @param playerItem  the LodeStar item used to initiate teleport
 	 * @param messageId   the teleport warmup message to send to player
 	 */
-	void execute(final Player player, final Destination destination, final ItemStack playerItem, final MessageId messageId) {
+	void execute(final Player player, final Destination destination, final MessageId messageId) {
 
-		// if destination location is null, send invalid destination message and return
-		if (destination.getLocation() == null) {
+		ItemStack playerItem = player.getInventory().getItemInMainHand();
+
+		// if destination location is empty, send invalid destination message and return
+		if (destination.getLocation().isEmpty()) {
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destination.getDisplayName())
 					.send();
@@ -70,6 +70,9 @@ class TeleportExecutor {
 					.send();
 			return;
 		}
+
+		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
+		removeFromInventoryOnUse(player, playerItem);
 
 		// initiate delayed teleport for player to final destination
 		BukkitTask teleportTask = new DelayedTeleportTask(plugin, player, destination, playerItem.clone())
@@ -122,9 +125,15 @@ class TeleportExecutor {
 	 */
 	private void loadDestinationChunk(final Destination destination) {
 
-		Location location = destination.getLocation();
+		// if optional destination location is empty, do nothing and return
+		if (destination.getLocation().isEmpty()) {
+			return;
+		}
 
-		if (location != null && location.getWorld() != null) {
+		// unwrap optional destination location
+		Location location = destination.getLocation().get();
+
+		if (location.getWorld() != null) {
 			if (!location.getWorld().getChunkAt(location).isLoaded()) {
 				location.getWorld().getChunkAt(location).load();
 			}
@@ -140,31 +149,52 @@ class TeleportExecutor {
 	 * @return true if under minimum distance, false if not
 	 */
 	private boolean isUnderMinimumDistance(final Player player, final Destination destination) {
-		return destination.getLocation() != null
-				&& destination.getLocation().getWorld() != null
-				&& player.getWorld().equals(destination.getLocation().getWorld())
-				&& player.getLocation().distanceSquared(destination.getLocation()) < Math.pow(plugin.getConfig().getInt("minimum-distance"), 2);
+
+		// if destination location is empty, return false
+		if (destination.getLocation().isEmpty()) {
+			return false;
+		}
+
+		// unwrap optional destination location
+		Location location = destination.getLocation().get();
+
+		// check if location is within minimum proximity to player
+		return location.getWorld() != null
+				&& player.getWorld().equals(location.getWorld())
+				&& player.getLocation().distanceSquared(location) < Math.pow(Config.MINIMUM_DISTANCE.asInt(), 2);
 	}
 
 
 	/**
-	 * Log teleport item use
+	 * remove one lode star item from player inventory
+	 * @param player     the player
+	 * @param playerItem the item
+	 */
+	final void removeFromInventoryOnUse(final Player player, final ItemStack playerItem) {
+		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
+		String removeItem = Config.REMOVE_FROM_INVENTORY.asOptionalString().orElse("on-success");
+		if (removeItem.equalsIgnoreCase("on-use")) {
+			playerItem.setAmount(playerItem.getAmount() - 1);
+			player.getInventory().setItemInMainHand(playerItem);
+		}
+	}
+
+
+	/**
+	 * Log player usage of homestar item
 	 *
-	 * @param player the player being logged as using a lodestar item
+	 * @param player the player being logged
 	 */
 	private void logUsage(final Player player, final Destination destination) {
-		if (plugin.getConfig().getBoolean("log-use")) {
 
-			CommandSender console = plugin.getServer().getConsoleSender();
+		// if log-use is enabled in config, write log entry
+		if (Config.LOG_USE.isTrue()) {
 
-			// get destination name
-			String destinationName = destination.getDisplayName();
-
-			// write message to log
-			console.sendMessage(player.getName() + ChatColor.RESET + " used a "
-					+ plugin.messageBuilder.getItemName() + ChatColor.RESET  + " to "
-					+ ChatColor.AQUA + destinationName + ChatColor.RESET + " in "
-					+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
+			// send message to console
+			plugin.messageBuilder.compose(plugin.getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
+					.setMacro(Macro.TARGET_PLAYER, player)
+					.setMacro(Macro.DESTINATION, destination)
+					.send();
 		}
 	}
 

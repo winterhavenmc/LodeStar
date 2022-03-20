@@ -35,6 +35,7 @@ final class ParticleTask extends BukkitRunnable {
 	private final PluginMain plugin;
 	private final Player player;
 
+
 	/**
 	 * Class constructor method
 	 *

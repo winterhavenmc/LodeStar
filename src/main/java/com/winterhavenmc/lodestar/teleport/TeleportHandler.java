@@ -39,6 +39,9 @@ public final class TeleportHandler {
 	// map to store player UUID and cooldown expire time in milliseconds
 	private final CooldownMap cooldownMap;
 
+	// teleport executor instance that serves all teleporters
+	private final TeleportExecutor teleportExecutor;
+
 
 	/**
 	 * Class constructor
@@ -49,6 +52,7 @@ public final class TeleportHandler {
 		this.plugin = plugin;
 		this.warmupMap = new WarmupMap(plugin);
 		this.cooldownMap = new CooldownMap(plugin);
+		this.teleportExecutor = new TeleportExecutor(plugin, warmupMap);
 	}
 
 
@@ -79,15 +83,15 @@ public final class TeleportHandler {
 
 		// if item key is home key, teleport to bed spawn location
 		if (Destination.isHome(key)) {
-			teleporter = new HomeTeleporter(plugin, warmupMap);
+			teleporter = new HomeTeleporter(plugin, teleportExecutor);
 		}
 		// if item key is spawn key, teleport to world spawn location
 		else if (Destination.isSpawn(key)) {
-			teleporter = new SpawnTeleporter(plugin, warmupMap);
+			teleporter = new SpawnTeleporter(plugin, teleportExecutor);
 		}
 		// teleport to destination for key
 		else {
-			teleporter = new DestinationTeleporter(plugin, warmupMap);
+			teleporter = new DestinationTeleporter(plugin, teleportExecutor);
 		}
 
 		// initiate teleport

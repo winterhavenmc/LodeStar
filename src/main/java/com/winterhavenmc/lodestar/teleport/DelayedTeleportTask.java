@@ -23,6 +23,7 @@ import com.winterhavenmc.lodestar.storage.Destination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
+import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,10 +60,10 @@ final class DelayedTeleportTask extends BukkitRunnable {
 		this.player = player;
 		this.destination = destination;
 		this.playerItem = playerItem;
-		this.location = destination.getLocation();
+		this.location = destination.getLocation().orElse(null);
 
 		// start repeating task for generating particles at player location
-		if (plugin.getConfig().getBoolean("particle-effects")) {
+		if (Config.PARTICLE_EFFECTS.isTrue()) {
 
 			// start particle task with 2 tick delay, so it doesn't self cancel on first run
 			particleTask = new ParticleTask(plugin, player).runTaskTimer(plugin, 2L, 10);

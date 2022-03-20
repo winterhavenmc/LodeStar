@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.winterhavenmc.lodestar.util.Config.TELEPORT_COOLDOWN;
 import static com.winterhavenmc.util.TimeUnit.SECONDS;
 
 
@@ -49,7 +50,7 @@ class CooldownMap {
 	 */
 	void startPlayerCooldown(final Player player) {
 
-		int cooldownSeconds = plugin.getConfig().getInt("teleport-cooldown");
+		int cooldownSeconds = TELEPORT_COOLDOWN.asInt();
 
 		Long expireTime = System.currentTimeMillis() + (SECONDS.toMillis(cooldownSeconds));
 		cooldownMap.put(player.getUniqueId(), expireTime);

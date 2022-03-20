@@ -18,12 +18,18 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.messages.Macro;
+import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
+import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -85,9 +91,13 @@ abstract class AbstractTeleporter {
 		// get spawn location for player
 		Location location = plugin.worldManager.getSpawnLocation(player);
 
-		// if location is null, return empty optional
-		if (location == null) {
-			return Optional.empty();
+		// if from-nether is enabled in config and player is in nether, try to get overworld spawn location
+		if (Config.FROM_NETHER.isTrue() && isInNetherWorld(player)) {
+			location = getOverworldSpawnLocation(player).orElse(location);
+		}
+		// if from-end is enabled in config and player is in end, try to get overworld spawn location
+		else if (Config.FROM_END.isTrue() && isInEndWorld(player)) {
+			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 
 		// return destination for player spawn
@@ -96,17 +106,80 @@ abstract class AbstractTeleporter {
 
 
 	/**
-	 * remove one lode star item from player inventory
-	 * @param player     the player
-	 * @param playerItem the item
+	 * Get overworld spawn location corresponding to a player nether or end world.
+	 *
+	 * @param player the passed player whose current world will be used to find a matching over world spawn location
+	 * @return {@link Optional} wrapped spawn location of the normal world associated with the passed player
+	 * nether or end world, or the current player world spawn location if no matching normal world found
 	 */
-	final void removeFromInventoryOnUse(final Player player, final ItemStack playerItem) {
-		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-		String removeItem = plugin.getConfig().getString("remove-from-inventory");
-		if (removeItem != null && removeItem.equalsIgnoreCase("on-use")) {
-			playerItem.setAmount(playerItem.getAmount() - 1);
-			player.getInventory().setItemInMainHand(playerItem);
+	private Optional<Location> getOverworldSpawnLocation(final Player player) {
+
+		// check for null parameter
+		if (player == null) {
+			return Optional.empty();
 		}
+
+		// create list to store normal environment worlds
+		List<World> normalWorlds = new ArrayList<>();
+
+		// iterate through all server worlds
+		for (World checkWorld : plugin.getServer().getWorlds()) {
+
+			// if world is normal environment, try to match name to passed world
+			if (checkWorld.getEnvironment().equals(World.Environment.NORMAL)) {
+
+				// check if normal world matches passed world minus nether/end suffix
+				if (checkWorld.getName().equals(player.getWorld().getName().replaceFirst("(_nether$|_the_end$)", ""))) {
+					return Optional.of(plugin.worldManager.getSpawnLocation(checkWorld));
+				}
+
+				// if no match, add to list of normal worlds
+				normalWorlds.add(checkWorld);
+			}
+		}
+
+		// if only one normal world exists, return that world
+		if (normalWorlds.size() == 1) {
+			return Optional.of(plugin.worldManager.getSpawnLocation(normalWorlds.get(0)));
+		}
+
+		// if no matching normal world found and more than one normal world exists, return passed world spawn location
+		return Optional.of(plugin.worldManager.getSpawnLocation(player.getWorld()));
+	}
+
+
+	/**
+	 * Check if a player is in a nether world
+	 *
+	 * @param player the player
+	 * @return true if player is in a nether world, false if not
+	 */
+	private boolean isInNetherWorld(final Player player) {
+		return player.getWorld().getEnvironment().equals(World.Environment.NETHER);
+	}
+
+
+	/**
+	 * Check if a player is in an end world
+	 *
+	 * @param player the player
+	 * @return true if player is in an end world, false if not
+	 */
+	private boolean isInEndWorld(final Player player) {
+		return player.getWorld().getEnvironment().equals(World.Environment.THE_END);
+	}
+
+
+	/**
+	 * Send invalid destination message to player
+	 * @param player the player
+	 * @param destinationName the destination name
+	 */
+	final void sendInvalidDestinationMessage(final Player player, final String destinationName) {
+		plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
+				.setMacro(Macro.DESTINATION, destinationName)
+				.send();
+		plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 	}
 
 }

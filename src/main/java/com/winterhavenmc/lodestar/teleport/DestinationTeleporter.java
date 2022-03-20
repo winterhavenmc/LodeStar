@@ -18,24 +18,26 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Optional;
 
 
 final class DestinationTeleporter extends AbstractTeleporter implements Teleporter {
 
-	private final WarmupMap warmupMap;
+	private final TeleportExecutor teleportExecutor;
 
 
-	DestinationTeleporter(final PluginMain plugin, final WarmupMap warmupMap) {
+	/**
+	 * Class constructor
+	 *
+	 * @param plugin the player to teleport
+	 * @param teleportExecutor the teleport executor
+	 */
+	DestinationTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
 		super(plugin);
-		this.warmupMap = warmupMap;
+		this.teleportExecutor = teleportExecutor;
 	}
 
 
@@ -47,34 +49,27 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 	@Override
 	public void initiate(final Player player) {
 
-		// get player item in hand
-		ItemStack playerItem = player.getInventory().getItemInMainHand();
+		// get item key from player item in main hand
+		final String key = plugin.lodeStarFactory.getKey(player.getInventory().getItemInMainHand());
 
-		// get item key
-		String key = plugin.lodeStarFactory.getKey(playerItem);
-
-		// get destination for key
-		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
-
-		// if destination is valid, execute teleport
-		if (optionalDestination.isPresent()) {
-
-			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-			removeFromInventoryOnUse(player, playerItem);
-
-			// execute teleport
-			execute(player, optionalDestination.get(), playerItem, MessageId.TELEPORT_WARMUP);
-		}
-		else {
-			// send invalid destination message
-			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION).setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName()).send();
-		}
+		// execute teleport or send invalid destination message
+		plugin.dataStore.selectRecord(key).ifPresentOrElse(
+				destination -> execute(player, destination, MessageId.TELEPORT_WARMUP),
+				() -> sendInvalidDestinationMessage(player, Destination.getDisplayName(key))
+		);
 	}
 
 
+	/**
+	 * Execute the teleport to destination
+	 *
+	 * @param player      the player to teleport
+	 * @param destination the destination
+	 * @param messageId   the teleport warmup message to send to player
+	 */
 	@Override
-	public void execute(final Player player, final Destination finalDestination, final ItemStack playerItem, final MessageId messageId) {
-		new TeleportExecutor(plugin, warmupMap).execute(player, finalDestination, playerItem, messageId);
+	public void execute(final Player player, final Destination destination, final MessageId messageId) {
+		teleportExecutor.execute(player, destination, messageId);
 	}
 
 }

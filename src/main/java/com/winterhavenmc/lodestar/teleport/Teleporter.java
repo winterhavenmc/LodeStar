@@ -21,13 +21,12 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 
 public interface Teleporter {
 
 	void initiate(final Player player);
 
-	void execute(final Player player, final Destination finalDestination, final ItemStack playerItem, final MessageId messageId);
+	void execute(final Player player, final Destination finalDestination, final MessageId messageId);
 
 }
