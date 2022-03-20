@@ -139,7 +139,7 @@ public class LodeStarPluginTests {
 	class SoundTests {
 
 		// collection of enum sound name strings
-		Collection<String> enumSoundNames = new HashSet<>();
+		final Collection<String> enumSoundNames = new HashSet<>();
 
 		// class constructor
 		SoundTests() {
@@ -221,7 +221,7 @@ public class LodeStarPluginTests {
 	class MessageTests {
 
 		// collection of enum sound name strings
-		Collection<String> enumMessageNames = new HashSet<>();
+		final Collection<String> enumMessageNames = new HashSet<>();
 
 		// class constructor
 		MessageTests() {
