@@ -45,6 +45,7 @@ public final class Destination {
 	private final float yaw;
 	private final float pitch;
 
+
 	/**
 	 * Class constructor
 	 *
@@ -80,7 +81,7 @@ public final class Destination {
 
 
 	/**
-	 * Class constructor
+	 * Class constructor used to create object fetched from data store
 	 *
 	 * @param key         the destination key
 	 * @param displayName the destination display name
@@ -133,7 +134,6 @@ public final class Destination {
 	 *
 	 * @return true if home, else false
 	 */
-	@SuppressWarnings("unused")
 	public boolean isHome() {
 		return this.getKey().equalsIgnoreCase("home")
 				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
