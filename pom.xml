@@ -280,6 +280,9 @@
 				<configuration>
 					<junitArtifactName>org.junit.jupiter:junit-jupiter</junitArtifactName>
 					<trimStackTrace>false</trimStackTrace>
+					<systemPropertyVariables>
+						<bstats.relocatecheck>false</bstats.relocatecheck>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 		</plugins>
