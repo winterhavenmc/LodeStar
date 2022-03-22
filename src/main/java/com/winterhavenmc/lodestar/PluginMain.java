@@ -31,7 +31,11 @@ import com.winterhavenmc.util.soundconfig.SoundConfiguration;
 import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
 import com.winterhavenmc.util.worldmanager.WorldManager;
 
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
+
+import java.io.File;
 
 
 /**
@@ -51,6 +55,28 @@ public final class PluginMain extends JavaPlugin {
 	public CommandManager commandManager;
 	public PlayerEventListener playerEventListener;
 	public LodeStarFactory lodeStarFactory;
+	public MetricsHandler metricsHandler;
+
+
+	/**
+	 * Constructor for mocking
+	 */
+	@SuppressWarnings("unused")
+	public PluginMain() {
+		super();
+	}
+
+
+	/**
+	 * Constructor for mocking
+	 */
+	@SuppressWarnings("unused")
+	private PluginMain(final JavaPluginLoader loader,
+	                   final PluginDescriptionFile descriptionFile,
+	                   final File dataFolder,
+	                   final File file) {
+		super(loader, descriptionFile, dataFolder, file);
+	}
 
 
 	@Override
@@ -84,7 +110,8 @@ public final class PluginMain extends JavaPlugin {
 		lodeStarFactory = new LodeStarFactory(this);
 
 		// instantiate metrics handler
-		new MetricsHandler(this);
+		metricsHandler = new MetricsHandler(this);
+		metricsHandler.start();
 
 	}
 
