@@ -53,13 +53,11 @@ public final class PluginMain extends JavaPlugin {
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public CommandManager commandManager;
-	public PlayerEventListener playerEventListener;
 	public LodeStarFactory lodeStarFactory;
-	public MetricsHandler metricsHandler;
 
 
 	/**
-	 * Constructor for mocking
+	 * Constructor for testing
 	 */
 	@SuppressWarnings("unused")
 	public PluginMain() {
@@ -68,7 +66,7 @@ public final class PluginMain extends JavaPlugin {
 
 
 	/**
-	 * Constructor for mocking
+	 * Constructor for testing
 	 */
 	@SuppressWarnings("unused")
 	private PluginMain(final JavaPluginLoader loader,
@@ -103,15 +101,14 @@ public final class PluginMain extends JavaPlugin {
 		// instantiate command manager
 		commandManager = new CommandManager(this);
 
-		// instantiate player listener
-		playerEventListener = new PlayerEventListener(this);
-
 		// instantiate lodestar factory
 		lodeStarFactory = new LodeStarFactory(this);
 
+		// instantiate player listener
+		new PlayerEventListener(this);
+
 		// instantiate metrics handler
-		metricsHandler = new MetricsHandler(this);
-		metricsHandler.start();
+		new MetricsHandler(this);
 
 	}
 
