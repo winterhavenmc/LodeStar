@@ -24,9 +24,10 @@ import com.winterhavenmc.lodestar.sounds.SoundId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 final class HelpSubcommand extends AbstractSubcommand {
@@ -57,23 +58,17 @@ final class HelpSubcommand extends AbstractSubcommand {
 	public List<String> onTabComplete(final CommandSender sender, final Command command,
 									  final String alias, final String[] args) {
 
-		List<String> returnList = new ArrayList<>();
-
-		// return list of subcommands for which sender has permission
-		if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("help")) {
-				for (String subcommandName : subcommandRegistry.getKeys()) {
-					Optional<Subcommand> subcommand = subcommandRegistry.getSubcommand(subcommandName);
-					if (subcommand.isPresent() && sender.hasPermission(subcommand.get().getPermissionNode())
-							&& subcommandName.startsWith(args[1].toLowerCase())
-							&& !subcommandName.equalsIgnoreCase("help")) {
-						returnList.add(subcommandName);
-					}
-				}
-			}
+		if (args.length == 2 && args[0].equalsIgnoreCase(this.name)) {
+			return subcommandRegistry.getKeys().stream()
+					.map(subcommandRegistry::getSubcommand)
+					.filter(Optional::isPresent)
+					.filter(subcommand -> sender.hasPermission(subcommand.get().getPermissionNode()))
+					.map(subcommand -> subcommand.get().getName())
+					.filter(subCommandName -> subCommandName.toLowerCase().startsWith(args[1].toLowerCase()))
+					.filter(subCommandName -> !subCommandName.equalsIgnoreCase(this.name))
+					.collect(Collectors.toList());
 		}
-
-		return returnList;
+		return Collections.emptyList();
 	}
 
 
