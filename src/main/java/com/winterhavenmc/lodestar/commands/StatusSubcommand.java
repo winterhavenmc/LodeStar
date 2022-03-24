@@ -21,7 +21,6 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
-import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -76,50 +75,50 @@ final class StatusSubcommand extends AbstractSubcommand {
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + "Version: "
 				+ ChatColor.RESET + versionString);
 
-		if (Config.DEBUG.isTrue()) {
+		if (plugin.getConfig().getBoolean("debug")) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
 
 		sender.sendMessage(ChatColor.GREEN + "Language: "
-				+ ChatColor.RESET + Config.LANGUAGE.asOptionalString());
+				+ ChatColor.RESET + plugin.getConfig().getString("language"));
 
 		sender.sendMessage(ChatColor.GREEN + "Default material: "
-				+ ChatColor.RESET + Config.DEFAULT_MATERIAL.asOptionalString());
+				+ ChatColor.RESET + plugin.getConfig().getString("default-material"));
 
 		sender.sendMessage(ChatColor.GREEN + "Minimum distance: "
-				+ ChatColor.RESET + Config.MINIMUM_DISTANCE.asInt());
+				+ ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
 
 		sender.sendMessage(ChatColor.GREEN + "Warmup: "
 				+ ChatColor.RESET
-				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(Config.TELEPORT_WARMUP.asInt())));
+				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(plugin.getConfig().getInt("teleport-warmup"))));
 
 		sender.sendMessage(ChatColor.GREEN + "Cooldown: "
 				+ ChatColor.RESET
-				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(Config.TELEPORT_COOLDOWN.asInt())));
+				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(plugin.getConfig().getInt("teleport-cooldown"))));
 
 		sender.sendMessage(ChatColor.GREEN + "Shift-click required: "
-				+ ChatColor.RESET + Config.SHIFT_CLICK.isTrue());
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));
 
 		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: "
 				+ ChatColor.RESET + "[ "
-				+ Config.CANCEL_ON_DAMAGE.isTrue() + "/"
-				+ Config.CANCEL_ON_MOVEMENT.isTrue() + "/"
-				+ Config.CANCEL_ON_INTERACTION.isTrue() + " ]");
+				+ plugin.getConfig().getBoolean("cancel-on-damage") + "/"
+				+ plugin.getConfig().getBoolean("cancel-on-movement") + "/"
+				+ plugin.getConfig().getBoolean("cancel-on-interaction") + " ]");
 
 		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: "
-				+ ChatColor.RESET + Config.REMOVE_FROM_INVENTORY.asOptionalString());
+				+ ChatColor.RESET + plugin.getConfig().getString("remove-from-inventory"));
 
 		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET
-				+ Config.ALLOW_IN_RECIPES.isTrue());
+				+ plugin.getConfig().getBoolean("allow-in-recipes"));
 
 		sender.sendMessage(ChatColor.GREEN + "From nether: "
-				+ ChatColor.RESET + Config.FROM_NETHER.isTrue());
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-nether"));
 
 		sender.sendMessage(ChatColor.GREEN + "From end: "
-				+ ChatColor.RESET + Config.FROM_END.isTrue());
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-end"));
 
 		sender.sendMessage(ChatColor.GREEN + "Lightning: "
-				+ ChatColor.RESET + Config.LIGHTNING.isTrue());
+				+ ChatColor.RESET + plugin.getConfig().getBoolean("lightning"));
 
 		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
 				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString());

@@ -23,7 +23,6 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
-import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -161,7 +160,7 @@ class TeleportExecutor {
 		// check if location is within minimum proximity to player
 		return location.getWorld() != null
 				&& player.getWorld().equals(location.getWorld())
-				&& player.getLocation().distanceSquared(location) < Math.pow(Config.MINIMUM_DISTANCE.asInt(), 2);
+				&& player.getLocation().distanceSquared(location) < Math.pow(plugin.getConfig().getInt("minimum-distance"), 2);
 	}
 
 
@@ -172,8 +171,7 @@ class TeleportExecutor {
 	 */
 	final void removeFromInventoryOnUse(final Player player, final ItemStack playerItem) {
 		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-		String removeItem = Config.REMOVE_FROM_INVENTORY.asOptionalString().orElse("on-success");
-		if (removeItem.equalsIgnoreCase("on-use")) {
+		if ("on-use".equalsIgnoreCase(plugin.getConfig().getString("remove-from-inventory"))) {
 			playerItem.setAmount(playerItem.getAmount() - 1);
 			player.getInventory().setItemInMainHand(playerItem);
 		}
@@ -188,7 +186,7 @@ class TeleportExecutor {
 	private void logUsage(final Player player, final Destination destination) {
 
 		// if log-use is enabled in config, write log entry
-		if (Config.LOG_USE.isTrue()) {
+		if (plugin.getConfig().getBoolean("log-use")) {
 
 			// send message to console
 			plugin.messageBuilder.compose(plugin.getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)

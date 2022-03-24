@@ -23,33 +23,38 @@ import org.bstats.charts.SimplePie;
 
 public class MetricsHandler {
 
+
+	/**
+	 * Class constructor
+	 * @param plugin reference to plugin main class
+	 */
 	public MetricsHandler(PluginMain plugin) {
 
 		Metrics metrics = new Metrics(plugin, 13927);
 
 		// pie chart of configured language
-		metrics.addCustomChart(new SimplePie("language", Config.LANGUAGE::asString));
+		metrics.addCustomChart(new SimplePie("language", () -> plugin.getConfig().getString("language")));
 
 		// pie chart of titles enabled
-		metrics.addCustomChart(new SimplePie("titles_enabled", Config.TITLES_ENABLED::asString));
+		metrics.addCustomChart(new SimplePie("titles_enabled", () -> plugin.getConfig().getString("titles-enabled")));
 
 		// pie chart of particle effects enabled
-		metrics.addCustomChart(new SimplePie("particle_effects", Config.PARTICLE_EFFECTS::asString));
+		metrics.addCustomChart(new SimplePie("particle_effects", () -> plugin.getConfig().getString("particle-effects")));
 
 		// pie chart of sound effects enabled
-		metrics.addCustomChart(new SimplePie("sound_effects", Config.SOUND_EFFECTS::asString));
+		metrics.addCustomChart(new SimplePie("sound_effects", () -> plugin.getConfig().getString("sound-effects")));
 
 		// pie chart of from-nether enabled
-		metrics.addCustomChart(new SimplePie("from_nether", Config.FROM_NETHER::asString));
+		metrics.addCustomChart(new SimplePie("from_nether", () -> plugin.getConfig().getString("from-nether")));
 
 		// pie chart of from-end enabled
-		metrics.addCustomChart(new SimplePie("from_end", Config.FROM_END::asString));
+		metrics.addCustomChart(new SimplePie("from_end", () -> plugin.getConfig().getString("from-end")));
 
 		// pie chart of teleport cooldown time
-		metrics.addCustomChart(new SimplePie("teleport_cooldown", Config.TELEPORT_COOLDOWN::asString));
+		metrics.addCustomChart(new SimplePie("teleport_cooldown", () -> plugin.getConfig().getString("teleport-cooldown")));
 
 		// pie chart of teleport warmup time
-		metrics.addCustomChart(new SimplePie("teleport_warmup", Config.TELEPORT_WARMUP::asString));
+		metrics.addCustomChart(new SimplePie("teleport_warmup", () -> plugin.getConfig().getString("teleport-warmup")));
 
 	}
 

@@ -22,7 +22,6 @@ import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-import com.winterhavenmc.lodestar.util.Config;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -243,7 +242,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 
 		String key = plugin.lodeStarFactory.getKey(itemStack);
 		int quantity = itemStack.getAmount();
-		int maxGiveAmount = Config.MAX_GIVE_AMOUNT.asInt();
+		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
 
 		// check quantity against configured max give amount
 		if (maxGiveAmount >= 0) {

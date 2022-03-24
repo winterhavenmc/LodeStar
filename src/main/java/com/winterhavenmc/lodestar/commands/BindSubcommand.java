@@ -23,7 +23,6 @@ import com.winterhavenmc.lodestar.storage.Destination;
 
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-import com.winterhavenmc.lodestar.util.Config;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -113,7 +112,7 @@ final class BindSubcommand extends AbstractSubcommand {
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// if default-item-only configured true, check that item in hand has default material and data
-		if (Config.DEFAULT_MATERIAL_ONLY.isTrue()
+		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
 			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)

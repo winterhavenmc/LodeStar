@@ -23,7 +23,6 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
 
-import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -92,11 +91,11 @@ abstract class AbstractTeleporter {
 		Location location = plugin.worldManager.getSpawnLocation(player);
 
 		// if from-nether is enabled in config and player is in nether, try to get overworld spawn location
-		if (Config.FROM_NETHER.isTrue() && isInNetherWorld(player)) {
+		if (plugin.getConfig().getBoolean("from-nether") && isInNetherWorld(player)) {
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 		// if from-end is enabled in config and player is in end, try to get overworld spawn location
-		else if (Config.FROM_END.isTrue() && isInEndWorld(player)) {
+		else if (plugin.getConfig().getBoolean("from-end") && isInEndWorld(player)) {
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 

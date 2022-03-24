@@ -21,7 +21,6 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
-import com.winterhavenmc.lodestar.util.Config;
 
 import org.bukkit.entity.Player;
 
@@ -76,7 +75,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter {
 	 * @param player the player to teleport
 	 */
 	void fallbackToSpawn(final Player player) {
-		if (Config.BEDSPAWN_FALLBACK.isTrue()) {
+		if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
 			getSpawnDestination(player).ifPresentOrElse(
 					destination -> new SpawnTeleporter(plugin, teleportExecutor).initiate(player),
 					() -> sendInvalidDestinationMessage(player, plugin.messageBuilder.getHomeDisplayName().orElse("Home"))

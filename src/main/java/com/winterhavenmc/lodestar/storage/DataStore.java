@@ -18,7 +18,6 @@
 package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.util.Config;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
@@ -143,7 +142,7 @@ public interface DataStore {
 		catch (Exception e) {
 			plugin.getLogger().severe("Could not initialize the " + newDataStore + " datastore!");
 			plugin.getLogger().severe(e.getLocalizedMessage());
-			if (Config.DEBUG.isTrue()) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.printStackTrace();
 			}
 		}

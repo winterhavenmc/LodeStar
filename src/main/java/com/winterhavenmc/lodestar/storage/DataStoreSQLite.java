@@ -25,8 +25,6 @@ import java.io.File;
 import java.sql.*;
 import java.util.*;
 
-import static com.winterhavenmc.lodestar.util.Config.DEBUG;
-
 
 final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
@@ -194,7 +192,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
-					if (DEBUG.isTrue()) {
+					if (plugin.getConfig().getBoolean("debug")) {
 						e.getStackTrace();
 					}
 				}
