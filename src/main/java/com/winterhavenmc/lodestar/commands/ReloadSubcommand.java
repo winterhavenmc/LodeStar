@@ -72,7 +72,7 @@ final class ReloadSubcommand extends AbstractSubcommand {
 		// reload main configuration
 		plugin.reloadConfig();
 
-		// update enabledWorlds list
+		// reload enabled worlds list
 		plugin.worldManager.reload();
 
 		// reload sounds
