@@ -70,59 +70,121 @@ final class StatusSubcommand extends AbstractSubcommand {
 			return true;
 		}
 
-		// output config settings
+		// output plugin info and config settings
+		displayPluginVersion(sender);
+		displayDebugSetting(sender);
+		displayLanguageSetting(sender);
+		displayDefaultMaterialSetting(sender);
+		displayMinimumDistanceSetting(sender);
+		displayTeleportWarmupSetting(sender);
+		displayTeleportCooldownSetting(sender);
+		displayShiftClickSetting(sender);
+		displayTeleportCancelSetting(sender);
+		displayRemoveFromInventorySetting(sender);
+		displayAllowInRecipesSetting(sender);
+		displayFromNetherSetting(sender);
+		displayFromEndSetting(sender);
+		displayLightningSetting(sender);
+		displayEnabledWorlds(sender);
+
+		return true;
+	}
+
+
+	private void displayPluginVersion(final CommandSender sender) {
 		String versionString = plugin.getDescription().getVersion();
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + "Version: "
 				+ ChatColor.RESET + versionString);
+	}
 
+
+	private void displayDebugSetting(final CommandSender sender) {
 		if (plugin.getConfig().getBoolean("debug")) {
 			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
 		}
+	}
 
+
+	private void displayLanguageSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Language: "
 				+ ChatColor.RESET + plugin.getConfig().getString("language"));
+	}
 
+
+	private void displayDefaultMaterialSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Default material: "
 				+ ChatColor.RESET + plugin.getConfig().getString("default-material"));
+	}
 
+
+	private void displayMinimumDistanceSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Minimum distance: "
 				+ ChatColor.RESET + plugin.getConfig().getInt("minimum-distance"));
+	}
 
+
+	private void displayTeleportWarmupSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Warmup: "
 				+ ChatColor.RESET
 				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(plugin.getConfig().getInt("teleport-warmup"))));
+	}
 
+
+	private void displayTeleportCooldownSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Cooldown: "
 				+ ChatColor.RESET
 				+ plugin.messageBuilder.getTimeString(SECONDS.toMillis(plugin.getConfig().getInt("teleport-cooldown"))));
+	}
 
+
+	private void displayShiftClickSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Shift-click required: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("shift-click"));
+	}
 
+
+	private void displayTeleportCancelSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: "
 				+ ChatColor.RESET + "[ "
 				+ plugin.getConfig().getBoolean("cancel-on-damage") + "/"
 				+ plugin.getConfig().getBoolean("cancel-on-movement") + "/"
 				+ plugin.getConfig().getBoolean("cancel-on-interaction") + " ]");
+	}
 
+
+	private void displayRemoveFromInventorySetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: "
 				+ ChatColor.RESET + plugin.getConfig().getString("remove-from-inventory"));
+	}
 
+
+	private void displayAllowInRecipesSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET
 				+ plugin.getConfig().getBoolean("allow-in-recipes"));
+	}
 
+
+	private void displayFromNetherSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "From nether: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-nether"));
+	}
 
+
+	private void displayFromEndSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "From end: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("from-end"));
+	}
 
+
+	private void displayLightningSetting(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Lightning: "
 				+ ChatColor.RESET + plugin.getConfig().getBoolean("lightning"));
+	}
 
+
+	private void displayEnabledWorlds(final CommandSender sender) {
 		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
 				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString());
-
-		return true;
 	}
+
 }
