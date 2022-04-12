@@ -34,7 +34,7 @@ import java.util.*;
 /**
  * Utility class with methods for creating and using LodeStar item stacks
  */
-public final class LodeStarFactory {
+public final class LodeStarUtility {
 
 	// static reference to main class instance
 	private final PluginMain plugin;
@@ -54,7 +54,7 @@ public final class LodeStarFactory {
 	 *
 	 * @param plugin reference to plugin main class
 	 */
-	public LodeStarFactory(final PluginMain plugin) {
+	public LodeStarUtility(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
 	}
@@ -152,7 +152,7 @@ public final class LodeStarFactory {
 		List<String> configLore = plugin.messageBuilder.getItemLore();
 
 		// list of strings for formatted item lore
-		List<String> itemLore = new LinkedList<>();
+		List<String> itemLore = new ArrayList<>(4);
 
 		// iterate over lines of lore and translate color codes and replace destination placeholder
 		for (String line : configLore) {

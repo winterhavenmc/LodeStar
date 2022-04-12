@@ -39,12 +39,28 @@ import java.util.Optional;
  * prevent them being overridden, and the class and methods are declared package-private
  * to prevent their use outside this package.
  */
-abstract class AbstractTeleporter {
+abstract class AbstractTeleporter implements Teleporter {
 
 	protected final PluginMain plugin;
+	protected final TeleportExecutor teleportExecutor;
 
-	public AbstractTeleporter(final PluginMain plugin) {
+
+	public AbstractTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
 		this.plugin = plugin;
+		this.teleportExecutor = teleportExecutor;
+	}
+
+
+	/**
+	 * Execute the teleport to destination
+	 *
+	 * @param player      the player to teleport
+	 * @param destination the destination
+	 * @param messageId   the teleport warmup message to send to player
+	 */
+	@Override
+	public void execute(final Player player, final Destination destination, final MessageId messageId) {
+		teleportExecutor.execute(player, destination, messageId);
 	}
 
 

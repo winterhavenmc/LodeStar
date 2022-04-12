@@ -254,7 +254,7 @@ public final class Destination {
 	 * @return String - the key derived from the destination name
 	 */
 	public static String deriveKey(final String destinationName) {
-		return plugin.lodeStarFactory.deriveKey(destinationName);
+		return plugin.lodeStarUtility.deriveKey(destinationName);
 	}
 
 

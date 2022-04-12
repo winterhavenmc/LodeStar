@@ -28,7 +28,7 @@ import java.util.*;
 abstract class AbstractSubcommand implements Subcommand {
 
 	protected String name;
-	protected Collection<String> aliases = new HashSet<>();
+	protected Collection<String> aliases = Collections.emptySet();
 	protected String permissionNode;
 	protected String usageString;
 	protected MessageId description;
@@ -74,8 +74,8 @@ abstract class AbstractSubcommand implements Subcommand {
 		return Collections.emptyList();
 	}
 
-	protected boolean matchPrefix(String string1, String string2) {
-		return string1.toLowerCase().startsWith(string2.toLowerCase());
+	protected boolean matchPrefix(String string, String prefix) {
+		return string.toLowerCase().startsWith(prefix.toLowerCase());
 	}
 
 }

@@ -38,11 +38,11 @@ final class DeleteSubcommand extends AbstractSubcommand {
 	DeleteSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name ="delete";
+		this.aliases = Set.of("unset");
 		this.permissionNode = "lodestar.delete";
 		this.usageString ="/lodestar delete <destination name>";
 		this.description = MessageId.COMMAND_HELP_DELETE;
 		this.minArgs = 1;
-		this.aliases = Set.of("unset");
 	}
 
 
@@ -83,7 +83,7 @@ final class DeleteSubcommand extends AbstractSubcommand {
 		String destinationName = String.join(" ", args);
 
 		// get key for destination name
-		String key = plugin.lodeStarFactory.deriveKey(destinationName);
+		String key = plugin.lodeStarUtility.deriveKey(destinationName);
 
 		// test that destination name is not reserved name
 		if (Destination.isReserved(destinationName)) {

@@ -102,7 +102,7 @@ public class LodeStarPluginTests {
 		@Test
 		@DisplayName("spawn star factory not null.")
 		void SpawnStarFactoryNotNull() {
-			Assertions.assertNotNull(plugin.lodeStarFactory,
+			Assertions.assertNotNull(plugin.lodeStarUtility,
 					"spawn star factory is null.");
 		}
 	}
@@ -140,12 +140,11 @@ public class LodeStarPluginTests {
 		// class constructor
 		SoundTests() {
 			// add all SoundId enum values to collection
-			for (com.winterhavenmc.lodestar.sounds.SoundId SoundId : SoundId.values()) {
+			for (SoundId SoundId : SoundId.values()) {
 				enumSoundNames.add(SoundId.name());
 			}
 		}
 
-		@SuppressWarnings("unused")
 		Collection<String> GetConfigFileKeys() {
 			return plugin.soundConfig.getSoundConfigKeys();
 		}
@@ -243,7 +242,7 @@ public class LodeStarPluginTests {
 	@DisplayName("Test spawn star factory methods.")
 	class SpawnStarFactoryTests {
 
-		ItemStack lodeStarItem = plugin.lodeStarFactory.create("test destination");
+		ItemStack lodeStarItem = plugin.lodeStarUtility.create("test destination");
 
 		@Test
 		@DisplayName("new item type is nether star.")
@@ -277,7 +276,7 @@ public class LodeStarPluginTests {
 		@Test
 		@DisplayName("new item is valid lode star item.")
 		void CreateAndTestValidItem() {
-			Assertions.assertTrue(plugin.lodeStarFactory.isItem(lodeStarItem),
+			Assertions.assertTrue(plugin.lodeStarUtility.isItem(lodeStarItem),
 					"new item stack is not a valid lode star item.");
 		}
 	}

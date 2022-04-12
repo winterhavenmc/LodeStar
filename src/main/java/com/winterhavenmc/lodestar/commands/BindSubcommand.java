@@ -114,7 +114,7 @@ final class BindSubcommand extends AbstractSubcommand {
 		// if default-item-only configured true, check that item in hand has default material and data
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
-			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
+			if (!plugin.lodeStarUtility.isDefaultItem(playerItem)) {
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
 						.setMacro(Macro.DESTINATION, destinationName)
 						.send();
@@ -147,7 +147,7 @@ final class BindSubcommand extends AbstractSubcommand {
 		}
 
 		// set destination in item lore
-		plugin.lodeStarFactory.setMetaData(playerItem, destinationName);
+		plugin.lodeStarUtility.setMetaData(playerItem, destinationName);
 
 		// send success message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_BIND)

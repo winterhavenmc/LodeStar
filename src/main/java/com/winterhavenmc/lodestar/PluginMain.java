@@ -23,7 +23,7 @@ import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.DataStore;
 import com.winterhavenmc.lodestar.teleport.TeleportHandler;
-import com.winterhavenmc.lodestar.util.LodeStarFactory;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.util.MetricsHandler;
 
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
@@ -53,7 +53,7 @@ public final class PluginMain extends JavaPlugin {
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public CommandManager commandManager;
-	public LodeStarFactory lodeStarFactory;
+	public LodeStarUtility lodeStarUtility;
 
 
 	/**
@@ -102,7 +102,7 @@ public final class PluginMain extends JavaPlugin {
 		commandManager = new CommandManager(this);
 
 		// instantiate lodestar factory
-		lodeStarFactory = new LodeStarFactory(this);
+		lodeStarUtility = new LodeStarUtility(this);
 
 		// instantiate player listener
 		new PlayerEventListener(this);

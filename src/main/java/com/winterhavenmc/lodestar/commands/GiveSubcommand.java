@@ -145,9 +145,9 @@ final class GiveSubcommand extends AbstractSubcommand {
 			ItemStack playerItem = ((Player) sender).getInventory().getItemInMainHand().clone();
 
 			// if item in hand is a LodeStar item, set destination and material from item
-			if (plugin.lodeStarFactory.isItem(playerItem)) {
+			if (plugin.lodeStarUtility.isItem(playerItem)) {
 
-				destinationName = plugin.lodeStarFactory.getDestinationName(playerItem);
+				destinationName = plugin.lodeStarUtility.getDestinationName(playerItem);
 				material = playerItem.getType();
 			}
 		}
@@ -220,7 +220,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 		ItemStack itemStack = new ItemStack(material, quantity);
 
 		// set item metadata on item stack
-		plugin.lodeStarFactory.setMetaData(itemStack, destinationName);
+		plugin.lodeStarUtility.setMetaData(itemStack, destinationName);
 
 		// give item stack to target player
 		giveItem(sender, targetPlayer, itemStack);
@@ -240,7 +240,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 	@SuppressWarnings("UnusedReturnValue")
 	private boolean giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack) {
 
-		String key = plugin.lodeStarFactory.getKey(itemStack);
+		String key = plugin.lodeStarUtility.getKey(itemStack);
 		int quantity = itemStack.getAmount();
 		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
 
@@ -251,7 +251,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 		}
 
 		// test that item is a LodeStar item
-		if (!plugin.lodeStarFactory.isItem(itemStack)) {
+		if (!plugin.lodeStarUtility.isItem(itemStack)) {
 			plugin.messageBuilder.compose(giver, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;

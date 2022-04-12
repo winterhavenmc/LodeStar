@@ -122,7 +122,7 @@ public final class PlayerEventListener implements Listener {
 		}
 
 		// if item used is not a LodeStar, do nothing and return
-		if (!plugin.lodeStarFactory.isItem(event.getItem())) {
+		if (!plugin.lodeStarUtility.isItem(event.getItem())) {
 			return;
 		}
 
@@ -243,7 +243,7 @@ public final class PlayerEventListener implements Listener {
 
 		// if crafting inventory contains LodeStar item, set result item to null
 		for (ItemStack itemStack : event.getInventory()) {
-			if (plugin.lodeStarFactory.isItem(itemStack)) {
+			if (plugin.lodeStarUtility.isItem(itemStack)) {
 				event.getInventory().setResult(null);
 			}
 		}

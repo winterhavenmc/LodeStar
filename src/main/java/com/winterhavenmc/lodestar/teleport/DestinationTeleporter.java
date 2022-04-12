@@ -24,9 +24,7 @@ import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.entity.Player;
 
 
-final class DestinationTeleporter extends AbstractTeleporter implements Teleporter {
-
-	private final TeleportExecutor teleportExecutor;
+final class DestinationTeleporter extends AbstractTeleporter {
 
 
 	/**
@@ -36,8 +34,7 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 	 * @param teleportExecutor the teleport executor
 	 */
 	DestinationTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
-		super(plugin);
-		this.teleportExecutor = teleportExecutor;
+		super(plugin, teleportExecutor);
 	}
 
 
@@ -50,26 +47,13 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 	public void initiate(final Player player) {
 
 		// get item key from player item in main hand
-		final String key = plugin.lodeStarFactory.getKey(player.getInventory().getItemInMainHand());
+		final String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
 		// execute teleport or send invalid destination message
 		plugin.dataStore.selectRecord(key).ifPresentOrElse(
 				destination -> execute(player, destination, MessageId.TELEPORT_WARMUP),
 				() -> sendInvalidDestinationMessage(player, Destination.getDisplayName(key))
 		);
-	}
-
-
-	/**
-	 * Execute the teleport to destination
-	 *
-	 * @param player      the player to teleport
-	 * @param destination the destination
-	 * @param messageId   the teleport warmup message to send to player
-	 */
-	@Override
-	public void execute(final Player player, final Destination destination, final MessageId messageId) {
-		teleportExecutor.execute(player, destination, messageId);
 	}
 
 }

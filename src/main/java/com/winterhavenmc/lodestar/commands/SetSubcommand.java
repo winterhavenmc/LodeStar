@@ -119,7 +119,7 @@ final class SetSubcommand extends AbstractSubcommand {
 		}
 
 		// send warning message if name begins with a number
-		if (plugin.lodeStarFactory.deriveKey(destinationName).matches("^\\d*_.*")) {
+		if (plugin.lodeStarUtility.deriveKey(destinationName).matches("^\\d*_.*")) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();

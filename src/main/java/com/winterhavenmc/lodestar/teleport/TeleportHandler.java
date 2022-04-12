@@ -77,7 +77,7 @@ public final class TeleportHandler {
 		}
 
 		// get key from player item
-		String key = plugin.lodeStarFactory.getKey(player.getInventory().getItemInMainHand());
+		String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
 		Teleporter teleporter;
 

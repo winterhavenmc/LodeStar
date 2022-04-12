@@ -19,14 +19,11 @@ package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
-import com.winterhavenmc.lodestar.storage.Destination;
 
 import org.bukkit.entity.Player;
 
 
-final class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
-
-	private final TeleportExecutor teleportExecutor;
+final class SpawnTeleporter extends AbstractTeleporter {
 
 
 	/**
@@ -36,8 +33,7 @@ final class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
 	 * @param teleportExecutor the teleport executor
 	 */
 	SpawnTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
-		super(plugin);
-		this.teleportExecutor = teleportExecutor;
+		super(plugin, teleportExecutor);
 	}
 
 
@@ -52,19 +48,6 @@ final class SpawnTeleporter extends AbstractTeleporter implements Teleporter {
 				destination -> execute(player, destination, MessageId.TELEPORT_WARMUP_SPAWN),
 				() -> sendInvalidDestinationMessage(player, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
 		);
-	}
-
-
-	/**
-	 * Execute the teleport to destination
-	 *
-	 * @param player      the player to teleport
-	 * @param destination the destination
-	 * @param messageId   the teleport warmup message to send to player
-	 */
-	@Override
-	public void execute(final Player player, final Destination destination, final MessageId messageId) {
-		teleportExecutor.execute(player, destination, messageId);
 	}
 
 }

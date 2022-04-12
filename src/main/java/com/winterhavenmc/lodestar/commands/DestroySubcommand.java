@@ -66,7 +66,7 @@ final class DestroySubcommand extends AbstractSubcommand {
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// check that item player is holding is a LodeStar item
-		if (!plugin.lodeStarFactory.isItem(playerItem)) {
+		if (!plugin.lodeStarUtility.isItem(playerItem)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -78,7 +78,7 @@ final class DestroySubcommand extends AbstractSubcommand {
 		// send item destroyed message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
 				.setMacro(Macro.ITEM_QUANTITY, quantity)
-				.setMacro(Macro.DESTINATION, plugin.lodeStarFactory.getDestinationName(playerItem))
+				.setMacro(Macro.DESTINATION, plugin.lodeStarUtility.getDestinationName(playerItem))
 				.send();
 		plugin.soundConfig.playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
 

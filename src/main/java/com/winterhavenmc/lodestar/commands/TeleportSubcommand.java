@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -42,6 +43,7 @@ final class TeleportSubcommand extends AbstractSubcommand {
 	TeleportSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.name = "teleport";
+		this.aliases = Set.of("tp");
 		this.permissionNode = "lodestar.teleport";
 		this.usageString = "/lodestar teleport <destination name>";
 		this.description = MessageId.COMMAND_HELP_TELEPORT;

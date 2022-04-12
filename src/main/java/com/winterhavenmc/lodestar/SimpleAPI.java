@@ -57,7 +57,7 @@ public final class SimpleAPI {
 	 * @return ItemStack with destination name and quantity
 	 */
 	public static ItemStack create(final String destinationName) {
-		return plugin.lodeStarFactory.create(destinationName, 1);
+		return plugin.lodeStarUtility.create(destinationName, 1);
 	}
 
 
@@ -69,7 +69,7 @@ public final class SimpleAPI {
 	 * @return ItemStack with destination name and quantity
 	 */
 	public static ItemStack create(final String destinationName, final int quantity) {
-		return plugin.lodeStarFactory.create(destinationName, quantity);
+		return plugin.lodeStarUtility.create(destinationName, quantity);
 	}
 
 
@@ -80,7 +80,7 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name used to create the encoded key
 	 */
 	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
-		plugin.lodeStarFactory.setMetaData(itemStack, destinationName);
+		plugin.lodeStarUtility.setMetaData(itemStack, destinationName);
 	}
 
 
@@ -91,7 +91,7 @@ public final class SimpleAPI {
 	 * @return boolean - {@code true} if ItemStack is LodeStar item, {@code false} if it is not
 	 */
 	public static boolean isLodeStar(final ItemStack itemStack) {
-		return plugin.lodeStarFactory.isItem(itemStack);
+		return plugin.lodeStarUtility.isItem(itemStack);
 	}
 
 
@@ -102,7 +102,7 @@ public final class SimpleAPI {
 	 * @return boolean - {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
 	 */
 	public static boolean isDefaultItem(final ItemStack itemStack) {
-		return plugin.lodeStarFactory.isDefaultItem(itemStack);
+		return plugin.lodeStarUtility.isDefaultItem(itemStack);
 	}
 
 
@@ -113,7 +113,7 @@ public final class SimpleAPI {
 	 * @return String - the destination key
 	 */
 	public static String getDestination(final ItemStack itemStack) {
-		return plugin.lodeStarFactory.getKey(itemStack);
+		return plugin.lodeStarUtility.getKey(itemStack);
 	}
 
 
@@ -192,7 +192,7 @@ public final class SimpleAPI {
 	public static String getDestinationName(final ItemStack itemStack) {
 
 		// get persistent key from item stack
-		String key = plugin.lodeStarFactory.getKey(itemStack);
+		String key = plugin.lodeStarUtility.getKey(itemStack);
 
 		// if item stack persistent key is null, return null
 		if (key == null) {
@@ -340,7 +340,7 @@ public final class SimpleAPI {
 	 * @return ItemStack
 	 */
 	public static ItemStack getDefaultItem() {
-		return plugin.lodeStarFactory.getDefaultItemStack();
+		return plugin.lodeStarUtility.getDefaultItemStack();
 	}
 
 }
