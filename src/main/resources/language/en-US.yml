@@ -51,273 +51,279 @@ TIME_STRINGS:
 MESSAGES:
   COMMAND_FAIL_ARGS_COUNT_UNDER:
     enabled: true
-    string: '&3[LodeStar]&c Too few arguments!'
+    message: '&3[LodeStar]&c Too few arguments!'
 
   COMMAND_FAIL_ARGS_COUNT_OVER:
     enabled: true
-    string: '&3[LodeStar]&c Too many arguments!'
+    message: '&3[LodeStar]&c Too many arguments!'
 
   COMMAND_FAIL_CONSOLE:
     enabled: true
-    string: '&3[LodeStar]&c You must be in game to use this command!'
+    message: '&3[LodeStar]&c You must be in game to use this command!'
 
   COMMAND_FAIL_DELETE_RESERVED:
     enabled: true
-    string: '&3[LodeStar]&c Destination &6%DESTINATION%&c cannot be deleted!'
+    message: '&3[LodeStar]&c Built-in destination &6%DESTINATION%&c cannot be deleted!'
 
   COMMAND_FAIL_GIVE_INVENTORY_FULL:
     enabled: true
-    string: '&3Could not give %ITEM% to %PLAYER% because their inventory is full.'
+    message: '&3Could not give %ITEM% to %PLAYER% because their inventory is full.'
 
   COMMAND_FAIL_INVALID_COMMAND:
     enabled: true
-    string: '&3[LodeStar]&c That is not a valid command!'
+    message: '&3[LodeStar]&c That is not a valid command!'
 
   COMMAND_FAIL_INVALID_DESTINATION:
     enabled: true
-    string: '&3[LodeStar]&c That is not a valid destination!'
+    message: '&3[LodeStar]&c That is not a valid destination!'
 
   COMMAND_FAIL_INVALID_ITEM:
     enabled: true
-    string: '&3[LodeStar]&c The item you are holding is not a %ITEM%!'
+    message: '&3[LodeStar]&c The item you are holding is not a %ITEM%!'
 
   COMMAND_FAIL_INVALID_MATERIAL:
     enabled: true
-    string: '&3[LodeStar]&c The item you are holding is not a valid material!'
+    message: '&3[LodeStar]&c The item you are holding is not a valid material!'
 
   COMMAND_FAIL_INVALID_QUANTITY:
     enabled: true
-    string: '&3[LodeStar]&c Invalid quantity!'
+    message: '&3[LodeStar]&c Invalid quantity!'
 
   COMMAND_FAIL_PLAYER_NOT_FOUND:
     enabled: true
-    string: '&3That player could not be found.'
+    message: '&3That player could not be found.'
 
   COMMAND_FAIL_PLAYER_NOT_ONLINE:
     enabled: true
-    string: '&3That player is not online.'
+    message: '&3That player is not online.'
 
   COMMAND_FAIL_SET_OVERWRITE:
     enabled: true
-    string: '&3[LodeStar]&c Destination cannot be overwritten!'
+    message: '&3[LodeStar]&c Destination cannot be overwritten!'
 
   COMMAND_FAIL_SET_RESERVED:
     enabled: true
-    string: '&3[LodeStar]&c Destination &6%DESTINATION%&c is reserved and cannot be set!'
+    message: '&3[LodeStar]&c Destination &6%DESTINATION%&c is reserved and cannot be set!'
 
 
   COMMAND_HELP_INVALID:
     enabled: true
-    string: '&3[LodeStar]&c That is not a valid command!'
+    message: '&3[LodeStar]&c That is not a valid command!'
 
   COMMAND_HELP_BIND:
     enabled: true
-    string: '&eBind a LodeStar destination to the item you are holding.'
+    message: '&eBind a LodeStar destination to the item you are holding.'
 
   COMMAND_HELP_DELETE:
     enabled: true
-    string: '&eRemove a LodeStar destination.'
+    message: '&eRemove a LodeStar destination.'
 
   COMMAND_HELP_DESTROY:
     enabled: true
-    string: '&eDestroy the stack of LodeStars you are holding.'
+    message: '&eDestroy the stack of LodeStars you are holding.'
 
   COMMAND_HELP_GIVE:
     enabled: true
-    string: '&eGive a LodeStar to a player.'
+    message: '&eGive a LodeStar to a player.'
 
   COMMAND_HELP_HELP:
     enabled: true
-    string: '&eDisplay help for LodeStar commands.'
+    message: '&eDisplay help for LodeStar commands.'
 
   COMMAND_HELP_LIST:
     enabled: true
-    string: '&eDisplay a list of LodeStar destinations.'
+    message: '&eDisplay a list of LodeStar destinations.'
 
   COMMAND_HELP_RELOAD:
     enabled: true
-    string: '&eReloads the configuration without needing to restart the server.'
+    message: '&eReloads the configuration without needing to restart the server.'
 
   COMMAND_HELP_SET:
     enabled: true
-    string: '&eCreate a new LodeStar destination at your current location.'
+    message: '&eCreate a new LodeStar destination at your current location.'
 
   COMMAND_HELP_STATUS:
     enabled: true
-    string: '&eDisplay plugin configuration settings.'
+    message: '&eDisplay plugin configuration settings.'
 
   COMMAND_HELP_TELEPORT:
     enabled: true
-    string: '&eTeleport to a LodeStar destination.'
+    message: '&eTeleport to a LodeStar destination.'
 
   COMMAND_HELP_USAGE_HEADER:
     enabled: true
-    string: '&eCommand usage:'
+    message: '&eCommand usage:'
 
 
   COMMAND_SUCCESS_BIND:
     enabled: true
-    string: '&3[LodeStar]&b Item in hand now linked to &2%DESTINATION%&b.'
+    message: '&3[LodeStar]&b Item in hand now linked to &2%DESTINATION%&b.'
 
   COMMAND_SUCCESS_DELETE:
     enabled: true
-    string: '&3[LodeStar]&c %DESTINATION% removed!'
+    message: '&3[LodeStar]&c %DESTINATION% removed!'
 
   COMMAND_SUCCESS_DESTROY:
     enabled: true
-    string: '&3[LodeStar]&c %ITEM% destroyed!'
+    message: '&3[LodeStar]&c %ITEM% destroyed!'
 
   COMMAND_SUCCESS_GIVE:
     enabled: true
-    string: '&3You gave %ITEM_QUANTITY% %ITEM% to %TARGET_PLAYER%.'
+    message: '&3You gave %ITEM_QUANTITY% %ITEM% to %TARGET_PLAYER%.'
 
 #NOTE: target player refers to item giver in below message!
   COMMAND_SUCCESS_GIVE_TARGET:
     enabled: true
-    string: '&3%TARGET_PLAYER% gave you %ITEM_QUANTITY% %ITEM%.'
+    message: '&3%TARGET_PLAYER% gave you %ITEM_QUANTITY% %ITEM%.'
 
   COMMAND_SUCCESS_RELOAD:
     enabled: true
-    string: '&3[LodeStar]&b configuration reloaded.'
+    message: '&3[LodeStar]&b configuration reloaded.'
 
   COMMAND_SUCCESS_SET:
     enabled: true
-    string: '&3[LodeStar]&b Destination &2%DESTINATION%&b set.'
+    message: '&3[LodeStar]&b Destination &2%DESTINATION%&b set.'
 
   COMMAND_WARN_SET_NUMERIC_PREFIX:
     enabled: true
-    string: '&3[LodeStar]&c Warning: Destination name begins with a valid quantity. Be mindful when using with the &ogive&r&c command!'
+    message: '&3[LodeStar]&c Warning: Destination name begins with a valid quantity. Be mindful when using with the &ogive&r&c command!'
 
 
   PERMISSION_DENIED_BIND:
     enabled: true
-    string: '&cYou do not have permission to bind LodeStar items to locations!'
+    message: '&cYou do not have permission to bind LodeStar items to locations!'
 
   PERMISSION_DENIED_DELETE:
     enabled: true
-    string: '&cYou do not have permission to delete LodeStar locations!'
+    message: '&cYou do not have permission to delete LodeStar locations!'
 
   PERMISSION_DENIED_DESTROY:
     enabled: true
-    string: '&cYou do not have permission to destroy LodeStar items!'
+    message: '&cYou do not have permission to destroy LodeStar items!'
 
   PERMISSION_DENIED_GIVE:
     enabled: true
-    string: '&cYou do not have permission to give LodeStar items!'
+    message: '&cYou do not have permission to give LodeStar items!'
 
   PERMISSION_DENIED_HELP:
     enabled: true
-    string: '&cYou do not have permission to view LodeStar help!'
+    message: '&cYou do not have permission to view LodeStar help!'
 
   PERMISSION_DENIED_LIST:
     enabled: true
-    string: '&cYou do not have permission to list LodeStar locations!'
+    message: '&cYou do not have permission to list LodeStar locations!'
 
   PERMISSION_DENIED_OVERWRITE:
      enabled: true
-     string: '&cYou do not have permission to overwrite LodeStar locations!'
+     message: '&cYou do not have permission to overwrite LodeStar locations!'
 
   PERMISSION_DENIED_RELOAD:
     enabled: true
-    string: '&cYou do not have permission to reload the configuration!'
+    message: '&cYou do not have permission to reload the configuration!'
 
   PERMISSION_DENIED_SET:
     enabled: true
-    string: '&cYou do not have permission to set LodeStar locations!'
+    message: '&cYou do not have permission to set LodeStar locations!'
 
   PERMISSION_DENIED_STATUS:
     enabled: true
-    string: '&cYou do not have permission to view LodeStar settings!'
+    message: '&cYou do not have permission to view LodeStar settings!'
 
   PERMISSION_DENIED_TELEPORT:
     enabled: true
-    string: '&cYou do not have permission to teleport to LodeStar locations!'
+    message: '&cYou do not have permission to teleport to LodeStar locations!'
 
   PERMISSION_DENIED_USE:
     enabled: true
     repeat-delay: 1
-    string: '&cYou do not have permission to use a &b%ITEM%&r&3 in %WORLD%.'
+    message: '&cYou do not have permission to use a &b%ITEM%&r&3 in %WORLD%.'
 
 
   TELEPORT_CANCELLED_DAMAGE:
     enabled: true
-    string: '&cTeleport cancelled by damage!'
+    message: '&cTeleport cancelled by damage!'
 
   TELEPORT_CANCELLED_INTERACTION:
     enabled: true
-    string: '&cTeleport cancelled by interaction!'
+    message: '&cTeleport cancelled by interaction!'
 
   TELEPORT_CANCELLED_MOVEMENT:
     enabled: true
-    string: '&cTeleport cancelled by movement!'
+    message: '&cTeleport cancelled by movement!'
 
   TELEPORT_CANCELLED_NO_ITEM:
     enabled: true
-    string: '&cYou no longer have a %ITEM%!'
+    message: '&cYou no longer have a %ITEM%!'
 
   TELEPORT_COOLDOWN:
     enabled: true
     repeat-delay: 1
-    string: '&3You need to wait &b%DURATION%&3 to use another %ITEM%.'
+    message: '&3You need to wait &b%DURATION%&3 to use another %ITEM%.'
 
   TELEPORT_FAIL_INVALID_DESTINATION:
     enabled: true
     repeat-delay: 1
-    string: '&cThat destination does not exist!'
+    message: '&cThat destination does not exist!'
 
   TELEPORT_FAIL_NO_BEDSPAWN:
     enabled: true
     repeat-delay: 1
-    string: '&3You do not have a bed home set!'
+    message: '&3You do not have a bed home set!'
 
   TELEPORT_FAIL_PROXIMITY:
     enabled: true
     repeat-delay: 1
-    string: '&3You are too close to %DESTINATION%&r&3 to use a %ITEM%.'
+    message: '&3You are too close to %DESTINATION%&r&3 to use a %ITEM%.'
 
   TELEPORT_FAIL_SHIFT_CLICK:
     enabled: true
     repeat-delay: 5
-    string: '&3You must shift-click to use a %ITEM%.'
+    message: '&3You must shift-click to use a %ITEM%.'
 
   TELEPORT_FAIL_WORLD_DISABLED:
     enabled: true
     repeat-delay: 1
-    string: '&3LodeStars are not enabled in this world.'
+    message: '&3LodeStars are not enabled in this world.'
 
   TELEPORT_SUCCESS:
     enabled: true
-    string: '&3Successfully teleported to &b%DESTINATION%&r&3.'
+    message: '&3Successfully teleported to &b%DESTINATION%&r&3.'
+    subtitle: '&b%DESTINATION%'
 
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
-    string: '&3Returned to &b%WORLD% spawn&3.'
+    message: '&3Returned to &b%WORLD% spawn&3.'
+    subtitle: '&b%DESTINATION%'
 
   TELEPORT_WARMUP:
     enabled: true
-    string: '&3Teleporting to &b%DESTINATION%&3 in &b%DURATION%...'
+    message: '&3Teleporting to &b%DESTINATION%&3 in &b%DURATION%...'
 
   TELEPORT_WARMUP_SPAWN:
     enabled: true
-    string: '&3Teleporting to &b%WORLD% spawn&3 in &b%DURATION%...'
+    message: '&3Teleporting to &b%WORLD% spawn&3 in &b%DURATION%...'
+
+  TELEPORT_LOG_USAGE:
+    enabled: true
+    message: "&b%TARGET_PLAYER%&r used a %ITEM%&r to &b%DESTINATION%&r in &3%WORLD%&r."
 
 
   LIST_HEADER:
     enabled: true
-    string: '&3Page &b%PAGE_NUMBER%&3 of &b%PAGE_TOTAL%'
+    message: '&3Page &b%PAGE_NUMBER%&3 of &b%PAGE_TOTAL%'
 
   LIST_FOOTER:
     enabled: false
-    string: '&3Page &b%PAGE_NUMBER%&3 of &b%PAGE_TOTAL%'
+    message: '&3Page &b%PAGE_NUMBER%&3 of &b%PAGE_TOTAL%'
 
   LIST_ITEM:
     enabled: true
-    string: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%LOCATION%"
+    message: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%LOCATION%"
 
   LIST_ITEM_INVALID:
     enabled: true
-    string: "%ITEM_NUMBER%) &7%DESTINATION% &c| &b[ &eInvalid World: %WORLD% &b]"
+    message: "%ITEM_NUMBER%) &7%DESTINATION% &c| &b[ &eInvalid World: %WORLD% &b]"
 
   LIST_EMPTY:
     enabled: true
-    string: '&bThere are no destinations to list!'
+    message: '&bThere are no destinations to list!'

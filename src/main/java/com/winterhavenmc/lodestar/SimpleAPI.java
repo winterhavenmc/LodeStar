@@ -19,9 +19,6 @@ package com.winterhavenmc.lodestar;
 
 import com.winterhavenmc.lodestar.storage.Destination;
 
-import org.bukkit.Material;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -60,7 +57,7 @@ public final class SimpleAPI {
 	 * @return ItemStack with destination name and quantity
 	 */
 	public static ItemStack create(final String destinationName) {
-		return plugin.lodeStarFactory.create(destinationName, 1);
+		return plugin.lodeStarUtility.create(destinationName, 1);
 	}
 
 
@@ -72,7 +69,7 @@ public final class SimpleAPI {
 	 * @return ItemStack with destination name and quantity
 	 */
 	public static ItemStack create(final String destinationName, final int quantity) {
-		return plugin.lodeStarFactory.create(destinationName, quantity);
+		return plugin.lodeStarUtility.create(destinationName, quantity);
 	}
 
 
@@ -83,7 +80,7 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name used to create the encoded key
 	 */
 	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
-		plugin.lodeStarFactory.setMetaData(itemStack, destinationName);
+		plugin.lodeStarUtility.setMetaData(itemStack, destinationName);
 	}
 
 
@@ -94,7 +91,7 @@ public final class SimpleAPI {
 	 * @return boolean - {@code true} if ItemStack is LodeStar item, {@code false} if it is not
 	 */
 	public static boolean isLodeStar(final ItemStack itemStack) {
-		return plugin.lodeStarFactory.isItem(itemStack);
+		return plugin.lodeStarUtility.isItem(itemStack);
 	}
 
 
@@ -105,7 +102,7 @@ public final class SimpleAPI {
 	 * @return boolean - {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
 	 */
 	public static boolean isDefaultItem(final ItemStack itemStack) {
-		return plugin.lodeStarFactory.isDefaultItem(itemStack);
+		return plugin.lodeStarUtility.isDefaultItem(itemStack);
 	}
 
 
@@ -116,7 +113,7 @@ public final class SimpleAPI {
 	 * @return String - the destination key
 	 */
 	public static String getDestination(final ItemStack itemStack) {
-		return plugin.lodeStarFactory.getKey(itemStack);
+		return plugin.lodeStarUtility.getKey(itemStack);
 	}
 
 
@@ -128,27 +125,6 @@ public final class SimpleAPI {
 	 */
 	public static boolean isValidDestination(final String destinationName) {
 		return Destination.exists(destinationName);
-	}
-
-
-	/**
-	 * Check if a string is a valid destination name
-	 * <ul>
-	 *     <li>destination name must not be null</li>
-	 *     <li>destination name must not be empty</li>
-	 *     <li>destination name must not start with a digit</li>
-	 *     <li>destination name must not contain a colon</li>
-	 * </ul>
-	 *
-	 * @param destinationName the destination name to test for validity
-	 * @return {@code true} if destination name is a valid name, {@code false} if it is not
-	 */
-	public static boolean isAllowedName(final String destinationName) {
-
-		return !(destinationName == null
-				|| destinationName.isEmpty()
-				|| destinationName.matches("^\\d.*")
-				|| destinationName.matches(".*:.*"));
 	}
 
 
@@ -181,11 +157,7 @@ public final class SimpleAPI {
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
 	 */
 	public static boolean isSpawnName(final String destinationName) {
-
-		// derive key from destination name to normalize string (strip colors, fold to lowercase, etc)
-		String key = plugin.lodeStarFactory.deriveKey(destinationName);
-		return key.equals("spawn")
-				|| key.equals(plugin.lodeStarFactory.deriveKey(plugin.messageBuilder.getSpawnDisplayName()));
+		return Destination.isSpawn(destinationName);
 	}
 
 
@@ -195,7 +167,7 @@ public final class SimpleAPI {
 	 * @return item name as specified in configuration file
 	 */
 	public static String getItemName() {
-		return plugin.messageBuilder.getItemName();
+		return plugin.messageBuilder.getItemName().orElse("LodeStar");
 	}
 
 
@@ -211,13 +183,40 @@ public final class SimpleAPI {
 
 
 	/**
-	 * get destination name from passed item stack
+	 * get destination display name for persistent key stored in item stack<br>
+	 * Matching is case-insensitive. Reserved names are tried first.
 	 *
 	 * @param itemStack the item stack from which to get name
-	 * @return String destination name
+	 * @return String destination display name, or null if no matching destination found
 	 */
 	public static String getDestinationName(final ItemStack itemStack) {
-		return Destination.getDisplayName(itemStack);
+
+		// get persistent key from item stack
+		String key = plugin.lodeStarUtility.getKey(itemStack);
+
+		// if item stack persistent key is null, return null
+		if (key == null) {
+			return null;
+		}
+
+		String resultString = null;
+
+		// if key matches spawn key, get spawn display name from language file
+		if (Destination.isSpawn(key)) {
+			resultString = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
+		}
+
+		// if destination is home, get home display name from messages file
+		else if (Destination.isHome(key)) {
+			resultString = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
+		}
+
+		// else get destination name from datastore
+		else if (plugin.dataStore.selectRecord(key).isPresent()) {
+			resultString = plugin.dataStore.selectRecord(key).get().getDisplayName();
+		}
+
+		return resultString;
 	}
 
 
@@ -301,29 +300,7 @@ public final class SimpleAPI {
 	 * @return Boolean - {@code true} if player is warming up, {@code false} if not
 	 */
 	public static Boolean isWarmingUp(final Player player) {
-		return plugin.teleportManager.isWarmingUp(player);
-	}
-
-
-	/**
-	 * Check if a player is currently cooling down for item use
-	 *
-	 * @param player the player to check
-	 * @return Boolean - {@code true} if player is cooling down, {@code false} if not
-	 */
-	public static Boolean isCoolingDown(final Player player) {
-		return plugin.teleportManager.isCoolingDown(player);
-	}
-
-
-	/**
-	 * Get a player's cooldown time remaining for item use
-	 *
-	 * @param player the player to check
-	 * @return long - cooldown time remaining in milliseconds
-	 */
-	public static long cooldownTimeRemaining(final Player player) {
-		return plugin.teleportManager.getCooldownTimeRemaining(player);
+		return plugin.teleportHandler.isWarmingUp(player);
 	}
 
 
@@ -333,16 +310,6 @@ public final class SimpleAPI {
 	 * @return List of Strings containing enabled world names
 	 */
 	public static List<String> getEnabledWorlds() {
-		return getEnabledWorldsList();
-	}
-
-
-	/**
-	 * Get List of String containing world names where plugin is enabled
-	 *
-	 * @return List of Strings containing enabled world names
-	 */
-	public static List<String> getEnabledWorldsList() {
 		return new ArrayList<>(plugin.worldManager.getEnabledWorldNames());
 	}
 
@@ -363,7 +330,7 @@ public final class SimpleAPI {
 	 * @param player the player to cancel teleporting
 	 */
 	public static void cancelTeleport(final Player player) {
-		plugin.teleportManager.cancelTeleport(player);
+		plugin.teleportHandler.cancelTeleport(player);
 	}
 
 
@@ -373,46 +340,7 @@ public final class SimpleAPI {
 	 * @return ItemStack
 	 */
 	public static ItemStack getDefaultItem() {
-
-		// get configured material
-		String configMaterial = plugin.getConfig().getString("default-material");
-
-		// if no configuration for default material, set string to NETHER_STAR
-		if (configMaterial == null) {
-			configMaterial = "NETHER_STAR";
-		}
-
-		// try to match material
-		Material material = Material.matchMaterial(configMaterial);
-
-		// if no match, set material type to NETHER_STAR
-		if (material == null) {
-			material = Material.NETHER_STAR;
-		}
-
-		// create a one item stack with configured material
-		return new ItemStack(material, 1);
-	}
-
-
-	/**
-	 * Get location centered on x,z coordinates from a block location (where coordinates are integers)
-	 *
-	 * @param location the integer block location to center
-	 * @return Location the centered on block location
-	 */
-	public static Location getBlockCenteredLocation(final Location location) {
-
-		// if location is null, return null
-		if (location == null) {
-			return null;
-		}
-
-		final World world = location.getWorld();
-		int x = location.getBlockX();
-		int y = (int) Math.round(location.getY());
-		int z = location.getBlockZ();
-		return new Location(world, x + 0.5, y, z + 0.5, location.getYaw(), location.getPitch());
+		return plugin.lodeStarUtility.getDefaultItemStack();
 	}
 
 }

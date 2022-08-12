@@ -22,16 +22,20 @@ import com.winterhavenmc.lodestar.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.DataStore;
-import com.winterhavenmc.lodestar.teleport.TeleportManager;
-import com.winterhavenmc.lodestar.util.LodeStarFactory;
+import com.winterhavenmc.lodestar.teleport.TeleportHandler;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.MetricsHandler;
 
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import com.winterhavenmc.util.soundconfig.SoundConfiguration;
 import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
 import com.winterhavenmc.util.worldmanager.WorldManager;
 
-import org.bstats.bukkit.Metrics;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
+
+import java.io.File;
 
 
 /**
@@ -45,19 +49,36 @@ public final class PluginMain extends JavaPlugin {
 
 	public MessageBuilder<MessageId, Macro> messageBuilder;
 	public DataStore dataStore;
-	public TeleportManager teleportManager;
+	public TeleportHandler teleportHandler;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public CommandManager commandManager;
-	public PlayerEventListener playerEventListener;
-	public LodeStarFactory lodeStarFactory;
+	public LodeStarUtility lodeStarUtility;
+
+
+	/**
+	 * Constructor for testing
+	 */
+	@SuppressWarnings("unused")
+	public PluginMain() {
+		super();
+	}
+
+
+	/**
+	 * Constructor for testing
+	 */
+	@SuppressWarnings("unused")
+	private PluginMain(final JavaPluginLoader loader,
+	                   final PluginDescriptionFile descriptionFile,
+	                   final File dataFolder,
+	                   final File file) {
+		super(loader, descriptionFile, dataFolder, file);
+	}
 
 
 	@Override
 	public void onEnable() {
-
-		// bStats
-		new Metrics(this, 13927);
 
 		// install default config.yml if not present
 		saveDefaultConfig();
@@ -75,16 +96,20 @@ public final class PluginMain extends JavaPlugin {
 		dataStore = DataStore.connect(this);
 
 		// instantiate teleport manager
-		teleportManager = new TeleportManager(this);
+		teleportHandler = new TeleportHandler(this);
 
 		// instantiate command manager
 		commandManager = new CommandManager(this);
 
-		// instantiate player listener
-		playerEventListener = new PlayerEventListener(this);
-
 		// instantiate lodestar factory
-		lodeStarFactory = new LodeStarFactory(this);
+		lodeStarUtility = new LodeStarUtility(this);
+
+		// instantiate player listener
+		new PlayerEventListener(this);
+
+		// instantiate metrics handler
+		new MetricsHandler(this);
+
 	}
 
 

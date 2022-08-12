@@ -25,63 +25,63 @@ enum SubcommandType {
 	BIND() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new BindCommand(plugin);
+			return new BindSubcommand(plugin);
 		}
 	},
 
 	DELETE() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new DeleteCommand(plugin);
+			return new DeleteSubcommand(plugin);
 		}
 	},
 
 	DESTROY() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new DestroyCommand(plugin);
+			return new DestroySubcommand(plugin);
 		}
 	},
 
 	GIVE() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new GiveCommand(plugin);
+			return new GiveSubcommand(plugin);
 		}
 	},
 
 	LIST() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new ListCommand(plugin);
+			return new ListSubcommand(plugin);
 		}
 	},
 
 	RELOAD() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new ReloadCommand(plugin);
+			return new ReloadSubcommand(plugin);
 		}
 	},
 
 	SET() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new SetCommand(plugin);
+			return new SetSubcommand(plugin);
 		}
 	},
 
 	STATUS() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new StatusCommand(plugin);
+			return new StatusSubcommand(plugin);
 		}
 	},
 
 	TELEPORT() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new TeleportCommand(plugin);
+			return new TeleportSubcommand(plugin);
 		}
 	};
 

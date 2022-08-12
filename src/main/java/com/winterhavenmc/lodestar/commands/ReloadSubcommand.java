@@ -24,14 +24,13 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Objects;
 
 
 /**
  * Reload command implementation<br>
  * reloads plugin configuration
  */
-final class ReloadCommand extends SubcommandAbstract {
+final class ReloadSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
@@ -40,9 +39,10 @@ final class ReloadCommand extends SubcommandAbstract {
 	 * Class constructor
 	 * @param plugin reference to plugin main class instance
 	 */
-	ReloadCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+	ReloadSubcommand(final PluginMain plugin) {
+		this.plugin = plugin;
 		this.name = "reload";
+		this.permissionNode = "lodestar.reload";
 		this.usageString = "/lodestar reload";
 		this.description = MessageId.COMMAND_HELP_RELOAD;
 	}
@@ -52,15 +52,15 @@ final class ReloadCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// if sender does not have permission to reload config, send error message and return true
-		if (!sender.hasPermission("lodestar.reload")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_RELOAD).send();
+		if (!sender.hasPermission(permissionNode)) {
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_RELOAD).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check max arguments
 		if (args.size() > getMaxArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -72,7 +72,7 @@ final class ReloadCommand extends SubcommandAbstract {
 		// reload main configuration
 		plugin.reloadConfig();
 
-		// update enabledWorlds list
+		// reload enabled worlds list
 		plugin.worldManager.reload();
 
 		// reload sounds
@@ -85,7 +85,7 @@ final class ReloadCommand extends SubcommandAbstract {
 		DataStore.reload(plugin);
 
 		// send reloaded message
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_RELOAD).send();
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_RELOAD).send();
 
 		return true;
 	}

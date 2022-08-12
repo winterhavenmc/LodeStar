@@ -23,6 +23,7 @@ import com.winterhavenmc.lodestar.storage.Destination;
 
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -30,9 +31,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
-final class BindCommand extends SubcommandAbstract {
+final class BindSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
@@ -42,9 +44,10 @@ final class BindCommand extends SubcommandAbstract {
 				Material.VOID_AIR ));
 
 
-	BindCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+	BindSubcommand(final PluginMain plugin) {
+		this.plugin = plugin;
 		this.name = "bind";
+		this.permissionNode = "lodestar.bind";
 		this.usageString ="/lodestar bind <destination name>";
 		this.description = MessageId.COMMAND_HELP_BIND;
 		this.minArgs = 1;
@@ -56,7 +59,10 @@ final class BindCommand extends SubcommandAbstract {
 									  final String alias, final String[] args) {
 
 		if (args.length == 2) {
-			return plugin.dataStore.selectAllKeys();
+			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
+			resultList.add(0, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			resultList.add(0, plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();
@@ -68,20 +74,20 @@ final class BindCommand extends SubcommandAbstract {
 
 		// command sender must be player
 		if (!(sender instanceof Player)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check sender has permission
-		if (!sender.hasPermission("lodestar.bind")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_BIND).send();
+		if (!sender.hasPermission(permissionNode)) {
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_BIND).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check minimum arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -93,9 +99,9 @@ final class BindCommand extends SubcommandAbstract {
 		// join remaining arguments into destination name
 		String destinationName = String.join(" ", args);
 
-		// test that destination exists
+		// check if destination exists
 		if (!Destination.exists(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -108,8 +114,8 @@ final class BindCommand extends SubcommandAbstract {
 		// if default-item-only configured true, check that item in hand has default material and data
 		if (plugin.getConfig().getBoolean("default-material-only")
 				&& !sender.hasPermission("lodestar.default-override")) {
-			if (!plugin.lodeStarFactory.isDefaultItem(playerItem)) {
-				plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
+			if (!plugin.lodeStarUtility.isDefaultItem(playerItem)) {
+				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
 						.setMacro(Macro.DESTINATION, destinationName)
 						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -119,7 +125,7 @@ final class BindCommand extends SubcommandAbstract {
 
 		// check that item in hand is valid material
 		if (invalidMaterials.contains(playerItem.getType())) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -127,16 +133,24 @@ final class BindCommand extends SubcommandAbstract {
 		}
 
 		// try to get formatted destination name from storage
-		Destination destination = plugin.dataStore.selectRecord(destinationName);
-		if (destination != null) {
-			destinationName = destination.getDisplayName();
+		Optional<Destination> destination = plugin.dataStore.selectRecord(destinationName);
+		if (destination.isPresent()) {
+			destinationName = destination.get().getDisplayName();
+		}
+
+		if ("spawn".equalsIgnoreCase(destinationName)) {
+			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
+		}
+
+		else if ("home".equalsIgnoreCase(destinationName)) {
+			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 		}
 
 		// set destination in item lore
-		plugin.lodeStarFactory.setMetaData(playerItem, destinationName);
+		plugin.lodeStarUtility.setMetaData(playerItem, destinationName);
 
 		// send success message
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_BIND)
+		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_BIND)
 				.setMacro(Macro.DESTINATION, destinationName)
 				.send();
 

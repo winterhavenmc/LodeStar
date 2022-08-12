@@ -4,6 +4,9 @@ import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -78,7 +81,7 @@ public class LodeStarPluginTests {
 		@Test
 		@DisplayName("teleport manager not null.")
 		void TeleportManagerNotNull() {
-			Assertions.assertNotNull(plugin.teleportManager,
+			Assertions.assertNotNull(plugin.teleportHandler,
 					"teleport manager is null.");
 		}
 
@@ -97,16 +100,9 @@ public class LodeStarPluginTests {
 		}
 
 		@Test
-		@DisplayName("player event listener not null.")
-		void PlayerEventListenerNotNull() {
-			Assertions.assertNotNull(plugin.playerEventListener,
-					"player event listener is null.");
-		}
-
-		@Test
 		@DisplayName("spawn star factory not null.")
 		void SpawnStarFactoryNotNull() {
-			Assertions.assertNotNull(plugin.lodeStarFactory,
+			Assertions.assertNotNull(plugin.lodeStarUtility,
 					"spawn star factory is null.");
 		}
 	}
@@ -139,17 +135,16 @@ public class LodeStarPluginTests {
 	class SoundTests {
 
 		// collection of enum sound name strings
-		Collection<String> enumSoundNames = new HashSet<>();
+		final Collection<String> enumSoundNames = new HashSet<>();
 
 		// class constructor
 		SoundTests() {
 			// add all SoundId enum values to collection
-			for (com.winterhavenmc.lodestar.sounds.SoundId SoundId : SoundId.values()) {
+			for (SoundId SoundId : SoundId.values()) {
 				enumSoundNames.add(SoundId.name());
 			}
 		}
 
-		@SuppressWarnings("unused")
 		Collection<String> GetConfigFileKeys() {
 			return plugin.soundConfig.getSoundConfigKeys();
 		}
@@ -182,16 +177,22 @@ public class LodeStarPluginTests {
 	}
 
 
-
 	@Nested
 	@DisplayName("test message builder.")
 	class MessageBuilderTests {
 
 		@Test
 		@DisplayName("item name is not null.")
-		void ItemNameNotNull() {
-			Assertions.assertNotNull(plugin.messageBuilder.getItemName(),
-					"item name is null.");
+		void ItemNameNotIsSet() {
+			Assertions.assertTrue(plugin.messageBuilder.getItemName().isPresent(),
+					"item name is empty optional.");
+		}
+
+		@Test
+		@DisplayName("item name is not null.")
+		void ItemNamePluralIsSet() {
+			Assertions.assertTrue(plugin.messageBuilder.getItemNamePlural().isPresent(),
+					"item name plural is empty optional.");
 		}
 
 		@Test
@@ -199,6 +200,13 @@ public class LodeStarPluginTests {
 		void ItemLoreNotNull() {
 			Assertions.assertNotNull(plugin.messageBuilder.getItemLore(),
 					"item lore is null.");
+		}
+
+		@Test
+		@DisplayName("item lore is not null.")
+		void ItemLoreNotEmpty() {
+			Assertions.assertFalse(plugin.messageBuilder.getItemLore().isEmpty(),
+					"item lore is empty.");
 		}
 	}
 
@@ -208,7 +216,7 @@ public class LodeStarPluginTests {
 	class MessageTests {
 
 		// collection of enum sound name strings
-		Collection<String> enumMessageNames = new HashSet<>();
+		final Collection<String> enumMessageNames = new HashSet<>();
 
 		// class constructor
 		MessageTests() {
@@ -227,68 +235,50 @@ public class LodeStarPluginTests {
 					"config file message is null.");
 		}
 
-//        @ParameterizedTest
-//        @MethodSource("GetConfigFileKeys")
-//        @DisplayName("config file key has matching key in MessageId enum")
-//        void EnumContainsAllFileKeys(String key) {
-//            Assertions.assertTrue(enumMessageNames.contains(key));
-//            System.out.println("File key '" + key + "' has matching SoundId enum value");
-//        }
-
 	}
-
-
 
 
 	@Nested
 	@DisplayName("Test spawn star factory methods.")
 	class SpawnStarFactoryTests {
 
-//		ItemStack lodeStarItem = plugin.lodeStarFactory.create("test destination");
-
-//		@Test
-//		@DisplayName("new item type is nether star.")
-//		void ItemSetDefaultType() {
-//			Assertions.assertEquals(Material.NETHER_STAR, lodeStarItem.getType(),
-//					"new item type is not nether star.");
-//		}
-
-//		@Test
-//		@DisplayName("new item name is SpawnStar.")
-//		void NewItemHasDefaultName() {
-//			Assertions.assertNotNull(lodeStarItem.getItemMeta(), "new item stack meta data is null.");
-//			Assertions.assertNotNull(lodeStarItem.getItemMeta().getDisplayName(),
-//					"new item stack display name meta data is null.");
-//			Assertions.assertEquals("test destination",
-//					ChatColor.stripColor(lodeStarItem.getItemMeta().getDisplayName()),
-//					"new item display name is not 'test destination'.");
-//		}
-
-//		@Test
-//		@DisplayName("new item has lore.")
-//		void NewItemHasDefaultLore() {
-//			Assertions.assertNotNull(lodeStarItem.getItemMeta());
-//			Assertions.assertNotNull(lodeStarItem.getItemMeta().getLore());
-//			Assertions.assertEquals("Use to Return to World Spawn",
-//					ChatColor.stripColor(String.join(" ",
-//							spawnStarItem.getItemMeta().getLore())),"" +
-//							"new item stack lore does not match default lore.");
-//		}
-
-//		@Test
-//		@DisplayName("new item is valid lode star item.")
-//		void CreateAndTestValidItem() {
-//			Assertions.assertTrue(plugin.lodeStarFactory.isItem(lodeStarItem),
-//					"new item stack is not a valid lode star item.");
-//		}
+		ItemStack lodeStarItem = plugin.lodeStarUtility.create("test destination");
 
 		@Test
-		@DisplayName("lode star factory is not null after reload.")
-		void ReloadSpawnStarFactory() {
-			plugin.lodeStarFactory.reload();
-			Assertions.assertNotNull(plugin.lodeStarFactory, "spawn star factory is null after reload.");
+		@DisplayName("new item type is nether star.")
+		void ItemSetDefaultType() {
+			Assertions.assertEquals(Material.NETHER_STAR, lodeStarItem.getType(),
+					"new item type is not nether star.");
+		}
+
+		@Test
+		@DisplayName("new item name is SpawnStar.")
+		void NewItemHasDefaultName() {
+			Assertions.assertNotNull(lodeStarItem.getItemMeta(), "new item stack meta data is null.");
+			Assertions.assertNotNull(lodeStarItem.getItemMeta().getDisplayName(),
+					"new item stack display name meta data is null.");
+			Assertions.assertEquals("LodeStar: test destination",
+					ChatColor.stripColor(lodeStarItem.getItemMeta().getDisplayName()),
+					"new item display name is not 'test destination'.");
+		}
+
+		@Test
+		@DisplayName("new item has lore.")
+		void NewItemHasDefaultLore() {
+			Assertions.assertNotNull(lodeStarItem.getItemMeta());
+			Assertions.assertNotNull(lodeStarItem.getItemMeta().getLore());
+			Assertions.assertEquals("Use to teleport to test destination",
+					ChatColor.stripColor(String.join(" ",
+							lodeStarItem.getItemMeta().getLore())),
+							"new item stack lore does not match default lore.");
+		}
+
+		@Test
+		@DisplayName("new item is valid lode star item.")
+		void CreateAndTestValidItem() {
+			Assertions.assertTrue(plugin.lodeStarUtility.isItem(lodeStarItem),
+					"new item stack is not a valid lode star item.");
 		}
 	}
-
 
 }

@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface DataStore {
@@ -54,7 +55,7 @@ public interface DataStore {
 	 * @param destinationName the name string key of the destination to be retrieved from the datastore
 	 * @return destination object or null if no matching record
 	 */
-	Destination selectRecord(final String destinationName);
+	Optional<Destination> selectRecord(final String destinationName);
 
 
 	/**
@@ -97,7 +98,7 @@ public interface DataStore {
 	 * @return the destination record that was deleted
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	Destination deleteRecord(final String destinationName);
+	Optional<Destination> deleteRecord(final String destinationName);
 
 
 	/**

@@ -96,7 +96,7 @@ public final class PlayerEventListener implements Listener {
 		if (plugin.getConfig().getBoolean("cancel-on-interaction")) {
 
 			// if player is in warmup hashmap, check if they are interacting with a block (not air)
-			if (plugin.teleportManager.isWarmingUp(player)) {
+			if (plugin.teleportHandler.isWarmingUp(player)) {
 
 				// if player is interacting with a block, cancel teleport, output message and return
 				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
@@ -104,15 +104,15 @@ public final class PlayerEventListener implements Listener {
 
 					// if player's last teleport initiated time is less than x ticks (def: 2), do nothing and return
 					// this is a workaround for event double firing (once for each hand) on every player interaction
-					if (!plugin.teleportManager.isInitiated(player)) {
+					if (!plugin.teleportHandler.isInitiated(player)) {
 						return;
 					}
 
 					// cancel teleport
-					plugin.teleportManager.cancelTeleport(player);
+					plugin.teleportHandler.cancelTeleport(player);
 
 					// send cancelled teleport message
-					plugin.messageBuilder.build(player, MessageId.TELEPORT_CANCELLED_INTERACTION).send();
+					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_INTERACTION).send();
 
 					// play cancelled teleport sound
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
@@ -122,7 +122,7 @@ public final class PlayerEventListener implements Listener {
 		}
 
 		// if item used is not a LodeStar, do nothing and return
-		if (!plugin.lodeStarFactory.isItem(event.getItem())) {
+		if (!plugin.lodeStarUtility.isItem(event.getItem())) {
 			return;
 		}
 
@@ -142,7 +142,7 @@ public final class PlayerEventListener implements Listener {
 		}
 
 		// if player is not warming
-		if (!plugin.teleportManager.isWarmingUp(player)) {
+		if (!plugin.teleportHandler.isWarmingUp(player)) {
 
 			// get clicked block
 			Block block = event.getClickedBlock();
@@ -178,30 +178,28 @@ public final class PlayerEventListener implements Listener {
 			// cancel event
 			event.setCancelled(true);
 
-			// if players current world is not enabled in config, do nothing and return
+			// if players current world is not enabled in config, send message and return
 			if (!plugin.worldManager.isEnabled(player.getWorld())) {
-				plugin.messageBuilder.build(player, MessageId.TELEPORT_FAIL_WORLD_DISABLED).send();
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_WORLD_DISABLED).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 				return;
 			}
 
 			// if player does not have lodestar.use permission, send message and return
 			if (!player.hasPermission("lodestar.use")) {
-				plugin.messageBuilder.build(player, MessageId.PERMISSION_DENIED_USE).send();
+				plugin.messageBuilder.compose(player, MessageId.PERMISSION_DENIED_USE).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
 				return;
 			}
 
-			// if shift-click configured and player is not sneaking,
-			// send teleport fail shift-click message, cancel event and return
-			if (plugin.getConfig().getBoolean("shift-click")
-					&& !player.isSneaking()) {
-				plugin.messageBuilder.build(player, MessageId.TELEPORT_FAIL_SHIFT_CLICK).send();
+			// if shift-click configured and player is not sneaking, send teleport fail shift-click message and return
+			if (plugin.getConfig().getBoolean("shift-click") && !player.isSneaking()) {
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_SHIFT_CLICK).send();
 				return;
 			}
 
 			// initiate teleport
-			plugin.teleportManager.initiateTeleport(player);
+			plugin.teleportHandler.initiateTeleport(player);
 		}
 	}
 
@@ -213,11 +211,8 @@ public final class PlayerEventListener implements Listener {
 	 */
 	@EventHandler
 	void onPlayerDeath(final PlayerDeathEvent event) {
-
-		Player player = event.getEntity();
-
 		// cancel any pending teleport for player
-		plugin.teleportManager.removePlayer(player);
+		plugin.teleportHandler.cancelTeleport(event.getEntity());
 	}
 
 
@@ -228,11 +223,8 @@ public final class PlayerEventListener implements Listener {
 	 */
 	@EventHandler
 	void onPlayerQuit(final PlayerQuitEvent event) {
-
-		Player player = event.getPlayer();
-
 		// cancel any pending teleport for player
-		plugin.teleportManager.removePlayer(player);
+		plugin.teleportHandler.cancelTeleport(event.getPlayer());
 	}
 
 
@@ -251,7 +243,7 @@ public final class PlayerEventListener implements Listener {
 
 		// if crafting inventory contains LodeStar item, set result item to null
 		for (ItemStack itemStack : event.getInventory()) {
-			if (plugin.lodeStarFactory.isItem(itemStack)) {
+			if (plugin.lodeStarUtility.isItem(itemStack)) {
 				event.getInventory().setResult(null);
 			}
 		}
@@ -277,9 +269,9 @@ public final class PlayerEventListener implements Listener {
 				Player player = (Player) entity;
 
 				// if player is in warmup hashmap, cancel teleport and send player message
-				if (plugin.teleportManager.isWarmingUp(player)) {
-					plugin.teleportManager.cancelTeleport(player);
-					plugin.messageBuilder.build(player, MessageId.TELEPORT_CANCELLED_DAMAGE).send();
+				if (plugin.teleportHandler.isWarmingUp(player)) {
+					plugin.teleportHandler.cancelTeleport(player);
+					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_DAMAGE).send();
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 				}
 			}
@@ -303,12 +295,12 @@ public final class PlayerEventListener implements Listener {
 		Player player = event.getPlayer();
 
 		// if player is in warmup hashmap, cancel teleport and send player message
-		if (plugin.teleportManager.isWarmingUp(player)) {
+		if (plugin.teleportHandler.isWarmingUp(player)) {
 
 			// check for player movement other than head turning
 			if (event.getFrom().distanceSquared(Objects.requireNonNull(event.getTo())) > 0) {
-				plugin.teleportManager.cancelTeleport(player);
-				plugin.messageBuilder.build(player, MessageId.TELEPORT_CANCELLED_MOVEMENT).send();
+				plugin.teleportHandler.cancelTeleport(player);
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_MOVEMENT).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 			}
 		}

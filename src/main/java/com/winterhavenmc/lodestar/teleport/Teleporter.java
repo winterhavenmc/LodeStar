@@ -15,35 +15,18 @@
  *
  */
 
-package com.winterhavenmc.lodestar.commands;
+package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.messages.MessageId;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import com.winterhavenmc.lodestar.storage.Destination;
 
-import java.util.Collection;
-import java.util.List;
+import org.bukkit.entity.Player;
 
 
-interface Subcommand {
+interface Teleporter {
 
-	boolean onCommand(final CommandSender sender, final List<String> argsList);
+	void initiate(final Player player);
 
-	List<String> onTabComplete(final CommandSender sender, final Command command,
-							   final String alias, final String[] args);
-
-	String getName();
-
-	String getPermissionNode();
-
-	Collection<String> getAliases();
-
-	void displayUsage(final CommandSender sender);
-
-	MessageId getDescription();
-
-	int getMinArgs();
-
-	int getMaxArgs();
+	void execute(final Player player, final Destination finalDestination, final MessageId messageId);
 
 }

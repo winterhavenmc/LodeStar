@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.util;
 
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.storage.Destination;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -33,7 +34,7 @@ import java.util.*;
 /**
  * Utility class with methods for creating and using LodeStar item stacks
  */
-public final class LodeStarFactory {
+public final class LodeStarUtility {
 
 	// static reference to main class instance
 	private final PluginMain plugin;
@@ -45,10 +46,7 @@ public final class LodeStarFactory {
 	private static final Set<ItemFlag> itemFlagSet = Set.of(
 			ItemFlag.HIDE_ATTRIBUTES,
 			ItemFlag.HIDE_ENCHANTS,
-			ItemFlag.HIDE_UNBREAKABLE );
-
-	// the proto item
-	private ItemStack protoItem;
+			ItemFlag.HIDE_UNBREAKABLE);
 
 
 	/**
@@ -56,11 +54,9 @@ public final class LodeStarFactory {
 	 *
 	 * @param plugin reference to plugin main class
 	 */
-	public LodeStarFactory(final PluginMain plugin) {
+	public LodeStarUtility(final PluginMain plugin) {
 		this.plugin = plugin;
 		this.PERSISTENT_KEY = new NamespacedKey(plugin, "destination");
-		this.protoItem = getDefaultItemStack();
-		setMetaData(this.protoItem, "");
 	}
 
 
@@ -79,17 +75,17 @@ public final class LodeStarFactory {
 	 * Create an item stack with encoded destination
 	 *
 	 * @param destinationName the destination name
-	 * @param quantity the number of items in the stack
+	 * @param quantity        the number of items in the stack
 	 * @return ItemStack with destination name and quantity
 	 */
 	public ItemStack create(final String destinationName, final int quantity) {
 
 		// clone proto item
-		ItemStack newItem = protoItem.clone();
+		ItemStack newItem = getDefaultItemStack();
 
 		// validate quantity is between 1 and max item stack size
 		int newQuantity = Math.max(1, quantity);
-		newQuantity = Math.min(newQuantity, protoItem.getMaxStackSize());
+		newQuantity = Math.min(newQuantity, newItem.getMaxStackSize());
 
 		// if configured max give quantity is positive, validate quantity
 		if (plugin.getConfig().getInt("max-give-amount") > 0) {
@@ -117,7 +113,7 @@ public final class LodeStarFactory {
 		// get configured material string
 		String configMaterialString = plugin.getConfig().getString("default-material");
 
-		// if string is null, use default
+		// if config material string is null, use NETHER_STAR
 		if (configMaterialString == null) {
 			configMaterialString = "NETHER_STAR";
 		}
@@ -144,7 +140,7 @@ public final class LodeStarFactory {
 	public void setMetaData(final ItemStack itemStack, final String destinationName) {
 
 		// retrieve item name from language file
-		String itemName = plugin.messageBuilder.getInventoryItemName();
+		String itemName = plugin.messageBuilder.getInventoryItemName().orElse("LodeStar: " + destinationName);
 
 		// replace destination placeholder with destination name
 		itemName = itemName.replace("%DESTINATION%", destinationName);
@@ -156,7 +152,7 @@ public final class LodeStarFactory {
 		List<String> configLore = plugin.messageBuilder.getItemLore();
 
 		// list of strings for formatted item lore
-		List<String> itemLore = new LinkedList<>();
+		List<String> itemLore = new ArrayList<>(4);
 
 		// iterate over lines of lore and translate color codes and replace destination placeholder
 		for (String line : configLore) {
@@ -230,19 +226,18 @@ public final class LodeStarFactory {
 		String destinationName = null;
 
 		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName()))) {
-			destinationName = plugin.messageBuilder.getSpawnDisplayName();
+		if (key.equals("spawn") || key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")))) {
+			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 		}
 		// if destination is home, get home display name from messages file
-		else if (key.equals("home")
-				|| key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName()))) {
-			destinationName = plugin.messageBuilder.getHomeDisplayName();
+		else if (key.equals("home") || key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
+			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 		}
 		// else get destination name from datastore
 		else {
-			Destination destination = plugin.dataStore.selectRecord(key);
-			if (destination != null) {
-				destinationName = destination.getDisplayName();
+			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
+			if (optionalDestination.isPresent()) {
+				destinationName = optionalDestination.get().getDisplayName();
 			}
 		}
 
@@ -296,13 +291,15 @@ public final class LodeStarFactory {
 			return false;
 		}
 
-		// try to match material
+		// get default material name from config
 		String defaultMaterialString = plugin.getConfig().getString("default-material");
 
+		// if default material string is null, use NETHER_STAR
 		if (defaultMaterialString == null) {
 			defaultMaterialString = "NETHER_STAR";
 		}
 
+		// try to match material
 		Material material = Material.matchMaterial(defaultMaterialString);
 
 		// if no match set to nether star
@@ -312,15 +309,6 @@ public final class LodeStarFactory {
 
 		// if material and data match defaults return true
 		return itemStack.getType().equals(material);
-	}
-
-
-	/**
-	 * Reload plugin's LodeStarFactory. Replaces existing plugin.LodeStarFactory with new instance.
-	 */
-	public void reload() {
-		this.protoItem = getDefaultItemStack();
-		setMetaData(this.protoItem, "");
 	}
 
 
@@ -335,7 +323,9 @@ public final class LodeStarFactory {
 	public String deriveKey(final String destinationName) {
 
 		// validate parameter
-		Objects.requireNonNull(destinationName);
+		if (destinationName == null || destinationName.isBlank()) {
+			return "";
+		}
 
 		// copy passed in destination name to derivedKey
 		String derivedKey = destinationName;

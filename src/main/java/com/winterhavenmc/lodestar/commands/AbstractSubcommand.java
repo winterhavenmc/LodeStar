@@ -25,11 +25,12 @@ import org.bukkit.command.CommandSender;
 import java.util.*;
 
 
-abstract class SubcommandAbstract implements Subcommand {
+abstract class AbstractSubcommand implements Subcommand {
 
 	protected String name;
-	protected Collection<String> aliases = new HashSet<>();
-	protected String usageString;
+	protected Collection<String> aliases = Collections.emptySet();
+	protected String permissionNode = "";
+	protected String usageString = "";
 	protected MessageId description;
 	protected int minArgs;
 	protected int maxArgs;
@@ -41,18 +42,13 @@ abstract class SubcommandAbstract implements Subcommand {
 	}
 
 	@Override
+	public String getPermissionNode() {
+		return permissionNode;
+	}
+
+	@Override
 	public Collection<String> getAliases() {
 		return aliases;
-	}
-
-	@Override
-	public void addAlias(final String alias) {
-		this.aliases.add(alias);
-	}
-
-	@Override
-	public String getUsage() {
-		return usageString;
 	}
 
 	@Override
@@ -76,6 +72,10 @@ abstract class SubcommandAbstract implements Subcommand {
 									  final String alias, final String[] args) {
 
 		return Collections.emptyList();
+	}
+
+	protected boolean matchPrefix(String string, String prefix) {
+		return string.toLowerCase().startsWith(prefix.toLowerCase());
 	}
 
 }

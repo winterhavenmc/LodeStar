@@ -26,17 +26,18 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 
-final class ListCommand extends SubcommandAbstract {
+final class ListSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
-	ListCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+	ListSubcommand(final PluginMain plugin) {
+		this.plugin = plugin;
 		this.name = "list";
+		this.permissionNode = "lodestar.list";
 		this.usageString = "/lodestar list [page]";
 		this.description = MessageId.COMMAND_HELP_LIST;
 		this.maxArgs = 1;
@@ -47,14 +48,14 @@ final class ListCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// if command sender does not have permission to list destinations, output error message and return true
-		if (!sender.hasPermission("lodestar.list")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_LIST).send();
+		if (!sender.hasPermission(permissionNode)) {
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_LIST).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		if (args.size() > getMaxArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -81,12 +82,12 @@ final class ListCommand extends SubcommandAbstract {
 		final List<String> allKeys = plugin.dataStore.selectAllKeys();
 
 		if (plugin.getConfig().getBoolean("debug")) {
-			plugin.getLogger().info("Total records fetched from db: " + allKeys.size());
+			plugin.getLogger().info("Total records fetched from data store: " + allKeys.size());
 		}
 
 		// if display list is empty, output list empty message and return
 		if (allKeys.isEmpty()) {
-			plugin.messageBuilder.build(sender, MessageId.LIST_EMPTY).send();
+			plugin.messageBuilder.compose(sender, MessageId.LIST_EMPTY).send();
 			return true;
 		}
 
@@ -104,35 +105,41 @@ final class ListCommand extends SubcommandAbstract {
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
 		// display list header
-		plugin.messageBuilder.build(sender, MessageId.LIST_HEADER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
+		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
 
 		int itemNumber = startIndex;
 
 		for (String key : displayKeys) {
 
-			Destination destination = plugin.dataStore.selectRecord(key);
+			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
 
-			// increment item number
-			itemNumber++;
+			if (optionalDestination.isPresent()) {
 
-			if (destination.isWorldValid()) {
-				plugin.messageBuilder.build(sender, MessageId.LIST_ITEM)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.setMacro(Macro.ITEM_NUMBER, itemNumber)
-						.setMacro(Macro.LOCATION, destination.getLocation())
-						.send();
-			}
-			else {
-				plugin.messageBuilder.build(sender, MessageId.LIST_ITEM_INVALID)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
-						.setMacro(Macro.ITEM_NUMBER, itemNumber)
-						.setMacro(Macro.WORLD, destination.getWorldName())
-						.send();
+				// unwrap optional destination
+				Destination destination = optionalDestination.get();
+
+				// increment item number
+				itemNumber++;
+
+				if (destination.isWorldValid()) {
+					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
+							.setMacro(Macro.DESTINATION, destination.getDisplayName())
+							.setMacro(Macro.ITEM_NUMBER, itemNumber)
+							.setMacro(Macro.LOCATION, destination.getLocation())
+							.send();
+				}
+				else {
+					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
+							.setMacro(Macro.DESTINATION, destination.getDisplayName())
+							.setMacro(Macro.ITEM_NUMBER, itemNumber)
+							.setMacro(Macro.WORLD, destination.getWorldName())
+							.send();
+				}
 			}
 		}
 
 		// display list footer
-		plugin.messageBuilder.build(sender, MessageId.LIST_FOOTER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
+		plugin.messageBuilder.compose(sender, MessageId.LIST_FOOTER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
 
 		return true;
 	}

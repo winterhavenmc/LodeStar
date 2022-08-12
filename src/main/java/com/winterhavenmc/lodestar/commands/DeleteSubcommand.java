@@ -27,20 +27,22 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
-final class DeleteCommand extends SubcommandAbstract {
+final class DeleteSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
-	DeleteCommand(final PluginMain plugin) {
-		this.plugin = Objects.requireNonNull(plugin);
+	DeleteSubcommand(final PluginMain plugin) {
+		this.plugin = plugin;
 		this.name ="delete";
+		this.aliases = Set.of("unset");
+		this.permissionNode = "lodestar.delete";
 		this.usageString ="/lodestar delete <destination name>";
 		this.description = MessageId.COMMAND_HELP_DELETE;
 		this.minArgs = 1;
-		this.aliases = Set.of("unset");
 	}
 
 
@@ -49,7 +51,10 @@ final class DeleteCommand extends SubcommandAbstract {
 									  final String alias, final String[] args) {
 
 		if (args.length == 2) {
-			return plugin.dataStore.selectAllKeys();
+			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
+			resultList.add(0, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			resultList.add(0, plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();
@@ -60,15 +65,15 @@ final class DeleteCommand extends SubcommandAbstract {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// check for permission
-		if (!sender.hasPermission("lodestar.delete")) {
-			plugin.messageBuilder.build(sender, MessageId.PERMISSION_DENIED_DELETE).send();
+		if (!sender.hasPermission(permissionNode)) {
+			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_DELETE).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
 		if (args.size() < getMinArgs()) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
@@ -78,39 +83,28 @@ final class DeleteCommand extends SubcommandAbstract {
 		String destinationName = String.join(" ", args);
 
 		// get key for destination name
-		String key = plugin.lodeStarFactory.deriveKey(destinationName);
+		String key = plugin.lodeStarUtility.deriveKey(destinationName);
 
 		// test that destination name is not reserved name
 		if (Destination.isReserved(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
-					.setMacro(Macro.DESTINATION, destinationName)
-					.send();
-
-			// play sound effect
-			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-			return true;
-		}
-
-		// test that destination name is valid
-		if (!Destination.exists(destinationName)) {
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-			return true;
 		}
-
-		// remove destination record from storage
-		plugin.dataStore.deleteRecord(key);
-
-		// send success message to player
-		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_DELETE)
-				.setMacro(Macro.DESTINATION, destinationName)
-				.send();
-
-		// play sound effect
-		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
-
+		// if delete method returns valid destination, delete was successful
+		else if (plugin.dataStore.deleteRecord(key).isPresent()) {
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
+					.setMacro(Macro.DESTINATION, destinationName)
+					.send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
+		}
+		else {
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+					.setMacro(Macro.DESTINATION, destinationName)
+					.send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+		}
 		return true;
 	}
 
