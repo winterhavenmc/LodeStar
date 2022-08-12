@@ -9,7 +9,6 @@ commands:
   lodestar:
     description: Use /lodestar help [command] for help.
     usage: /lodestar [command]
-    permission: lodestar.command
 
 permissions:
   lodestar.use:
@@ -18,11 +17,11 @@ permissions:
 
   lodestar.list:
     description: 'List all LodeStar locations.'
-    default: true
+    default: op
 
   lodestar.help:
     description: 'Display help for LodeStar commands.'
-    default: true
+    default: op
 
   lodestar.command:
     description: 'Allow use of LodeStar command.'
@@ -68,11 +67,12 @@ permissions:
     description: 'Allows all admin commands.'
     default: op
     children:
-      lodestar.command: true
       lodestar.bind: true
       lodestar.give: true
       lodestar.delete: true
       lodestar.destroy: true
+      lodestar.help: true
+      lodestar.list: true
       lodestar.reload: true
       lodestar.set: true
       lodestar.set.overwrite: true
