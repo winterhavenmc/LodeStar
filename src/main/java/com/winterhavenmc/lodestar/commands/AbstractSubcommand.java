@@ -29,8 +29,8 @@ abstract class AbstractSubcommand implements Subcommand {
 
 	protected String name;
 	protected Collection<String> aliases = Collections.emptySet();
-	protected String permissionNode;
-	protected String usageString;
+	protected String permissionNode = "";
+	protected String usageString = "";
 	protected MessageId description;
 	protected int minArgs;
 	protected int maxArgs;
