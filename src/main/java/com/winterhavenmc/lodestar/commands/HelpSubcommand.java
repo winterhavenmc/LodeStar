@@ -99,19 +99,26 @@ final class HelpSubcommand extends AbstractSubcommand {
 
 
 	/**
-	 * Send help description for subcommand to command sender
+	 * Send help description for subcommand to command sender with subcommand permission node,
+	 * otherwise send invalid command message
 	 *
 	 * @param sender the command sender
 	 * @param subcommand the subcommand to display help description
 	 */
-	private void sendCommandHelpMessage(final CommandSender sender, final Subcommand subcommand) {
-		plugin.messageBuilder.compose(sender, subcommand.getDescription()).send();
-		subcommand.displayUsage(sender);
+	private void sendCommandHelpMessage(CommandSender sender, Subcommand subcommand) {
+		if (sender.hasPermission(subcommand.getPermissionNode())) {
+			plugin.messageBuilder.compose(sender, subcommand.getDescription()).send();
+			subcommand.displayUsage(sender);
+		}
+		else {
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_HELP_INVALID).send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_INVALID);
+		}
 	}
 
 
 	/**
-	 * Send invalid subcommand message to command sender
+	 * Send invalid subcommand message to command sender and display usage for all subcommands
 	 *
 	 * @param sender the command sender
 	 */
