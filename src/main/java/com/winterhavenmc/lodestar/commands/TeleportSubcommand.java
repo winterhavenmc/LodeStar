@@ -77,7 +77,7 @@ final class TeleportSubcommand extends AbstractSubcommand {
 		}
 
 		// check for in game player
-		if (!(sender instanceof Player)) {
+		if (!(sender instanceof Player player)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
@@ -89,9 +89,6 @@ final class TeleportSubcommand extends AbstractSubcommand {
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
-
-		// cast sender to player
-		Player player = (Player) sender;
 
 		// join remaining arguments to get destination name
 		String destinationName = String.join(" ", args);

@@ -47,7 +47,7 @@ final class DestroySubcommand extends AbstractSubcommand {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// sender must be in game player
-		if (!(sender instanceof Player)) {
+		if (!(sender instanceof Player player)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
@@ -58,9 +58,6 @@ final class DestroySubcommand extends AbstractSubcommand {
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
-
-		// cast sender to player
-		Player player = (Player) sender;
 
 		// get item in hand
 		ItemStack playerItem = player.getInventory().getItemInMainHand();

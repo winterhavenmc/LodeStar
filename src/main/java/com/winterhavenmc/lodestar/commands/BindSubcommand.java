@@ -73,7 +73,7 @@ final class BindSubcommand extends AbstractSubcommand {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		// command sender must be player
-		if (!(sender instanceof Player)) {
+		if (!(sender instanceof Player player)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
@@ -92,9 +92,6 @@ final class BindSubcommand extends AbstractSubcommand {
 			displayUsage(sender);
 			return true;
 		}
-
-		// cast sender to player
-		Player player = (Player) sender;
 
 		// join remaining arguments into destination name
 		String destinationName = String.join(" ", args);
