@@ -242,7 +242,7 @@ public class LodeStarPluginTests {
 	@DisplayName("Test spawn star factory methods.")
 	class SpawnStarFactoryTests {
 
-		ItemStack lodeStarItem = plugin.lodeStarUtility.create("test destination");
+		final ItemStack lodeStarItem = plugin.lodeStarUtility.create("test destination");
 
 		@Test
 		@DisplayName("new item type is nether star.")
