@@ -3,7 +3,7 @@ main: com.winterhavenmc.lodestar.PluginMain
 author: '${project.author}'
 version: '${project.version}'
 api-version: 1.18
-softdepend: [Iris,Multiverse-Core,My_Worlds]
+softdepend: [ Iris, Multiverse-Core, My_Worlds ]
 
 commands:
   lodestar:
