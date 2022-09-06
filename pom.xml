@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>LodeStar</artifactId>
-	<version>1.19.1-SNAPSHOT</version>
+	<version>1.19.2-SNAPSHOT</version>
 	<name>LodeStar</name>
 
 	<url>https://github.com/tim-savage/LodeStar</url>
