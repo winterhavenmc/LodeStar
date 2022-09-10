@@ -2,8 +2,9 @@ package com.winterhavenmc.lodestar;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
-import com.winterhavenmc.lodestar.messages.MessageId;
+
 import com.winterhavenmc.lodestar.sounds.SoundId;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -122,11 +123,9 @@ public class LodeStarPluginTests {
 		@Test
 		@DisplayName("test configured language.")
 		void GetLanguage() {
-			Assertions.assertEquals("en-US", plugin.getConfig().getString("language"),
-					"language does not equal 'en-US'");
+			Assertions.assertEquals("en-US", plugin.getConfig().getString("language"), "configured language does not equal default 'en-US'");
 		}
 	}
-
 
 
 	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -210,36 +209,9 @@ public class LodeStarPluginTests {
 		}
 	}
 
-	@Nested
-	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-	@DisplayName("Test messages.")
-	class MessageTests {
-
-		// collection of enum sound name strings
-		final Collection<String> enumMessageNames = new HashSet<>();
-
-		// class constructor
-		MessageTests() {
-			// add all MessageId enum values to collection
-			for (com.winterhavenmc.lodestar.messages.MessageId MessageId : MessageId.values()) {
-				enumMessageNames.add(MessageId.name());
-			}
-		}
-
-		@ParameterizedTest
-		@EnumSource(MessageId.class)
-		@DisplayName("enum member MessageId is contained in getConfig() keys.")
-		void FileKeysContainsEnumValue(MessageId messageId) {
-			Assertions.assertNotNull(messageId);
-			Assertions.assertNotNull(plugin.messageBuilder.getMessage(messageId),
-					"config file message is null.");
-		}
-
-	}
-
 
 	@Nested
-	@DisplayName("Test spawn star factory methods.")
+	@DisplayName("Test LodeStar utility methods.")
 	class SpawnStarFactoryTests {
 
 		final ItemStack lodeStarItem = plugin.lodeStarUtility.create("test destination");
