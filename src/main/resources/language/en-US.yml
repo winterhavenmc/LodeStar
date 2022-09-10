@@ -93,10 +93,6 @@ MESSAGES:
     enabled: true
     message: '&3That player could not be found.'
 
-  COMMAND_FAIL_PLAYER_NOT_ONLINE:
-    enabled: true
-    message: '&3That player is not online.'
-
   COMMAND_FAIL_SET_OVERWRITE:
     enabled: true
     message: '&3[LodeStar]&c Destination cannot be overwritten!'

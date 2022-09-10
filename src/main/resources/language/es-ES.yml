@@ -93,10 +93,6 @@ MESSAGES:
     enabled: true
     message: '&3Ese jugador no pudo ser encontrado.'
 
-  COMMAND_FAIL_PLAYER_NOT_ONLINE:
-    enabled: true
-    message: '&3Ese jugador no está conectado.'
-
   COMMAND_FAIL_SET_OVERWRITE:
     enabled: true
     message: '&3[LodeStar]&c ¡Destino no se puede sobrescribir!'
