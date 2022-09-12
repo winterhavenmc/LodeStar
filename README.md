@@ -7,17 +7,17 @@ You can set a destination, similar to warps, and then bind any item to that
 destination so that when used, it will teleport the player to the destination.
 
 ## Features
-*  A fully configurable item that teleports a player to preset destinations. Default item is a netherstar, but can be changed to any item.
-*  Includes all the functionality of SpawnStars, and a whole lot more!
-*  Customizable display name and lore.
-*  Option to teleport back to overworld spawn from nether or the end.
-*  Configurable cool down period.
-*  Configurable warm up period, with optional particle effects during warm up.
-*  Individually configurable options to cancel teleport during warmup on damage, movement, or block interaction.
-*  Configurable option to remove item from inventory on use, after successful teleport, or never.
-*  Configurable option to prevent using LodeStar items in crafting recipes.
-*  Configurable option to require shift-click to use.
-*  Uses MultiVerse world aliases in messages, if installed
-*  Uses MultiVerse world spawn location, if installed. (So players will be looking in the right direction on respawn.)
-*  Configurable per message repeat delay (message cooldown) where appropriate.
-*  Customizable language support.
+* A fully configurable item that teleports a player to preset destinations. Default item is a netherstar, but can be changed to any item.
+* Includes all the functionality of SpawnStars, and a whole lot more!
+* Customizable display name and lore.
+* Option to teleport back to overworld spawn from nether or the end.
+* Configurable cool down period.
+* Configurable warm up period, with optional particle effects during warm up.
+* Individually configurable options to cancel teleport during warmup on damage, movement, or block interaction.
+* Configurable option to remove item from inventory on use, after successful teleport, or never.
+* Configurable option to prevent using LodeStar items in crafting recipes.
+* Configurable option to require shift-click to use.
+* Uses MultiVerse world aliases in messages, if installed
+* Uses MultiVerse world spawn location, if installed. (So players will be looking in the right direction on respawn.)
+* Configurable per message repeat delay (message cooldown) where appropriate.
+* Customizable language support.
