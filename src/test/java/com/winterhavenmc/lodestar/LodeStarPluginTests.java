@@ -44,19 +44,19 @@ public class LodeStarPluginTests {
 
 		@Test
 		@DisplayName("server is not null.")
-		void ServerNotNull() {
+		void serverNotNull() {
 			Assertions.assertNotNull(server, "server is null.");
 		}
 
 		@Test
 		@DisplayName("plugin is not null.")
-		void PluginNotNull() {
+		void pluginNotNull() {
 			Assertions.assertNotNull(plugin, "plugin is null.");
 		}
 
 		@Test
 		@DisplayName("plugin is enabled.")
-		void PluginEnabled() {
+		void pluginEnabled() {
 			Assertions.assertTrue(plugin.isEnabled(),"plugin is not enabled.");
 		}
 	}
@@ -67,44 +67,38 @@ public class LodeStarPluginTests {
 
 		@Test
 		@DisplayName("language handler not null.")
-		void LanguageHandlerNotNull() {
-			Assertions.assertNotNull(plugin.messageBuilder,
-					"language handler is null.");
+		void messageBuilderNotNull() {
+			Assertions.assertNotNull(plugin.messageBuilder, "language handler is null.");
 		}
 
 		@Test
 		@DisplayName("sound config not null.")
-		void SoundConfigNotNull() {
-			Assertions.assertNotNull(plugin.soundConfig,
-					"sound config is null.");
+		void soundConfigNotNull() {
+			Assertions.assertNotNull(plugin.soundConfig, "sound config is null.");
 		}
 
 		@Test
 		@DisplayName("teleport manager not null.")
-		void TeleportManagerNotNull() {
-			Assertions.assertNotNull(plugin.teleportHandler,
-					"teleport manager is null.");
+		void teleportManagerNotNull() {
+			Assertions.assertNotNull(plugin.teleportHandler, "teleport manager is null.");
 		}
 
 		@Test
 		@DisplayName("world manager not null.")
-		void WorldManagerNotNull() {
-			Assertions.assertNotNull(plugin.worldManager,
-					"world manager is null.");
+		void worldManagerNotNull() {
+			Assertions.assertNotNull(plugin.worldManager, "world manager is null.");
 		}
 
 		@Test
 		@DisplayName("command manager not null.")
 		void commandManagerNotNull() {
-			Assertions.assertNotNull(plugin.commandManager,
-					"command manager is null.");
+			Assertions.assertNotNull(plugin.commandManager, "command manager is null.");
 		}
 
 		@Test
 		@DisplayName("spawn star factory not null.")
-		void SpawnStarFactoryNotNull() {
-			Assertions.assertNotNull(plugin.lodeStarUtility,
-					"spawn star factory is null.");
+		void spawnStarFactoryNotNull() {
+			Assertions.assertNotNull(plugin.lodeStarUtility, "spawn star factory is null.");
 		}
 	}
 
@@ -115,14 +109,13 @@ public class LodeStarPluginTests {
 
 		@Test
 		@DisplayName("config not null.")
-		void ConfigNotNull() {
-			Assertions.assertNotNull(plugin.getConfig(),
-					"plugin config is null.");
+		void configNotNull() {
+			Assertions.assertNotNull(plugin.getConfig(), "plugin config is null.");
 		}
 
 		@Test
 		@DisplayName("test configured language.")
-		void GetLanguage() {
+		void getLanguage() {
 			Assertions.assertEquals("en-US", plugin.getConfig().getString("language"), "configured language does not equal default 'en-US'");
 		}
 	}
@@ -151,7 +144,7 @@ public class LodeStarPluginTests {
 		@ParameterizedTest
 		@EnumSource(SoundId.class)
 		@DisplayName("enum member soundId is contained in config file keys.")
-		void FileKeysContainsEnumValue(SoundId soundId) {
+		void fileKeysContainsEnumValue(SoundId soundId) {
 			Assertions.assertTrue(plugin.soundConfig.isValidSoundConfigKey(soundId.name()),
 					"Enum value soundId is not in config file keys.");
 		}
@@ -159,7 +152,7 @@ public class LodeStarPluginTests {
 		@ParameterizedTest
 		@MethodSource("GetConfigFileKeys")
 		@DisplayName("config file key has matching key in enum sound names")
-		void SoundConfigEnumContainsAllFileSounds(String key) {
+		void soundConfigEnumContainsAllFileSounds(String key) {
 			Assertions.assertTrue(enumSoundNames.contains(key),
 					"Enum SoundId does not contain config file key: " + key);
 		}
@@ -167,7 +160,7 @@ public class LodeStarPluginTests {
 		@ParameterizedTest
 		@MethodSource("GetConfigFileKeys")
 		@DisplayName("sound file key has valid bukkit sound name")
-		void SoundConfigFileHasValidBukkitSound(String key) {
+		void soundConfigFileHasValidBukkitSound(String key) {
 			String bukkitSoundName = plugin.soundConfig.getBukkitSoundName(key);
 			Assertions.assertTrue(plugin.soundConfig.isValidBukkitSoundName(bukkitSoundName),
 					"file key '" + key + "' has invalid bukkit sound name: " + bukkitSoundName);
@@ -182,28 +175,28 @@ public class LodeStarPluginTests {
 
 		@Test
 		@DisplayName("item name is not null.")
-		void ItemNameNotIsSet() {
+		void itemNameNotIsSet() {
 			Assertions.assertTrue(plugin.messageBuilder.getItemName().isPresent(),
 					"item name is empty optional.");
 		}
 
 		@Test
 		@DisplayName("item name is not null.")
-		void ItemNamePluralIsSet() {
+		void itemNamePluralIsSet() {
 			Assertions.assertTrue(plugin.messageBuilder.getItemNamePlural().isPresent(),
 					"item name plural is empty optional.");
 		}
 
 		@Test
 		@DisplayName("item lore is not null.")
-		void ItemLoreNotNull() {
+		void itemLoreNotNull() {
 			Assertions.assertNotNull(plugin.messageBuilder.getItemLore(),
 					"item lore is null.");
 		}
 
 		@Test
 		@DisplayName("item lore is not null.")
-		void ItemLoreNotEmpty() {
+		void itemLoreNotEmpty() {
 			Assertions.assertFalse(plugin.messageBuilder.getItemLore().isEmpty(),
 					"item lore is empty.");
 		}
@@ -218,14 +211,14 @@ public class LodeStarPluginTests {
 
 		@Test
 		@DisplayName("new item type is nether star.")
-		void ItemSetDefaultType() {
+		void itemSetDefaultType() {
 			Assertions.assertEquals(Material.NETHER_STAR, lodeStarItem.getType(),
 					"new item type is not nether star.");
 		}
 
 		@Test
 		@DisplayName("new item name is SpawnStar.")
-		void NewItemHasDefaultName() {
+		void newItemHasDefaultName() {
 			Assertions.assertNotNull(lodeStarItem.getItemMeta(), "new item stack meta data is null.");
 			Assertions.assertNotNull(lodeStarItem.getItemMeta().getDisplayName(),
 					"new item stack display name meta data is null.");
@@ -236,7 +229,7 @@ public class LodeStarPluginTests {
 
 		@Test
 		@DisplayName("new item has lore.")
-		void NewItemHasDefaultLore() {
+		void newItemHasDefaultLore() {
 			Assertions.assertNotNull(lodeStarItem.getItemMeta());
 			Assertions.assertNotNull(lodeStarItem.getItemMeta().getLore());
 			Assertions.assertEquals("Use to teleport to test destination",
@@ -247,7 +240,7 @@ public class LodeStarPluginTests {
 
 		@Test
 		@DisplayName("new item is valid lode star item.")
-		void CreateAndTestValidItem() {
+		void createAndTestValidItem() {
 			Assertions.assertTrue(plugin.lodeStarUtility.isItem(lodeStarItem),
 					"new item stack is not a valid lode star item.");
 		}
