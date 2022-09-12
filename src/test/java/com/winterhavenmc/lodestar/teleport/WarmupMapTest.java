@@ -23,7 +23,6 @@ import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import com.winterhavenmc.lodestar.PluginMain;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class WarmupMapTest {
@@ -46,36 +45,40 @@ class WarmupMapTest {
 		MockBukkit.unmock();
 	}
 
+
 	@Test
 	void removePlayer() {
 
 		// create mock player
 		PlayerMock player = server.addPlayer();
 
-		// put player in warmup map
+		// instantiate warmup map
 		WarmupMap warmupMap = new WarmupMap(plugin);
 
-		warmupMap.startPlayerWarmUp(player, 1);
-
+		// put player in warmup map
+		warmupMap.startPlayerWarmUp(player, 10);
 		Assertions.assertTrue(warmupMap.containsPlayer(player), "Player was not inserted in warmup map.");
 
+		// remove player from warmup map
 		warmupMap.removePlayer(player);
-
 		Assertions.assertFalse(warmupMap.containsPlayer(player), "Player was not removed from warmup map.");
 	}
 
+
 	@Test
 	void isWarmingUp() {
+
 		// create mock player
 		PlayerMock player = server.addPlayer();
 
-		// put player in warmup map
+		// instantiate warmup map
 		WarmupMap warmupMap = new WarmupMap(plugin);
 
-		warmupMap.startPlayerWarmUp(player, 1);
-
+		// put player in warmup map
+		warmupMap.startPlayerWarmUp(player, 20);
 		Assertions.assertTrue(warmupMap.isWarmingUp(player), "Warmup map does not contain player.");
 	}
+
 
 	@Test
 	void startPlayerWarmUpTest() {
@@ -83,13 +86,14 @@ class WarmupMapTest {
 		// create mock player
 		PlayerMock player = server.addPlayer();
 
-		// put player in warmup map
+		// instantiate warmup map
 		WarmupMap warmupMap = new WarmupMap(plugin);
 
-		warmupMap.startPlayerWarmUp(player, 1);
-
+		// put player in warmup map
+		warmupMap.startPlayerWarmUp(player, 30);
 		Assertions.assertTrue(warmupMap.containsPlayer(player), "Warmup map does not contain player.");
 	}
+
 
 	@Test
 	void containsPlayer() {
@@ -97,13 +101,14 @@ class WarmupMapTest {
 		// create mock player
 		PlayerMock player = server.addPlayer();
 
-		// put player in warmup map
+		// instantiate warmup map
 		WarmupMap warmupMap = new WarmupMap(plugin);
 
-		warmupMap.startPlayerWarmUp(player, 1);
-
+		// put player in warmup map
+		warmupMap.startPlayerWarmUp(player, 40);
 		Assertions.assertTrue(warmupMap.containsPlayer(player), "Warmup map does not contain player.");
 	}
+
 
 	@Test
 	void getTaskId() {
@@ -111,29 +116,12 @@ class WarmupMapTest {
 		// create mock player
 		PlayerMock player = server.addPlayer();
 
-		// put player in warmup map
+		// instantiate warmup map
 		WarmupMap warmupMap = new WarmupMap(plugin);
 
-		warmupMap.startPlayerWarmUp(player, 1);
-
-		Assertions.assertEquals(1, warmupMap.getTaskId(player), "Could not get taskId from warmup map.");
-	}
-
-	@Test
-	void isInitiated() {
-		// create mock player
-		PlayerMock player = server.addPlayer();
-
 		// put player in warmup map
-		WarmupMap warmupMap = new WarmupMap(plugin);
-
-		warmupMap.startPlayerWarmUp(player, 1);
-
-		Assertions.assertFalse(warmupMap.isInitiated(player), "Player teleport is already initiated.");
-
-		server.getScheduler().performTicks(plugin.getConfig().getLong("interact-delay"));
-
-		Assertions.assertTrue(warmupMap.isInitiated(player), "Player teleport is not initiated.");
+		warmupMap.startPlayerWarmUp(player, 50);
+		Assertions.assertEquals(50, warmupMap.getTaskId(player), "Could not get taskId from warmup map.");
 	}
 
 }
