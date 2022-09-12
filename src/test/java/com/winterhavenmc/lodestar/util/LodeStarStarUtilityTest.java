@@ -115,7 +115,7 @@ class LodeStarStarUtilityTest {
 	@Test
 	void getDestinationNameTest() {
 		ItemStack testItem = plugin.lodeStarUtility.create("Home");
-		assertEquals("Home", plugin.lodeStarUtility.getDestinationName(testItem), "item destination name does is not 'Home'");
+		assertEquals("Home", plugin.lodeStarUtility.getDestinationName(testItem), "item destination name is not 'Home'");
 	}
 
 	@Test

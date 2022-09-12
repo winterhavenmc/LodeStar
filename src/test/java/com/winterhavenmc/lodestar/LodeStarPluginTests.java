@@ -5,9 +5,6 @@ import be.seeseemelk.mockbukkit.ServerMock;
 
 import com.winterhavenmc.lodestar.sounds.SoundId;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -199,50 +196,6 @@ public class LodeStarPluginTests {
 		void itemLoreNotEmpty() {
 			Assertions.assertFalse(plugin.messageBuilder.getItemLore().isEmpty(),
 					"item lore is empty.");
-		}
-	}
-
-
-	@Nested
-	@DisplayName("Test LodeStar utility methods.")
-	class SpawnStarFactoryTests {
-
-		final ItemStack lodeStarItem = plugin.lodeStarUtility.create("test destination");
-
-		@Test
-		@DisplayName("new item type is nether star.")
-		void itemSetDefaultType() {
-			Assertions.assertEquals(Material.NETHER_STAR, lodeStarItem.getType(),
-					"new item type is not nether star.");
-		}
-
-		@Test
-		@DisplayName("new item name is SpawnStar.")
-		void newItemHasDefaultName() {
-			Assertions.assertNotNull(lodeStarItem.getItemMeta(), "new item stack meta data is null.");
-			Assertions.assertNotNull(lodeStarItem.getItemMeta().getDisplayName(),
-					"new item stack display name meta data is null.");
-			Assertions.assertEquals("LodeStar: test destination",
-					ChatColor.stripColor(lodeStarItem.getItemMeta().getDisplayName()),
-					"new item display name is not 'test destination'.");
-		}
-
-		@Test
-		@DisplayName("new item has lore.")
-		void newItemHasDefaultLore() {
-			Assertions.assertNotNull(lodeStarItem.getItemMeta());
-			Assertions.assertNotNull(lodeStarItem.getItemMeta().getLore());
-			Assertions.assertEquals("Use to teleport to test destination",
-					ChatColor.stripColor(String.join(" ",
-							lodeStarItem.getItemMeta().getLore())),
-							"new item stack lore does not match default lore.");
-		}
-
-		@Test
-		@DisplayName("new item is valid lode star item.")
-		void createAndTestValidItem() {
-			Assertions.assertTrue(plugin.lodeStarUtility.isItem(lodeStarItem),
-					"new item stack is not a valid lode star item.");
 		}
 	}
 
