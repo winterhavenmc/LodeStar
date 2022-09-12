@@ -109,6 +109,11 @@ public final class TeleportHandler {
 	}
 
 
+	void cancelPlayerCooldown(final Player player) {
+		cooldownMap.removePlayer(player);
+	}
+
+
 	/**
 	 * Cancel pending teleport for player
 	 *
@@ -132,17 +137,6 @@ public final class TeleportHandler {
 
 
 	/**
-	 * Check if player is in teleport initiated set. Public pass through method.
-	 *
-	 * @param player the player to check if teleport is initiated
-	 * @return {@code true} if teleport been initiated, {@code false} if it has not
-	 */
-	public boolean isInitiated(final Player player) {
-		return warmupMap.isInitiated(player);
-	}
-
-
-	/**
 	 * Test if player uuid is in warmup hashmap. Public pass through method.
 	 *
 	 * @param player the player to test if in warmup map
@@ -162,4 +156,9 @@ public final class TeleportHandler {
 		warmupMap.removePlayer(player);
 	}
 
+
+	boolean isCoolingDown(Player player) {
+		return cooldownMap.isCoolingDown(player);
+
+	}
 }
