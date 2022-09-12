@@ -134,7 +134,7 @@ public class LodeStarPluginTests {
 			}
 		}
 
-		Collection<String> GetConfigFileKeys() {
+		Collection<String> getConfigFileKeys() {
 			return plugin.soundConfig.getSoundConfigKeys();
 		}
 
@@ -147,7 +147,7 @@ public class LodeStarPluginTests {
 		}
 
 		@ParameterizedTest
-		@MethodSource("GetConfigFileKeys")
+		@MethodSource("getConfigFileKeys")
 		@DisplayName("config file key has matching key in enum sound names")
 		void soundConfigEnumContainsAllFileSounds(String key) {
 			Assertions.assertTrue(enumSoundNames.contains(key),
@@ -155,7 +155,7 @@ public class LodeStarPluginTests {
 		}
 
 		@ParameterizedTest
-		@MethodSource("GetConfigFileKeys")
+		@MethodSource("getConfigFileKeys")
 		@DisplayName("sound file key has valid bukkit sound name")
 		void soundConfigFileHasValidBukkitSound(String key) {
 			String bukkitSoundName = plugin.soundConfig.getBukkitSoundName(key);
