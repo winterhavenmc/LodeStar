@@ -110,14 +110,13 @@ final class BindSubcommand extends AbstractSubcommand {
 
 		// if default-item-only configured true, check that item in hand has default material and data
 		if (plugin.getConfig().getBoolean("default-material-only")
-				&& !sender.hasPermission("lodestar.default-override")) {
-			if (!plugin.lodeStarUtility.isDefaultItem(playerItem)) {
-				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
-						.setMacro(Macro.DESTINATION, destinationName)
-						.send();
-				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-				return true;
-			}
+				&& !sender.hasPermission("lodestar.default-override")
+				&& !plugin.lodeStarUtility.isDefaultItem(playerItem)) {
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
+					.setMacro(Macro.DESTINATION, destinationName)
+					.send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			return true;
 		}
 
 		// check that item in hand is valid material
