@@ -37,6 +37,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -102,9 +103,8 @@ public final class PlayerEventListener implements Listener {
 				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
 						|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
-					// if player's last teleport initiated time is less than x ticks (def: 2), do nothing and return
-					// this is a workaround for event double firing (once for each hand) on every player interaction
-					if (!plugin.teleportHandler.isInitiated(player)) {
+					// if item used is in off_hand, do nothing and return
+					if (EquipmentSlot.OFF_HAND.equals(event.getHand())) {
 						return;
 					}
 
