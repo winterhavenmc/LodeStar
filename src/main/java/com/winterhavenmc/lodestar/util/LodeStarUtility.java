@@ -282,10 +282,6 @@ public final class LodeStarUtility {
 	 */
 	public boolean isDefaultItem(final ItemStack itemStack) {
 
-		if (plugin.getConfig().getBoolean("debug")) {
-			plugin.getLogger().info("isDefaultItem: " + itemStack.toString());
-		}
-
 		// if item stack is empty (null or air) return false
 		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
 			return false;
