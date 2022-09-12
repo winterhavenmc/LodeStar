@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b6ce0eeb50774ec89cf60b81e8d3522f)](https://www.codacy.com/gh/tim-savage/LodeStar/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tim-savage/LodeStar&amp;utm_campaign=Badge_Grade)
+
 # LodeStar
 Allows the creation of items that are bound to named destinations.
 An extension of the SpawnStar plugin, but not just for spawn anymore!
