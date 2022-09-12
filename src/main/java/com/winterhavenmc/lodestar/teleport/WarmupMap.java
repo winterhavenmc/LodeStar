@@ -19,23 +19,18 @@ package com.winterhavenmc.lodestar.teleport;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 class WarmupMap {
 
-	// reference to plugin main class
+	// reference to plugin main class (currently unused, but left in for possible future use)
+	@SuppressWarnings({"FieldCanBeLocal", "unused"})
 	private final JavaPlugin plugin;
 
 	// HashMap containing player UUID as key and warmup task id as value
 	private final ConcurrentHashMap<UUID, Integer> warmupMap;
-
-	// Map containing player uuid for teleport initiated
-	private final Set<UUID> teleportInitiated;
 
 
 	WarmupMap(final JavaPlugin plugin) {
@@ -45,9 +40,6 @@ class WarmupMap {
 
 		// initialize warmup HashMap
 		warmupMap = new ConcurrentHashMap<>();
-
-		// initialize teleport initiated set
-		teleportInitiated = ConcurrentHashMap.newKeySet();
 	}
 
 
@@ -79,20 +71,7 @@ class WarmupMap {
 	 * @param taskId the taskId of the player's delayed teleport task
 	 */
 	void startPlayerWarmUp(final Player player, final Integer taskId) {
-
 		warmupMap.put(player.getUniqueId(), taskId);
-
-		// insert player uuid into teleport initiated set
-		teleportInitiated.add(player.getUniqueId());
-
-		// create task to remove player uuid from tpi set after set amount of ticks
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				teleportInitiated.remove(player.getUniqueId());
-			}
-		}.runTaskLater(plugin, plugin.getConfig().getLong("interact-delay"));
-
 	}
 
 
@@ -103,23 +82,6 @@ class WarmupMap {
 
 	int getTaskId(final Player player) {
 		return warmupMap.get(player.getUniqueId());
-	}
-
-
-	/**
-	 * Check if player is in teleport initiated set
-	 *
-	 * @param player the player to check if teleport is initiated
-	 * @return {@code true} if teleport been initiated, {@code false} if it has not
-	 */
-	boolean isInitiated(final Player player) {
-
-		// check for null parameter
-		if (player == null) {
-			return false;
-		}
-
-		return !teleportInitiated.contains(player.getUniqueId());
 	}
 
 }
