@@ -80,6 +80,14 @@ public final class PlayerEventListener implements Listener {
 	}
 
 
+	/**
+	 * Check if cancel on interaction is configured and such interaction has occurred
+	 *
+	 * @param player the player interacting with a block
+	 * @param action the event action performed by the player
+	 * @param hand the player hand used in the interaction
+	 * @return true if cancellable interaction occurred, false if not
+	 */
 	boolean cancelOnInteraction(final Player player, final Action action, final EquipmentSlot hand) {
 
 		// if cancel-on-interaction is configured true, check if player is in warmup hashmap
@@ -113,6 +121,12 @@ public final class PlayerEventListener implements Listener {
 	}
 
 
+	/**
+	 * Check if block is of type that interaction is allowed while holding a lode star item in hand
+	 *
+	 * @param block the block being interacted with
+	 * @return true if block type is allowed for interactionm, false if not
+	 */
 	boolean allowedInteraction(Block block) {
 		// allow use of doors, gates and trap doors with item in hand
 		if (block.getBlockData() instanceof Openable) {
