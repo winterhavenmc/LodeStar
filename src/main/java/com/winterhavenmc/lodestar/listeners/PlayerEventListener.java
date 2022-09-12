@@ -80,6 +80,64 @@ public final class PlayerEventListener implements Listener {
 	}
 
 
+	boolean cancelOnInteraction(final Player player, final Action action, final EquipmentSlot hand) {
+
+		// if cancel-on-interaction is configured true, check if player is in warmup hashmap
+		if (plugin.getConfig().getBoolean("cancel-on-interaction")) {
+
+			// if player is in warmup hashmap, check if they are interacting with a block (not air)
+			if (plugin.teleportHandler.isWarmingUp(player)) {
+
+				// if player is interacting with a block, cancel teleport, output message and return
+				if (Action.LEFT_CLICK_BLOCK.equals(action)
+						|| Action.RIGHT_CLICK_BLOCK.equals(action)) {
+
+					// if item used is in off_hand, do nothing and return
+					if (EquipmentSlot.OFF_HAND.equals(hand)) {
+						return true;
+					}
+
+					// cancel teleport
+					plugin.teleportHandler.cancelTeleport(player);
+
+					// send cancelled teleport message
+					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_INTERACTION).send();
+
+					// play cancelled teleport sound
+					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	boolean allowedInteraction(Block block) {
+		// allow use of doors, gates and trap doors with item in hand
+		if (block.getBlockData() instanceof Openable) {
+			return true;
+		}
+
+		// allow use of switches with item in hand
+		if (block.getBlockData() instanceof Switch) {
+			return true;
+		}
+
+		// allow use of containers and other tile entity blocks with item in hand
+		if (block.getState() instanceof TileState) {
+			return true;
+		}
+
+		// allow use of crafting tables with item in hand
+		//noinspection RedundantIfStatement
+		if (craftTables.contains(block.getType())) {
+			return true;
+		}
+		return false;
+	}
+
+
 	/**
 	 * Event listener for PlayerInteractEvent<br>
 	 * detects LodeStar use, or cancels teleport
@@ -94,31 +152,8 @@ public final class PlayerEventListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// if cancel-on-interaction is configured true, check if player is in warmup hashmap
-		if (plugin.getConfig().getBoolean("cancel-on-interaction")) {
-
-			// if player is in warmup hashmap, check if they are interacting with a block (not air)
-			if (plugin.teleportHandler.isWarmingUp(player)) {
-
-				// if player is interacting with a block, cancel teleport, output message and return
-				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
-						|| event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-
-					// if item used is in off_hand, do nothing and return
-					if (EquipmentSlot.OFF_HAND.equals(event.getHand())) {
-						return;
-					}
-
-					// cancel teleport
-					plugin.teleportHandler.cancelTeleport(player);
-
-					// send cancelled teleport message
-					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_INTERACTION).send();
-
-					// play cancelled teleport sound
-					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
-					return;
-				}
-			}
+		if (cancelOnInteraction(player, event.getAction(), event.getHand())) {
+			return;
 		}
 
 		// if item used is not a LodeStar, do nothing and return
@@ -153,23 +188,7 @@ public final class PlayerEventListener implements Listener {
 				// check that player is not sneaking, to interact with blocks
 				if (!event.getPlayer().isSneaking()) {
 
-					// allow use of doors, gates and trap doors with item in hand
-					if (block.getBlockData() instanceof Openable) {
-						return;
-					}
-
-					// allow use of switches with item in hand
-					if (block.getBlockData() instanceof Switch) {
-						return;
-					}
-
-					// allow use of containers and other tile entity blocks with item in hand
-					if (block.getState() instanceof TileState) {
-						return;
-					}
-
-					// allow use of crafting tables with item in hand
-					if (craftTables.contains(block.getType())) {
+					if (allowedInteraction(block)) {
 						return;
 					}
 				}
