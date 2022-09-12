@@ -148,11 +148,14 @@ public final class PlayerEventListener implements Listener {
 	@EventHandler
 	void onPlayerUse(final PlayerInteractEvent event) {
 
-		// get player
+		// get event player
 		final Player player = event.getPlayer();
 
-		// if cancel-on-interaction is configured true, check if player is in warmup hashmap
-		if (cancelOnInteraction(player, event.getAction(), event.getHand())) {
+		// get event action
+		Action action = event.getAction();
+
+		// perform check for cancel-on-interaction
+		if (cancelOnInteraction(player, action, event.getHand())) {
 			return;
 		}
 
@@ -160,9 +163,6 @@ public final class PlayerEventListener implements Listener {
 		if (!plugin.lodeStarUtility.isItem(event.getItem())) {
 			return;
 		}
-
-		// get event action
-		Action action = event.getAction();
 
 		// if event action is PHYSICAL (not left-click or right click), do nothing and return
 		if (action.equals(Action.PHYSICAL)) {
