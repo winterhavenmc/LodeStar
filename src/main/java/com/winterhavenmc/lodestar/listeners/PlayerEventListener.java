@@ -81,41 +81,33 @@ public final class PlayerEventListener implements Listener {
 
 
 	/**
-	 * Check if cancel on interaction is configured and such interaction has occurred
+	 * Check if cancel on interaction is configured and if such interaction has occurred
 	 *
-	 * @param player the player interacting with a block
-	 * @param action the event action performed by the player
-	 * @param hand the player hand used in the interaction
+	 * @param event the event to check for player/block interaction
 	 * @return true if cancellable interaction occurred, false if not
 	 */
-	boolean cancelOnInteraction(final Player player, final Action action, final EquipmentSlot hand) {
+	boolean cancelTeleportOnInteraction(final PlayerInteractEvent event) {
 
-		// if cancel-on-interaction is configured true, check if player is in warmup hashmap
-		if (plugin.getConfig().getBoolean("cancel-on-interaction")) {
+		final Player player = event.getPlayer();
+		final Action action = event.getAction();
+		final EquipmentSlot hand = event.getHand();
 
-			// if player is in warmup hashmap, check if they are interacting with a block (not air)
-			if (plugin.teleportHandler.isWarmingUp(player)) {
+		// if cancel-on-interaction is configured true, and player is in warmup hashmap,
+		// and player is interacting with a block (not air) then cancel teleport, output message and return
+		if (plugin.getConfig().getBoolean("cancel-on-interaction")
+				&& plugin.teleportHandler.isWarmingUp(player)
+				&& (Action.LEFT_CLICK_BLOCK.equals(action) || Action.RIGHT_CLICK_BLOCK.equals(action))) {
 
-				// if player is interacting with a block, cancel teleport, output message and return
-				if (Action.LEFT_CLICK_BLOCK.equals(action)
-						|| Action.RIGHT_CLICK_BLOCK.equals(action)) {
-
-					// if item used is in off_hand, do nothing and return
-					if (EquipmentSlot.OFF_HAND.equals(hand)) {
-						return true;
-					}
-
-					// cancel teleport
-					plugin.teleportHandler.cancelTeleport(player);
-
-					// send cancelled teleport message
-					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_INTERACTION).send();
-
-					// play cancelled teleport sound
-					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
-					return true;
-				}
+			// if item used is in off_hand, do nothing and return
+			if (EquipmentSlot.OFF_HAND.equals(hand)) {
+				return true;
 			}
+
+			// cancel teleport and send message, play sound
+			plugin.teleportHandler.cancelTeleport(player);
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_INTERACTION).send();
+			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
+			return true;
 		}
 		return false;
 	}
@@ -153,6 +145,35 @@ public final class PlayerEventListener implements Listener {
 
 
 	/**
+	 *
+	 * @param event the event whose action to test
+	 * @return true if action is allowed, false if action would cancel the event
+	 */
+	boolean allowedClickType(PlayerInteractEvent event) {
+
+		// if event action is PHYSICAL (not left-click or right click), do nothing and return
+		if (event.getAction().equals(Action.PHYSICAL)) {
+			return true;
+		}
+
+		// if event action is left-click, and left-click is config disabled, do nothing and return
+		return event.getAction().equals(Action.LEFT_CLICK_BLOCK)
+				|| event.getAction().equals(Action.LEFT_CLICK_AIR)
+				&& !plugin.getConfig().getBoolean("left-click");
+	}
+
+
+	boolean isNotAir(final Block block) {
+		return block != null && !block.getType().isAir();
+	}
+
+
+	boolean isNotSneaking(final Player player) {
+		return !player.isSneaking();
+	}
+
+
+	/**
 	 * Event listener for PlayerInteractEvent<br>
 	 * detects LodeStar use, or cancels teleport
 	 * if cancel-on-interaction configured
@@ -165,11 +186,8 @@ public final class PlayerEventListener implements Listener {
 		// get event player
 		final Player player = event.getPlayer();
 
-		// get event action
-		Action action = event.getAction();
-
 		// perform check for cancel-on-interaction
-		if (cancelOnInteraction(player, action, event.getHand())) {
+		if (cancelTeleportOnInteraction(event)) {
 			return;
 		}
 
@@ -178,34 +196,21 @@ public final class PlayerEventListener implements Listener {
 			return;
 		}
 
-		// if event action is PHYSICAL (not left-click or right click), do nothing and return
-		if (action.equals(Action.PHYSICAL)) {
-			return;
-		}
-
-		// if event action is left-click, and left-click is config disabled, do nothing and return
-		if (action.equals(Action.LEFT_CLICK_BLOCK)
-				|| action.equals(Action.LEFT_CLICK_AIR)
-				&& !plugin.getConfig().getBoolean("left-click")) {
+		// perform check for allowed click type
+		if (allowedClickType(event)) {
 			return;
 		}
 
 		// if player is not warming
 		if (!plugin.teleportHandler.isWarmingUp(player)) {
 
-			// get clicked block
-			Block block = event.getClickedBlock();
-
 			// check if clicked block is air (null)
-			if (block != null) {
-
-				// check that player is not sneaking, to interact with blocks
-				if (!event.getPlayer().isSneaking()) {
-
-					if (allowedInteraction(block)) {
-						return;
-					}
-				}
+			// check that player is not sneaking
+			// check allowed to interact with blocks
+			if (isNotAir(event.getClickedBlock())
+					&& isNotSneaking(event.getPlayer())
+					&& allowedInteraction(event.getClickedBlock())) {
+				return;
 			}
 
 			// cancel event
