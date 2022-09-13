@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar;
 
 import com.winterhavenmc.lodestar.commands.CommandManager;
 import com.winterhavenmc.lodestar.listeners.PlayerEventListener;
+import com.winterhavenmc.lodestar.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.DataStore;
@@ -104,8 +105,9 @@ public final class PluginMain extends JavaPlugin {
 		// instantiate lodestar factory
 		lodeStarUtility = new LodeStarUtility(this);
 
-		// instantiate player listener
+		// instantiate event listeners
 		new PlayerEventListener(this);
+		new PlayerInteractEventListener(this);
 
 		// instantiate metrics handler
 		new MetricsHandler(this);
