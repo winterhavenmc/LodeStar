@@ -121,15 +121,11 @@ public final class PlayerEventListener implements Listener {
 
 			Entity entity = event.getEntity();
 
-			// if damaged entity is player, check for pending teleport
-			if (entity instanceof Player player) {
-
-				// if player is in warmup hashmap, cancel teleport and send player message
-				if (plugin.teleportHandler.isWarmingUp(player)) {
-					plugin.teleportHandler.cancelTeleport(player);
-					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_DAMAGE).send();
-					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
-				}
+			// if damaged entity is player, and player has pending teleport, cancel teleport and send player message
+			if (entity instanceof Player player && plugin.teleportHandler.isWarmingUp(player)) {
+				plugin.teleportHandler.cancelTeleport(player);
+				plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_DAMAGE).send();
+				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 			}
 		}
 	}
@@ -150,16 +146,22 @@ public final class PlayerEventListener implements Listener {
 
 		Player player = event.getPlayer();
 
-		// if player is in warmup hashmap, cancel teleport and send player message
-		if (plugin.teleportHandler.isWarmingUp(player)) {
-
-			// check for player movement other than head turning
-			if (event.getFrom().distanceSquared(Objects.requireNonNull(event.getTo())) > 0) {
-				plugin.teleportHandler.cancelTeleport(player);
-				plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_MOVEMENT).send();
-				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
-			}
+		// if player is pending teleport and has moved, cancel teleport and send player message
+		if (plugin.teleportHandler.isWarmingUp(player) && playerHasMoved(event)) {
+			plugin.teleportHandler.cancelTeleport(player);
+			plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_MOVEMENT).send();
+			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 		}
+	}
+
+
+	/**
+	 * check for player movement other than head turning
+	 * @param event the player move event
+	 * @return true if player has moved, false if not
+	 */
+	private boolean playerHasMoved(PlayerMoveEvent event) {
+		return event.getFrom().distanceSquared(Objects.requireNonNull(event.getTo())) > 0;
 	}
 
 }
