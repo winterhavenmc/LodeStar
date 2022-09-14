@@ -27,6 +27,6 @@ interface Teleporter {
 
 	void initiate(final Player player);
 
-	void execute(final Player player, final Destination finalDestination, final MessageId messageId);
+	void execute(final Player player, final Destination destination, final MessageId messageId);
 
 }
