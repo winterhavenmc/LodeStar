@@ -107,11 +107,11 @@ abstract class AbstractTeleporter implements Teleporter {
 		Location location = plugin.worldManager.getSpawnLocation(player);
 
 		// if from-nether is enabled in config and player is in nether, try to get overworld spawn location
-		if (plugin.getConfig().getBoolean("from-nether") && isInNetherWorld(player)) {
+		if (isInNetherWorld(player) && plugin.getConfig().getBoolean("from-nether")) {
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 		// if from-end is enabled in config and player is in end, try to get overworld spawn location
-		else if (plugin.getConfig().getBoolean("from-end") && isInEndWorld(player)) {
+		else if (isInEndWorld(player) && plugin.getConfig().getBoolean("from-end")) {
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 
