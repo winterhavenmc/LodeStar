@@ -45,7 +45,7 @@ abstract class AbstractTeleporter implements Teleporter {
 	protected final TeleportExecutor teleportExecutor;
 
 
-	public AbstractTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
+	AbstractTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
 		this.plugin = plugin;
 		this.teleportExecutor = teleportExecutor;
 	}
