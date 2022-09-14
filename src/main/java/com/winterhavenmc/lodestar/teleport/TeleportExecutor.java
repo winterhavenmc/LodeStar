@@ -132,10 +132,8 @@ class TeleportExecutor {
 		// unwrap optional destination location
 		Location location = destination.getLocation().get();
 
-		if (location.getWorld() != null) {
-			if (!location.getWorld().getChunkAt(location).isLoaded()) {
-				location.getWorld().getChunkAt(location).load();
-			}
+		if (location.getWorld() != null && !location.getWorld().getChunkAt(location).isLoaded()) {
+			location.getWorld().getChunkAt(location).load();
 		}
 	}
 
