@@ -57,7 +57,7 @@ final class HomeTeleporter extends AbstractTeleporter {
 	 *
 	 * @param player the player to teleport
 	 */
-	void fallbackToSpawn(final Player player) {
+	private void fallbackToSpawn(final Player player) {
 		if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
 			getSpawnDestination(player).ifPresentOrElse(
 					destination -> new SpawnTeleporter(plugin, teleportExecutor).initiate(player),
