@@ -98,7 +98,7 @@ final class SetSubcommand extends AbstractSubcommand {
 		String destinationName = String.join(" ", args);
 
 		// check if destination name is a reserved name
-		if (Destination.isReserved(destinationName)) {
+		if (isRerservedName(destinationName)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();

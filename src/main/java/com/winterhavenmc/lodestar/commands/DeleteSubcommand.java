@@ -19,7 +19,6 @@ package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
 
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
@@ -86,7 +85,7 @@ final class DeleteSubcommand extends AbstractSubcommand {
 		String key = plugin.lodeStarUtility.deriveKey(destinationName);
 
 		// test that destination name is not reserved name
-		if (Destination.isReserved(destinationName)) {
+		if (isRerservedName(destinationName)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();

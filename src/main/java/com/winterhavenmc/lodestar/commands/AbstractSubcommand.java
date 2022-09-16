@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.commands;
 
+import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
 import org.bukkit.command.Command;
@@ -27,6 +28,7 @@ import java.util.*;
 
 abstract class AbstractSubcommand implements Subcommand {
 
+	protected PluginMain plugin;
 	protected String name;
 	protected Collection<String> aliases = Collections.emptySet();
 	protected String permissionNode = "";
@@ -76,6 +78,11 @@ abstract class AbstractSubcommand implements Subcommand {
 
 	protected boolean matchPrefix(String string, String prefix) {
 		return string.toLowerCase().startsWith(prefix.toLowerCase());
+	}
+
+	boolean isRerservedName(final String destinationName) {
+		return destinationName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
+				|| destinationName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 	}
 
 }

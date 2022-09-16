@@ -135,7 +135,8 @@ public final class SimpleAPI {
 	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
 	 */
 	static public boolean isReservedName(final String destinationName) {
-		return Destination.isReserved(destinationName);
+		return destinationName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
+				|| destinationName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 	}
 
 
