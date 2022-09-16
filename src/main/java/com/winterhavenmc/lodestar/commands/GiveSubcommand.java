@@ -66,8 +66,8 @@ final class GiveSubcommand extends AbstractSubcommand {
 			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
 
 			// add home and spawn destinations to list
-			resultList.add(0, Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")));
-			resultList.add(0, Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+			resultList.add(0, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			resultList.add(0, plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 
 			// return list filtered by matching prefix to argument
 			return resultList.stream().filter(destinationKey -> matchPrefix(destinationKey, args[2])).collect(Collectors.toList());
