@@ -239,7 +239,7 @@ public final class LodeStarUtility {
 	 * @param itemStack the item whose destination name is being retrieved
 	 * @return String - destination display name
 	 */
-	public String getDestinationName(final ItemStack itemStack) {
+	public String getDisplayName(final ItemStack itemStack) {
 
 		String key = this.getKey(itemStack);
 
@@ -249,31 +249,6 @@ public final class LodeStarUtility {
 		}
 
 		return getDisplayName(key).orElse(null);
-
-//		String destinationName = null;
-//
-//		// if destination is spawn get spawn display name from messages files
-//		if (key.equalsIgnoreCase("spawn") || key.equalsIgnoreCase(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
-//			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-//		}
-//		// if destination is home, get home display name from messages file
-//		else if (key.equals("home") || key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
-//			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-//		}
-//		// else get destination name from datastore
-//		else {
-//			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
-//			if (optionalDestination.isPresent()) {
-//				destinationName = optionalDestination.get().getDisplayName();
-//			}
-//		}
-//
-//		// if no destination name found, use key for name
-//		if (destinationName == null) {
-//			destinationName = key;
-//		}
-//
-//		return destinationName;
 	}
 
 

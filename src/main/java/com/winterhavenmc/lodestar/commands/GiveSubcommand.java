@@ -19,7 +19,6 @@ package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
@@ -147,7 +146,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 			// if item in hand is a LodeStar item, set destination and material from item
 			if (plugin.lodeStarUtility.isItem(playerItem)) {
 
-				destinationName = plugin.lodeStarUtility.getDestinationName(playerItem);
+				destinationName = plugin.lodeStarUtility.getDisplayName(playerItem);
 				material = playerItem.getType();
 			}
 		}

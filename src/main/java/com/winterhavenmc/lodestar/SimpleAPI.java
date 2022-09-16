@@ -189,7 +189,7 @@ public final class SimpleAPI {
 	 * @return String destination display name, or null if no matching destination found
 	 */
 	public static String getDestinationName(final ItemStack itemStack) {
-		return plugin.lodeStarUtility.getDestinationName(itemStack);
+		return plugin.lodeStarUtility.getDisplayName(itemStack);
 	}
 
 
