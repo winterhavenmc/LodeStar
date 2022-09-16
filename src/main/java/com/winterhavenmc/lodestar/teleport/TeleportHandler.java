@@ -103,21 +103,6 @@ public final class TeleportHandler {
 
 
 	/**
-	 * Insert player into cooldown map
-	 *
-	 * @param player the player being inserted into the cooldown map
-	 */
-	void startPlayerCooldown(final Player player) {
-		cooldownMap.startPlayerCooldown(player);
-	}
-
-
-	void cancelPlayerCooldown(final Player player) {
-		cooldownMap.removePlayer(player);
-	}
-
-
-	/**
 	 * Cancel pending teleport for player
 	 *
 	 * @param player the player to cancel teleport
@@ -157,6 +142,21 @@ public final class TeleportHandler {
 	 */
 	public void removeWarmingUpPlayer(final Player player) {
 		warmupMap.removePlayer(player);
+	}
+
+
+	/**
+	 * Insert player into cooldown map
+	 *
+	 * @param player the player being inserted into the cooldown map
+	 */
+	void startPlayerCooldown(final Player player) {
+		cooldownMap.startPlayerCooldown(player);
+	}
+
+
+	void cancelPlayerCooldown(final Player player) {
+		cooldownMap.removePlayer(player);
 	}
 
 
