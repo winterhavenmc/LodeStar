@@ -193,7 +193,7 @@ public final class LodeStarUtility {
 	public boolean isItem(final ItemStack itemStack) {
 
 		// if item stack is empty (null or air) return false
-		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
+		if (itemStack == null || itemStack.getType().isAir()) {
 			return false;
 		}
 
