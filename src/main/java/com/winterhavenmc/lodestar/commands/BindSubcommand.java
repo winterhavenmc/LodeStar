@@ -134,11 +134,13 @@ final class BindSubcommand extends AbstractSubcommand {
 			destinationName = destination.get().getDisplayName();
 		}
 
-		if ("spawn".equalsIgnoreCase(destinationName)) {
+		if ("spawn".equalsIgnoreCase(destinationName)
+				|| destinationName.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")))) {
 			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 		}
 
-		else if ("home".equalsIgnoreCase(destinationName)) {
+		else if ("home".equalsIgnoreCase(destinationName)
+				|| destinationName.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
 			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 		}
 
