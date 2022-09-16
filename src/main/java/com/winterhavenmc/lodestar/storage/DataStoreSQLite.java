@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.storage;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -281,7 +282,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		}
 
 		// derive key in case destination name was passed
-		String derivedKey = Destination.deriveKey(key);
+		String derivedKey = deriveKey(key);
 
 		Destination destination = null;
 
@@ -488,7 +489,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		}
 
 		// derive key in case destination name was passed
-		String key = Destination.deriveKey(passedKey);
+		String key = deriveKey(passedKey);
 
 		// get destination record to be deleted, for return
 		Optional<Destination> destination = this.selectRecord(key);
@@ -560,6 +561,11 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 			result = dataStoreFile.delete();
 		}
 		return result;
+	}
+
+
+	private String deriveKey(final String displayName) {
+		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', displayName)).replace(' ', '_');
 	}
 
 }
