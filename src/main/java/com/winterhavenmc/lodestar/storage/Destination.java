@@ -141,8 +141,7 @@ public final class Destination {
 	 * @return true if home, else false
 	 */
 	public boolean isHome() {
-		return this.getKey().equalsIgnoreCase("home")
-				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+		return this.type.equals(Type.HOME);
 	}
 
 
@@ -152,8 +151,7 @@ public final class Destination {
 	 * @return true if destination is spawn, else false
 	 */
 	public boolean isSpawn() {
-		return this.getKey().equalsIgnoreCase("spawn")
-				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")));
+		return this.type.equals(Type.SPAWN);
 	}
 
 
