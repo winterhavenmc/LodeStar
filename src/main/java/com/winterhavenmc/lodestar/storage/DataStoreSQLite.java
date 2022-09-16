@@ -17,9 +17,10 @@
 
 package com.winterhavenmc.lodestar.storage;
 
+import com.winterhavenmc.lodestar.PluginMain;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -30,7 +31,7 @@ import java.util.*;
 final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 	// reference to main class
-	private final JavaPlugin plugin;
+	private final PluginMain plugin;
 
 	// database connection object
 	private Connection connection;
@@ -46,7 +47,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 	 *
 	 * @param plugin reference to main class
 	 */
-	DataStoreSQLite(final JavaPlugin plugin) {
+	DataStoreSQLite(final PluginMain plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
@@ -566,6 +567,21 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 	private String deriveKey(final String displayName) {
 		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', displayName)).replace(' ', '_');
+	}
+
+
+	public boolean destinationExists(final String displayName) {
+
+		if (displayName == null || displayName.isBlank()) {
+			return false;
+		}
+
+		if (displayName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
+				|| displayName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
+			return true;
+		}
+
+		return selectRecord(displayName).isPresent();
 	}
 
 }

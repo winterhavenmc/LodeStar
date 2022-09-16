@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.storage;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import com.winterhavenmc.lodestar.PluginMain;
 
 import java.io.File;
 import java.util.Arrays;
@@ -30,14 +30,14 @@ enum DataStoreType {
 	SQLITE("SQLite", "destinations.db") {
 
 		@Override
-		public DataStore connect(final JavaPlugin plugin) {
+		public DataStore connect(final PluginMain plugin) {
 
 			// return new sqlite datastore object
 			return new DataStoreSQLite(plugin);
 		}
 
 		@Override
-		boolean storageObjectExists(final JavaPlugin plugin) {
+		boolean storageObjectExists(final PluginMain plugin) {
 			// get path name to data store file
 			File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getStorageName());
 			return dataStoreFile.exists();
@@ -69,7 +69,7 @@ enum DataStoreType {
 	 * Create datastore
 	 * @return DataStore object
 	 */
-	public abstract DataStore connect(final JavaPlugin plugin);
+	public abstract DataStore connect(final PluginMain plugin);
 
 
 	@Override
@@ -94,7 +94,7 @@ enum DataStoreType {
 	 * @param plugin reference to plugin main class
 	 * @return true if backing object exists, false if not
 	 */
-	abstract boolean storageObjectExists(final JavaPlugin plugin);
+	abstract boolean storageObjectExists(final PluginMain plugin);
 
 
 	/**
@@ -120,7 +120,7 @@ enum DataStoreType {
 	 * @param oldDataStore the old datastore to convert from
 	 * @param newDataStore the new datastore to convert to
 	 */
-	static void convert(final JavaPlugin plugin, final DataStore oldDataStore, final DataStore newDataStore) {
+	static void convert(final PluginMain plugin, final DataStore oldDataStore, final DataStore newDataStore) {
 
 		// if datastores are same type, do not convert
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
@@ -169,7 +169,7 @@ enum DataStoreType {
 	 *
 	 * @param newDataStore the new datastore to convert all other datastore into
 	 */
-	static void convertAll(final JavaPlugin plugin, final DataStore newDataStore) {
+	static void convertAll(final PluginMain plugin, final DataStore newDataStore) {
 
 		// get array list of all data store types
 		Collection<DataStoreType> dataStores = new HashSet<>(Arrays.asList(DataStoreType.values()));

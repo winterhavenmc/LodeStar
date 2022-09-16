@@ -97,7 +97,7 @@ final class BindSubcommand extends AbstractSubcommand {
 		String destinationName = String.join(" ", args);
 
 		// check if destination exists
-		if (!Destination.exists(destinationName)) {
+		if (!plugin.dataStore.destinationExists(destinationName)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();

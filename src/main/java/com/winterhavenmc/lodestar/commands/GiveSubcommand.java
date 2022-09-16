@@ -159,7 +159,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 			String testName = String.join(" ", args);
 
 			// if resulting name is existing destination, get destinationName from datastore
-			if (Destination.exists(testName)) {
+			if (plugin.dataStore.destinationExists(testName)) {
 				destinationName = Destination.getDisplayName(testName);
 
 				// remove remaining arguments
@@ -184,7 +184,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 			String testName = String.join(" ", args);
 
 			// if resulting name is existing destination, get destinationName from datastore
-			if (Destination.exists(testName)) {
+			if (plugin.dataStore.destinationExists(testName)) {
 				destinationName = Destination.getDisplayName(testName);
 
 				// remove remaining arguments

@@ -124,7 +124,7 @@ public final class SimpleAPI {
 	 * @return {@code true} if destination exists, {@code false} if it does not
 	 */
 	public static boolean isValidDestination(final String destinationName) {
-		return Destination.exists(destinationName);
+		return plugin.dataStore.destinationExists(destinationName);
 	}
 
 
