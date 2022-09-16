@@ -32,8 +32,6 @@ import java.util.List;
  */
 final class ReloadSubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 
 	/**
 	 * Class constructor

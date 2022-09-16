@@ -31,8 +31,6 @@ import java.util.Optional;
 
 final class ListSubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 
 	ListSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;

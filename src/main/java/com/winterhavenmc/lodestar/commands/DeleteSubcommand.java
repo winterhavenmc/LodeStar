@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 
 final class DeleteSubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 
 	DeleteSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;

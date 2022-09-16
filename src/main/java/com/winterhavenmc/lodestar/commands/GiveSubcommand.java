@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 
 final class GiveSubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 
 	GiveSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;

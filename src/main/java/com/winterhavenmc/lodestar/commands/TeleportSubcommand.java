@@ -37,8 +37,6 @@ import java.util.stream.Collectors;
 
 final class TeleportSubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 
 	TeleportSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;

@@ -32,9 +32,6 @@ import java.util.stream.Collectors;
 
 final class HelpSubcommand extends AbstractSubcommand {
 
-	// reference to plugin main class instance
-	private final PluginMain plugin;
-
 	// reference to subcommand map
 	private final SubcommandRegistry subcommandRegistry;
 

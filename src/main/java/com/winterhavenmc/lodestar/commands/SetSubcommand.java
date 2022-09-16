@@ -37,8 +37,6 @@ import java.util.stream.Collectors;
 
 final class SetSubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 
 	SetSubcommand(final PluginMain plugin) {
 		this.plugin = plugin;

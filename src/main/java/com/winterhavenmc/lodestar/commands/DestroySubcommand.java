@@ -31,8 +31,6 @@ import java.util.List;
 
 final class DestroySubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 
 	DestroySubcommand(final PluginMain plugin) {
 		this.plugin = plugin;

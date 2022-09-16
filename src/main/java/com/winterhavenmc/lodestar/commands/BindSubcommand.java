@@ -36,8 +36,6 @@ import java.util.stream.Collectors;
 
 final class BindSubcommand extends AbstractSubcommand {
 
-	private final PluginMain plugin;
-
 	private final List<Material> invalidMaterials = new ArrayList<>(Arrays.asList(
 				Material.AIR,
 				Material.CAVE_AIR,
