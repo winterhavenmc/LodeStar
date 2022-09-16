@@ -115,6 +115,11 @@ abstract class AbstractTeleporter implements Teleporter {
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 
+		// if location is null, return empty optional
+		if (location == null) {
+			return Optional.empty();
+		}
+
 		// return destination for player spawn
 		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location, Destination.Type.SPAWN));
 	}
