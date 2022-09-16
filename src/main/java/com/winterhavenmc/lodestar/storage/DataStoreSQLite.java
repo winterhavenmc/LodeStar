@@ -19,7 +19,6 @@ package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
 
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -283,7 +282,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		}
 
 		// derive key in case destination name was passed
-		String derivedKey = deriveKey(key);
+		String derivedKey = plugin.lodeStarUtility.deriveKey(key);
 
 		Destination destination = null;
 
@@ -490,7 +489,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		}
 
 		// derive key in case destination name was passed
-		String key = deriveKey(passedKey);
+		String key = plugin.lodeStarUtility.deriveKey(passedKey);
 
 		// get destination record to be deleted, for return
 		Optional<Destination> destination = this.selectRecord(key);
@@ -562,11 +561,6 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 			result = dataStoreFile.delete();
 		}
 		return result;
-	}
-
-
-	private String deriveKey(final String displayName) {
-		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', displayName)).replace(' ', '_');
 	}
 
 

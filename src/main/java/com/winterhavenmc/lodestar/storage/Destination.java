@@ -17,12 +17,10 @@
 
 package com.winterhavenmc.lodestar.storage;
 
-import com.winterhavenmc.lodestar.PluginMain;
-
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -37,9 +35,6 @@ public final class Destination {
 		HOME,
 		SPAWN,
 	}
-
-	// static reference to plugin main class instance, necessary for static methods
-	private static final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	private final Type type;
 	private final String displayName;
@@ -195,7 +190,7 @@ public final class Destination {
 		}
 
 		// get world by uid
-		World world = plugin.getServer().getWorld(worldUid);
+		World world = Bukkit.getServer().getWorld(worldUid);
 
 		// if world is null, return null
 		if (world == null) {
@@ -244,94 +239,6 @@ public final class Destination {
 
 	public float getPitch() {
 		return pitch;
-	}
-
-
-	/* STATIC METHODS */
-
-	/**
-	 * Derive key from destination display name<br>
-	 * strips color codes and replaces spaces with underscores<br>
-	 * if a destination key is passed, it will be returned unaltered
-	 *
-	 * @param destinationName the destination name to convert to a key
-	 * @return String - the key derived from the destination name
-	 */
-	public static String deriveKey(final String destinationName) {
-		return plugin.lodeStarUtility.deriveKey(destinationName);
-	}
-
-
-	/**
-	 * Check if passed key is reserved name for home location; accepts key or display name<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the destination name to check
-	 * @return {@code true} if destination name is reserved home name, {@code false} if not
-	 */
-	public static boolean isHome(final String key) {
-
-		// if key is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		// if key is literal string "home", return true
-		if (key.equalsIgnoreCase("home")) {
-			return true;
-		}
-
-		// if key matches configured home display name, return true; otherwise return false
-		return key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("home")));
-	}
-
-
-	/**
-	 * Check if passed key is reserved name for spawn location; accepts key or display name.<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the destination name to check
-	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
-	 */
-	public static boolean isSpawn(final String key) {
-
-		// if key is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		// if key is literal string "spawn" return true
-		if (key.equalsIgnoreCase("spawn")) {
-			return true;
-		}
-
-		// if key matches configured spawn display name, return true; otherwise return false
-		return key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("spawn")));
-	}
-
-
-	/**
-	 * Get destination display name from destination represented by passed key.
-	 * Accepts key or display name.<br>
-	 * Matching is case-insensitive. Reserved names are tried first.
-	 *
-	 * @param key the key of the destination for which to retrieve display name
-	 * @return String - the formatted display name for the destination, or null if no record exists
-	 */
-	public static String getDisplayName(final String key) {
-
-		// if key matches spawn key, get spawn display name from messages files
-		if (isSpawn(key)) {
-			return plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-		}
-
-		// if key matches home key, get home display name from messages file
-		if (isHome(key)) {
-			return plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-		}
-
-		// else try to get destination name from datastore
-		return plugin.dataStore.selectRecord(Destination.deriveKey(key)).map(Destination::getDisplayName).orElse(null);
 	}
 
 }

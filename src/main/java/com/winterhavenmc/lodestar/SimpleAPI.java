@@ -17,8 +17,6 @@
 
 package com.winterhavenmc.lodestar;
 
-import com.winterhavenmc.lodestar.storage.Destination;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -147,7 +145,7 @@ public final class SimpleAPI {
 	 * @return {@code true} if destination name is reserved home name, {@code false} if not
 	 */
 	public static boolean isHomeName(final String destinationName) {
-		return Destination.isHome(destinationName);
+		return destinationName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 	}
 
 
@@ -158,7 +156,7 @@ public final class SimpleAPI {
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
 	 */
 	public static boolean isSpawnName(final String destinationName) {
-		return Destination.isSpawn(destinationName);
+		return destinationName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
 	}
 
 
@@ -179,7 +177,7 @@ public final class SimpleAPI {
 	 * @return String name of destination, or null if no matching destination found
 	 */
 	public static String getDestinationName(final String key) {
-		return Destination.getDisplayName(key);
+		return plugin.lodeStarUtility.getDisplayName(key).orElse(null);
 	}
 
 
@@ -191,33 +189,7 @@ public final class SimpleAPI {
 	 * @return String destination display name, or null if no matching destination found
 	 */
 	public static String getDestinationName(final ItemStack itemStack) {
-
-		// get persistent key from item stack
-		String key = plugin.lodeStarUtility.getKey(itemStack);
-
-		// if item stack persistent key is null, return null
-		if (key == null) {
-			return null;
-		}
-
-		String resultString = null;
-
-		// if key matches spawn key, get spawn display name from language file
-		if (Destination.isSpawn(key)) {
-			resultString = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-		}
-
-		// if destination is home, get home display name from messages file
-		else if (Destination.isHome(key)) {
-			resultString = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-		}
-
-		// else get destination name from datastore
-		else if (plugin.dataStore.selectRecord(key).isPresent()) {
-			resultString = plugin.dataStore.selectRecord(key).get().getDisplayName();
-		}
-
-		return resultString;
+		return plugin.lodeStarUtility.getDestinationName(itemStack);
 	}
 
 

@@ -52,7 +52,7 @@ final class DestinationTeleporter extends AbstractTeleporter {
 		// execute teleport or send invalid destination message
 		plugin.dataStore.selectRecord(key).ifPresentOrElse(
 				destination -> execute(player, destination, MessageId.TELEPORT_WARMUP),
-				() -> sendInvalidDestinationMessage(player, Destination.getDisplayName(key))
+				() -> sendInvalidDestinationMessage(player, key)
 		);
 	}
 

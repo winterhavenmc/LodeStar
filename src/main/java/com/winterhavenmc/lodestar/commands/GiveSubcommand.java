@@ -160,7 +160,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 
 			// if resulting name is existing destination, get destinationName from datastore
 			if (plugin.dataStore.destinationExists(testName)) {
-				destinationName = Destination.getDisplayName(testName);
+				destinationName = plugin.lodeStarUtility.getDisplayName(testName).orElse(null);
 
 				// remove remaining arguments
 				args.clear();
@@ -185,7 +185,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 
 			// if resulting name is existing destination, get destinationName from datastore
 			if (plugin.dataStore.destinationExists(testName)) {
-				destinationName = Destination.getDisplayName(testName);
+				destinationName = plugin.lodeStarUtility.getDisplayName(testName).orElse(null);
 
 				// remove remaining arguments
 				args.clear();
@@ -278,7 +278,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 		quantity = quantity - noFitCount;
 
 		// get destination display name
-		String destinationName = Destination.getDisplayName(key);
+		String destinationName = plugin.lodeStarUtility.getDisplayName(key).orElse(null);
 
 		// don't display messages if giving item to self
 		if (!giver.getName().equals(targetPlayer.getName())) {

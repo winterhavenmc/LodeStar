@@ -208,6 +208,31 @@ public final class LodeStarUtility {
 	}
 
 
+	public Optional<String> getDisplayName(final String passedKey) {
+
+		// validate parameter
+		if (passedKey == null) {
+			return Optional.empty();
+		}
+
+		// derive key in case display name was passed
+		String key = deriveKey(passedKey);
+
+		// if destination key is spawn, get spawn display name from messages file
+		if (key.equalsIgnoreCase("spawn") || key.equalsIgnoreCase(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
+			return Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+		}
+
+		// if destination key is home, get home display name from message file
+		if (key.equalsIgnoreCase("home") || key.equalsIgnoreCase(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
+			return Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+		}
+
+		// else get destination display name from datastore
+		return plugin.dataStore.selectRecord(key).map(Destination::getDisplayName);
+	}
+
+
 	/**
 	 * Get display name for destination associated with item
 	 *
@@ -223,30 +248,32 @@ public final class LodeStarUtility {
 			return "";
 		}
 
-		String destinationName = null;
+		return getDisplayName(key).orElse(null);
 
-		// if destination is spawn get spawn display name from messages files
-		if (key.equals("spawn") || key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")))) {
-			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-		}
-		// if destination is home, get home display name from messages file
-		else if (key.equals("home") || key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
-			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-		}
-		// else get destination name from datastore
-		else {
-			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
-			if (optionalDestination.isPresent()) {
-				destinationName = optionalDestination.get().getDisplayName();
-			}
-		}
-
-		// if no destination name found, use key for name
-		if (destinationName == null) {
-			destinationName = key;
-		}
-
-		return destinationName;
+//		String destinationName = null;
+//
+//		// if destination is spawn get spawn display name from messages files
+//		if (key.equalsIgnoreCase("spawn") || key.equalsIgnoreCase(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
+//			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
+//		}
+//		// if destination is home, get home display name from messages file
+//		else if (key.equals("home") || key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
+//			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
+//		}
+//		// else get destination name from datastore
+//		else {
+//			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
+//			if (optionalDestination.isPresent()) {
+//				destinationName = optionalDestination.get().getDisplayName();
+//			}
+//		}
+//
+//		// if no destination name found, use key for name
+//		if (destinationName == null) {
+//			destinationName = key;
+//		}
+//
+//		return destinationName;
 	}
 
 
@@ -323,19 +350,7 @@ public final class LodeStarUtility {
 			return "";
 		}
 
-		// copy passed in destination name to derivedKey
-		String derivedKey = destinationName;
-
-		// translate alternate color codes
-		derivedKey = ChatColor.translateAlternateColorCodes('&', derivedKey);
-
-		// strip all color codes
-		derivedKey = ChatColor.stripColor(derivedKey);
-
-		// replace spaces with underscores
-		derivedKey = derivedKey.replace(' ', '_');
-
-		return derivedKey;
+		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', destinationName)).replace(' ', '_');
 	}
 
 }

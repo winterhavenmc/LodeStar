@@ -20,7 +20,6 @@ package com.winterhavenmc.lodestar.teleport;
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-import com.winterhavenmc.lodestar.storage.Destination;
 
 import org.bukkit.entity.Player;
 
@@ -79,14 +78,18 @@ public final class TeleportHandler {
 		// get key from player item
 		String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
+		if (key == null) {
+			return;
+		}
+
 		Teleporter teleporter;
 
 		// if item key is home key, teleport to bed spawn location
-		if (Destination.isHome(key)) {
+		if (key.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
 			teleporter = new HomeTeleporter(plugin, teleportExecutor);
 		}
 		// if item key is spawn key, teleport to world spawn location
-		else if (Destination.isSpawn(key)) {
+		else if (key.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
 			teleporter = new SpawnTeleporter(plugin, teleportExecutor);
 		}
 		// teleport to destination for key
