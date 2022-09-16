@@ -263,45 +263,6 @@ public final class Destination {
 
 
 	/**
-	 * Check if destination exists in storage or is reserved name; accepts key or display name.<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the destination name to check
-	 * @return {@code true} if destination exists, {@code false} if it does not
-	 */
-	public static boolean exists(final String key) {
-
-		// if parameter is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		String derivedKey = Destination.deriveKey(key);
-
-		return isReserved(key) || plugin.dataStore.selectRecord(derivedKey).isPresent();
-	}
-
-
-	/**
-	 * Check if destination key or display name is a reserved name<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the key or destination name to test for reserved name
-	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
-	 */
-	public static boolean isReserved(final String key) {
-
-		// if parameter is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		// test if passed destination name is reserved name for home or spawn locations
-		return isHome(key) || isSpawn(key);
-	}
-
-
-	/**
 	 * Check if passed key is reserved name for home location; accepts key or display name<br>
 	 * Matching is case-insensitive.
 	 *
