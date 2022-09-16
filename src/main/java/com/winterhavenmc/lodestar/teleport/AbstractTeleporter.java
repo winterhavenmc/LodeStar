@@ -86,7 +86,7 @@ abstract class AbstractTeleporter implements Teleporter {
 		}
 
 		// return optional wrapped destination for player bed spawn location
-		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location));
+		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location, Destination.Type.HOME));
 	}
 
 
@@ -116,7 +116,7 @@ abstract class AbstractTeleporter implements Teleporter {
 		}
 
 		// return destination for player spawn
-		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location));
+		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location, Destination.Type.SPAWN));
 	}
 
 

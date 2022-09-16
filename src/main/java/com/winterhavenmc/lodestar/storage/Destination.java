@@ -31,9 +31,16 @@ import java.util.UUID;
 
 public final class Destination {
 
+	public enum Type {
+		STORED,
+		HOME,
+		SPAWN,
+	}
+
 	// static reference to plugin main class instance, necessary for static methods
 	private static final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
+	private final Type type;
 	private final String key;
 	private final String displayName;
 	private final boolean worldValid;
@@ -52,13 +59,14 @@ public final class Destination {
 	 * @param displayName the destination display name string
 	 * @param location    the destination location
 	 */
-	public Destination(@Nonnull final String displayName, @Nonnull final Location location) {
+	public Destination(@Nonnull final String displayName, @Nonnull final Location location, @Nonnull Type type) {
 
 		// validate parameters
 		Objects.requireNonNull(displayName);
 		Objects.requireNonNull(location);
 
 		this.key = deriveKey(displayName);
+		this.type = type;
 		this.displayName = displayName;
 
 		if (location.getWorld() != null) {
@@ -94,7 +102,8 @@ public final class Destination {
 	 * @param yaw         destination yaw
 	 * @param pitch       destination pitch
 	 */
-	public Destination(final String key,
+	public Destination(final Type type,
+	                   final String key,
 	                   final String displayName,
 	                   final boolean worldValid,
 	                   final String worldName,
@@ -105,6 +114,7 @@ public final class Destination {
 	                   final float yaw,
 	                   final float pitch) {
 
+		this.type = type;
 		this.key = key;
 		this.displayName = displayName;
 		this.worldValid = worldValid;

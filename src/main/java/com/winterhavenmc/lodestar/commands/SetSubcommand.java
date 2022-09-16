@@ -126,7 +126,7 @@ final class SetSubcommand extends AbstractSubcommand {
 		}
 
 		// create destination object
-		Destination destination = new Destination(destinationName, location);
+		Destination destination = new Destination(destinationName, location, Destination.Type.STORED);
 
 		// store destination object
 		plugin.dataStore.insertRecord(destination);
