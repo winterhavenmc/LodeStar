@@ -145,8 +145,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 
 			// if item in hand is a LodeStar item, set destination and material from item
 			if (plugin.lodeStarUtility.isItem(playerItem)) {
-
-				destinationName = plugin.lodeStarUtility.getDisplayName(playerItem);
+				destinationName = plugin.lodeStarUtility.getDisplayName(playerItem).orElse(null);
 				material = playerItem.getType();
 			}
 		}

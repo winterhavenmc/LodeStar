@@ -188,8 +188,8 @@ public final class SimpleAPI {
 	 * @param itemStack the item stack from which to get name
 	 * @return String destination display name, or null if no matching destination found
 	 */
-	public static String getDestinationName(final ItemStack itemStack) {
-		return plugin.lodeStarUtility.getDisplayName(itemStack);
+	public static String getDisplayName(final ItemStack itemStack) {
+		return plugin.lodeStarUtility.getDisplayName(itemStack).orElse(null);
 	}
 
 

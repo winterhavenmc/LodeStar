@@ -75,7 +75,7 @@ final class DestroySubcommand extends AbstractSubcommand {
 		// send item destroyed message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
 				.setMacro(Macro.ITEM_QUANTITY, quantity)
-				.setMacro(Macro.DESTINATION, plugin.lodeStarUtility.getDisplayName(playerItem))
+				.setMacro(Macro.DESTINATION, plugin.lodeStarUtility.getDisplayName(playerItem).orElse(null))
 				.send();
 		plugin.soundConfig.playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
 

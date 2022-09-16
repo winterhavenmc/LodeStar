@@ -239,16 +239,8 @@ public final class LodeStarUtility {
 	 * @param itemStack the item whose destination name is being retrieved
 	 * @return String - destination display name
 	 */
-	public String getDisplayName(final ItemStack itemStack) {
-
-		String key = this.getKey(itemStack);
-
-		// if key is null, return empty string
-		if (key == null) {
-			return "";
-		}
-
-		return getDisplayName(key).orElse(null);
+	public Optional<String> getDisplayName(final ItemStack itemStack) {
+		return getDisplayName(getKey(itemStack));
 	}
 
 
