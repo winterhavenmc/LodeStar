@@ -327,7 +327,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 				}
 
 				// create destination
-				destination = new Destination(Destination.Type.STORED, key, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
+				destination = new Destination(Destination.Type.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 			}
 		}
 		catch (SQLException e) {
@@ -361,7 +361,6 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 			while (rs.next()) {
 
 				if (schemaVersion == 0) {
-					String key = rs.getString("key");
 					String displayName = rs.getString("displayname");
 					String worldName = rs.getString("worldname");
 					double x = rs.getDouble("x");
@@ -388,7 +387,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 					}
 
 					// create destination from record
-					Destination destination = new Destination(Destination.Type.STORED, key, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
+					Destination destination = new Destination(Destination.Type.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 
 					// add destination to return list
 					returnList.add(destination);
@@ -396,7 +395,6 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 				else if (schemaVersion == 1) {
 
-					String key = rs.getString("key");
 					String displayName = rs.getString("displayname");
 					String worldName = rs.getString("worldname");
 					long worldUidMsb = rs.getLong("worldUidMsb");
@@ -422,7 +420,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 					}
 
 					// create destination
-					Destination destination = new Destination(Destination.Type.STORED, key, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
+					Destination destination = new Destination(Destination.Type.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 
 					// add destination to return list
 					returnList.add(destination);

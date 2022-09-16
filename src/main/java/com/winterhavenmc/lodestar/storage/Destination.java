@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,7 +42,6 @@ public final class Destination {
 	private static final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	private final Type type;
-	private final String key;
 	private final String displayName;
 	private final boolean worldValid;
 	private final String worldName;
@@ -65,7 +65,6 @@ public final class Destination {
 		Objects.requireNonNull(displayName);
 		Objects.requireNonNull(location);
 
-		this.key = deriveKey(displayName);
 		this.type = type;
 		this.displayName = displayName;
 
@@ -91,7 +90,6 @@ public final class Destination {
 	/**
 	 * Class constructor used to create object fetched from data store
 	 *
-	 * @param key         the destination key
 	 * @param displayName the destination display name
 	 * @param worldValid  destination world valid
 	 * @param worldName   destination world name
@@ -103,7 +101,6 @@ public final class Destination {
 	 * @param pitch       destination pitch
 	 */
 	public Destination(final Type type,
-	                   final String key,
 	                   final String displayName,
 	                   final boolean worldValid,
 	                   final String worldName,
@@ -115,7 +112,6 @@ public final class Destination {
 	                   final float pitch) {
 
 		this.type = type;
-		this.key = key;
 		this.displayName = displayName;
 		this.worldValid = worldValid;
 		this.worldName = worldName;
@@ -167,7 +163,7 @@ public final class Destination {
 	 * @return the value of the key field
 	 */
 	String getKey() {
-		return key;
+		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', displayName)).replace(' ', '_');
 	}
 
 
