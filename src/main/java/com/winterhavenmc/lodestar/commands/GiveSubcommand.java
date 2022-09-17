@@ -155,7 +155,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 			String testName = String.join(" ", args);
 
 			// if resulting name is existing destination, get destinationName from datastore
-			if (plugin.dataStore.destinationExists(testName)) {
+			if (plugin.lodeStarUtility.destinationExists(testName)) {
 				destinationName = plugin.lodeStarUtility.getDisplayName(testName).orElse(null);
 
 				// remove remaining arguments
@@ -180,7 +180,7 @@ final class GiveSubcommand extends AbstractSubcommand {
 			String testName = String.join(" ", args);
 
 			// if resulting name is existing destination, get destinationName from datastore
-			if (plugin.dataStore.destinationExists(testName)) {
+			if (plugin.lodeStarUtility.destinationExists(testName)) {
 				destinationName = plugin.lodeStarUtility.getDisplayName(testName).orElse(null);
 
 				// remove remaining arguments

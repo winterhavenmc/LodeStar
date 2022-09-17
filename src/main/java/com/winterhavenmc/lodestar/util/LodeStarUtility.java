@@ -320,4 +320,19 @@ public final class LodeStarUtility {
 		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', destinationName)).replace(' ', '_');
 	}
 
+
+	public boolean destinationExists(final String displayName) {
+
+		if (displayName == null || displayName.isBlank()) {
+			return false;
+		}
+
+		if (displayName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
+				|| displayName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
+			return true;
+		}
+
+		return plugin.dataStore.selectRecord(displayName).isPresent();
+	}
+
 }

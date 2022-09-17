@@ -563,19 +563,4 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		return result;
 	}
 
-
-	public boolean destinationExists(final String displayName) {
-
-		if (displayName == null || displayName.isBlank()) {
-			return false;
-		}
-
-		if (displayName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
-				|| displayName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
-			return true;
-		}
-
-		return selectRecord(displayName).isPresent();
-	}
-
 }

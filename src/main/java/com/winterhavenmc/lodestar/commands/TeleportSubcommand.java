@@ -92,7 +92,7 @@ final class TeleportSubcommand extends AbstractSubcommand {
 		String destinationName = String.join(" ", args);
 
 		// test that destination name is valid
-		if (!plugin.dataStore.destinationExists(destinationName)) {
+		if (!plugin.lodeStarUtility.destinationExists(destinationName)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();

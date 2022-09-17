@@ -74,9 +74,6 @@ public interface DataStore {
 	int insertRecords(final Collection<Destination> destinations);
 
 
-	boolean destinationExists(String destinationName);
-
-
 	/**
 	 * get all display names
 	 *
