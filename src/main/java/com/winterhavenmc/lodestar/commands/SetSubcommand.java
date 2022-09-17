@@ -127,7 +127,7 @@ final class SetSubcommand extends AbstractSubcommand {
 		Destination destination = new Destination(destinationName, location, Destination.Type.STORED);
 
 		// store destination object
-		plugin.dataStore.insertRecord(destination);
+		plugin.dataStore.insertRecords(Collections.singleton(destination));
 
 		// send success message to player
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_SET).setMacro(Macro.DESTINATION, destinationName).send();

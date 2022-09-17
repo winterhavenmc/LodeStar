@@ -58,14 +58,6 @@ public interface DataStore {
 
 
 	/**
-	 * Store record
-	 *
-	 * @param destination the destination object to be inserted in the datastore
-	 */
-	void insertRecord(final Destination destination);
-
-
-	/**
 	 * Insert a collection of records
 	 * @param destinations a collection of records to be inserted
 	 *
