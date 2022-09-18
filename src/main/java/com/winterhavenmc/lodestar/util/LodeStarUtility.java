@@ -208,24 +208,32 @@ public final class LodeStarUtility {
 	}
 
 
-	public Optional<String> getDisplayName(final String passedKey) {
+	/**
+	 * Get display name from key
+	 *
+	 * @param key the destination key for which to retrive the display name
+	 * @return the destination display name
+	 */
+	public Optional<String> getDisplayName(final String key) {
 
 		// validate parameter
-		if (passedKey == null) {
+		if (key == null) {
 			return Optional.empty();
 		}
 
 		// derive key in case display name was passed
-		String key = deriveKey(passedKey);
-
-		// if destination key is spawn, get spawn display name from messages file
-		if (key.equalsIgnoreCase("spawn") || key.equalsIgnoreCase(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
-			return Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
-		}
+		String derivedKey = deriveKey(key);
 
 		// if destination key is home, get home display name from message file
-		if (key.equalsIgnoreCase("home") || key.equalsIgnoreCase(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
+		if (derivedKey.equalsIgnoreCase("home")
+				|| derivedKey.equalsIgnoreCase(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
 			return Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+		}
+
+		// if destination key is spawn, get spawn display name from messages file
+		if (derivedKey.equalsIgnoreCase("spawn")
+				|| derivedKey.equalsIgnoreCase(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")))) {
+			return Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
 		}
 
 		// else get destination display name from datastore
@@ -251,6 +259,11 @@ public final class LodeStarUtility {
 	 * @return String - destination key, or null if item does not have key in persistent meta data
 	 */
 	public String getKey(final ItemStack itemStack) {
+
+		// if item stack is null, return null
+		if (itemStack == null) {
+			return null;
+		}
 
 		// if item stack does not have metadata, return null
 		if (!itemStack.hasItemMeta()) {
