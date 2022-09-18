@@ -327,8 +327,8 @@ public final class LodeStarUtility {
 			return false;
 		}
 
-		if (displayName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
-				|| displayName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
+		if (displayName.equalsIgnoreCase(plugin.messageBuilder.getSpawnDisplayName().orElse("spawn"))
+				|| displayName.equalsIgnoreCase(plugin.messageBuilder.getHomeDisplayName().orElse("home"))) {
 			return true;
 		}
 
