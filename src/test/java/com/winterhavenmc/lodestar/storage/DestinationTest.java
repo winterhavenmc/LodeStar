@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.storage;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
+import be.seeseemelk.mockbukkit.WorldMock;
 import com.winterhavenmc.lodestar.PluginMain;
 import org.bukkit.Location;
 import org.junit.jupiter.api.AfterAll;
@@ -52,6 +53,14 @@ class DestinationTest {
 		MockBukkit.unmock();
 	}
 
+
+	@Test
+	void testLongconstructor() {
+		WorldMock world = server.addSimpleWorld("test_world");
+		Destination destination = new Destination(Destination.Type.STORED, "&aTest World", true,
+				world.getName(), world.getUID(), 100.0, 100.0, 100.0, 90.0F, 90.0F);
+		assertNotNull(destination);
+	}
 
 	@Test
 	void testToString() {
@@ -98,33 +107,44 @@ class DestinationTest {
 
 //NOTE: MockBukkit does not provide world uid, so these methods can not be tested using the framework
 
-//	@Test
-//	void getLocation() {
-//		Location location = new Location(server.getWorld("world"), 100.0, 100.0, 100.0);
-//		Location otherLocation = new Location(server.getWorld("world"), 200.0, 200.0, 200.0);
-//		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
-//
-//		System.out.println(server.getWorld("world").getUID().toString());
-//		assertTrue(destination.getLocation().isPresent());
-//		assertEquals(location, destination.getLocation().get());
-//		assertNotEquals(otherLocation, destination.getLocation().get());
-//	}
+	@Test
+	void getLocation() {
 
-//	@Test
-//	void getWorldUid() {
-//	}
+		WorldMock world = server.addSimpleWorld("test_world");
 
-//	@Test
-//	void getWorldName() {
-//		Location location = new Location(server.getWorld("world"), 100.0, 100.0, 100.0);
-//		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
-//		assertEquals("world", destination.getWorldName());
-//	}
+		Location location = new Location(world, 100.0, 100.0, 100.0);
+		Location otherLocation = new Location(world, 200.0, 200.0, 200.0);
+		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
 
-//	@Test
-//	void isWorldValid() {
-//	}
+		assertTrue(destination.getLocation().isPresent());
+		assertEquals(location, destination.getLocation().get());
+		assertNotEquals(otherLocation, destination.getLocation().get());
+	}
 
+	@Test
+	void getWorldUid() {
+		WorldMock world = server.addSimpleWorld("test_world");
+		Location location = new Location(world, 100.0, 100.0, 100.0);
+		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
+
+		assertNotNull(destination.getWorldUid());
+	}
+
+	@Test
+	void getWorldName() {
+		WorldMock world = server.addSimpleWorld("test_world");
+		Location location = new Location(world, 100.0, 100.0, 100.0);
+		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
+		assertEquals("test_world", destination.getWorldName());
+	}
+
+	@Test
+	void isWorldValid() {
+		WorldMock world = server.addSimpleWorld("test_world");
+		Location location = new Location(world, 100.0, 100.0, 100.0);
+		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
+		assertTrue(destination.isWorldValid());
+	}
 
 	@Test
 	void getX() {
