@@ -59,12 +59,19 @@ class LodeStarStarUtilityTest {
 
 	@Test
 	void createTest() {
-
-		// create test item
 		ItemStack testItem = plugin.lodeStarUtility.create("Home");
-
-		// assert test item is not null
 		assertNotNull(testItem, "create produced null item.");
+		assertEquals(testItem.getType(), Material.NETHER_STAR, "item is not default material type.");
+		assertEquals(1, testItem.getAmount(), "item stack is not 1.");
+	}
+
+	@Test
+	void maxGiveAmountTest() {
+		plugin.getConfig().set("max-give-amount", 64);
+		ItemStack testItem = plugin.lodeStarUtility.create("Home");
+		assertNotNull(testItem, "create produced null item.");
+		assertEquals(testItem.getType(), Material.NETHER_STAR, "item is not default material type.");
+		assertEquals(1, testItem.getAmount(), "item stack is not 1.");
 	}
 
 	@Test
@@ -113,32 +120,54 @@ class LodeStarStarUtilityTest {
 	}
 
 	@Test
-	void getDisplayNameTest() {
+	void getHomeDisplayNameTest() {
 		ItemStack testItem = plugin.lodeStarUtility.create("Home");
 		assertEquals("Home", plugin.lodeStarUtility.getDisplayName(testItem).orElse(null), "item destination name is not 'Home'");
 	}
 
 	@Test
+	void getSpawnDisplayNameTest() {
+		ItemStack testItem = plugin.lodeStarUtility.create("Spawn");
+		assertEquals("Spawn", plugin.lodeStarUtility.getDisplayName(testItem).orElse(null), "item destination name is not 'Spawn'");
+	}
+
+	@Test
+	void getNullKeyDisplayNameTest() {
+		assertTrue(plugin.lodeStarUtility.getDisplayName((String) null).isEmpty(), "null key did not return empty optional.");
+	}
+
+	@Test
+	void getNullItemDisplayNameTest() {
+		assertTrue(plugin.lodeStarUtility.getDisplayName((ItemStack) null).isEmpty(), "null item stack did not return empty optional.");
+	}
+
+	@Test
 	void getKeyTest() {
 		ItemStack testItem = plugin.lodeStarUtility.create("Home");
-		assertEquals("Home", plugin.lodeStarUtility.getKey(testItem), "Item destiname key is not 'Home'");
+		assertEquals("Home", plugin.lodeStarUtility.getKey(testItem), "Item key is not 'Home'");
 	}
 
 	@Test
 	void isDefaultItemTest() {
 		ItemStack testItem = plugin.lodeStarUtility.create("Home");
-		assertTrue(plugin.lodeStarUtility.isDefaultItem(testItem), "Item is not default item.");
-
 		ItemStack falseItem = new ItemStack(Material.DIRT);
-		assertFalse(plugin.lodeStarUtility.isDefaultItem(falseItem), "false item matched for default item.");
-
+		assertTrue(plugin.lodeStarUtility.isDefaultItem(testItem), "Item is not default item.");
 		assertFalse(plugin.lodeStarUtility.isDefaultItem(null), "null item matched default item.");
+		assertFalse(plugin.lodeStarUtility.isDefaultItem(falseItem), "false item matched for default item.");
 	}
 
 	@Test
 	void deriveKeyTest() {
 		assertEquals("Destination_Name", plugin.lodeStarUtility.deriveKey("&aDestination Name"), "derived key is not 'Destination_Name'");
 		assertEquals("", plugin.lodeStarUtility.deriveKey(null), "derived key from null object is not blank.");
+	}
+
+	@Test
+	void destinationExistsTest() {
+		assertTrue(plugin.lodeStarUtility.destinationExists("home"));
+		assertTrue(plugin.lodeStarUtility.destinationExists("spawn"));
+		assertFalse(plugin.lodeStarUtility.destinationExists(null));
+		assertFalse(plugin.lodeStarUtility.destinationExists(""));
 	}
 
 }
