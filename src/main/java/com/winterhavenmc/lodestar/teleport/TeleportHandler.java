@@ -119,7 +119,7 @@ public final class TeleportHandler {
 
 
 	/**
-	 * Test if player uuid is in warmup hashmap. Public pass through method.
+	 * Test if player uuid is in warmup map
 	 *
 	 * @param player the player to test if in warmup map
 	 * @return {@code true} if player is in warmup map, {@code false} if not
@@ -130,7 +130,7 @@ public final class TeleportHandler {
 
 
 	/**
-	 * Remove player uuid from warmup hashmap. Public pass through method.
+	 * Remove player uuid from warmup map
 	 *
 	 * @param player the player to remove from the warmup map
 	 */
@@ -149,11 +149,22 @@ public final class TeleportHandler {
 	}
 
 
+	/**
+	 * Remove player from cooldown map
+	 *
+	 * @param player the player to be removed from the cooldown map
+	 */
 	void cancelPlayerCooldown(final Player player) {
 		cooldownMap.removePlayer(player);
 	}
 
 
+	/**
+	 * Test if a player is currently in the cooldown map
+	 * @param player the player to check
+	 *
+	 * @return true if player is currently in the cooldown map, false if not
+	 */
 	boolean isCoolingDown(final Player player) {
 		return cooldownMap.isCoolingDown(player);
 
