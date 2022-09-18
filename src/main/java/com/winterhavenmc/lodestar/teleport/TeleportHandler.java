@@ -79,7 +79,7 @@ public final class TeleportHandler {
 		// get key from player item
 		final String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
-		// if item key is invalid, do nothing and return
+		// if item key is null, do nothing and return
 		if (key == null) {
 			return;
 		}
@@ -160,11 +160,17 @@ public final class TeleportHandler {
 	}
 
 
-	Destination.Type getDestinationType(final String key) {
-		if (key.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
+	/**
+	 * Get destination type from key
+	 *
+	 * @param key the destination key
+	 * @return the enum member representing the destination type for the key
+	 */
+	private Destination.Type getDestinationType(final String key) {
+		if (key.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("home")))) {
 			return Destination.Type.HOME;
 		}
-		else if (key.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
+		else if (key.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("spawn")))) {
 			return Destination.Type.SPAWN;
 		}
 		else {
