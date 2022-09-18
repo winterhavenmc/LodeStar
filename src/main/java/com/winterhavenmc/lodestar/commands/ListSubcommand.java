@@ -119,7 +119,7 @@ final class ListSubcommand extends AbstractSubcommand {
 				// increment item number
 				itemNumber++;
 
-				if (destination.isWorldValid()) {
+				if (destination.isValidWorld()) {
 					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
 							.setMacro(Macro.DESTINATION, destination.getDisplayName())
 							.setMacro(Macro.ITEM_NUMBER, itemNumber)

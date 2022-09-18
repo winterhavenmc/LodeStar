@@ -143,7 +143,7 @@ class DestinationTest {
 		WorldMock world = server.addSimpleWorld("test_world");
 		Location location = new Location(world, 100.0, 100.0, 100.0);
 		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
-		assertTrue(destination.isWorldValid());
+		assertTrue(destination.isValidWorld());
 	}
 
 	@Test

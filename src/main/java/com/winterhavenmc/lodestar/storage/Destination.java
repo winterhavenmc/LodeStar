@@ -212,7 +212,7 @@ public final class Destination {
 	}
 
 
-	public boolean isWorldValid() {
+	public boolean isValidWorld() {
 		return worldValid;
 	}
 
