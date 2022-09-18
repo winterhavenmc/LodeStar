@@ -21,6 +21,7 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
+import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.entity.Player;
 
 
@@ -63,12 +64,12 @@ public final class TeleportHandler {
 	public void initiateTeleport(final Player player) {
 
 		// if player is warming up, do nothing and return
-		if (warmupMap.isWarmingUp(player)) {
+		if (isWarmingUp(player)) {
 			return;
 		}
 
 		// if player cooldown has not expired, send player cooldown message and return
-		if (cooldownMap.isCoolingDown(player)) {
+		if (isCoolingDown(player)) {
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_COOLDOWN)
 					.setMacro(Macro.DURATION, cooldownMap.getCooldownTimeRemaining(player))
 					.send();
@@ -76,26 +77,19 @@ public final class TeleportHandler {
 		}
 
 		// get key from player item
-		String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
+		final String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
+		// if item key is invalid, do nothing and return
 		if (key == null) {
 			return;
 		}
 
-		Teleporter teleporter;
-
-		// if item key is home key, teleport to bed spawn location
-		if (key.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
-			teleporter = new HomeTeleporter(plugin, teleportExecutor);
-		}
-		// if item key is spawn key, teleport to world spawn location
-		else if (key.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
-			teleporter = new SpawnTeleporter(plugin, teleportExecutor);
-		}
-		// teleport to destination for key
-		else {
-			teleporter = new DestinationTeleporter(plugin, teleportExecutor);
-		}
+		// get appropriate teleporter type for destination
+		Teleporter teleporter = switch (getDestinationType(key)) {
+			case HOME -> new HomeTeleporter(plugin, teleportExecutor);
+			case SPAWN -> new SpawnTeleporter(plugin, teleportExecutor);
+			default -> new DestinationTeleporter(plugin, teleportExecutor);
+		};
 
 		// initiate teleport
 		teleporter.initiate(player);
@@ -160,8 +154,22 @@ public final class TeleportHandler {
 	}
 
 
-	boolean isCoolingDown(Player player) {
+	boolean isCoolingDown(final Player player) {
 		return cooldownMap.isCoolingDown(player);
 
 	}
+
+
+	Destination.Type getDestinationType(final String key) {
+		if (key.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"))) {
+			return Destination.Type.HOME;
+		}
+		else if (key.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))) {
+			return Destination.Type.SPAWN;
+		}
+		else {
+			return Destination.Type.STORED;
+		}
+	}
+
 }
