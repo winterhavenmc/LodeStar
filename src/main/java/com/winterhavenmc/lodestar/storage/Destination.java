@@ -18,7 +18,6 @@
 package com.winterhavenmc.lodestar.storage;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -26,6 +25,9 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.bukkit.ChatColor.stripColor;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
 public final class Destination {
@@ -156,7 +158,7 @@ public final class Destination {
 	 * @return the value of the key field
 	 */
 	String getKey() {
-		return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', displayName)).replace(' ', '_');
+		return stripColor(translateAlternateColorCodes('&', displayName)).replace(' ', '_');
 	}
 
 
