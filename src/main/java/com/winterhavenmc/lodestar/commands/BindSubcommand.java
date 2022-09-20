@@ -19,7 +19,6 @@ package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
 
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
@@ -28,7 +27,6 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,68 +90,51 @@ final class BindSubcommand extends AbstractSubcommand {
 		}
 
 		// join remaining arguments into destination name
-		String destinationName = String.join(" ", args);
+		String suppliedName = String.join(" ", args);
 
 		// check if destination exists
-		if (!plugin.lodeStarUtility.destinationExists(destinationName)) {
+		if (!plugin.lodeStarUtility.destinationExists(suppliedName)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, destinationName)
-					.send();
-			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
-			return true;
-		}
-
-		// get player item in hand
-		ItemStack playerItem = player.getInventory().getItemInMainHand();
-
-		// if default-item-only configured true, check that item in hand has default material and data
-		if (plugin.getConfig().getBoolean("default-material-only")
-				&& !sender.hasPermission("lodestar.default-override")
-				&& !plugin.lodeStarUtility.isDefaultItem(playerItem)) {
-			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
-					.setMacro(Macro.DESTINATION, destinationName)
+					.setMacro(Macro.DESTINATION, suppliedName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check that item in hand is valid material
-		if (invalidMaterials.contains(playerItem.getType())) {
+		if (notRequiredDefaultItem(player) || notValidItem(player)) {
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
-					.setMacro(Macro.DESTINATION, destinationName)
+					.setMacro(Macro.DESTINATION, suppliedName)
 					.send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
-		// try to get formatted destination name from storage
-		Optional<Destination> destination = plugin.dataStore.selectRecord(destinationName);
-		if (destination.isPresent()) {
-			destinationName = destination.get().getDisplayName();
-		}
-
-		if ("spawn".equalsIgnoreCase(destinationName)
-				|| destinationName.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")))) {
-			destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-		}
-
-		else if ("home".equalsIgnoreCase(destinationName)
-				|| destinationName.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
-			destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-		}
+		// get formatted destination name
+		String formattedName = plugin.lodeStarUtility.getDisplayName(suppliedName).orElse(suppliedName);
 
 		// set destination in item lore
-		plugin.lodeStarUtility.setMetaData(playerItem, destinationName);
+		plugin.lodeStarUtility.setMetaData(player.getInventory().getItemInMainHand(), formattedName);
 
 		// send success message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_BIND)
-				.setMacro(Macro.DESTINATION, destinationName)
+				.setMacro(Macro.DESTINATION, formattedName)
 				.send();
 
 		// play sound effect
 		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_BIND);
 
 		return true;
+	}
+
+	private boolean notRequiredDefaultItem(final Player player) {
+		return plugin.getConfig().getBoolean("default-material-only")
+				&& !player.hasPermission("lodestar.default-override")
+				&& !plugin.lodeStarUtility.isDefaultItem(player.getInventory().getItemInMainHand());
+	}
+
+	private boolean notValidItem(final Player player) {
+		return invalidMaterials.contains(player.getInventory().getItemInMainHand().getType());
 	}
 
 }
