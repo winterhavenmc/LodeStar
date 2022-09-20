@@ -21,7 +21,6 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 
-import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.entity.Player;
 
 
@@ -85,7 +84,7 @@ public final class TeleportHandler {
 		}
 
 		// get appropriate teleporter type for destination
-		Teleporter teleporter = switch (getDestinationType(key)) {
+		Teleporter teleporter = switch (plugin.lodeStarUtility.getDestinationType(key)) {
 			case HOME -> new HomeTeleporter(plugin, teleportExecutor);
 			case SPAWN -> new SpawnTeleporter(plugin, teleportExecutor);
 			default -> new DestinationTeleporter(plugin, teleportExecutor);
@@ -168,25 +167,6 @@ public final class TeleportHandler {
 	boolean isCoolingDown(final Player player) {
 		return cooldownMap.isCoolingDown(player);
 
-	}
-
-
-	/**
-	 * Get destination type from key
-	 *
-	 * @param key the destination key
-	 * @return the enum member representing the destination type for the key
-	 */
-	private Destination.Type getDestinationType(final String key) {
-		if (key.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("home")))) {
-			return Destination.Type.HOME;
-		}
-		else if (key.equalsIgnoreCase(plugin.lodeStarUtility.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("spawn")))) {
-			return Destination.Type.SPAWN;
-		}
-		else {
-			return Destination.Type.STORED;
-		}
 	}
 
 }
