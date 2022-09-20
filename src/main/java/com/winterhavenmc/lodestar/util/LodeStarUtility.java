@@ -209,6 +209,17 @@ public final class LodeStarUtility {
 
 
 	/**
+	 * Get display name for destination associated with item
+	 *
+	 * @param itemStack the item whose destination name is being retrieved
+	 * @return String - destination display name
+	 */
+	public Optional<String> getDisplayName(final ItemStack itemStack) {
+		return getDisplayName(getKey(itemStack));
+	}
+
+
+	/**
 	 * Get display name from key
 	 *
 	 * @param key the destination key for which to retrive the display name
@@ -221,34 +232,56 @@ public final class LodeStarUtility {
 			return Optional.empty();
 		}
 
-		// derive key in case display name was passed
-		String derivedKey = deriveKey(key);
-
-		// if destination key is home, get home display name from message file
-		if (derivedKey.equalsIgnoreCase("home")
-				|| derivedKey.equalsIgnoreCase(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")))) {
-			return Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
-		}
-
-		// if destination key is spawn, get spawn display name from messages file
-		if (derivedKey.equalsIgnoreCase("spawn")
-				|| derivedKey.equalsIgnoreCase(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")))) {
-			return Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
-		}
-
-		// else get destination display name from datastore
-		return plugin.dataStore.selectRecord(key).map(Destination::getDisplayName);
+		return switch (getDestinationType(key)) {
+			case HOME -> Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+			case SPAWN -> Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			default -> plugin.dataStore.selectRecord(key).map(Destination::getDisplayName);
+		};
 	}
 
 
 	/**
-	 * Get display name for destination associated with item
+	 * check if key is for home destination
 	 *
-	 * @param itemStack the item whose destination name is being retrieved
-	 * @return String - destination display name
+	 * @param key the key to check
+	 * @return true if key is for home destination, false if not
 	 */
-	public Optional<String> getDisplayName(final ItemStack itemStack) {
-		return getDisplayName(getKey(itemStack));
+	private boolean isHomeKey(final String key) {
+		final String derivedKey = deriveKey(key);
+		return derivedKey.equalsIgnoreCase("home")
+				|| derivedKey.equalsIgnoreCase(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+	}
+
+
+	/**
+	 * Check if key is for spawn destination
+	 *
+	 * @param key the key to check
+	 * @return true if key is for spawn destination, false if not
+	 */
+	private boolean isSpawnKey(final String key) {
+		final String derivedKey = deriveKey(key);
+		return derivedKey.equalsIgnoreCase("spawn")
+				|| derivedKey.equalsIgnoreCase(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")));
+	}
+
+
+	/**
+	 * Get destination type from key
+	 *
+	 * @param key the destination key
+	 * @return the enum member representing the destination type for the key
+	 */
+	public Destination.Type getDestinationType(final String key) {
+		if (isHomeKey(key)) {
+			return Destination.Type.HOME;
+		}
+		else if (isSpawnKey(key)) {
+			return Destination.Type.SPAWN;
+		}
+		else {
+			return Destination.Type.STORED;
+		}
 	}
 
 
