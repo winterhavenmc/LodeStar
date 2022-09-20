@@ -171,7 +171,7 @@ public class PlayerInteractEventListener implements Listener {
 	 * Check if block is of type that interaction is allowed while holding a lode star item in hand
 	 *
 	 * @param block the block being interacted with
-	 * @return true if block type is allowed for interactionm, false if not
+	 * @return true if block type is allowed for interaction, false if not
 	 */
 	boolean allowedInteraction(Block block) {
 		// allow use of doors, gates and trap doors with item in hand
