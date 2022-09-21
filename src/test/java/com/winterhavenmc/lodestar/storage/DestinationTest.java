@@ -22,10 +22,7 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.WorldMock;
 import com.winterhavenmc.lodestar.PluginMain;
 import org.bukkit.Location;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -115,9 +112,9 @@ class DestinationTest {
 		assertNotEquals(otherLocation, destination.getLocation().get());
 	}
 
+	@Disabled("This test does not currently run because unloadWorld is unimplemented in MockBukkit.")
 	@Test
 	void getNullWorldLocation() {
-		// NOTE: this test does not currently run because unloadWorld is unimplemented in MockBukkit
 		WorldMock world = server.addSimpleWorld("test_world");
 		Location location = new Location(world, 100.0, 100.0, 100.0);
 		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED );
