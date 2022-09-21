@@ -61,6 +61,7 @@ public final class Destination {
 		// validate parameters
 		Objects.requireNonNull(displayName);
 		Objects.requireNonNull(location);
+		Objects.requireNonNull(type);
 
 		this.type = type;
 		this.displayName = displayName;
@@ -168,13 +169,6 @@ public final class Destination {
 	 * @return the value of the displayName field
 	 */
 	public String getDisplayName() {
-
-		// if display name is null, return empty string
-		if (displayName == null) {
-			return "";
-		}
-
-		// return display name
 		return displayName;
 	}
 
@@ -186,7 +180,7 @@ public final class Destination {
 	 */
 	public Optional<Location> getLocation() {
 
-		// if world uid is null, return null
+		// if world uid is null, return empty optional
 		if (worldUid == null) {
 			return Optional.empty();
 		}
@@ -194,7 +188,7 @@ public final class Destination {
 		// get world by uid
 		World world = Bukkit.getServer().getWorld(worldUid);
 
-		// if world is null, return null
+		// if world is null, return empty optional
 		if (world == null) {
 			return Optional.empty();
 		}
