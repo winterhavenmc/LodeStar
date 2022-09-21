@@ -104,21 +104,32 @@ class DestinationTest {
 		assertNotEquals("Test_Destination", destination.getDisplayName());
 	}
 
-
-//NOTE: MockBukkit does not provide world uid, so these methods can not be tested using the framework
-
 	@Test
 	void getLocation() {
-
 		WorldMock world = server.addSimpleWorld("test_world");
-
 		Location location = new Location(world, 100.0, 100.0, 100.0);
 		Location otherLocation = new Location(world, 200.0, 200.0, 200.0);
 		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
-
 		assertTrue(destination.getLocation().isPresent());
 		assertEquals(location, destination.getLocation().get());
 		assertNotEquals(otherLocation, destination.getLocation().get());
+	}
+
+	@Test
+	void getNullWorldLocation() {
+		// NOTE: this test does not currently run because unloadWorld is unimplemented in MockBukkit
+		WorldMock world = server.addSimpleWorld("test_world");
+		Location location = new Location(world, 100.0, 100.0, 100.0);
+		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED );
+		server.unloadWorld(world, false);
+		assertTrue(destination.getLocation().isEmpty());
+	}
+
+	@Test
+	void getNullWorldUidLocation() {
+		Destination destination = new Destination(Destination.Type.STORED, "&aTest World", true,
+				"test_world", null, 100.0, 100.0, 100.0, 90.0F, 90.0F);
+		assertTrue(destination.getLocation().isEmpty());
 	}
 
 	@Test
@@ -126,7 +137,6 @@ class DestinationTest {
 		WorldMock world = server.addSimpleWorld("test_world");
 		Location location = new Location(world, 100.0, 100.0, 100.0);
 		Destination destination = new Destination("&aTest Destination", location, Destination.Type.STORED);
-
 		assertNotNull(destination.getWorldUid());
 	}
 
