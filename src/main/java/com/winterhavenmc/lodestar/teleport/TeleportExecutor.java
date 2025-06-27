@@ -107,7 +107,7 @@ class TeleportExecutor {
 		if (warmupTime > 0) {
 			plugin.messageBuilder.compose(player, messageId)
 					.setMacro(Macro.DESTINATION, destination.getDisplayName())
-					.setMacro(Macro.WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
+//					.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 					.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
 					.send();
 
