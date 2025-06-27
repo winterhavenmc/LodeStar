@@ -22,7 +22,7 @@ import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.entity.Player;
 
 
-final class DestinationTeleporter extends AbstractTeleporter
+final class DestinationTeleporter extends AbstractTeleporter implements Teleporter
 {
 	/**
 	 * Class constructor

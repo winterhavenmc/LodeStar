@@ -23,7 +23,7 @@ import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.entity.Player;
 
 
-sealed interface Teleporter permits AbstractTeleporter, HomeTeleporter, SpawnTeleporter
+sealed interface Teleporter permits AbstractTeleporter, DestinationTeleporter, HomeTeleporter, SpawnTeleporter
 {
 	void initiate(final Player player);
 	void execute(final Player player, final Destination destination, final MessageId messageId);
