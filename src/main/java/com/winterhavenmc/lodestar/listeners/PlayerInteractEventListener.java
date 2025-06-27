@@ -36,19 +36,19 @@ import java.util.Objects;
 import java.util.Set;
 
 
-public class PlayerInteractEventListener implements Listener {
-
+public class PlayerInteractEventListener implements Listener
+{
 	// reference to main class
 	private final PluginMain plugin;
 
 	// set to hold craft table materials
-	private final Set<Material> craftTables =  Set.of(
+	private final Set<Material> craftTables = Set.of(
 			Material.CARTOGRAPHY_TABLE,
 			Material.CRAFTING_TABLE,
 			Material.FLETCHING_TABLE,
 			Material.SMITHING_TABLE,
 			Material.LOOM,
-			Material.STONECUTTER );
+			Material.STONECUTTER);
 
 
 	/**
@@ -56,8 +56,8 @@ public class PlayerInteractEventListener implements Listener {
 	 *
 	 * @param plugin A reference to this plugin's main class
 	 */
-	public PlayerInteractEventListener(final PluginMain plugin) {
-
+	public PlayerInteractEventListener(final PluginMain plugin)
+	{
 		// reference to main
 		Objects.requireNonNull(this.plugin = plugin);
 
@@ -74,34 +74,38 @@ public class PlayerInteractEventListener implements Listener {
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerInteract(final PlayerInteractEvent event) {
-
+	void onPlayerInteract(final PlayerInteractEvent event)
+	{
 		// get event player
 		final Player player = event.getPlayer();
 
 		// perform check for cancel-on-interaction
-		if (cancelTeleportOnInteraction(event)) {
+		if (cancelTeleportOnInteraction(event))
+		{
 			return;
 		}
 
 		// if item used is not a LodeStar, do nothing and return
-		if (!plugin.lodeStarUtility.isItem(event.getItem())) {
+		if (!plugin.lodeStarUtility.isItem(event.getItem()))
+		{
 			return;
 		}
 
 		// perform check for allowed click type
-		if (allowedClickType(event)) {
+		if (allowedClickType(event))
+		{
 			return;
 		}
 
 		// if player is not warming
-		if (!plugin.teleportHandler.isWarmingUp(player)) {
-
+		if (!plugin.teleportHandler.isWarmingUp(player))
+		{
 			// check if clicked block is not air, and player is not sneaking, and  block interaction type is allowed
 			//noinspection ConstantConditions
 			if (isNotAir(event.getClickedBlock())
 					&& isNotSneaking(event.getPlayer())
-					&& allowedInteraction(event.getClickedBlock())) {
+					&& allowedInteraction(event.getClickedBlock()))
+			{
 				return;
 			}
 
@@ -109,21 +113,24 @@ public class PlayerInteractEventListener implements Listener {
 			event.setCancelled(true);
 
 			// if players current world is not enabled in config, send message and return
-			if (!plugin.worldManager.isEnabled(player.getWorld())) {
+			if (!plugin.worldManager.isEnabled(player.getWorld()))
+			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_WORLD_DISABLED).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 				return;
 			}
 
 			// if player does not have lodestar.use permission, send message and return
-			if (!player.hasPermission("lodestar.use")) {
+			if (!player.hasPermission("lodestar.use"))
+			{
 				plugin.messageBuilder.compose(player, MessageId.PERMISSION_DENIED_USE).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
 				return;
 			}
 
 			// if shift-click configured and player is not sneaking, send teleport fail shift-click message and return
-			if (plugin.getConfig().getBoolean("shift-click") && isNotSneaking(player)) {
+			if (plugin.getConfig().getBoolean("shift-click") && isNotSneaking(player))
+			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_SHIFT_CLICK).send();
 				return;
 			}
@@ -140,8 +147,8 @@ public class PlayerInteractEventListener implements Listener {
 	 * @param event the event to check for player/block interaction
 	 * @return true if cancellable interaction occurred, false if not
 	 */
-	boolean cancelTeleportOnInteraction(final PlayerInteractEvent event) {
-
+	boolean cancelTeleportOnInteraction(final PlayerInteractEvent event)
+	{
 		final Player player = event.getPlayer();
 		final Action action = event.getAction();
 		final EquipmentSlot hand = event.getHand();
@@ -150,10 +157,11 @@ public class PlayerInteractEventListener implements Listener {
 		// and player is interacting with a block (not air) then cancel teleport, output message and return
 		if (plugin.getConfig().getBoolean("cancel-on-interaction")
 				&& plugin.teleportHandler.isWarmingUp(player)
-				&& (Action.LEFT_CLICK_BLOCK.equals(action) || Action.RIGHT_CLICK_BLOCK.equals(action))) {
-
+				&& (Action.LEFT_CLICK_BLOCK.equals(action) || Action.RIGHT_CLICK_BLOCK.equals(action)))
+		{
 			// if item used is in off_hand, do nothing and return
-			if (EquipmentSlot.OFF_HAND.equals(hand)) {
+			if (EquipmentSlot.OFF_HAND.equals(hand))
+			{
 				return true;
 			}
 
@@ -173,19 +181,23 @@ public class PlayerInteractEventListener implements Listener {
 	 * @param block the block being interacted with
 	 * @return true if block type is allowed for interaction, false if not
 	 */
-	boolean allowedInteraction(Block block) {
+	boolean allowedInteraction(Block block)
+	{
 		// allow use of doors, gates and trap doors with item in hand
-		if (block.getBlockData() instanceof Openable) {
+		if (block.getBlockData() instanceof Openable)
+		{
 			return true;
 		}
 
 		// allow use of switches with item in hand
-		if (block.getBlockData() instanceof Switch) {
+		if (block.getBlockData() instanceof Switch)
+		{
 			return true;
 		}
 
 		// allow use of containers and other tile entity blocks with item in hand
-		if (block.getState() instanceof TileState) {
+		if (block.getState() instanceof TileState)
+		{
 			return true;
 		}
 
@@ -200,10 +212,11 @@ public class PlayerInteractEventListener implements Listener {
 	 * @param event the event whose action to test
 	 * @return true if action is allowed, false if action would cancel the event
 	 */
-	boolean allowedClickType(PlayerInteractEvent event) {
-
+	boolean allowedClickType(PlayerInteractEvent event)
+	{
 		// if event action is PHYSICAL (not left-click or right click), do nothing and return
-		if (event.getAction().equals(Action.PHYSICAL)) {
+		if (event.getAction().equals(Action.PHYSICAL))
+		{
 			return true;
 		}
 
@@ -220,7 +233,8 @@ public class PlayerInteractEventListener implements Listener {
 	 * @param block the block to check
 	 * @return true if block is not air, false if it is
 	 */
-	boolean isNotAir(final Block block) {
+	boolean isNotAir(final Block block)
+	{
 		return block != null && !block.getType().isAir();
 	}
 
@@ -231,7 +245,8 @@ public class PlayerInteractEventListener implements Listener {
 	 * @param player the player to check
 	 * @return true if player is not sneaking, false if it is
 	 */
-	boolean isNotSneaking(final Player player) {
+	boolean isNotSneaking(final Player player)
+	{
 		return !player.isSneaking();
 	}
 

@@ -24,9 +24,8 @@ import com.winterhavenmc.lodestar.sounds.SoundId;
 import org.bukkit.entity.Player;
 
 
-final class HomeTeleporter extends AbstractTeleporter {
-
-
+final class HomeTeleporter extends AbstractTeleporter implements Teleporter
+{
 	/**
 	 * Class constructor
 	 *
@@ -44,7 +43,8 @@ final class HomeTeleporter extends AbstractTeleporter {
 	 * @param player the player to teleport
 	 */
 	@Override
-	public void initiate(final Player player) {
+	public void initiate(final Player player)
+	{
 		getHomeDestination(player).ifPresentOrElse(
 				destination -> execute(player, destination, MessageId.TELEPORT_WARMUP),
 				() -> fallbackToSpawn(player)
@@ -57,14 +57,17 @@ final class HomeTeleporter extends AbstractTeleporter {
 	 *
 	 * @param player the player to teleport
 	 */
-	private void fallbackToSpawn(final Player player) {
-		if (plugin.getConfig().getBoolean("bedspawn-fallback")) {
+	private void fallbackToSpawn(final Player player)
+	{
+		if (plugin.getConfig().getBoolean("bedspawn-fallback"))
+		{
 			getSpawnDestination(player).ifPresentOrElse(
 					destination -> new SpawnTeleporter(plugin, teleportExecutor).initiate(player),
 					() -> sendInvalidDestinationMessage(player, plugin.messageBuilder.getHomeDisplayName().orElse("Home"))
 			);
 		}
-		else {
+		else
+		{
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN).send();
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
 		}

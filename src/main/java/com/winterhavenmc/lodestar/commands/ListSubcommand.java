@@ -18,21 +18,20 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
-
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.sounds.SoundId;
+import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Optional;
 
 
-final class ListSubcommand extends AbstractSubcommand {
-
-
-	ListSubcommand(final PluginMain plugin) {
+final class ListSubcommand extends AbstractSubcommand
+{
+	ListSubcommand(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.name = "list";
 		this.permissionNode = "lodestar.list";
@@ -43,16 +42,18 @@ final class ListSubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final List<String> args) {
-
+	public boolean onCommand(final CommandSender sender, final List<String> args)
+	{
 		// if command sender does not have permission to list destinations, output error message and return true
-		if (!sender.hasPermission(permissionNode)) {
+		if (!sender.hasPermission(permissionNode))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_LIST).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
-		if (args.size() > getMaxArgs()) {
+		if (args.size() > getMaxArgs())
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
@@ -61,11 +62,13 @@ final class ListSubcommand extends AbstractSubcommand {
 
 		int page = 1;
 
-		if (args.size() == 1) {
-			try {
-				page = Integer.parseInt(args.get(0));
-			}
-			catch (NumberFormatException e) {
+		if (args.size() == 1)
+		{
+			try
+			{
+				page = Integer.parseInt(args.getFirst());
+			} catch (NumberFormatException e)
+			{
 				// second argument not a page number, let default of 1 stand
 			}
 		}
@@ -79,19 +82,22 @@ final class ListSubcommand extends AbstractSubcommand {
 		// get all records from datastore
 		final List<String> allKeys = plugin.dataStore.selectAllKeys();
 
-		if (plugin.getConfig().getBoolean("debug")) {
+		if (plugin.getConfig().getBoolean("debug"))
+		{
 			plugin.getLogger().info("Total records fetched from data store: " + allKeys.size());
 		}
 
 		// if display list is empty, output list empty message and return
-		if (allKeys.isEmpty()) {
+		if (allKeys.isEmpty())
+		{
 			plugin.messageBuilder.compose(sender, MessageId.LIST_EMPTY).send();
 			return true;
 		}
 
 		// get page count
 		int pageCount = ((allKeys.size() - 1) / itemsPerPage) + 1;
-		if (page > pageCount) {
+		if (page > pageCount)
+		{
 			page = pageCount;
 		}
 
@@ -107,26 +113,28 @@ final class ListSubcommand extends AbstractSubcommand {
 
 		int itemNumber = startIndex;
 
-		for (String key : displayKeys) {
-
+		for (String key : displayKeys)
+		{
 			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
 
-			if (optionalDestination.isPresent()) {
-
+			if (optionalDestination.isPresent())
+			{
 				// unwrap optional destination
 				Destination destination = optionalDestination.get();
 
 				// increment item number
 				itemNumber++;
 
-				if (destination.isValidWorld()) {
+				if (destination.isValidWorld())
+				{
 					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
 							.setMacro(Macro.DESTINATION, destination.getDisplayName())
 							.setMacro(Macro.DESTINATION_LOCATION, destination.getLocation())
 							.setMacro(Macro.ITEM_NUMBER, itemNumber)
 							.send();
 				}
-				else {
+				else
+				{
 					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
 							.setMacro(Macro.DESTINATION, destination.getDisplayName())
 							.setMacro(Macro.DESTINATION_WORLD, destination.getWorldName())

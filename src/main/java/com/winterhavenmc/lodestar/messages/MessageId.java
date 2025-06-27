@@ -20,8 +20,8 @@ package com.winterhavenmc.lodestar.messages;
 /**
  * Enum with entries for all player messages in language configuration files
  */
-public enum MessageId {
-
+public enum MessageId
+{
 	COMMAND_HELP_INVALID,
 	COMMAND_HELP_BIND,
 	COMMAND_HELP_DELETE,
@@ -97,5 +97,4 @@ public enum MessageId {
 	LIST_ITEM,
 	LIST_ITEM_INVALID,
 	LIST_EMPTY,
-
 }

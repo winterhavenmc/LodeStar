@@ -20,7 +20,6 @@ package com.winterhavenmc.lodestar.listeners;
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +31,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.Objects;
 
 
 /**
@@ -41,8 +40,8 @@ import java.util.*;
  * @author Tim Savage
  * @version 1.0
  */
-public final class PlayerEventListener implements Listener {
-
+public final class PlayerEventListener implements Listener
+{
 	// reference to main class
 	private final PluginMain plugin;
 
@@ -52,8 +51,8 @@ public final class PlayerEventListener implements Listener {
 	 *
 	 * @param plugin A reference to this plugin's main class
 	 */
-	public PlayerEventListener(final PluginMain plugin) {
-
+	public PlayerEventListener(final PluginMain plugin)
+	{
 		// reference to main
 		Objects.requireNonNull(this.plugin = plugin);
 
@@ -68,7 +67,8 @@ public final class PlayerEventListener implements Listener {
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerDeath(final PlayerDeathEvent event) {
+	void onPlayerDeath(final PlayerDeathEvent event)
+	{
 		// cancel any pending teleport for player
 		plugin.teleportHandler.cancelTeleport(event.getEntity());
 	}
@@ -80,7 +80,8 @@ public final class PlayerEventListener implements Listener {
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerQuit(final PlayerQuitEvent event) {
+	void onPlayerQuit(final PlayerQuitEvent event)
+	{
 		// cancel any pending teleport for player
 		plugin.teleportHandler.cancelTeleport(event.getPlayer());
 	}
@@ -92,16 +93,19 @@ public final class PlayerEventListener implements Listener {
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onCraftPrepare(final PrepareItemCraftEvent event) {
-
+	void onCraftPrepare(final PrepareItemCraftEvent event)
+	{
 		// if allow-in-recipes is true in configuration, do nothing and return
-		if (plugin.getConfig().getBoolean("allow-in-recipes")) {
+		if (plugin.getConfig().getBoolean("allow-in-recipes"))
+		{
 			return;
 		}
 
 		// if crafting inventory contains LodeStar item, set result item to null
-		for (ItemStack itemStack : event.getInventory()) {
-			if (plugin.lodeStarUtility.isItem(itemStack)) {
+		for (ItemStack itemStack : event.getInventory())
+		{
+			if (plugin.lodeStarUtility.isItem(itemStack))
+			{
 				event.getInventory().setResult(null);
 			}
 		}
@@ -114,15 +118,16 @@ public final class PlayerEventListener implements Listener {
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler(ignoreCancelled = true)
-	void onEntityDamage(final EntityDamageEvent event) {
-
+	void onEntityDamage(final EntityDamageEvent event)
+	{
 		// if cancel-on-damage configuration is true, check if damaged entity is player
-		if (plugin.getConfig().getBoolean("cancel-on-damage")) {
-
+		if (plugin.getConfig().getBoolean("cancel-on-damage"))
+		{
 			Entity entity = event.getEntity();
 
 			// if damaged entity is player, and player has pending teleport, cancel teleport and send player message
-			if (entity instanceof Player player && plugin.teleportHandler.isWarmingUp(player)) {
+			if (entity instanceof Player player && plugin.teleportHandler.isWarmingUp(player))
+			{
 				plugin.teleportHandler.cancelTeleport(player);
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_DAMAGE).send();
 				plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
@@ -137,17 +142,19 @@ public final class PlayerEventListener implements Listener {
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerMovement(final PlayerMoveEvent event) {
-
+	void onPlayerMovement(final PlayerMoveEvent event)
+	{
 		// if cancel-on-movement configuration is false, do nothing and return
-		if (!plugin.getConfig().getBoolean("cancel-on-movement")) {
+		if (!plugin.getConfig().getBoolean("cancel-on-movement"))
+		{
 			return;
 		}
 
 		Player player = event.getPlayer();
 
 		// if player is pending teleport and has moved, cancel teleport and send player message
-		if (plugin.teleportHandler.isWarmingUp(player) && playerHasMoved(event)) {
+		if (plugin.teleportHandler.isWarmingUp(player) && playerHasMoved(event))
+		{
 			plugin.teleportHandler.cancelTeleport(player);
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_MOVEMENT).send();
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED);
@@ -157,10 +164,12 @@ public final class PlayerEventListener implements Listener {
 
 	/**
 	 * check for player movement other than head turning
+	 *
 	 * @param event the player move event
 	 * @return true if player has moved, false if not
 	 */
-	private boolean playerHasMoved(PlayerMoveEvent event) {
+	private boolean playerHasMoved(PlayerMoveEvent event)
+	{
 		return event.getFrom().distanceSquared(Objects.requireNonNull(event.getTo())) > 0;
 	}
 

@@ -21,20 +21,22 @@ import com.winterhavenmc.lodestar.PluginMain;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class RemovePlayerCooldownTask extends BukkitRunnable {
-
+public class RemovePlayerCooldownTask extends BukkitRunnable
+{
 	private final PluginMain plugin;
 	private final Player player;
 
 
-	public RemovePlayerCooldownTask(final PluginMain plugin, final Player player) {
+	public RemovePlayerCooldownTask(final PluginMain plugin, final Player player)
+	{
 		this.plugin = plugin;
 		this.player = player;
 	}
 
 
 	@Override
-	public void run() {
+	public void run()
+	{
 		plugin.teleportHandler.cancelPlayerCooldown(player);
 	}
 

@@ -18,11 +18,10 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-
+import com.winterhavenmc.lodestar.sounds.SoundId;
+import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +35,8 @@ import java.util.Objects;
  * Class that extends BukkitRunnable to teleport a player to a predefined location
  * after a configured warmup period.
  */
-final class DelayedTeleportTask extends BukkitRunnable {
+final class DelayedTeleportTask extends BukkitRunnable
+{
 
 	private final PluginMain plugin;
 	private final Player player;
@@ -53,7 +53,8 @@ final class DelayedTeleportTask extends BukkitRunnable {
 	 * @param destination the teleport destination
 	 * @param playerItem  the item used to initiate teleport
 	 */
-	DelayedTeleportTask(final PluginMain plugin, final Player player, final Destination destination, final ItemStack playerItem) {
+	DelayedTeleportTask(final PluginMain plugin, final Player player, final Destination destination, final ItemStack playerItem)
+	{
 
 		this.plugin = plugin;
 		this.player = player;
@@ -62,7 +63,8 @@ final class DelayedTeleportTask extends BukkitRunnable {
 		this.location = destination.getLocation().orElse(null);
 
 		// start repeating task for generating particles at player location
-		if (plugin.getConfig().getBoolean("particle-effects")) {
+		if (plugin.getConfig().getBoolean("particle-effects"))
+		{
 
 			// start particle task with 2 tick delay, so it doesn't self cancel on first run
 			particleTask = new ParticleTask(plugin, player).runTaskTimer(plugin, 2L, 10);
@@ -72,29 +74,32 @@ final class DelayedTeleportTask extends BukkitRunnable {
 
 
 	@Override
-	public void run() {
-
+	public void run()
+	{
 		// cancel particles task
 		particleTask.cancel();
 
 		// if player is in warmup map
-		if (plugin.teleportHandler.isWarmingUp(player)) {
-
+		if (plugin.teleportHandler.isWarmingUp(player))
+		{
 			// remove player from warmup map
 			plugin.teleportHandler.removeWarmingUpPlayer(player);
 
 			// if destination is spawn, get spawn location from world manager
-			if (destination.isSpawn()) {
+			if (destination.isSpawn())
+			{
 				location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 			}
 
 			// if remove-from-inventory is configured on-success, take one LodeStar item from inventory now
-			if ("on-success".equalsIgnoreCase(plugin.getConfig().getString("remove-from-inventory"))) {
-
+			if ("on-success".equalsIgnoreCase(plugin.getConfig().getString("remove-from-inventory")))
+			{
 				// try to remove one LodeStar item from player inventory
 				boolean wasRemoved = false;
-				for (ItemStack itemStack : player.getInventory()) {
-					if (playerItem.isSimilar(itemStack)) {
+				for (ItemStack itemStack : player.getInventory())
+				{
+					if (playerItem.isSimilar(itemStack))
+					{
 						ItemStack itemToRemove = itemStack.clone();
 						itemToRemove.setAmount(1);
 						player.getInventory().removeItem(itemToRemove);
@@ -104,7 +109,8 @@ final class DelayedTeleportTask extends BukkitRunnable {
 				}
 
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
-				if (!wasRemoved) {
+				if (!wasRemoved)
+				{
 					plugin.messageBuilder.compose(player, MessageId.TELEPORT_CANCELLED_NO_ITEM).send();
 					plugin.soundConfig.playSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
 					plugin.teleportHandler.startPlayerCooldown(player);
@@ -118,14 +124,16 @@ final class DelayedTeleportTask extends BukkitRunnable {
 			player.teleport(location);
 
 			// if destination is spawn, send spawn specific success message
-			if (destination.isSpawn()) {
+			if (destination.isSpawn())
+			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
 						.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
 						.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
 						.send();
 			}
 			// otherwise, send regular success message
-			else {
+			else
+			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS)
 						.setMacro(Macro.DESTINATION, destination.getDisplayName())
 						.send();
@@ -134,7 +142,8 @@ final class DelayedTeleportTask extends BukkitRunnable {
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 
 			// if lightning is enabled in config, strike lightning at teleport destination
-			if (plugin.getConfig().getBoolean("lightning")) {
+			if (plugin.getConfig().getBoolean("lightning"))
+			{
 				player.getWorld().strikeLightningEffect(location);
 			}
 

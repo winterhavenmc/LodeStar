@@ -30,9 +30,10 @@ import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
-public final class Destination {
-
-	public enum Type {
+public final class Destination
+{
+	public enum Type
+	{
 		STORED,
 		HOME,
 		SPAWN,
@@ -56,8 +57,8 @@ public final class Destination {
 	 * @param displayName the destination display name string
 	 * @param location    the destination location
 	 */
-	public Destination(@Nonnull final String displayName, @Nonnull final Location location, @Nonnull Type type) {
-
+	public Destination(@Nonnull final String displayName, @Nonnull final Location location, @Nonnull Type type)
+	{
 		// validate parameters
 		Objects.requireNonNull(displayName);
 		Objects.requireNonNull(location);
@@ -66,12 +67,14 @@ public final class Destination {
 		this.type = type;
 		this.displayName = displayName;
 
-		if (location.getWorld() != null) {
+		if (location.getWorld() != null)
+		{
 			this.worldUid = location.getWorld().getUID();
 			this.worldName = location.getWorld().getName();
 			this.worldValid = true;
 		}
-		else {
+		else
+		{
 			this.worldUid = null;
 			this.worldName = "???";
 			this.worldValid = false;
@@ -107,8 +110,8 @@ public final class Destination {
 	                   final double y,
 	                   final double z,
 	                   final float yaw,
-	                   final float pitch) {
-
+	                   final float pitch)
+	{
 		this.type = type;
 		this.displayName = displayName;
 		this.worldValid = worldValid;
@@ -128,7 +131,8 @@ public final class Destination {
 	 * @return String - destination display name
 	 */
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return getDisplayName();
 	}
 
@@ -138,7 +142,8 @@ public final class Destination {
 	 *
 	 * @return true if home, else false
 	 */
-	public boolean isHome() {
+	public boolean isHome()
+	{
 		return this.type.equals(Type.HOME);
 	}
 
@@ -148,7 +153,8 @@ public final class Destination {
 	 *
 	 * @return true if destination is spawn, else false
 	 */
-	public boolean isSpawn() {
+	public boolean isSpawn()
+	{
 		return this.type.equals(Type.SPAWN);
 	}
 
@@ -158,7 +164,8 @@ public final class Destination {
 	 *
 	 * @return the value of the key field
 	 */
-	String getKey() {
+	String getKey()
+	{
 		return stripColor(translateAlternateColorCodes('&', displayName)).replace(' ', '_');
 	}
 
@@ -168,7 +175,8 @@ public final class Destination {
 	 *
 	 * @return the value of the displayName field
 	 */
-	public String getDisplayName() {
+	public String getDisplayName()
+	{
 		return displayName;
 	}
 
@@ -178,10 +186,11 @@ public final class Destination {
 	 *
 	 * @return {@link Optional} Location
 	 */
-	public Optional<Location> getLocation() {
-
+	public Optional<Location> getLocation()
+	{
 		// if world uid is null, return empty optional
-		if (worldUid == null) {
+		if (worldUid == null)
+		{
 			return Optional.empty();
 		}
 
@@ -189,7 +198,8 @@ public final class Destination {
 		World world = Bukkit.getServer().getWorld(worldUid);
 
 		// if world is null, return empty optional
-		if (world == null) {
+		if (world == null)
+		{
 			return Optional.empty();
 		}
 
@@ -198,42 +208,50 @@ public final class Destination {
 	}
 
 
-	public UUID getWorldUid() {
+	public UUID getWorldUid()
+	{
 		return worldUid;
 	}
 
 
-	public String getWorldName() {
+	public String getWorldName()
+	{
 		return worldName;
 	}
 
 
-	public boolean isValidWorld() {
+	public boolean isValidWorld()
+	{
 		return worldValid;
 	}
 
 
-	public double getX() {
+	public double getX()
+	{
 		return x;
 	}
 
 
-	public double getY() {
+	public double getY()
+	{
 		return y;
 	}
 
 
-	public double getZ() {
+	public double getZ()
+	{
 		return z;
 	}
 
 
-	public float getYaw() {
+	public float getYaw()
+	{
 		return yaw;
 	}
 
 
-	public float getPitch() {
+	public float getPitch()
+	{
 		return pitch;
 	}
 

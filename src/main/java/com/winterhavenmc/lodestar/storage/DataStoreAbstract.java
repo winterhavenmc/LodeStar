@@ -18,10 +18,9 @@
 package com.winterhavenmc.lodestar.storage;
 
 
-abstract class DataStoreAbstract implements DataStore {
-
+abstract class DataStoreAbstract implements DataStore
+{
 	private boolean initialized;
-
 	DataStoreType type;
 
 
@@ -31,7 +30,8 @@ abstract class DataStoreAbstract implements DataStore {
 	 * @return boolean
 	 */
 	@Override
-	public boolean isInitialized() {
+	public boolean isInitialized()
+	{
 		return this.initialized;
 	}
 
@@ -41,7 +41,8 @@ abstract class DataStoreAbstract implements DataStore {
 	 *
 	 * @param initialized the boolean value to set initialized field
 	 */
-	void setInitialized(final boolean initialized) {
+	void setInitialized(final boolean initialized)
+	{
 		this.initialized = initialized;
 	}
 
@@ -50,7 +51,8 @@ abstract class DataStoreAbstract implements DataStore {
 	 * Get datastore type
 	 */
 	@Override
-	public DataStoreType getType() {
+	public DataStoreType getType()
+	{
 		return this.type;
 	}
 
@@ -61,7 +63,8 @@ abstract class DataStoreAbstract implements DataStore {
 	 * @return the name of this datastore instance
 	 */
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return this.type.toString();
 	}
 

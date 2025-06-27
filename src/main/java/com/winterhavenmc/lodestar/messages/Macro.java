@@ -20,8 +20,8 @@ package com.winterhavenmc.lodestar.messages;
 /**
  * Enum with entries for custom message string replacement placeholders
  */
-public enum Macro {
-
+public enum Macro
+{
 	DESTINATION,
 	ITEM_QUANTITY,
 	TARGET_PLAYER,
@@ -31,5 +31,4 @@ public enum Macro {
 	PAGE_TOTAL,
 	ITEM_NUMBER,
 	DESTINATION_LOCATION,
-
 }

@@ -20,70 +20,88 @@ package com.winterhavenmc.lodestar.commands;
 import com.winterhavenmc.lodestar.PluginMain;
 
 
-enum SubcommandType {
+enum SubcommandType
+{
+	BIND()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new BindSubcommand(plugin);
+				}
+			},
 
-	BIND() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new BindSubcommand(plugin);
-		}
-	},
+	DELETE()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new DeleteSubcommand(plugin);
+				}
+			},
 
-	DELETE() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new DeleteSubcommand(plugin);
-		}
-	},
+	DESTROY()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new DestroySubcommand(plugin);
+				}
+			},
 
-	DESTROY() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new DestroySubcommand(plugin);
-		}
-	},
+	GIVE()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new GiveSubcommand(plugin);
+				}
+			},
 
-	GIVE() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new GiveSubcommand(plugin);
-		}
-	},
+	LIST()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new ListSubcommand(plugin);
+				}
+			},
 
-	LIST() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new ListSubcommand(plugin);
-		}
-	},
+	RELOAD()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new ReloadSubcommand(plugin);
+				}
+			},
 
-	RELOAD() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new ReloadSubcommand(plugin);
-		}
-	},
+	SET()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new SetSubcommand(plugin);
+				}
+			},
 
-	SET() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new SetSubcommand(plugin);
-		}
-	},
+	STATUS()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new StatusSubcommand(plugin);
+				}
+			},
 
-	STATUS() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new StatusSubcommand(plugin);
-		}
-	},
-
-	TELEPORT() {
-		@Override
-		Subcommand create(final PluginMain plugin) {
-			return new TeleportSubcommand(plugin);
-		}
-	};
+	TELEPORT()
+			{
+				@Override
+				Subcommand create(final PluginMain plugin)
+				{
+					return new TeleportSubcommand(plugin);
+				}
+			};
 
 
 	abstract Subcommand create(final PluginMain plugin);

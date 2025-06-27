@@ -18,7 +18,6 @@
 package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
-
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -27,8 +26,8 @@ import java.sql.*;
 import java.util.*;
 
 
-final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
-
+final class DataStoreSQLite extends DataStoreAbstract implements DataStore
+{
 	// reference to main class
 	private final PluginMain plugin;
 
@@ -41,13 +40,14 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 	// schema version
 	private int schemaVersion;
 
+
 	/**
 	 * Class constructor
 	 *
 	 * @param plugin reference to main class
 	 */
-	DataStoreSQLite(final PluginMain plugin) {
-
+	DataStoreSQLite(final PluginMain plugin)
+	{
 		// reference to main class
 		this.plugin = plugin;
 
@@ -60,10 +60,11 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public void initialize() throws SQLException, ClassNotFoundException {
-
+	public void initialize() throws SQLException, ClassNotFoundException
+	{
 		// if data store is already initialized, do nothing and return
-		if (this.isInitialized()) {
+		if (this.isInitialized())
+		{
 			plugin.getLogger().info(this + " datastore already initialized.");
 			return;
 		}
@@ -88,36 +89,40 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 	}
 
 
-	private int getSchemaVersion() {
-
+	private int getSchemaVersion()
+	{
 		int version = -1;
 
-		try {
+		try
+		{
 			final Statement statement = connection.createStatement();
 
 			ResultSet rs = statement.executeQuery(Queries.getQuery("GetUserVersion"));
 
-			while (rs.next()) {
+			while (rs.next())
+			{
 				version = rs.getInt(1);
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e)
+		{
 			plugin.getLogger().warning("Could not get schema version!");
 		}
 		return version;
 	}
 
 
-	private void updateSchema() throws SQLException {
-
+	private void updateSchema() throws SQLException
+	{
 		schemaVersion = getSchemaVersion();
 
 		final Statement statement = connection.createStatement();
 
-		if (schemaVersion == 0) {
+		if (schemaVersion == 0)
+		{
 			int count;
 			ResultSet rs = statement.executeQuery(Queries.getQuery("SelectDestinationTable"));
-			if (rs.next()) {
+			if (rs.next())
+			{
 				Collection<Destination> existingRecords = selectAllRecords();
 				statement.executeUpdate(Queries.getQuery("DropDestinationTable"));
 				statement.executeUpdate(Queries.getQuery("CreateDestinationTable"));
@@ -138,17 +143,18 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	synchronized public int insertRecords(final Collection<Destination> destinations) {
-
+	synchronized public int insertRecords(final Collection<Destination> destinations)
+	{
 		// if destination is null return zero record count
-		if (destinations == null) {
+		if (destinations == null)
+		{
 			return 0;
 		}
 
 		int count = 0;
 
-		for (Destination destination : destinations) {
-
+		for (Destination destination : destinations)
+		{
 			// get key
 			final String key = destination.getKey();
 
@@ -159,7 +165,8 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 			World world = plugin.getServer().getWorld(destination.getWorldUid());
 
 			// test that world in destination location is valid
-			if (world == null) {
+			if (world == null)
+			{
 				plugin.getLogger().warning("An error occurred while inserting"
 						+ " a destination in the " + this + " datastore. World invalid!");
 				continue;
@@ -167,10 +174,13 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 			final String worldName = world.getName();
 
-			new BukkitRunnable() {
+			new BukkitRunnable()
+			{
 				@Override
-				public void run() {
-					try {
+				public void run()
+				{
+					try
+					{
 						// create prepared statement
 						PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("InsertDestination"));
 
@@ -187,16 +197,16 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 						// execute prepared statement
 						preparedStatement.executeUpdate();
-					}
-					catch (Exception e) {
-
+					} catch (Exception e)
+					{
 						// output simple error message
 						plugin.getLogger().warning("An error occurred while inserting a destination "
 								+ "into the " + this + " datastore.");
 						plugin.getLogger().warning(e.getLocalizedMessage());
 
 						// if debugging is enabled, output stack trace
-						if (plugin.getConfig().getBoolean("debug")) {
+						if (plugin.getConfig().getBoolean("debug"))
+						{
 							e.getStackTrace();
 						}
 					}
@@ -209,10 +219,11 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public Optional<Destination> selectRecord(final String key) {
-
+	public Optional<Destination> selectRecord(final String key)
+	{
 		// if key is null return null record
-		if (key == null) {
+		if (key == null)
+		{
 			return Optional.empty();
 		}
 
@@ -221,7 +232,8 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 		Destination destination = null;
 
-		try {
+		try
+		{
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectDestination"));
 
 			preparedStatement.setString(1, derivedKey);
@@ -230,11 +242,12 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 			ResultSet rs = preparedStatement.executeQuery();
 
 			// only zero or one record can match the unique key
-			if (rs.next()) {
-
+			if (rs.next())
+			{
 				// get stored displayName
 				String displayName = rs.getString("displayname");
-				if (displayName == null || displayName.isEmpty()) {
+				if (displayName == null || displayName.isEmpty())
+				{
 					displayName = derivedKey;
 				}
 
@@ -257,7 +270,8 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 				boolean worldValid = true;
 
 				// if world is null, set worldValid false and log warning
-				if (world == null) {
+				if (world == null)
+				{
 					worldValid = false;
 					plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
 				}
@@ -265,15 +279,15 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 				// create destination
 				destination = new Destination(Destination.Type.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 			}
-		}
-		catch (SQLException e) {
-
+		} catch (SQLException e)
+		{
 			// output simple error message
 			plugin.getLogger().warning("An error occurred while fetching a destination from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.getConfig().getBoolean("debug")) {
+			if (plugin.getConfig().getBoolean("debug"))
+			{
 				e.getStackTrace();
 			}
 			return Optional.empty();
@@ -284,19 +298,21 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public Collection<Destination> selectAllRecords() {
-
+	public Collection<Destination> selectAllRecords()
+	{
 		Collection<Destination> returnList = new ArrayList<>();
 
-		try {
+		try
+		{
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllRecords"));
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
 
-			while (rs.next()) {
-
-				if (schemaVersion == 0) {
+			while (rs.next())
+			{
+				if (schemaVersion == 0)
+				{
 					String displayName = rs.getString("displayname");
 					String worldName = rs.getString("worldname");
 					double x = rs.getDouble("x");
@@ -313,11 +329,13 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 					UUID worldUid = null;
 
 					// if world is null, set worldValid false and log warning
-					if (world == null) {
+					if (world == null)
+					{
 						worldValid = false;
 						plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
 					}
-					else {
+					else
+					{
 						// get world Uid
 						worldUid = world.getUID();
 					}
@@ -329,8 +347,8 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 					returnList.add(destination);
 				}
 
-				else if (schemaVersion == 1) {
-
+				else if (schemaVersion == 1)
+				{
 					String displayName = rs.getString("displayname");
 					String worldName = rs.getString("worldname");
 					long worldUidMsb = rs.getLong("worldUidMsb");
@@ -350,7 +368,8 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 					boolean worldValid = true;
 
 					// if world is null, set worldValid false and log warning
-					if (world == null) {
+					if (world == null)
+					{
 						worldValid = false;
 						plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
 					}
@@ -363,15 +382,16 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 				}
 			}
 		}
-		catch (final SQLException e) {
-
+		catch (final SQLException e)
+		{
 			// output simple error message
 			plugin.getLogger().warning("An error occurred while trying to "
 					+ "fetch all records from the SQLite datastore.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.getConfig().getBoolean("debug")) {
+			if (plugin.getConfig().getBoolean("debug"))
+			{
 				e.getStackTrace();
 			}
 		}
@@ -383,29 +403,32 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public List<String> selectAllKeys() {
-
+	public List<String> selectAllKeys()
+	{
 		List<String> returnList = new ArrayList<>();
 
-		try {
+		try
+		{
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllKeys"));
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
 
-			while (rs.next()) {
+			while (rs.next())
+			{
 				returnList.add(rs.getString("key"));
 			}
 		}
-		catch (Exception e) {
-
+		catch (Exception e)
+		{
 			// output simple error message
 			plugin.getLogger().warning("An error occurred while trying to "
 					+ "fetch all records from the SQLite datastore.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.getConfig().getBoolean("debug")) {
+			if (plugin.getConfig().getBoolean("debug"))
+			{
 				e.getStackTrace();
 			}
 		}
@@ -416,10 +439,11 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 
 
 	@Override
-	public Optional<Destination> deleteRecord(final String passedKey) {
-
+	public Optional<Destination> deleteRecord(final String passedKey)
+	{
 		// if key is null return null record
-		if (passedKey == null) {
+		if (passedKey == null)
+		{
 			return Optional.empty();
 		}
 
@@ -429,7 +453,8 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 		// get destination record to be deleted, for return
 		Optional<Destination> destination = this.selectRecord(key);
 
-		try {
+		try
+		{
 			// create prepared statement
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("DeleteDestination"));
 
@@ -439,62 +464,71 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore {
 			int rowsAffected = preparedStatement.executeUpdate();
 
 			// output debugging information
-			if (plugin.getConfig().getBoolean("debug")) {
+			if (plugin.getConfig().getBoolean("debug"))
+			{
 				plugin.getLogger().info(rowsAffected + " rows deleted.");
 			}
 		}
-		catch (Exception e) {
-
+		catch (Exception e)
+		{
 			// output simple error message
 			plugin.getLogger().warning("An error occurred while attempting to "
 					+ "delete a destination from the SQLite datastore.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.getConfig().getBoolean("debug")) {
+			if (plugin.getConfig().getBoolean("debug"))
+			{
 				e.getStackTrace();
 			}
 		}
+
 		return destination;
 	}
 
 
 	@Override
-	public void close() {
-
-		try {
+	public void close()
+	{
+		try
+		{
 			connection.close();
 			plugin.getLogger().info("SQLite datastore connection closed.");
 		}
-		catch (Exception e) {
-
+		catch (Exception e)
+		{
 			// output simple error message
 			plugin.getLogger().warning("An error occurred while closing the SQLite datastore.");
 			plugin.getLogger().warning(e.getMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.getConfig().getBoolean("debug")) {
+			if (plugin.getConfig().getBoolean("debug"))
+			{
 				e.getStackTrace();
 			}
 		}
+
 		setInitialized(false);
 	}
 
 
 	@Override
-	public void sync() {
+	public void sync()
+	{
 		// no action necessary for this storage type
 	}
 
 
 	@Override
-	public boolean delete() {
-
+	public boolean delete()
+	{
 		File dataStoreFile = new File(dataFilePath);
 		boolean result = false;
-		if (dataStoreFile.exists()) {
+		if (dataStoreFile.exists())
+		{
 			result = dataStoreFile.delete();
 		}
+
 		return result;
 	}
 

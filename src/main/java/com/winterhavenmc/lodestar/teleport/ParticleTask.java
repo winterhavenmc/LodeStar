@@ -18,7 +18,6 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
-
 import org.bukkit.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,8 +29,8 @@ import org.bukkit.scheduler.BukkitRunnable;
  *
  * @author savage
  */
-final class ParticleTask extends BukkitRunnable {
-
+final class ParticleTask extends BukkitRunnable
+{
 	private final PluginMain plugin;
 	private final Player player;
 
@@ -41,21 +40,24 @@ final class ParticleTask extends BukkitRunnable {
 	 *
 	 * @param player the player being teleported
 	 */
-	ParticleTask(final PluginMain plugin, final Player player) {
+	ParticleTask(final PluginMain plugin, final Player player)
+	{
 		this.plugin = plugin;
 		this.player = player;
 	}
 
 
 	@Override
-	public void run() {
-
+	public void run()
+	{
 		// if player is in the warmup hashmap, display the particle effect at their location
-		if (plugin.teleportHandler.isWarmingUp(player)) {
+		if (plugin.teleportHandler.isWarmingUp(player))
+		{
 			player.getWorld().playEffect(player.getLocation().add(0.0d, 1.0d, 0.0d), Effect.ENDER_SIGNAL, 0, 10);
 		}
 		// otherwise, cancel this repeating task if the player is not in the warmup hashmap
-		else {
+		else
+		{
 			this.cancel();
 		}
 	}

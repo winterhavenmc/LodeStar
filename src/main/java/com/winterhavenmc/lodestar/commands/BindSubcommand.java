@@ -18,46 +18,51 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.sounds.SoundId;
-
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-
+import com.winterhavenmc.lodestar.sounds.SoundId;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
-final class BindSubcommand extends AbstractSubcommand {
-
+final class BindSubcommand extends AbstractSubcommand
+{
 	private final List<Material> invalidMaterials = new ArrayList<>(Arrays.asList(
-				Material.AIR,
-				Material.CAVE_AIR,
-				Material.VOID_AIR ));
+			Material.AIR,
+			Material.CAVE_AIR,
+			Material.VOID_AIR));
 
 
-	BindSubcommand(final PluginMain plugin) {
+	BindSubcommand(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.name = "bind";
 		this.permissionNode = "lodestar.bind";
-		this.usageString ="/lodestar bind <destination name>";
+		this.usageString = "/lodestar bind <destination name>";
 		this.description = MessageId.COMMAND_HELP_BIND;
 		this.minArgs = 1;
 	}
 
 
 	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command command,
-									  final String alias, final String[] args) {
-
-		if (args.length == 2) {
+	public List<String> onTabComplete(final CommandSender sender,
+	                                  final Command command,
+	                                  final String alias,
+	                                  final String[] args)
+	{
+		if (args.length == 2)
+		{
 			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
-			resultList.add(0, plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
-			resultList.add(0, plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+			resultList.addFirst(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			resultList.addFirst(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 
@@ -66,23 +71,26 @@ final class BindSubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final List<String> args) {
-
+	public boolean onCommand(final CommandSender sender, final List<String> args)
+	{
 		// command sender must be player
-		if (!(sender instanceof Player player)) {
+		if (!(sender instanceof Player player))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check sender has permission
-		if (!sender.hasPermission(permissionNode)) {
+		if (!sender.hasPermission(permissionNode))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_BIND).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check minimum arguments
-		if (args.size() < getMinArgs()) {
+		if (args.size() < getMinArgs())
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
@@ -93,7 +101,8 @@ final class BindSubcommand extends AbstractSubcommand {
 		String suppliedName = String.join(" ", args);
 
 		// check if destination exists
-		if (!plugin.lodeStarUtility.destinationExists(suppliedName)) {
+		if (!plugin.lodeStarUtility.destinationExists(suppliedName))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, suppliedName)
 					.send();
@@ -102,7 +111,8 @@ final class BindSubcommand extends AbstractSubcommand {
 		}
 
 		// check that item in hand is valid material
-		if (notRequiredDefaultItem(player) || notValidItem(player)) {
+		if (notRequiredDefaultItem(player) || notValidItem(player))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
 					.setMacro(Macro.DESTINATION, suppliedName)
 					.send();
@@ -127,13 +137,15 @@ final class BindSubcommand extends AbstractSubcommand {
 		return true;
 	}
 
-	private boolean notRequiredDefaultItem(final Player player) {
+	private boolean notRequiredDefaultItem(final Player player)
+	{
 		return plugin.getConfig().getBoolean("default-material-only")
 				&& !player.hasPermission("lodestar.default-override")
 				&& !plugin.lodeStarUtility.isDefaultItem(player.getInventory().getItemInMainHand());
 	}
 
-	private boolean notValidItem(final Player player) {
+	private boolean notValidItem(final Player player)
+	{
 		return invalidMaterials.contains(player.getInventory().getItemInMainHand().getType());
 	}
 

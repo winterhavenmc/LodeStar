@@ -20,15 +20,14 @@ package com.winterhavenmc.lodestar.teleport;
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-
 import org.bukkit.entity.Player;
 
 
 /**
  * Class that manages player teleportation, including warmup and cooldown.
  */
-public final class TeleportHandler {
-
+public final class TeleportHandler
+{
 	// reference to main class
 	private final PluginMain plugin;
 
@@ -47,7 +46,8 @@ public final class TeleportHandler {
 	 *
 	 * @param plugin reference to plugin main class
 	 */
-	public TeleportHandler(final PluginMain plugin) {
+	public TeleportHandler(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.warmupMap = new WarmupMap(plugin);
 		this.cooldownMap = new CooldownMap(plugin);
@@ -60,15 +60,17 @@ public final class TeleportHandler {
 	 *
 	 * @param player the player being teleported
 	 */
-	public void initiateTeleport(final Player player) {
-
+	public void initiateTeleport(final Player player)
+	{
 		// if player is warming up, do nothing and return
-		if (isWarmingUp(player)) {
+		if (isWarmingUp(player))
+		{
 			return;
 		}
 
 		// if player cooldown has not expired, send player cooldown message and return
-		if (isCoolingDown(player)) {
+		if (isCoolingDown(player))
+		{
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_COOLDOWN)
 					.setMacro(Macro.DURATION, cooldownMap.getCooldownTimeRemaining(player))
 					.send();
@@ -79,12 +81,14 @@ public final class TeleportHandler {
 		final String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
 		// if item key is null, do nothing and return
-		if (key == null) {
+		if (key == null)
+		{
 			return;
 		}
 
 		// get appropriate teleporter type for destination
-		Teleporter teleporter = switch (plugin.lodeStarUtility.getDestinationType(key)) {
+		Teleporter teleporter = switch (plugin.lodeStarUtility.getDestinationType(key))
+		{
 			case HOME -> new HomeTeleporter(plugin, teleportExecutor);
 			case SPAWN -> new SpawnTeleporter(plugin, teleportExecutor);
 			default -> new DestinationTeleporter(plugin, teleportExecutor);
@@ -100,11 +104,11 @@ public final class TeleportHandler {
 	 *
 	 * @param player the player to cancel teleport
 	 */
-	public void cancelTeleport(final Player player) {
-
+	public void cancelTeleport(final Player player)
+	{
 		// if player is in warmup hashmap, cancel delayed teleport task and remove player from warmup hashmap
-		if (warmupMap.containsPlayer(player)) {
-
+		if (warmupMap.containsPlayer(player))
+		{
 			// get delayed teleport task id
 			int taskId = warmupMap.getTaskId(player);
 
@@ -123,7 +127,8 @@ public final class TeleportHandler {
 	 * @param player the player to test if in warmup map
 	 * @return {@code true} if player is in warmup map, {@code false} if not
 	 */
-	public boolean isWarmingUp(final Player player) {
+	public boolean isWarmingUp(final Player player)
+	{
 		return warmupMap.isWarmingUp(player);
 	}
 
@@ -133,7 +138,8 @@ public final class TeleportHandler {
 	 *
 	 * @param player the player to remove from the warmup map
 	 */
-	public void removeWarmingUpPlayer(final Player player) {
+	public void removeWarmingUpPlayer(final Player player)
+	{
 		warmupMap.removePlayer(player);
 	}
 
@@ -143,7 +149,8 @@ public final class TeleportHandler {
 	 *
 	 * @param player the player being inserted into the cooldown map
 	 */
-	void startPlayerCooldown(final Player player) {
+	void startPlayerCooldown(final Player player)
+	{
 		cooldownMap.startPlayerCooldown(player);
 	}
 
@@ -153,18 +160,20 @@ public final class TeleportHandler {
 	 *
 	 * @param player the player to be removed from the cooldown map
 	 */
-	void cancelPlayerCooldown(final Player player) {
+	void cancelPlayerCooldown(final Player player)
+	{
 		cooldownMap.removePlayer(player);
 	}
 
 
 	/**
 	 * Test if a player is currently in the cooldown map
-	 * @param player the player to check
 	 *
+	 * @param player the player to check
 	 * @return true if player is currently in the cooldown map, false if not
 	 */
-	boolean isCoolingDown(final Player player) {
+	boolean isCoolingDown(final Player player)
+	{
 		return cooldownMap.isCoolingDown(player);
 
 	}

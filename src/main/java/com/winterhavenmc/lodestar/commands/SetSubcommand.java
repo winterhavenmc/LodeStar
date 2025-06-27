@@ -18,11 +18,10 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
-
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
+import com.winterhavenmc.lodestar.sounds.SoundId;
+import com.winterhavenmc.lodestar.storage.Destination;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,10 +34,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-final class SetSubcommand extends AbstractSubcommand {
-
-
-	SetSubcommand(final PluginMain plugin) {
+final class SetSubcommand extends AbstractSubcommand
+{
+	SetSubcommand(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.name = "set";
 		this.permissionNode = "lodestar.set";
@@ -50,10 +49,10 @@ final class SetSubcommand extends AbstractSubcommand {
 
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command,
-									  final String alias, final String[] args) {
-
-		if (args.length == 2) {
-
+	                                  final String alias, final String[] args)
+	{
+		if (args.length == 2)
+		{
 			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
 
 			return plugin.dataStore.selectAllKeys().stream()
@@ -66,23 +65,26 @@ final class SetSubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final List<String> args) {
-
+	public boolean onCommand(final CommandSender sender, final List<String> args)
+	{
 		// sender must be in game player
-		if (!(sender instanceof Player)) {
+		if (!(sender instanceof Player))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check for permission
-		if (!sender.hasPermission(permissionNode)) {
+		if (!sender.hasPermission(permissionNode))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_SET).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check min arguments
-		if (args.size() < getMinArgs()) {
+		if (args.size() < getMinArgs())
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
@@ -96,7 +98,8 @@ final class SetSubcommand extends AbstractSubcommand {
 		String destinationName = String.join(" ", args);
 
 		// check if destination name is a reserved name
-		if (isRerservedName(destinationName)) {
+		if (isRerservedName(destinationName))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
@@ -108,7 +111,8 @@ final class SetSubcommand extends AbstractSubcommand {
 		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
 
 		// check for overwrite permission if destination already exists
-		if (optionalDestination.isPresent() && sender.hasPermission(permissionNode + ".overwrite")) {
+		if (optionalDestination.isPresent() && sender.hasPermission(permissionNode + ".overwrite"))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
@@ -117,7 +121,8 @@ final class SetSubcommand extends AbstractSubcommand {
 		}
 
 		// send warning message if name begins with a number
-		if (plugin.lodeStarUtility.deriveKey(destinationName).matches("^\\d*_.*")) {
+		if (plugin.lodeStarUtility.deriveKey(destinationName).matches("^\\d*_.*"))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();

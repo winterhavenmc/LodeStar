@@ -19,20 +19,19 @@ package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
-
 import org.bukkit.entity.Player;
 
 
-final class DestinationTeleporter extends AbstractTeleporter {
-
-
+final class DestinationTeleporter extends AbstractTeleporter
+{
 	/**
 	 * Class constructor
 	 *
-	 * @param plugin the player to teleport
+	 * @param plugin           the player to teleport
 	 * @param teleportExecutor the teleport executor
 	 */
-	DestinationTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
+	DestinationTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor)
+	{
 		super(plugin, teleportExecutor);
 	}
 
@@ -43,8 +42,8 @@ final class DestinationTeleporter extends AbstractTeleporter {
 	 * @param player the player to teleport
 	 */
 	@Override
-	public void initiate(final Player player) {
-
+	public void initiate(final Player player)
+	{
 		// get item key from player item in main hand
 		final String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
