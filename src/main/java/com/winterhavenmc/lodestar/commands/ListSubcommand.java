@@ -122,15 +122,15 @@ final class ListSubcommand extends AbstractSubcommand {
 				if (destination.isValidWorld()) {
 					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
 							.setMacro(Macro.DESTINATION, destination.getDisplayName())
+							.setMacro(Macro.DESTINATION_LOCATION, destination.getLocation())
 							.setMacro(Macro.ITEM_NUMBER, itemNumber)
-							.setMacro(Macro.LOCATION, destination.getLocation())
 							.send();
 				}
 				else {
 					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
 							.setMacro(Macro.DESTINATION, destination.getDisplayName())
+							.setMacro(Macro.DESTINATION_WORLD, destination.getWorldName())
 							.setMacro(Macro.ITEM_NUMBER, itemNumber)
-							.setMacro(Macro.WORLD, destination.getWorldName())
 							.send();
 				}
 			}
