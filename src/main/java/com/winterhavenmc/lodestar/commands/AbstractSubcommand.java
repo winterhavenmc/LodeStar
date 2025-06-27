@@ -17,16 +17,19 @@
 
 package com.winterhavenmc.lodestar.commands;
 
+import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
-abstract class AbstractSubcommand implements Subcommand {
-
+abstract class AbstractSubcommand implements Subcommand
+{
+	protected PluginMain plugin;
 	protected String name;
 	protected Collection<String> aliases = Collections.emptySet();
 	protected String permissionNode = "";
@@ -37,45 +40,63 @@ abstract class AbstractSubcommand implements Subcommand {
 
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
 	@Override
-	public String getPermissionNode() {
+	public String getPermissionNode()
+	{
 		return permissionNode;
 	}
 
 	@Override
-	public Collection<String> getAliases() {
+	public Collection<String> getAliases()
+	{
 		return aliases;
 	}
 
 	@Override
-	public void displayUsage(final CommandSender sender) {
+	public void displayUsage(final CommandSender sender)
+	{
 		sender.sendMessage(usageString);
 	}
 
 	@Override
-	public MessageId getDescription() {
+	public MessageId getDescription()
+	{
 		return description;
 	}
 
 	@Override
-	public int getMinArgs() { return minArgs; }
+	public int getMinArgs()
+	{
+		return minArgs;
+	}
 
 	@Override
-	public int getMaxArgs() { return maxArgs; }
+	public int getMaxArgs()
+	{
+		return maxArgs;
+	}
 
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command,
-									  final String alias, final String[] args) {
-
+	                                  final String alias, final String[] args)
+	{
 		return Collections.emptyList();
 	}
 
-	protected boolean matchPrefix(String string, String prefix) {
+	protected boolean matchPrefix(String string, String prefix)
+	{
 		return string.toLowerCase().startsWith(prefix.toLowerCase());
+	}
+
+	boolean isRerservedName(final String destinationName)
+	{
+		return destinationName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
+				|| destinationName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 	}
 
 }

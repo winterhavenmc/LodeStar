@@ -21,7 +21,6 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,12 +28,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 
-final class DestroySubcommand extends AbstractSubcommand {
-
-	private final PluginMain plugin;
-
-
-	DestroySubcommand(final PluginMain plugin) {
+final class DestroySubcommand extends AbstractSubcommand
+{
+	DestroySubcommand(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.name = "destroy";
 		this.permissionNode = "lodestar.destroy";
@@ -44,16 +41,18 @@ final class DestroySubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final List<String> args) {
-
+	public boolean onCommand(final CommandSender sender, final List<String> args)
+	{
 		// sender must be in game player
-		if (!(sender instanceof Player player)) {
+		if (!(sender instanceof Player player))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check that sender has permission
-		if (!sender.hasPermission(permissionNode)) {
+		if (!sender.hasPermission(permissionNode))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_DESTROY).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -63,7 +62,8 @@ final class DestroySubcommand extends AbstractSubcommand {
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// check that item player is holding is a LodeStar item
-		if (!plugin.lodeStarUtility.isItem(playerItem)) {
+		if (!plugin.lodeStarUtility.isItem(playerItem))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -75,7 +75,7 @@ final class DestroySubcommand extends AbstractSubcommand {
 		// send item destroyed message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
 				.setMacro(Macro.ITEM_QUANTITY, quantity)
-				.setMacro(Macro.DESTINATION, plugin.lodeStarUtility.getDestinationName(playerItem))
+				.setMacro(Macro.DESTINATION, plugin.lodeStarUtility.getDisplayName(playerItem).orElse(null))
 				.send();
 		plugin.soundConfig.playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
 
@@ -86,11 +86,12 @@ final class DestroySubcommand extends AbstractSubcommand {
 	/**
 	 * Set item stack quantity to zero
 	 *
-	 * @param player the player whose item stack is to be destroyed
+	 * @param player     the player whose item stack is to be destroyed
 	 * @param playerItem the itemstack to destroy
 	 * @return the number of items destroyed
 	 */
-	private int destroyItemStack(final Player player, final ItemStack playerItem) {
+	private int destroyItemStack(final Player player, final ItemStack playerItem)
+	{
 		int quantity = playerItem.getAmount();
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);

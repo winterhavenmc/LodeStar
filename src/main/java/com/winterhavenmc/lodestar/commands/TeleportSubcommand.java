@@ -22,7 +22,6 @@ import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
-
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,12 +34,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-final class TeleportSubcommand extends AbstractSubcommand {
-
-	private final PluginMain plugin;
-
-
-	TeleportSubcommand(final PluginMain plugin) {
+final class TeleportSubcommand extends AbstractSubcommand
+{
+	TeleportSubcommand(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.name = "teleport";
 		this.aliases = Set.of("tp");
@@ -53,10 +50,10 @@ final class TeleportSubcommand extends AbstractSubcommand {
 
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command,
-									  final String alias, final String[] args) {
-
-		if (args.length == 2) {
-
+	                                  final String alias, final String[] args)
+	{
+		if (args.length == 2)
+		{
 			return plugin.dataStore.selectAllKeys().stream()
 					.filter(string -> matchPrefix(string, args[1]))
 					.collect(Collectors.toList());
@@ -67,23 +64,26 @@ final class TeleportSubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final List<String> args) {
-
+	public boolean onCommand(final CommandSender sender, final List<String> args)
+	{
 		// check for permission
-		if (!sender.hasPermission(permissionNode)) {
+		if (!sender.hasPermission(permissionNode))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_TELEPORT).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check for in game player
-		if (!(sender instanceof Player player)) {
+		if (!(sender instanceof Player player))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_CONSOLE).send();
 			return true;
 		}
 
 		// check min arguments
-		if (args.size() < getMinArgs()) {
+		if (args.size() < getMinArgs())
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			displayUsage(sender);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
@@ -94,7 +94,8 @@ final class TeleportSubcommand extends AbstractSubcommand {
 		String destinationName = String.join(" ", args);
 
 		// test that destination name is valid
-		if (!Destination.exists(destinationName)) {
+		if (!plugin.lodeStarUtility.destinationExists(destinationName))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
@@ -105,8 +106,8 @@ final class TeleportSubcommand extends AbstractSubcommand {
 		// get destination from datastore
 		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
 
-		if (optionalDestination.isPresent() && optionalDestination.get().getLocation().isPresent()) {
-
+		if (optionalDestination.isPresent() && optionalDestination.get().getLocation().isPresent())
+		{
 			// unwrap optional destination
 			Destination destination = optionalDestination.get();
 
@@ -121,7 +122,8 @@ final class TeleportSubcommand extends AbstractSubcommand {
 			plugin.soundConfig.playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 			return true;
 		}
-		else {
+		else
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION).send();
 			plugin.soundConfig.playSound(sender, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 		}

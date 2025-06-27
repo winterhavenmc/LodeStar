@@ -17,8 +17,6 @@
 
 package com.winterhavenmc.lodestar;
 
-import com.winterhavenmc.lodestar.storage.Destination;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,8 +33,8 @@ import java.util.List;
  * @version 1.0
  */
 @SuppressWarnings("unused")
-public final class SimpleAPI {
-
+public final class SimpleAPI
+{
 	// static reference to main class
 	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
@@ -45,7 +43,8 @@ public final class SimpleAPI {
 	 *
 	 * @throws AssertionError on attempt to instantiate
 	 */
-	private SimpleAPI() {
+	private SimpleAPI()
+	{
 		throw new AssertionError();
 	}
 
@@ -56,7 +55,8 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name
 	 * @return ItemStack with destination name and quantity
 	 */
-	public static ItemStack create(final String destinationName) {
+	public static ItemStack create(final String destinationName)
+	{
 		return plugin.lodeStarUtility.create(destinationName, 1);
 	}
 
@@ -65,10 +65,11 @@ public final class SimpleAPI {
 	 * Create an item stack with encoded destination and quantity
 	 *
 	 * @param destinationName the destination name
-	 * @param quantity the quantity of items
+	 * @param quantity        the quantity of items
 	 * @return ItemStack with destination name and quantity
 	 */
-	public static ItemStack create(final String destinationName, final int quantity) {
+	public static ItemStack create(final String destinationName, final int quantity)
+	{
 		return plugin.lodeStarUtility.create(destinationName, quantity);
 	}
 
@@ -79,7 +80,8 @@ public final class SimpleAPI {
 	 * @param itemStack       the ItemStack to encode with destination key
 	 * @param destinationName the destination name used to create the encoded key
 	 */
-	public static void setMetaData(final ItemStack itemStack, final String destinationName) {
+	public static void setMetaData(final ItemStack itemStack, final String destinationName)
+	{
 		plugin.lodeStarUtility.setMetaData(itemStack, destinationName);
 	}
 
@@ -90,7 +92,8 @@ public final class SimpleAPI {
 	 * @param itemStack the ItemStack to test if LodeStar item
 	 * @return boolean - {@code true} if ItemStack is LodeStar item, {@code false} if it is not
 	 */
-	public static boolean isLodeStar(final ItemStack itemStack) {
+	public static boolean isLodeStar(final ItemStack itemStack)
+	{
 		return plugin.lodeStarUtility.isItem(itemStack);
 	}
 
@@ -101,7 +104,8 @@ public final class SimpleAPI {
 	 * @param itemStack the ItemStack to test if default LodeStar item
 	 * @return boolean - {@code true} if ItemStack is a default LodeStar item, {@code false} if it is not
 	 */
-	public static boolean isDefaultItem(final ItemStack itemStack) {
+	public static boolean isDefaultItem(final ItemStack itemStack)
+	{
 		return plugin.lodeStarUtility.isDefaultItem(itemStack);
 	}
 
@@ -112,7 +116,8 @@ public final class SimpleAPI {
 	 * @param itemStack the item to get destination from
 	 * @return String - the destination key
 	 */
-	public static String getDestination(final ItemStack itemStack) {
+	public static String getDestination(final ItemStack itemStack)
+	{
 		return plugin.lodeStarUtility.getKey(itemStack);
 	}
 
@@ -123,8 +128,9 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name to check
 	 * @return {@code true} if destination exists, {@code false} if it does not
 	 */
-	public static boolean isValidDestination(final String destinationName) {
-		return Destination.exists(destinationName);
+	public static boolean isValidDestination(final String destinationName)
+	{
+		return plugin.lodeStarUtility.destinationExists(destinationName);
 	}
 
 
@@ -134,8 +140,10 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name to test for reserved name
 	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
 	 */
-	static public boolean isReservedName(final String destinationName) {
-		return Destination.isReserved(destinationName);
+	static public boolean isReservedName(final String destinationName)
+	{
+		return destinationName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"))
+				|| destinationName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 	}
 
 
@@ -145,8 +153,9 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name to check
 	 * @return {@code true} if destination name is reserved home name, {@code false} if not
 	 */
-	public static boolean isHomeName(final String destinationName) {
-		return Destination.isHome(destinationName);
+	public static boolean isHomeName(final String destinationName)
+	{
+		return destinationName.equals(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 	}
 
 
@@ -156,8 +165,9 @@ public final class SimpleAPI {
 	 * @param destinationName the destination name to check
 	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
 	 */
-	public static boolean isSpawnName(final String destinationName) {
-		return Destination.isSpawn(destinationName);
+	public static boolean isSpawnName(final String destinationName)
+	{
+		return destinationName.equals(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
 	}
 
 
@@ -166,7 +176,8 @@ public final class SimpleAPI {
 	 *
 	 * @return item name as specified in configuration file
 	 */
-	public static String getItemName() {
+	public static String getItemName()
+	{
 		return plugin.messageBuilder.getItemName().orElse("LodeStar");
 	}
 
@@ -177,8 +188,9 @@ public final class SimpleAPI {
 	 * @param key the key for which to get destination name
 	 * @return String name of destination, or null if no matching destination found
 	 */
-	public static String getDestinationName(final String key) {
-		return Destination.getDisplayName(key);
+	public static String getDestinationName(final String key)
+	{
+		return plugin.lodeStarUtility.getDisplayName(key).orElse(null);
 	}
 
 
@@ -189,34 +201,9 @@ public final class SimpleAPI {
 	 * @param itemStack the item stack from which to get name
 	 * @return String destination display name, or null if no matching destination found
 	 */
-	public static String getDestinationName(final ItemStack itemStack) {
-
-		// get persistent key from item stack
-		String key = plugin.lodeStarUtility.getKey(itemStack);
-
-		// if item stack persistent key is null, return null
-		if (key == null) {
-			return null;
-		}
-
-		String resultString = null;
-
-		// if key matches spawn key, get spawn display name from language file
-		if (Destination.isSpawn(key)) {
-			resultString = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-		}
-
-		// if destination is home, get home display name from messages file
-		else if (Destination.isHome(key)) {
-			resultString = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-		}
-
-		// else get destination name from datastore
-		else if (plugin.dataStore.selectRecord(key).isPresent()) {
-			resultString = plugin.dataStore.selectRecord(key).get().getDisplayName();
-		}
-
-		return resultString;
+	public static String getDisplayName(final ItemStack itemStack)
+	{
+		return plugin.lodeStarUtility.getDisplayName(itemStack).orElse(null);
 	}
 
 
@@ -225,7 +212,8 @@ public final class SimpleAPI {
 	 *
 	 * @return Boolean - {@code true} if items can be used in recipes, {@code false} if they cannot
 	 */
-	public static Boolean isValidIngredient() {
+	public static Boolean isValidIngredient()
+	{
 		return plugin.getConfig().getBoolean("allow-in-recipes");
 	}
 
@@ -235,7 +223,8 @@ public final class SimpleAPI {
 	 *
 	 * @return int - the cooldown time (in seconds) before another item can be used
 	 */
-	public static int getCooldownTime() {
+	public static int getCooldownTime()
+	{
 		return plugin.getConfig().getInt("cooldown-time");
 	}
 
@@ -245,7 +234,8 @@ public final class SimpleAPI {
 	 *
 	 * @return int - the warmup time (in seconds) before teleportation occurs when an item is used
 	 */
-	public static int getWarmupTime() {
+	public static int getWarmupTime()
+	{
 		return plugin.getConfig().getInt("warmup-time");
 	}
 
@@ -255,7 +245,8 @@ public final class SimpleAPI {
 	 *
 	 * @return int - the minimum distance from a destination required to use an item
 	 */
-	public static int getMinDistance() {
+	public static int getMinDistance()
+	{
 		return plugin.getConfig().getInt("minimum-distance");
 	}
 
@@ -266,7 +257,8 @@ public final class SimpleAPI {
 	 * @return Boolean - {@code true} if teleportation will be cancelled when player takes damage
 	 * during warmup time, {@code false} if not
 	 */
-	public static Boolean isCancelledOnDamage() {
+	public static Boolean isCancelledOnDamage()
+	{
 		return plugin.getConfig().getBoolean("cancel-on-damage");
 	}
 
@@ -277,7 +269,8 @@ public final class SimpleAPI {
 	 * @return Boolean - {@code true} if teleportation will be cancelled when player moves
 	 * during warmup time, {@code false} if not
 	 */
-	public static Boolean isCancelledOnMovement() {
+	public static Boolean isCancelledOnMovement()
+	{
 		return plugin.getConfig().getBoolean("cancel-on-movement");
 	}
 
@@ -288,7 +281,8 @@ public final class SimpleAPI {
 	 * @return Boolean - {@code true} if teleportation will be cancelled when player interacts with objects
 	 * during warmup time, {@code false} if not
 	 */
-	public static Boolean isCancelledOnInteraction() {
+	public static Boolean isCancelledOnInteraction()
+	{
 		return plugin.getConfig().getBoolean("cancel-on-interaction");
 	}
 
@@ -299,7 +293,8 @@ public final class SimpleAPI {
 	 * @param player the player to check
 	 * @return Boolean - {@code true} if player is warming up, {@code false} if not
 	 */
-	public static Boolean isWarmingUp(final Player player) {
+	public static Boolean isWarmingUp(final Player player)
+	{
 		return plugin.teleportHandler.isWarmingUp(player);
 	}
 
@@ -309,7 +304,8 @@ public final class SimpleAPI {
 	 *
 	 * @return List of Strings containing enabled world names
 	 */
-	public static List<String> getEnabledWorlds() {
+	public static List<String> getEnabledWorlds()
+	{
 		return new ArrayList<>(plugin.worldManager.getEnabledWorldNames());
 	}
 
@@ -319,7 +315,8 @@ public final class SimpleAPI {
 	 *
 	 * @return Collection of Strings containing enabled world names
 	 */
-	public static Collection<String> getEnabledWorldsCollection() {
+	public static Collection<String> getEnabledWorldsCollection()
+	{
 		return plugin.worldManager.getEnabledWorldNames();
 	}
 
@@ -329,7 +326,8 @@ public final class SimpleAPI {
 	 *
 	 * @param player the player to cancel teleporting
 	 */
-	public static void cancelTeleport(final Player player) {
+	public static void cancelTeleport(final Player player)
+	{
 		plugin.teleportHandler.cancelTeleport(player);
 	}
 
@@ -339,7 +337,8 @@ public final class SimpleAPI {
 	 *
 	 * @return ItemStack
 	 */
-	public static ItemStack getDefaultItem() {
+	public static ItemStack getDefaultItem()
+	{
 		return plugin.lodeStarUtility.getDefaultItemStack();
 	}
 

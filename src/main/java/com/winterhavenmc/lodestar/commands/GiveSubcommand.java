@@ -18,11 +18,9 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
-
+import com.winterhavenmc.lodestar.sounds.SoundId;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -33,12 +31,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-final class GiveSubcommand extends AbstractSubcommand {
-
-	private final PluginMain plugin;
-
-
-	GiveSubcommand(final PluginMain plugin) {
+final class GiveSubcommand extends AbstractSubcommand
+{
+	GiveSubcommand(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.name = "give";
 		this.permissionNode = "lodestar.give";
@@ -49,10 +45,13 @@ final class GiveSubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command command,
-	                                  final String alias, final String[] args) {
-
-		if (args.length == 2) {
+	public List<String> onTabComplete(final CommandSender sender,
+	                                  final Command command,
+	                                  final String alias,
+	                                  final String[] args)
+	{
+		if (args.length == 2)
+		{
 			// return all matching online players, including invisible players
 			return plugin.getServer().getOnlinePlayers().stream()
 					.map(Player::getName)
@@ -60,14 +59,14 @@ final class GiveSubcommand extends AbstractSubcommand {
 					.collect(Collectors.toList());
 		}
 
-		else if (args.length == 3) {
-
+		else if (args.length == 3)
+		{
 			// get all destination keys in list
 			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
 
 			// add home and spawn destinations to list
-			resultList.add(0, Destination.deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")));
-			resultList.add(0, Destination.deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+			resultList.addFirst(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			resultList.addFirst(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 
 			// return list filtered by matching prefix to argument
 			return resultList.stream().filter(destinationKey -> matchPrefix(destinationKey, args[2])).collect(Collectors.toList());
@@ -78,17 +77,19 @@ final class GiveSubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final List<String> args) {
-
+	public boolean onCommand(final CommandSender sender, final List<String> args)
+	{
 		// if command sender does not have permission to give LodeStars, output error message and return true
-		if (!sender.hasPermission(permissionNode)) {
+		if (!sender.hasPermission(permissionNode))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_GIVE).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// if too few arguments, send error and usage message
-		if (args.size() < getMinArgs()) {
+		if (args.size() < getMinArgs())
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
@@ -96,13 +97,14 @@ final class GiveSubcommand extends AbstractSubcommand {
 		}
 
 		// get required argument target player name and remove from ArrayList
-		String targetPlayerName = args.remove(0);
+		String targetPlayerName = args.removeFirst();
 
 		// get player by name
 		Player targetPlayer = plugin.getServer().getPlayer(targetPlayerName);
 
 		// if no match, send player not found message and return
-		if (targetPlayer == null) {
+		if (targetPlayer == null)
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
@@ -119,23 +121,26 @@ final class GiveSubcommand extends AbstractSubcommand {
 		Material material = null;
 
 		// try to parse first argument as integer quantity
-		if (!args.isEmpty()) {
-			try {
-				quantity = Integer.parseInt(args.get(0));
+		if (!args.isEmpty())
+		{
+			try
+			{
+				quantity = Integer.parseInt(args.getFirst());
 
 				// remove argument if no exception thrown
-				args.remove(0);
-			}
-			catch (NumberFormatException e) {
+				args.removeFirst();
+			} catch (NumberFormatException e)
+			{
 				// not an integer, do nothing
 			}
 		}
 
 		// if no remaining arguments, check if item in hand is LodeStar item
-		if (args.isEmpty()) {
-
+		if (args.isEmpty())
+		{
 			// if sender is not player, send args-count-under error message
-			if (!(sender instanceof Player)) {
+			if (!(sender instanceof Player))
+			{
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 				displayUsage(sender);
 				return true;
@@ -145,22 +150,23 @@ final class GiveSubcommand extends AbstractSubcommand {
 			ItemStack playerItem = ((Player) sender).getInventory().getItemInMainHand().clone();
 
 			// if item in hand is a LodeStar item, set destination and material from item
-			if (plugin.lodeStarUtility.isItem(playerItem)) {
-
-				destinationName = plugin.lodeStarUtility.getDestinationName(playerItem);
+			if (plugin.lodeStarUtility.isItem(playerItem))
+			{
+				destinationName = plugin.lodeStarUtility.getDisplayName(playerItem).orElse(null);
 				material = playerItem.getType();
 			}
 		}
 
 		// try to parse all remaining arguments as destinationName
-		else {
-
+		else
+		{
 			// join remaining arguments with spaces
 			String testName = String.join(" ", args);
 
 			// if resulting name is existing destination, get destinationName from datastore
-			if (Destination.exists(testName)) {
-				destinationName = Destination.getDisplayName(testName);
+			if (plugin.lodeStarUtility.destinationExists(testName))
+			{
+				destinationName = plugin.lodeStarUtility.getDisplayName(testName).orElse(null);
 
 				// remove remaining arguments
 				args.clear();
@@ -168,31 +174,35 @@ final class GiveSubcommand extends AbstractSubcommand {
 		}
 
 		// try to parse next argument as material
-		if (!args.isEmpty()) {
-
+		if (!args.isEmpty())
+		{
 			// try to match material
-			material = Material.matchMaterial(args.get(0));
+			material = Material.matchMaterial(args.getFirst());
 
 			// if material matched, remove argument from list
-			if (material != null) {
-				args.remove(0);
+			if (material != null)
+			{
+				args.removeFirst();
 			}
 		}
 
 		// try to parse all remaining arguments as destinationName
-		if (!args.isEmpty()) {
+		if (!args.isEmpty())
+		{
 			String testName = String.join(" ", args);
 
 			// if resulting name is existing destination, get destinationName from datastore
-			if (Destination.exists(testName)) {
-				destinationName = Destination.getDisplayName(testName);
+			if (plugin.lodeStarUtility.destinationExists(testName))
+			{
+				destinationName = plugin.lodeStarUtility.getDisplayName(testName).orElse(null);
 
 				// remove remaining arguments
 				args.clear();
 			}
 
 			// else given destination is invalid (but not blank), so send error message
-			else {
+			else
+			{
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 						.setMacro(Macro.DESTINATION, testName)
 						.send();
@@ -202,17 +212,20 @@ final class GiveSubcommand extends AbstractSubcommand {
 		}
 
 		// if no destination name set, set destination to spawn
-		if (destinationName == null || destinationName.isEmpty()) {
+		if (destinationName == null || destinationName.isEmpty())
+		{
 			destinationName = "spawn";
 		}
 
 		// if no material set or default-material-only configured true, try to parse material from config
-		if (material == null || plugin.getConfig().getBoolean("default-material-only")) {
+		if (material == null || plugin.getConfig().getBoolean("default-material-only"))
+		{
 			material = Material.matchMaterial(Objects.requireNonNull(plugin.getConfig().getString("default-material")));
 		}
 
 		// if still no material match, set to nether star
-		if (material == null) {
+		if (material == null)
+		{
 			material = Material.NETHER_STAR;
 		}
 
@@ -238,20 +251,22 @@ final class GiveSubcommand extends AbstractSubcommand {
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	private boolean giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack) {
-
+	private boolean giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack)
+	{
 		String key = plugin.lodeStarUtility.getKey(itemStack);
 		int quantity = itemStack.getAmount();
 		int maxGiveAmount = plugin.getConfig().getInt("max-give-amount");
 
 		// check quantity against configured max give amount
-		if (maxGiveAmount >= 0) {
+		if (maxGiveAmount >= 0)
+		{
 			quantity = Math.min(maxGiveAmount, quantity);
 			itemStack.setAmount(quantity);
 		}
 
 		// test that item is a LodeStar item
-		if (!plugin.lodeStarUtility.isItem(itemStack)) {
+		if (!plugin.lodeStarUtility.isItem(itemStack))
+		{
 			plugin.messageBuilder.compose(giver, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 			plugin.soundConfig.playSound(giver, SoundId.COMMAND_FAIL);
 			return true;
@@ -262,12 +277,14 @@ final class GiveSubcommand extends AbstractSubcommand {
 
 		// count items that didn't fit in inventory
 		int noFitCount = 0;
-		for (int index : noFit.keySet()) {
+		for (int index : noFit.keySet())
+		{
 			noFitCount += noFit.get(index).getAmount();
 		}
 
 		// if remaining items equals quantity given, send player-inventory-full message and return
-		if (noFitCount == quantity) {
+		if (noFitCount == quantity)
+		{
 			plugin.messageBuilder.compose(giver, MessageId.COMMAND_FAIL_GIVE_INVENTORY_FULL)
 					.setMacro(Macro.ITEM_QUANTITY, quantity)
 					.send();
@@ -278,11 +295,11 @@ final class GiveSubcommand extends AbstractSubcommand {
 		quantity = quantity - noFitCount;
 
 		// get destination display name
-		String destinationName = Destination.getDisplayName(key);
+		String destinationName = plugin.lodeStarUtility.getDisplayName(key).orElse(null);
 
 		// don't display messages if giving item to self
-		if (!giver.getName().equals(targetPlayer.getName())) {
-
+		if (!giver.getName().equals(targetPlayer.getName()))
+		{
 			// send message and play sound to giver
 			plugin.messageBuilder.compose(giver, MessageId.COMMAND_SUCCESS_GIVE)
 					.setMacro(Macro.DESTINATION, destinationName)
@@ -291,7 +308,8 @@ final class GiveSubcommand extends AbstractSubcommand {
 					.send();
 
 			// if giver is in game, play sound
-			if (giver instanceof Player) {
+			if (giver instanceof Player)
+			{
 				plugin.soundConfig.playSound(giver, SoundId.COMMAND_SUCCESS_GIVE_SENDER);
 			}
 

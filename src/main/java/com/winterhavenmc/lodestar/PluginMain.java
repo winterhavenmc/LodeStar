@@ -19,23 +19,19 @@ package com.winterhavenmc.lodestar;
 
 import com.winterhavenmc.lodestar.commands.CommandManager;
 import com.winterhavenmc.lodestar.listeners.PlayerEventListener;
+import com.winterhavenmc.lodestar.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.storage.DataStore;
 import com.winterhavenmc.lodestar.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.util.MetricsHandler;
-
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import com.winterhavenmc.util.soundconfig.SoundConfiguration;
 import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
 import com.winterhavenmc.util.worldmanager.WorldManager;
 
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-
-import java.io.File;
 
 
 /**
@@ -45,8 +41,8 @@ import java.io.File;
  *
  * @author Tim Savage
  */
-public final class PluginMain extends JavaPlugin {
-
+public final class PluginMain extends JavaPlugin
+{
 	public MessageBuilder<MessageId, Macro> messageBuilder;
 	public DataStore dataStore;
 	public TeleportHandler teleportHandler;
@@ -56,30 +52,9 @@ public final class PluginMain extends JavaPlugin {
 	public LodeStarUtility lodeStarUtility;
 
 
-	/**
-	 * Constructor for testing
-	 */
-	@SuppressWarnings("unused")
-	public PluginMain() {
-		super();
-	}
-
-
-	/**
-	 * Constructor for testing
-	 */
-	@SuppressWarnings("unused")
-	private PluginMain(final JavaPluginLoader loader,
-	                   final PluginDescriptionFile descriptionFile,
-	                   final File dataFolder,
-	                   final File file) {
-		super(loader, descriptionFile, dataFolder, file);
-	}
-
-
 	@Override
-	public void onEnable() {
-
+	public void onEnable()
+	{
 		// install default config.yml if not present
 		saveDefaultConfig();
 
@@ -104,17 +79,18 @@ public final class PluginMain extends JavaPlugin {
 		// instantiate lodestar factory
 		lodeStarUtility = new LodeStarUtility(this);
 
-		// instantiate player listener
+		// instantiate event listeners
 		new PlayerEventListener(this);
+		new PlayerInteractEventListener(this);
 
 		// instantiate metrics handler
 		new MetricsHandler(this);
-
 	}
 
 
 	@Override
-	public void onDisable() {
+	public void onDisable()
+	{
 		dataStore.close();
 	}
 

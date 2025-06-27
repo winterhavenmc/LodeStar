@@ -18,9 +18,9 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.DataStore;
-import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -30,16 +30,15 @@ import java.util.List;
  * Reload command implementation<br>
  * reloads plugin configuration
  */
-final class ReloadSubcommand extends AbstractSubcommand {
-
-	private final PluginMain plugin;
-
-
+final class ReloadSubcommand extends AbstractSubcommand
+{
 	/**
 	 * Class constructor
+	 *
 	 * @param plugin reference to plugin main class instance
 	 */
-	ReloadSubcommand(final PluginMain plugin) {
+	ReloadSubcommand(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		this.name = "reload";
 		this.permissionNode = "lodestar.reload";
@@ -49,17 +48,19 @@ final class ReloadSubcommand extends AbstractSubcommand {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final List<String> args) {
-
+	public boolean onCommand(final CommandSender sender, final List<String> args)
+	{
 		// if sender does not have permission to reload config, send error message and return true
-		if (!sender.hasPermission(permissionNode)) {
+		if (!sender.hasPermission(permissionNode))
+		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_RELOAD).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// check max arguments
-		if (args.size() > getMaxArgs()) {
+		if (args.size() > getMaxArgs())
+		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);

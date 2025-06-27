@@ -22,7 +22,6 @@ import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -39,13 +38,14 @@ import java.util.Optional;
  * prevent them being overridden, and the class and methods are declared package-private
  * to prevent their use outside this package.
  */
-abstract class AbstractTeleporter implements Teleporter {
-
+abstract non-sealed class AbstractTeleporter implements Teleporter
+{
 	protected final PluginMain plugin;
 	protected final TeleportExecutor teleportExecutor;
 
 
-	public AbstractTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor) {
+	AbstractTeleporter(final PluginMain plugin, final TeleportExecutor teleportExecutor)
+	{
 		this.plugin = plugin;
 		this.teleportExecutor = teleportExecutor;
 	}
@@ -59,7 +59,8 @@ abstract class AbstractTeleporter implements Teleporter {
 	 * @param messageId   the teleport warmup message to send to player
 	 */
 	@Override
-	public void execute(final Player player, final Destination destination, final MessageId messageId) {
+	public void execute(final Player player, final Destination destination, final MessageId messageId)
+	{
 		teleportExecutor.execute(player, destination, messageId);
 	}
 
@@ -70,10 +71,11 @@ abstract class AbstractTeleporter implements Teleporter {
 	 * @param player the player
 	 * @return the player bedspawn destination wrapped in an {@link Optional}
 	 */
-	final Optional<Destination> getHomeDestination(final Player player) {
-
+	final Optional<Destination> getHomeDestination(final Player player)
+	{
 		// if player is null, return empty optional
-		if (player == null) {
+		if (player == null)
+		{
 			return Optional.empty();
 		}
 
@@ -81,12 +83,13 @@ abstract class AbstractTeleporter implements Teleporter {
 		Location location = player.getBedSpawnLocation();
 
 		// if location is null, return empty optional
-		if (location == null) {
+		if (location == null)
+		{
 			return Optional.empty();
 		}
 
 		// return optional wrapped destination for player bed spawn location
-		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location));
+		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location, Destination.Type.HOME));
 	}
 
 
@@ -96,27 +99,36 @@ abstract class AbstractTeleporter implements Teleporter {
 	 * @param player the player
 	 * @return the player spawn destination wrapped in an {@link Optional}
 	 */
-	final Optional<Destination> getSpawnDestination(final Player player) {
-
+	final Optional<Destination> getSpawnDestination(final Player player)
+	{
 		// if player is null, return empty optional
-		if (player == null) {
+		if (player == null)
+		{
 			return Optional.empty();
 		}
 
 		// get spawn location for player
-		Location location = plugin.worldManager.getSpawnLocation(player);
+		Location location = plugin.worldManager.getSpawnLocation(player.getWorld());
 
 		// if from-nether is enabled in config and player is in nether, try to get overworld spawn location
-		if (plugin.getConfig().getBoolean("from-nether") && isInNetherWorld(player)) {
+		if (isInNetherWorld(player) && plugin.getConfig().getBoolean("from-nether"))
+		{
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 		// if from-end is enabled in config and player is in end, try to get overworld spawn location
-		else if (plugin.getConfig().getBoolean("from-end") && isInEndWorld(player)) {
+		else if (isInEndWorld(player) && plugin.getConfig().getBoolean("from-end"))
+		{
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 
+		// if location is null, return empty optional
+		if (location == null)
+		{
+			return Optional.empty();
+		}
+
 		// return destination for player spawn
-		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location));
+		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location, Destination.Type.SPAWN));
 	}
 
 
@@ -127,10 +139,11 @@ abstract class AbstractTeleporter implements Teleporter {
 	 * @return {@link Optional} wrapped spawn location of the normal world associated with the passed player
 	 * nether or end world, or the current player world spawn location if no matching normal world found
 	 */
-	private Optional<Location> getOverworldSpawnLocation(final Player player) {
-
+	private Optional<Location> getOverworldSpawnLocation(final Player player)
+	{
 		// check for null parameter
-		if (player == null) {
+		if (player == null)
+		{
 			return Optional.empty();
 		}
 
@@ -138,13 +151,16 @@ abstract class AbstractTeleporter implements Teleporter {
 		List<World> normalWorlds = new ArrayList<>();
 
 		// iterate through all server worlds
-		for (World checkWorld : plugin.getServer().getWorlds()) {
+		for (World checkWorld : plugin.getServer().getWorlds())
+		{
 
 			// if world is normal environment, try to match name to passed world
-			if (checkWorld.getEnvironment().equals(World.Environment.NORMAL)) {
+			if (checkWorld.getEnvironment().equals(World.Environment.NORMAL))
+			{
 
 				// check if normal world matches passed world minus nether/end suffix
-				if (checkWorld.getName().equals(player.getWorld().getName().replaceFirst("(_nether$|_the_end$)", ""))) {
+				if (checkWorld.getName().equals(player.getWorld().getName().replaceFirst("(_nether$|_the_end$)", "")))
+				{
 					return Optional.of(plugin.worldManager.getSpawnLocation(checkWorld));
 				}
 
@@ -154,8 +170,9 @@ abstract class AbstractTeleporter implements Teleporter {
 		}
 
 		// if only one normal world exists, return that world
-		if (normalWorlds.size() == 1) {
-			return Optional.of(plugin.worldManager.getSpawnLocation(normalWorlds.get(0)));
+		if (normalWorlds.size() == 1)
+		{
+			return Optional.of(plugin.worldManager.getSpawnLocation(normalWorlds.getFirst()));
 		}
 
 		// if no matching normal world found and more than one normal world exists, return passed world spawn location
@@ -169,7 +186,8 @@ abstract class AbstractTeleporter implements Teleporter {
 	 * @param player the player
 	 * @return true if player is in a nether world, false if not
 	 */
-	private boolean isInNetherWorld(final Player player) {
+	private boolean isInNetherWorld(final Player player)
+	{
 		return player.getWorld().getEnvironment().equals(World.Environment.NETHER);
 	}
 
@@ -180,17 +198,20 @@ abstract class AbstractTeleporter implements Teleporter {
 	 * @param player the player
 	 * @return true if player is in an end world, false if not
 	 */
-	private boolean isInEndWorld(final Player player) {
+	private boolean isInEndWorld(final Player player)
+	{
 		return player.getWorld().getEnvironment().equals(World.Environment.THE_END);
 	}
 
 
 	/**
 	 * Send invalid destination message to player
-	 * @param player the player
+	 *
+	 * @param player          the player
 	 * @param destinationName the destination name
 	 */
-	final void sendInvalidDestinationMessage(final Player player, final String destinationName) {
+	final void sendInvalidDestinationMessage(final Player player, final String destinationName)
+	{
 		plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
 				.setMacro(Macro.DESTINATION, destinationName)
 				.send();

@@ -3,14 +3,14 @@
 COMMAND_FAIL:
   enabled: true
   player-only: true
-  sound: ENTITY_VILLAGER_NO
+  sound: minecraft:entity.villager.no
   volume: 1
   pitch: 1
 
 COMMAND_INVALID:
   enabled: true
   player-only: true
-  sound: ENTITY_WANDERING_TRADER_AMBIENT
+  sound: minecraft:entity.wandering_trader.ambient
   volume: 1
   pitch: 1
 
@@ -18,90 +18,90 @@ COMMAND_INVALID:
 COMMAND_SUCCESS_GIVE_SENDER:
   enabled: true
   player-only: true
-  sound: ENTITY_ARROW_SHOOT
+  sound: minecraft:entity.arrow.shoot
   volume: 1
   pitch: 0.5
 
 COMMAND_SUCCESS_GIVE_TARGET:
   enabled: true
   player-only: true
-  sound: ENTITY_ITEM_PICKUP
+  sound: minecraft:entity.item.pickup
   volume: 1
   pitch: 1
 
 COMMAND_SUCCESS_DELETE:
   enabled: true
   player-only: true
-  sound: ENTITY_IRON_GOLEM_HURT
+  sound: minecraft:entity.iron_golem.hurt
   volume: 1
   pitch: 1
 
 COMMAND_SUCCESS_DESTROY:
   enabled: true
   player-only: true
-  sound: ENTITY_ITEM_BREAK
+  sound: minecraft:entity.item.break
   volume: 1
   pitch: 1
 
 COMMAND_SUCCESS_SET:
   enabled: true
   player-only: true
-  sound: ENTITY_PLAYER_LEVELUP
+  sound: minecraft:entity.player.levelup
   volume: 1
   pitch: 1.5
 
 COMMAND_SUCCESS_BIND:
   enabled: true
   player-only: true
-  sound: BLOCK_ANVIL_LAND
+  sound: minecraft:block.anvil.land
   volume: 1
   pitch: 1.75
 
 TELEPORT_DENIED_PERMISSION:
   enabled: true
   player-only: true
-  sound: BLOCK_NOTE_BLOCK_BASS
+  sound: minecraft:block.note_block.bass
   volume: 1
   pitch: 1
 
 TELEPORT_DENIED_WORLD_DISABLED:
   enabled: true
   player-only: true
-  sound: BLOCK_NOTE_BLOCK_BASS
+  sound: minecraft:block.note_block.bass
   volume: 1
   pitch: 1
 
 TELEPORT_CANCELLED:
   enabled: true
   player-only: false
-  sound: ENTITY_GENERIC_EXTINGUISH_FIRE
+  sound: minecraft:entity.generic.extinguish_fire
   volume: 1
   pitch: 1
 
 TELEPORT_CANCELLED_NO_ITEM:
   enabled: true
   player-only: false
-  sound: ENTITY_DONKEY_ANGRY
+  sound: minecraft:entity.donkey.angry
   volume: 1
   pitch: 1
 
 TELEPORT_WARMUP:
   enabled: true
   player-only: false
-  sound: BLOCK_PORTAL_TRAVEL
+  sound: minecraft:block.portal.travel
   volume: 0.3
   pitch: 1
 
 TELEPORT_SUCCESS_DEPARTURE:
   enabled: true
   player-only: false
-  sound: ENTITY_ENDERMAN_TELEPORT
+  sound: minecraft:entity.enderman.teleport
   volume: 1
   pitch: 1
 
 TELEPORT_SUCCESS_ARRIVAL:
   enabled: true
   player-only: false
-  sound: ENTITY_ENDERMAN_TELEPORT
+  sound: minecraft:entity.enderman.teleport
   volume: 1
   pitch: 1

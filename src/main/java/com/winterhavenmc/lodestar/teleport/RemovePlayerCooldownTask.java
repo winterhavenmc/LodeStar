@@ -17,14 +17,27 @@
 
 package com.winterhavenmc.lodestar.teleport;
 
-import com.winterhavenmc.lodestar.messages.MessageId;
-import com.winterhavenmc.lodestar.storage.Destination;
-
+import com.winterhavenmc.lodestar.PluginMain;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-
-sealed interface Teleporter permits AbstractTeleporter, DestinationTeleporter, HomeTeleporter, SpawnTeleporter
+public class RemovePlayerCooldownTask extends BukkitRunnable
 {
-	void initiate(final Player player);
-	void execute(final Player player, final Destination destination, final MessageId messageId);
+	private final PluginMain plugin;
+	private final Player player;
+
+
+	public RemovePlayerCooldownTask(final PluginMain plugin, final Player player)
+	{
+		this.plugin = plugin;
+		this.player = player;
+	}
+
+
+	@Override
+	public void run()
+	{
+		plugin.teleportHandler.cancelPlayerCooldown(player);
+	}
+
 }

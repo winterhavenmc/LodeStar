@@ -18,15 +18,14 @@
 package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 
-public interface DataStore {
-
+public interface DataStore
+{
 	/**
 	 * Initialize storage
 	 *
@@ -56,14 +55,6 @@ public interface DataStore {
 	 * @return destination object or null if no matching record
 	 */
 	Optional<Destination> selectRecord(final String destinationName);
-
-
-	/**
-	 * Store record
-	 *
-	 * @param destination the destination object to be inserted in the datastore
-	 */
-	void insertRecord(final Destination destination);
 
 
 	/**
@@ -127,7 +118,7 @@ public interface DataStore {
 	 *
 	 * @return new datastore of configured type
 	 */
-	static DataStore connect(final JavaPlugin plugin) {
+	static DataStore connect(final PluginMain plugin) {
 
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));

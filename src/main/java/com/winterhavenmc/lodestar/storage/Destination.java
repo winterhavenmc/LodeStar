@@ -17,24 +17,29 @@
 
 package com.winterhavenmc.lodestar.storage;
 
-import com.winterhavenmc.lodestar.PluginMain;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.bukkit.ChatColor.stripColor;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
-public final class Destination {
 
-	// static reference to plugin main class instance, necessary for static methods
-	private static final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
+public final class Destination
+{
+	public enum Type
+	{
+		STORED,
+		HOME,
+		SPAWN,
+	}
 
-	private final String key;
+	private final Type type;
 	private final String displayName;
 	private final boolean worldValid;
 	private final String worldName;
@@ -52,21 +57,24 @@ public final class Destination {
 	 * @param displayName the destination display name string
 	 * @param location    the destination location
 	 */
-	public Destination(@Nonnull final String displayName, @Nonnull final Location location) {
-
+	public Destination(@Nonnull final String displayName, @Nonnull final Location location, @Nonnull Type type)
+	{
 		// validate parameters
 		Objects.requireNonNull(displayName);
 		Objects.requireNonNull(location);
+		Objects.requireNonNull(type);
 
-		this.key = deriveKey(displayName);
+		this.type = type;
 		this.displayName = displayName;
 
-		if (location.getWorld() != null) {
+		if (location.getWorld() != null)
+		{
 			this.worldUid = location.getWorld().getUID();
 			this.worldName = location.getWorld().getName();
 			this.worldValid = true;
 		}
-		else {
+		else
+		{
 			this.worldUid = null;
 			this.worldName = "???";
 			this.worldValid = false;
@@ -83,7 +91,6 @@ public final class Destination {
 	/**
 	 * Class constructor used to create object fetched from data store
 	 *
-	 * @param key         the destination key
 	 * @param displayName the destination display name
 	 * @param worldValid  destination world valid
 	 * @param worldName   destination world name
@@ -94,7 +101,7 @@ public final class Destination {
 	 * @param yaw         destination yaw
 	 * @param pitch       destination pitch
 	 */
-	public Destination(final String key,
+	public Destination(final Type type,
 	                   final String displayName,
 	                   final boolean worldValid,
 	                   final String worldName,
@@ -103,9 +110,9 @@ public final class Destination {
 	                   final double y,
 	                   final double z,
 	                   final float yaw,
-	                   final float pitch) {
-
-		this.key = key;
+	                   final float pitch)
+	{
+		this.type = type;
 		this.displayName = displayName;
 		this.worldValid = worldValid;
 		this.worldName = worldName;
@@ -124,7 +131,8 @@ public final class Destination {
 	 * @return String - destination display name
 	 */
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return getDisplayName();
 	}
 
@@ -134,9 +142,9 @@ public final class Destination {
 	 *
 	 * @return true if home, else false
 	 */
-	public boolean isHome() {
-		return this.getKey().equalsIgnoreCase("home")
-				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("Home")));
+	public boolean isHome()
+	{
+		return this.type.equals(Type.HOME);
 	}
 
 
@@ -145,9 +153,9 @@ public final class Destination {
 	 *
 	 * @return true if destination is spawn, else false
 	 */
-	public boolean isSpawn() {
-		return this.getKey().equalsIgnoreCase("spawn")
-				|| this.getKey().equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn")));
+	public boolean isSpawn()
+	{
+		return this.type.equals(Type.SPAWN);
 	}
 
 
@@ -156,8 +164,9 @@ public final class Destination {
 	 *
 	 * @return the value of the key field
 	 */
-	String getKey() {
-		return key;
+	String getKey()
+	{
+		return stripColor(translateAlternateColorCodes('&', displayName)).replace(' ', '_');
 	}
 
 
@@ -166,14 +175,8 @@ public final class Destination {
 	 *
 	 * @return the value of the displayName field
 	 */
-	public String getDisplayName() {
-
-		// if display name is null, return empty string
-		if (displayName == null) {
-			return "";
-		}
-
-		// return display name
+	public String getDisplayName()
+	{
 		return displayName;
 	}
 
@@ -183,18 +186,20 @@ public final class Destination {
 	 *
 	 * @return {@link Optional} Location
 	 */
-	public Optional<Location> getLocation() {
-
-		// if world uid is null, return null
-		if (worldUid == null) {
+	public Optional<Location> getLocation()
+	{
+		// if world uid is null, return empty optional
+		if (worldUid == null)
+		{
 			return Optional.empty();
 		}
 
 		// get world by uid
-		World world = plugin.getServer().getWorld(worldUid);
+		World world = Bukkit.getServer().getWorld(worldUid);
 
-		// if world is null, return null
-		if (world == null) {
+		// if world is null, return empty optional
+		if (world == null)
+		{
 			return Optional.empty();
 		}
 
@@ -203,170 +208,51 @@ public final class Destination {
 	}
 
 
-	public UUID getWorldUid() {
+	public UUID getWorldUid()
+	{
 		return worldUid;
 	}
 
 
-	public String getWorldName() {
+	public String getWorldName()
+	{
 		return worldName;
 	}
 
 
-	public boolean isWorldValid() {
+	public boolean isValidWorld()
+	{
 		return worldValid;
 	}
 
 
-	public double getX() {
+	public double getX()
+	{
 		return x;
 	}
 
 
-	public double getY() {
+	public double getY()
+	{
 		return y;
 	}
 
 
-	public double getZ() {
+	public double getZ()
+	{
 		return z;
 	}
 
 
-	public float getYaw() {
+	public float getYaw()
+	{
 		return yaw;
 	}
 
 
-	public float getPitch() {
+	public float getPitch()
+	{
 		return pitch;
-	}
-
-
-	/* STATIC METHODS */
-
-	/**
-	 * Derive key from destination display name<br>
-	 * strips color codes and replaces spaces with underscores<br>
-	 * if a destination key is passed, it will be returned unaltered
-	 *
-	 * @param destinationName the destination name to convert to a key
-	 * @return String - the key derived from the destination name
-	 */
-	public static String deriveKey(final String destinationName) {
-		return plugin.lodeStarUtility.deriveKey(destinationName);
-	}
-
-
-	/**
-	 * Check if destination exists in storage or is reserved name; accepts key or display name.<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the destination name to check
-	 * @return {@code true} if destination exists, {@code false} if it does not
-	 */
-	public static boolean exists(final String key) {
-
-		// if parameter is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		String derivedKey = Destination.deriveKey(key);
-
-		return isReserved(key) || plugin.dataStore.selectRecord(derivedKey).isPresent();
-	}
-
-
-	/**
-	 * Check if destination key or display name is a reserved name<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the key or destination name to test for reserved name
-	 * @return {@code true} if destination is a reserved name, {@code false} if it is not
-	 */
-	public static boolean isReserved(final String key) {
-
-		// if parameter is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		// test if passed destination name is reserved name for home or spawn locations
-		return isHome(key) || isSpawn(key);
-	}
-
-
-	/**
-	 * Check if passed key is reserved name for home location; accepts key or display name<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the destination name to check
-	 * @return {@code true} if destination name is reserved home name, {@code false} if not
-	 */
-	public static boolean isHome(final String key) {
-
-		// if key is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		// if key is literal string "home", return true
-		if (key.equalsIgnoreCase("home")) {
-			return true;
-		}
-
-		// if key matches configured home display name, return true; otherwise return false
-		return key.equals(deriveKey(plugin.messageBuilder.getHomeDisplayName().orElse("home")));
-	}
-
-
-	/**
-	 * Check if passed key is reserved name for spawn location; accepts key or display name.<br>
-	 * Matching is case-insensitive.
-	 *
-	 * @param key the destination name to check
-	 * @return {@code true} if destination name is reserved spawn name, {@code false} if not
-	 */
-	public static boolean isSpawn(final String key) {
-
-		// if key is null or blank string, return false
-		if (key == null || key.isBlank()) {
-			return false;
-		}
-
-		// if key is literal string "spawn" return true
-		if (key.equalsIgnoreCase("spawn")) {
-			return true;
-		}
-
-		// if key matches configured spawn display name, return true; otherwise return false
-		return key.equals(deriveKey(plugin.messageBuilder.getSpawnDisplayName().orElse("spawn")));
-	}
-
-
-	/**
-	 * Get destination display name from destination represented by passed key.
-	 * Accepts key or display name.<br>
-	 * Matching is case-insensitive. Reserved names are tried first.
-	 *
-	 * @param key the key of the destination for which to retrieve display name
-	 * @return String - the formatted display name for the destination, or null if no record exists
-	 */
-	public static String getDisplayName(final String key) {
-
-		// if key matches spawn key, get spawn display name from messages files
-		if (isSpawn(key)) {
-			return plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
-		}
-
-		// if key matches home key, get home display name from messages file
-		if (isHome(key)) {
-			return plugin.messageBuilder.getHomeDisplayName().orElse("Home");
-		}
-
-		// else try to get destination name from datastore
-		return plugin.dataStore.selectRecord(Destination.deriveKey(key)).map(Destination::getDisplayName).orElse(null);
 	}
 
 }

@@ -17,9 +17,8 @@
 
 package com.winterhavenmc.lodestar.teleport;
 
+import com.winterhavenmc.lodestar.PluginMain;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,15 +26,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.winterhavenmc.util.TimeUnit.SECONDS;
 
 
-class CooldownMap {
-
-	private final JavaPlugin plugin;
+class CooldownMap
+{
+	private final PluginMain plugin;
 
 	// hashmap to store player UUID and cooldown expire time in milliseconds
 	private final ConcurrentHashMap<UUID, Long> cooldownMap;
 
 
-	CooldownMap(final JavaPlugin plugin) {
+	CooldownMap(final PluginMain plugin)
+	{
 		this.plugin = plugin;
 		cooldownMap = new ConcurrentHashMap<>();
 	}
@@ -47,18 +47,14 @@ class CooldownMap {
 	 *
 	 * @param player the player being inserted into the cooldown map
 	 */
-	void startPlayerCooldown(final Player player) {
-
+	void startPlayerCooldown(final Player player)
+	{
 		int cooldownSeconds = plugin.getConfig().getInt("teleport-cooldown");
 
 		Long expireTime = System.currentTimeMillis() + (SECONDS.toMillis(cooldownSeconds));
 		cooldownMap.put(player.getUniqueId(), expireTime);
 
-		new BukkitRunnable() {
-			public void run() {
-				cooldownMap.remove(player.getUniqueId());
-			}
-		}.runTaskLater(plugin, SECONDS.toTicks(cooldownSeconds));
+		new RemovePlayerCooldownTask(plugin, player).runTaskLater(plugin, SECONDS.toTicks(cooldownSeconds));
 	}
 
 
@@ -68,9 +64,11 @@ class CooldownMap {
 	 * @param player the player whose cooldown time remaining is being retrieved
 	 * @return long remaining time in milliseconds
 	 */
-	long getCooldownTimeRemaining(final Player player) {
+	long getCooldownTimeRemaining(final Player player)
+	{
 		long remainingTime = 0;
-		if (cooldownMap.containsKey(player.getUniqueId())) {
+		if (cooldownMap.containsKey(player.getUniqueId()))
+		{
 			remainingTime = (cooldownMap.get(player.getUniqueId()) - System.currentTimeMillis());
 		}
 		return remainingTime;
@@ -83,8 +81,15 @@ class CooldownMap {
 	 * @param player the player to check for cooldown
 	 * @return boolean - {@code true} if player is cooling down after item use, {@code false} if not
 	 */
-	boolean isCoolingDown(final Player player) {
+	boolean isCoolingDown(final Player player)
+	{
 		return getCooldownTimeRemaining(player) > 0;
+	}
+
+
+	void removePlayer(final Player player)
+	{
+		cooldownMap.remove(player.getUniqueId());
 	}
 
 }

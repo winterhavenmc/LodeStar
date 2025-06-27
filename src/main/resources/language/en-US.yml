@@ -37,13 +37,14 @@ TIME_STRINGS:
 # Custom Messages
 #
 # Variable substitutions:
-# %ITEM%                Item name as defined in this file
-# %ITEM_QUANTITY%       number of items (valid in give command message only)
-# %PLAYER%              message recipient's name
-# %WORLD%               destination world name
-# %DESTINATION%         display name of teleport destination
-# %TARGET_PLAYER%       Target player's name
-# %DURATION%            time duration in seconds (valid in warmup/cooldown messages only)
+# %RECIPIENT%                    message recipient's name
+# %RECIPIENT_LOCATION_WORLD%     message recipient's world
+# %ITEM%                         item name as defined in this file
+# %ITEM_QUANTITY%                number of items (valid in give command message only)
+# %WORLD%                        destination world name
+# %DESTINATION%                  display name of teleport destination
+# %TARGET_PLAYER%                target player's name
+# %DURATION%                     time duration in seconds (valid in warmup/cooldown messages only)
 
 # optional repeat-delay setting is the number of seconds to wait before
 # displaying a message again (only used on appropriate messages)
@@ -67,7 +68,7 @@ MESSAGES:
 
   COMMAND_FAIL_GIVE_INVENTORY_FULL:
     enabled: true
-    message: '&3Could not give %ITEM% to %PLAYER% because their inventory is full.'
+    message: '&3Could not give %ITEM% to %TARGET_PLAYER% because their inventory is full.'
 
   COMMAND_FAIL_INVALID_COMMAND:
     enabled: true
@@ -92,10 +93,6 @@ MESSAGES:
   COMMAND_FAIL_PLAYER_NOT_FOUND:
     enabled: true
     message: '&3That player could not be found.'
-
-  COMMAND_FAIL_PLAYER_NOT_ONLINE:
-    enabled: true
-    message: '&3That player is not online.'
 
   COMMAND_FAIL_SET_OVERWRITE:
     enabled: true
@@ -236,7 +233,7 @@ MESSAGES:
   PERMISSION_DENIED_USE:
     enabled: true
     repeat-delay: 1
-    message: '&cYou do not have permission to use a &b%ITEM%&r&3 in %WORLD%.'
+    message: '&cYou do not have permission to use a &b%ITEM%&r&3 in %RECIPIENT_LOCATION_WORLD%.'
 
 
   TELEPORT_CANCELLED_DAMAGE:
@@ -292,7 +289,7 @@ MESSAGES:
 
   TELEPORT_SUCCESS_SPAWN:
     enabled: true
-    message: '&3Returned to &b%WORLD% spawn&3.'
+    message: '&3Returned to &b%DESTINATION_WORLD% spawn&3.'
     subtitle: '&b%DESTINATION%'
 
   TELEPORT_WARMUP:
@@ -301,7 +298,7 @@ MESSAGES:
 
   TELEPORT_WARMUP_SPAWN:
     enabled: true
-    message: '&3Teleporting to &b%WORLD% spawn&3 in &b%DURATION%...'
+    message: '&3Teleporting to &b%DESTINATION_WORLD% spawn&3 in &b%DURATION%...'
 
   TELEPORT_LOG_USAGE:
     enabled: true
