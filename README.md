@@ -21,7 +21,5 @@ destination so that when used, it will teleport the player to the destination.
 *  Configurable option to remove item from inventory on use, after successful teleport, or never.
 *  Configurable option to prevent using LodeStar items in crafting recipes.
 *  Configurable option to require shift-click to use.
-*  Uses MultiVerse world aliases in messages, if installed
-*  Uses MultiVerse world spawn location, if installed. (So players will be looking in the right direction on respawn.)
 *  Configurable per message repeat delay (message cooldown) where appropriate.
 *  Customizable language support.
