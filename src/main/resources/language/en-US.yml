@@ -315,7 +315,7 @@ MESSAGES:
 
   LIST_ITEM:
     enabled: true
-    message: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%LOCATION%"
+    message: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%DESTINATION_LOCATION%"
 
   LIST_ITEM_INVALID:
     enabled: true
