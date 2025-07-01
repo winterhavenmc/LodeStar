@@ -18,6 +18,10 @@
 package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.Destination;
+import com.winterhavenmc.lodestar.destination.DestinationType;
+import com.winterhavenmc.lodestar.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -123,7 +127,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 			ResultSet rs = statement.executeQuery(Queries.getQuery("SelectDestinationTable"));
 			if (rs.next())
 			{
-				Collection<Destination> existingRecords = selectAllRecords();
+				Collection<ValidDestination> existingRecords = selectAllRecords();
 				statement.executeUpdate(Queries.getQuery("DropDestinationTable"));
 				statement.executeUpdate(Queries.getQuery("CreateDestinationTable"));
 				count = insertRecords(existingRecords);
@@ -143,32 +147,32 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 
 
 	@Override
-	synchronized public int insertRecords(final Collection<Destination> destinations)
+	synchronized public int insertRecords(final Collection<ValidDestination> validDestinations)
 	{
 		// if destination is null return zero record count
-		if (destinations == null)
+		if (validDestinations == null)
 		{
 			return 0;
 		}
 
 		int count = 0;
 
-		for (Destination destination : destinations)
+		for (ValidDestination validDestination : validDestinations)
 		{
 			// get key
-			final String key = destination.getKey();
+			final String key = validDestination.getKey();
 
 			// get display name
-			final String displayName = destination.getDisplayName();
+			final String displayName = validDestination.getDisplayName();
 
 			// get world
-			World world = plugin.getServer().getWorld(destination.getWorldUid());
+			World world = plugin.getServer().getWorld(validDestination.getWorldUid());
 
-			// test that world in destination location is valid
+			// test that world in validDestination location is valid
 			if (world == null)
 			{
 				plugin.getLogger().warning("An error occurred while inserting"
-						+ " a destination in the " + this + " datastore. World invalid!");
+						+ " a validDestination in the " + this + " datastore. World invalid!");
 				continue;
 			}
 
@@ -187,20 +191,20 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 						preparedStatement.setString(1, key);
 						preparedStatement.setString(2, displayName);
 						preparedStatement.setString(3, worldName);
-						preparedStatement.setLong(4, destination.getWorldUid().getMostSignificantBits());
-						preparedStatement.setLong(5, destination.getWorldUid().getLeastSignificantBits());
-						preparedStatement.setDouble(6, destination.getX());
-						preparedStatement.setDouble(7, destination.getY());
-						preparedStatement.setDouble(8, destination.getZ());
-						preparedStatement.setFloat(9, destination.getYaw());
-						preparedStatement.setFloat(10, destination.getPitch());
+						preparedStatement.setLong(4, validDestination.getWorldUid().getMostSignificantBits());
+						preparedStatement.setLong(5, validDestination.getWorldUid().getLeastSignificantBits());
+						preparedStatement.setDouble(6, validDestination.getX());
+						preparedStatement.setDouble(7, validDestination.getY());
+						preparedStatement.setDouble(8, validDestination.getZ());
+						preparedStatement.setFloat(9, validDestination.getYaw());
+						preparedStatement.setFloat(10, validDestination.getPitch());
 
 						// execute prepared statement
 						preparedStatement.executeUpdate();
 					} catch (Exception e)
 					{
 						// output simple error message
-						plugin.getLogger().warning("An error occurred while inserting a destination "
+						plugin.getLogger().warning("An error occurred while inserting a validDestination "
 								+ "into the " + this + " datastore.");
 						plugin.getLogger().warning(e.getLocalizedMessage());
 
@@ -219,9 +223,8 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 
 
 	@Override
-	public Optional<Destination> selectRecord(final String key)
+	public Optional<ValidDestination> selectRecord(final String key)
 	{
-		// if key is null return null record
 		if (key == null)
 		{
 			return Optional.empty();
@@ -273,16 +276,17 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 				if (world == null)
 				{
 					worldValid = false;
-					plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
+					plugin.getLogger().warning("Stored validDestination has invalid world: " + worldName);
 				}
 
-				// create destination
-				destination = new Destination(Destination.Type.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
+				// create Destination object
+				destination = Destination.of(DestinationType.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 			}
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			// output simple error message
-			plugin.getLogger().warning("An error occurred while fetching a destination from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while fetching a validDestination from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
@@ -293,14 +297,19 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 			return Optional.empty();
 		}
 
-		return Optional.ofNullable(destination);
+		return switch (destination)
+		{
+			case ValidDestination validDestination -> Optional.of(validDestination);
+			case InvalidDestination ignored -> Optional.empty();
+			case null -> Optional.empty();
+		};
 	}
 
 
 	@Override
-	public Collection<Destination> selectAllRecords()
+	public Collection<ValidDestination> selectAllRecords()
 	{
-		Collection<Destination> returnList = new ArrayList<>();
+		Collection<ValidDestination> returnList = new ArrayList<>();
 
 		try
 		{
@@ -332,7 +341,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 					if (world == null)
 					{
 						worldValid = false;
-						plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
+						plugin.getLogger().warning("Stored validDestination has invalid world: " + worldName);
 					}
 					else
 					{
@@ -340,11 +349,12 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 						worldUid = world.getUID();
 					}
 
-					// create destination from record
-					Destination destination = new Destination(Destination.Type.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
+					Destination destination = Destination.of(DestinationType.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 
-					// add destination to return list
-					returnList.add(destination);
+					if (destination instanceof ValidDestination validDestination)
+					{
+						returnList.add(validDestination);
+					}
 				}
 
 				else if (schemaVersion == 1)
@@ -371,14 +381,15 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 					if (world == null)
 					{
 						worldValid = false;
-						plugin.getLogger().warning("Stored destination has invalid world: " + worldName);
+						plugin.getLogger().warning("Stored validDestination has invalid world: " + worldName);
 					}
 
-					// create destination
-					Destination destination = new Destination(Destination.Type.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
+					Destination destination = Destination.of(DestinationType.STORED, displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
 
-					// add destination to return list
-					returnList.add(destination);
+					if (destination instanceof ValidDestination validDestination)
+					{
+						returnList.add(validDestination);
+					}
 				}
 			}
 		}
@@ -439,7 +450,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 
 
 	@Override
-	public Optional<Destination> deleteRecord(final String passedKey)
+	public Optional<ValidDestination> deleteRecord(final String passedKey)
 	{
 		// if key is null return null record
 		if (passedKey == null)
@@ -451,7 +462,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 		String key = plugin.lodeStarUtility.deriveKey(passedKey);
 
 		// get destination record to be deleted, for return
-		Optional<Destination> destination = this.selectRecord(key);
+		Optional<ValidDestination> destination = this.selectRecord(key);
 
 		try
 		{

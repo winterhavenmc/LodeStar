@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Tim Savage.
+ * Copyright (c) 2022-2025 Tim Savage.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.storage;
+package com.winterhavenmc.lodestar.destination;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,16 +30,9 @@ import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
-public final class Destination
+public final class ValidDestination implements Destination
 {
-	public enum Type
-	{
-		STORED,
-		HOME,
-		SPAWN,
-	}
-
-	private final Type type;
+	private final DestinationType type;
 	private final String displayName;
 	private final boolean worldValid;
 	private final String worldName;
@@ -57,7 +50,7 @@ public final class Destination
 	 * @param displayName the destination display name string
 	 * @param location    the destination location
 	 */
-	public Destination(@Nonnull final String displayName, @Nonnull final Location location, @Nonnull Type type)
+	ValidDestination(@Nonnull final String displayName, @Nonnull final Location location, @Nonnull final DestinationType type)
 	{
 		// validate parameters
 		Objects.requireNonNull(displayName);
@@ -101,16 +94,16 @@ public final class Destination
 	 * @param yaw         destination yaw
 	 * @param pitch       destination pitch
 	 */
-	public Destination(final Type type,
-	                   final String displayName,
-	                   final boolean worldValid,
-	                   final String worldName,
-	                   final UUID worldUid,
-	                   final double x,
-	                   final double y,
-	                   final double z,
-	                   final float yaw,
-	                   final float pitch)
+	ValidDestination(final DestinationType type,
+	                 final String displayName,
+	                 final boolean worldValid,
+	                 final String worldName,
+	                 final UUID worldUid,
+	                 final double x,
+	                 final double y,
+	                 final double z,
+	                 final float yaw,
+	                 final float pitch)
 	{
 		this.type = type;
 		this.displayName = displayName;
@@ -144,7 +137,7 @@ public final class Destination
 	 */
 	public boolean isHome()
 	{
-		return this.type.equals(Type.HOME);
+		return this.type.equals(DestinationType.HOME);
 	}
 
 
@@ -155,7 +148,7 @@ public final class Destination
 	 */
 	public boolean isSpawn()
 	{
-		return this.type.equals(Type.SPAWN);
+		return this.type.equals(DestinationType.SPAWN);
 	}
 
 
@@ -164,7 +157,7 @@ public final class Destination
 	 *
 	 * @return the value of the key field
 	 */
-	String getKey()
+	public String getKey()
 	{
 		return stripColor(translateAlternateColorCodes('&', displayName)).replace(' ', '_');
 	}

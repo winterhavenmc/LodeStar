@@ -18,6 +18,8 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 
@@ -45,10 +47,11 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 	@Override
 	public void initiate(final Player player)
 	{
-		getHomeDestination(player).ifPresentOrElse(
-				destination -> execute(player, destination, MessageId.TELEPORT_WARMUP),
-				() -> fallbackToSpawn(player)
-		);
+		switch (getHomeDestination(player))
+		{
+			case ValidDestination validDestination -> execute(player, validDestination, MessageId.TELEPORT_WARMUP);
+			case InvalidDestination ignored -> fallbackToSpawn(player);
+		}
 	}
 
 
@@ -61,10 +64,14 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 	{
 		if (plugin.getConfig().getBoolean("bedspawn-fallback"))
 		{
-			getSpawnDestination(player).ifPresentOrElse(
-					destination -> new SpawnTeleporter(plugin, teleportExecutor).initiate(player),
-					() -> sendInvalidDestinationMessage(player, plugin.messageBuilder.getHomeDisplayName().orElse("Home"))
-			);
+			SpawnTeleporter spawnTeleporter = new SpawnTeleporter(plugin, teleportExecutor);
+
+			switch (getSpawnDestination(player))
+			{
+				case ValidDestination ignored -> spawnTeleporter.initiate(player);
+				case InvalidDestination ignored -> sendInvalidDestinationMessage(player,
+						plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+			}
 		}
 		else
 		{

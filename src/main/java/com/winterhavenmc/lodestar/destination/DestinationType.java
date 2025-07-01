@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Tim Savage.
+ * Copyright (c) 2025 Tim Savage.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,11 @@
  *
  */
 
-package com.winterhavenmc.lodestar.teleport;
+package com.winterhavenmc.lodestar.destination;
 
-import com.winterhavenmc.lodestar.messages.MessageId;
-import com.winterhavenmc.lodestar.destination.ValidDestination;
-
-import org.bukkit.entity.Player;
-
-
-sealed interface Teleporter permits AbstractTeleporter, DestinationTeleporter, HomeTeleporter, SpawnTeleporter
+public enum DestinationType
 {
-	void initiate(final Player player);
-	void execute(final Player player, final ValidDestination validDestination, final MessageId messageId);
+	STORED,
+	HOME,
+	SPAWN,
 }

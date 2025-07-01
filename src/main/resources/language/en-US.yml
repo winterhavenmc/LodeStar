@@ -96,11 +96,15 @@ MESSAGES:
 
   COMMAND_FAIL_SET_OVERWRITE:
     enabled: true
-    message: '&3[LodeStar]&c Destination cannot be overwritten!'
+    message: '&3[LodeStar]&c ValidDestination cannot be overwritten!'
 
   COMMAND_FAIL_SET_RESERVED:
     enabled: true
-    message: '&3[LodeStar]&c Destination &6%DESTINATION%&c is reserved and cannot be set!'
+    message: '&3[LodeStar]&c destination &6%DESTINATION%&c is reserved and cannot be set!'
+
+  COMMAND_FAIL_SET_REASON:
+    enabled: true
+    message: '&3[LodeStar]&c Destination &6%DESTINATION%&c could not be set: %FAIL_REASON%'
 
 
   COMMAND_HELP_INVALID:
@@ -179,11 +183,11 @@ MESSAGES:
 
   COMMAND_SUCCESS_SET:
     enabled: true
-    message: '&3[LodeStar]&b Destination &2%DESTINATION%&b set.'
+    message: '&3[LodeStar]&b destination &2%DESTINATION%&b set.'
 
   COMMAND_WARN_SET_NUMERIC_PREFIX:
     enabled: true
-    message: '&3[LodeStar]&c Warning: Destination name begins with a valid quantity. Be mindful when using with the &ogive&r&c command!'
+    message: '&3[LodeStar]&c Warning: destination name begins with a valid quantity. Be mindful when using with the &ogive&r&c command!'
 
 
   PERMISSION_DENIED_BIND:

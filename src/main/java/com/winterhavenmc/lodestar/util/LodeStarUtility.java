@@ -18,7 +18,8 @@
 package com.winterhavenmc.lodestar.util;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.storage.Destination;
+import com.winterhavenmc.lodestar.destination.DestinationType;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -249,7 +250,7 @@ public final class LodeStarUtility
 		{
 			case HOME -> Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 			case SPAWN -> Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
-			default -> plugin.dataStore.selectRecord(key).map(Destination::getDisplayName);
+			default -> plugin.dataStore.selectRecord(key).map(ValidDestination::getDisplayName);
 		};
 	}
 
@@ -288,19 +289,19 @@ public final class LodeStarUtility
 	 * @param key the destination key
 	 * @return the enum member representing the destination type for the key
 	 */
-	public Destination.Type getDestinationType(final String key)
+	public DestinationType getDestinationType(final String key)
 	{
 		if (isHomeKey(key))
 		{
-			return Destination.Type.HOME;
+			return DestinationType.HOME;
 		}
 		else if (isSpawnKey(key))
 		{
-			return Destination.Type.SPAWN;
+			return DestinationType.SPAWN;
 		}
 		else
 		{
-			return Destination.Type.STORED;
+			return DestinationType.STORED;
 		}
 	}
 

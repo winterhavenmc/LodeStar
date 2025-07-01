@@ -21,7 +21,7 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,7 +40,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 
 	private final PluginMain plugin;
 	private final Player player;
-	private final Destination destination;
+	private final ValidDestination validDestination;
 	private final ItemStack playerItem;
 	private Location location;
 	private BukkitTask particleTask;
@@ -50,17 +50,17 @@ final class DelayedTeleportTask extends BukkitRunnable
 	 * Class constructor method
 	 *
 	 * @param player      the player to be teleported
-	 * @param destination the teleport destination
+	 * @param validDestination the teleport validDestination
 	 * @param playerItem  the item used to initiate teleport
 	 */
-	DelayedTeleportTask(final PluginMain plugin, final Player player, final Destination destination, final ItemStack playerItem)
+	DelayedTeleportTask(final PluginMain plugin, final Player player, final ValidDestination validDestination, final ItemStack playerItem)
 	{
 
 		this.plugin = plugin;
 		this.player = player;
-		this.destination = destination;
+		this.validDestination = validDestination;
 		this.playerItem = playerItem;
-		this.location = destination.getLocation().orElse(null);
+		this.location = validDestination.getLocation().orElse(null);
 
 		// start repeating task for generating particles at player location
 		if (plugin.getConfig().getBoolean("particle-effects"))
@@ -85,8 +85,8 @@ final class DelayedTeleportTask extends BukkitRunnable
 			// remove player from warmup map
 			plugin.teleportHandler.removeWarmingUpPlayer(player);
 
-			// if destination is spawn, get spawn location from world manager
-			if (destination.isSpawn())
+			// if validDestination is spawn, get spawn location from world manager
+			if (validDestination.isSpawn())
 			{
 				location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 			}
@@ -123,25 +123,25 @@ final class DelayedTeleportTask extends BukkitRunnable
 			// teleport player to location
 			player.teleport(location);
 
-			// if destination is spawn, send spawn specific success message
-			if (destination.isSpawn())
+			// if validDestination is spawn, send spawn specific success message
+			if (validDestination.isSpawn())
 			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
 						.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
-						.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
+						.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(validDestination.getWorldUid()))
 						.send();
 			}
 			// otherwise, send regular success message
 			else
 			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS)
-						.setMacro(Macro.DESTINATION, destination.getDisplayName())
+						.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
 						.send();
 			}
 			// play post-teleport sound if sound effects are enabled
 			plugin.soundConfig.playSound(player, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 
-			// if lightning is enabled in config, strike lightning at teleport destination
+			// if lightning is enabled in config, strike lightning at teleport validDestination
 			if (plugin.getConfig().getBoolean("lightning"))
 			{
 				player.getWorld().strikeLightningEffect(location);

@@ -21,7 +21,7 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -115,29 +115,29 @@ final class ListSubcommand extends AbstractSubcommand
 
 		for (String key : displayKeys)
 		{
-			Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(key);
+			Optional<ValidDestination> optionalDestination = plugin.dataStore.selectRecord(key);
 
 			if (optionalDestination.isPresent())
 			{
-				// unwrap optional destination
-				Destination destination = optionalDestination.get();
+				// unwrap optional validDestination
+				ValidDestination validDestination = optionalDestination.get();
 
 				// increment item number
 				itemNumber++;
 
-				if (destination.isValidWorld())
+				if (validDestination.isValidWorld())
 				{
 					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
-							.setMacro(Macro.DESTINATION, destination.getDisplayName())
-							.setMacro(Macro.DESTINATION_LOCATION, destination.getLocation())
+							.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
+							.setMacro(Macro.DESTINATION_LOCATION, validDestination.getLocation())
 							.setMacro(Macro.ITEM_NUMBER, itemNumber)
 							.send();
 				}
 				else
 				{
 					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
-							.setMacro(Macro.DESTINATION, destination.getDisplayName())
-							.setMacro(Macro.DESTINATION_WORLD, destination.getWorldName())
+							.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
+							.setMacro(Macro.DESTINATION_WORLD, validDestination.getWorldName())
 							.setMacro(Macro.ITEM_NUMBER, itemNumber)
 							.send();
 				}

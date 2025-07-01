@@ -101,6 +101,10 @@ MESSAGES:
     enabled: true
     message: '&3[LodeStar]&c ¡Destino %DESTINATION% está reservado y no se puede ajustar!'
 
+  COMMAND_FAIL_SET_REASON:
+    enabled: true
+    message: '&3[LodeStar]&c No se pudo establecer el destino &6%DESTINATION%&c: %FAIL_REASON%'
+
 
   COMMAND_HELP_INVALID:
     enabled: true
