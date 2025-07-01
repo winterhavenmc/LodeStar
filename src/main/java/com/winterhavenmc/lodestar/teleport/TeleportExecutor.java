@@ -202,7 +202,7 @@ class TeleportExecutor
 			plugin.messageBuilder.compose(plugin.getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
 					.setMacro(Macro.TARGET_PLAYER, player)
 					.setMacro(Macro.DESTINATION, destination)
-					.setMacro(Macro.DESTINATION_WORLD, destination.getWorldName())
+					.setMacro(Macro.DESTINATION_WORLD, plugin.worldManager.getAliasOrName(destination.getWorldName()))
 					.send();
 		}
 	}
