@@ -216,12 +216,12 @@
 							</artifactSet>
 							<relocations>
 								<relocation>
-									<pattern>com.winterhavenmc.util</pattern>
+									<pattern>com.winterhavenmc.library</pattern>
 									<shadedPattern>com.winterhavenmc.lodestar.shaded</shadedPattern>
 								</relocation>
 								<relocation>
 									<pattern>org.bstats</pattern>
-									<shadedPattern>com.winterhavenmc.deathchest.shaded</shadedPattern>
+									<shadedPattern>com.winterhavenmc.lodestar.shaded</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
