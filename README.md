@@ -1,5 +1,5 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b6ce0eeb50774ec89cf60b81e8d3522f)](https://www.codacy.com/gh/tim-savage/LodeStar/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tim-savage/LodeStar&amp;utm_campaign=Badge_Grade)
-[![Spigot Version](https://badgen.net/static/spigot-api/1.21.6?color=yellow)](https://spigotmc.org)
+[![Spigot Version](https://badgen.net/static/spigot-api/1.21.7?color=yellow)](https://spigotmc.org)
 &nbsp;[![License](https://badgen.net/static/license/GPLv3)](https://www.gnu.org/licenses/gpl-3.0)
 
 # LodeStar

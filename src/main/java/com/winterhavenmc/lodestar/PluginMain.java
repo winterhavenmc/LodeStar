@@ -26,10 +26,11 @@ import com.winterhavenmc.lodestar.storage.DataStore;
 import com.winterhavenmc.lodestar.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.util.MetricsHandler;
-import com.winterhavenmc.util.messagebuilder.MessageBuilder;
-import com.winterhavenmc.util.soundconfig.SoundConfiguration;
-import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
-import com.winterhavenmc.util.worldmanager.WorldManager;
+
+import com.winterhavenmc.library.messagebuilder.MessageBuilder;
+import com.winterhavenmc.library.soundconfig.SoundConfiguration;
+import com.winterhavenmc.library.soundconfig.YamlSoundConfiguration;
+import com.winterhavenmc.library.worldmanager.WorldManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
