@@ -22,6 +22,7 @@ import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.storage.Destination;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,6 +60,7 @@ class TeleportExecutor
 		{
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destination.getDisplayName())
+					.setMacro(Macro.DESTINATION_LOCATION, destination.getLocation())
 					.send();
 			return;
 		}
@@ -68,6 +70,7 @@ class TeleportExecutor
 		{
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_PROXIMITY)
 					.setMacro(Macro.DESTINATION, destination.getDisplayName())
+					.setMacro(Macro.DESTINATION_LOCATION, destination.getLocation())
 					.send();
 			return;
 		}
@@ -110,7 +113,7 @@ class TeleportExecutor
 		{
 			plugin.messageBuilder.compose(player, messageId)
 					.setMacro(Macro.DESTINATION, destination.getDisplayName())
-//					.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(destination.getWorldUid()))
+					.setMacro(Macro.DESTINATION_WORLD, destination.getWorldName())
 					.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
 					.send();
 
@@ -199,6 +202,7 @@ class TeleportExecutor
 			plugin.messageBuilder.compose(plugin.getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
 					.setMacro(Macro.TARGET_PLAYER, player)
 					.setMacro(Macro.DESTINATION, destination)
+					.setMacro(Macro.DESTINATION_WORLD, destination.getWorldName())
 					.send();
 		}
 	}
