@@ -24,9 +24,20 @@ import java.util.UUID;
 
 public sealed interface Destination permits ValidDestination, InvalidDestination
 {
+	enum Type { STORED, HOME, SPAWN }
+
+
+	/**
+	 * Returns an instance of a destination of the appropriate type, or invalid if a destination could not be created
+	 *
+	 * @param displayName the display name of the destination
+	 * @param location the location of the destination
+	 * @param type the type of destination
+	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
+	 */
 	static Destination of(final String displayName,
 	                      final Location location,
-	                      final DestinationType type)
+	                      final Type type)
 	{
 		if (displayName == null) return new InvalidDestination("NULL", "Destination display name was null.");
 		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "Destination display name was blank.");
@@ -38,7 +49,11 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	}
 
 
-	static Destination of(final DestinationType type,
+	/**
+	 * Create an instance of a {@link Destination} from values retrieved from the datastore
+	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
+	 */
+	static Destination of(final Type type,
 						  final String displayName,
 	                      final boolean worldValid,
 	                      final String worldName,
