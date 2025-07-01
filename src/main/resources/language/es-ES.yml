@@ -299,7 +299,7 @@ MESSAGES:
 
   TELEPORT_LOG_USAGE:
     enabled: true
-    message: '&b%TARGET_PLAYER%&r usó un %ITEM%&r para &b%DESTINATION%&r en &3%WORLD%&r.'
+    message: '&b%TARGET_PLAYER%&r usó un %ITEM%&r para &b%DESTINATION%&r en &3%DESTINATION_WORLD%&r.'
 
 
   LIST_HEADER:

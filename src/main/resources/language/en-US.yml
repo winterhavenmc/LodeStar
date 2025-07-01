@@ -302,7 +302,7 @@ MESSAGES:
 
   TELEPORT_LOG_USAGE:
     enabled: true
-    message: "&b%TARGET_PLAYER%&r used a %ITEM%&r to &b%DESTINATION%&r in &3%WORLD%&r."
+    message: "&b%TARGET_PLAYER%&r used a %ITEM%&r to &b%DESTINATION%&r in &3%DESTINATION_WORLD%&r."
 
 
   LIST_HEADER:
