@@ -36,9 +36,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 /**
- * Bukkit plugin to create items that return player to
- * world spawn when clicked.<br>
- * An alternative to the /spawn command.
+ * Bukkit plugin to create items that return player to a stored location when clicked.<br>
+ * An alternative to the /warp command.
  *
  * @author Tim Savage
  */
