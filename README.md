@@ -1,4 +1,4 @@
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b6ce0eeb50774ec89cf60b81e8d3522f)](https://www.codacy.com/gh/tim-savage/LodeStar/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tim-savage/LodeStar&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8475ff94e6194d36b97d1f324bc05bf5)](https://app.codacy.com/gh/winterhavenmc/LodeStar/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Spigot Version](https://badgen.net/static/spigot-api/1.21.7?color=yellow)](https://spigotmc.org)
 &nbsp;[![License](https://badgen.net/static/license/GPLv3)](https://www.gnu.org/licenses/gpl-3.0)
 
