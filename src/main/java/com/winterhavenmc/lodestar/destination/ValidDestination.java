@@ -41,7 +41,7 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 
 
 	/**
-	 * Getter for destination key field
+	 * Getter for derived value for destination key field
 	 *
 	 * @return the value of the key field
 	 */
@@ -52,7 +52,7 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 
 
 	/**
-	 * Getter for destination location
+	 * Getter for derived value for destination location
 	 *
 	 * @return {@link Optional} Location
 	 */
