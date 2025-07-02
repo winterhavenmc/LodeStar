@@ -135,7 +135,7 @@ final class ListSubcommand extends AbstractSubcommand
 						.send();
 
 				case InvalidDestination invalidDestination -> plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
-						.setMacro(Macro.DESTINATION, invalidDestination.name())
+						.setMacro(Macro.DESTINATION, invalidDestination.displayName())
 						.setMacro(Macro.DESTINATION_WORLD, "Invalid")
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
