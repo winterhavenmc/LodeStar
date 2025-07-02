@@ -42,10 +42,13 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 		if (displayName == null) return new InvalidDestination("NULL", "Destination display name was null.");
 		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "Destination display name was blank.");
 		else if (location == null) return new InvalidDestination(displayName, "Destination location was null.");
+		else if (location.getWorld() == null) return new InvalidDestination(displayName, "Location world was null.");
 		else if (type == null) return new InvalidDestination(displayName, "Destination type was null.");
 		else if (type == Type.HOME) return new HomeDestination(displayName, location);
 		else if (type == Type.SPAWN) return new SpawnDestination(displayName, location);
-		else return new StoredDestination(displayName, location);
+		else return new StoredDestination(displayName, location.getWorld().getName(),
+					location.getWorld().getUID(), location.getX(), location.getY(), location.getZ(),
+					location.getYaw(), location.getPitch());
 	}
 
 
@@ -55,7 +58,6 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	 */
 	static Destination of(final Type type,
 						  final String displayName,
-	                      final boolean worldValid,
 	                      final String worldName,
 	                      final UUID worldUid,
 	                      final double x,
@@ -70,9 +72,9 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 		else if (worldName == null) return new InvalidDestination(displayName, "The world name was null.");
 		else if (worldName.isBlank()) return new InvalidDestination(displayName, "The world name was blank.");
 		else if (worldUid == null) return new InvalidDestination(displayName, "The world UUID was null.");
-		else if (type == Type.HOME) return new HomeDestination(displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
-		else if (type == Type.SPAWN) return new SpawnDestination(displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
-		else return new StoredDestination(displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
+		else if (type == Type.HOME) return new HomeDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
+		else if (type == Type.SPAWN) return new SpawnDestination(displayName,worldName, worldUid, x, y, z, yaw, pitch);
+		else return new StoredDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
 	}
 
 }

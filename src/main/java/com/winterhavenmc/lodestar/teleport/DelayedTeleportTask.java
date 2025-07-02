@@ -18,6 +18,7 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.SpawnDestination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
@@ -60,7 +61,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 		this.player = player;
 		this.validDestination = validDestination;
 		this.playerItem = playerItem;
-		this.location = validDestination.getLocation().orElse(null);
+		this.location = validDestination.location().orElse(null);
 
 		// start repeating task for generating particles at player location
 		if (plugin.getConfig().getBoolean("particle-effects"))
@@ -86,7 +87,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 			plugin.teleportHandler.removeWarmingUpPlayer(player);
 
 			// if validDestination is spawn, get spawn location from world manager
-			if (validDestination.isSpawn())
+			if (validDestination instanceof SpawnDestination)
 			{
 				location = plugin.worldManager.getSpawnLocation(Objects.requireNonNull(location.getWorld()));
 			}
@@ -124,18 +125,18 @@ final class DelayedTeleportTask extends BukkitRunnable
 			player.teleport(location);
 
 			// if validDestination is spawn, send spawn specific success message
-			if (validDestination.isSpawn())
+			if (validDestination instanceof SpawnDestination)
 			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
 						.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
-						.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(validDestination.getWorldUid()))
+						.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(validDestination.worldUid()))
 						.send();
 			}
 			// otherwise, send regular success message
 			else
 			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS)
-						.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
+						.setMacro(Macro.DESTINATION, validDestination.displayName())
 						.send();
 			}
 			// play post-teleport sound if sound effects are enabled

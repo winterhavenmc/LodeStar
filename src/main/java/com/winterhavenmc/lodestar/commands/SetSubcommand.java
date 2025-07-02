@@ -18,7 +18,6 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.destination.DestinationType;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
@@ -32,7 +31,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -111,10 +109,10 @@ final class SetSubcommand extends AbstractSubcommand
 		}
 
 		// get optional Destination from data store
-		Optional<ValidDestination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
+		Destination destination = plugin.dataStore.selectRecord(destinationName);
 
-		// check for overwrite permission if validDestination already exists
-		if (optionalDestination.isPresent() && sender.hasPermission(permissionNode + ".overwrite"))
+		// check for overwrite permission if validDestination already exists TODO: shouldn't this check negate permission?
+		if (destination instanceof ValidDestination && sender.hasPermission(permissionNode + ".overwrite"))
 		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
 					.setMacro(Macro.DESTINATION, destinationName)
@@ -132,13 +130,13 @@ final class SetSubcommand extends AbstractSubcommand
 		}
 
 		// create validDestination object
-		switch (Destination.of(destinationName, location, DestinationType.STORED))
+		switch (Destination.of(destinationName, location, Destination.Type.STORED))
 		{
 			case ValidDestination validDestination -> {
 				plugin.dataStore.insertRecords(Collections.singleton(validDestination));
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_SET)
-						.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
-						.setMacro(Macro.DESTINATION_LOCATION, validDestination.getLocation())
+						.setMacro(Macro.DESTINATION, validDestination.displayName())
+						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
 						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_SET);
 			}

@@ -17,50 +17,17 @@
 
 package com.winterhavenmc.lodestar.destination;
 
-import org.bukkit.Location;
-
-import javax.annotation.Nonnull;
 import java.util.UUID;
 
 
-public final class StoredDestination extends AbstractDestination
-{
-	/**
-	 * Class constructor
-	 *
-	 * @param displayName the destination display name string
-	 * @param location    the destination location
-	 */
-	StoredDestination(@Nonnull final String displayName, @Nonnull final Location location)
-	{
-		super(displayName, location);
-	}
-
-
-	/**
-	 * Class constructor used to create object fetched from data store
-	 *
-	 * @param displayName the destination display name
-	 * @param worldValid  destination world valid
-	 * @param worldName   destination world name
-	 * @param worldUid    destination world uid
-	 * @param x           destination x coordinate
-	 * @param y           destination y coordinate
-	 * @param z           destination z coordinate
-	 * @param yaw         destination yaw
-	 * @param pitch       destination pitch
-	 */
-	StoredDestination(final String displayName,
-	                  final boolean worldValid,
-	                  final String worldName,
-	                  final UUID worldUid,
-	                  final double x,
-	                  final double y,
-	                  final double z,
-	                  final float yaw,
-	                  final float pitch)
-	{
-		super(displayName, worldValid, worldName, worldUid, x, y, z, yaw, pitch);
-	}
-
-}
+/**
+ * Record class describing a user-created destination, which can be persisted in the datastore
+ */
+public record StoredDestination(String displayName,
+                                String worldName,
+                                UUID worldUid,
+                                double x,
+                                double y,
+                                double z,
+                                float yaw,
+                                float pitch) implements ValidDestination { }

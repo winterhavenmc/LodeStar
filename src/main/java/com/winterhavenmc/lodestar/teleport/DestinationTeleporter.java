@@ -18,6 +18,9 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.Destination;
+import com.winterhavenmc.lodestar.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import org.bukkit.entity.Player;
 
@@ -48,10 +51,13 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 		final String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
 		// execute teleport or send invalid destination message
-		plugin.dataStore.selectRecord(key).ifPresentOrElse(
-				destination -> execute(player, destination, MessageId.TELEPORT_WARMUP),
-				() -> sendInvalidDestinationMessage(player, key)
-		);
+		Destination destination = plugin.dataStore.selectRecord(key);
+
+		switch (destination)
+		{
+			case ValidDestination validDestination -> execute(player, validDestination, MessageId.TELEPORT_WARMUP);
+			case InvalidDestination ignored -> sendInvalidDestinationMessage(player, key);
+		}
 	}
 
 }

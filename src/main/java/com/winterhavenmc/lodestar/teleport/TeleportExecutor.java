@@ -56,11 +56,11 @@ class TeleportExecutor
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// if validDestination location is empty, send invalid validDestination message and return
-		if (validDestination.getLocation().isEmpty())
+		if (validDestination.location().isEmpty())
 		{
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
-					.setMacro(Macro.DESTINATION_LOCATION, validDestination.getLocation())
+					.setMacro(Macro.DESTINATION, validDestination.displayName())
+					.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
 					.send();
 			return;
 		}
@@ -69,8 +69,8 @@ class TeleportExecutor
 		if (isUnderMinimumDistance(player, validDestination))
 		{
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_PROXIMITY)
-					.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
-					.setMacro(Macro.DESTINATION_LOCATION, validDestination.getLocation())
+					.setMacro(Macro.DESTINATION, validDestination.displayName())
+					.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
 					.send();
 			return;
 		}
@@ -112,8 +112,8 @@ class TeleportExecutor
 		if (warmupTime > 0)
 		{
 			plugin.messageBuilder.compose(player, messageId)
-					.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
-					.setMacro(Macro.DESTINATION_WORLD, validDestination.getWorldName())
+					.setMacro(Macro.DESTINATION, validDestination.displayName())
+					.setMacro(Macro.DESTINATION_WORLD, validDestination.worldName())
 					.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
 					.send();
 
@@ -131,13 +131,13 @@ class TeleportExecutor
 	private void loadDestinationChunk(final ValidDestination validDestination)
 	{
 		// if optional validDestination location is empty, do nothing and return
-		if (validDestination.getLocation().isEmpty())
+		if (validDestination.location().isEmpty())
 		{
 			return;
 		}
 
 		// unwrap optional validDestination location
-		Location location = validDestination.getLocation().get();
+		Location location = validDestination.location().get();
 
 		if (location.getWorld() != null && !location.getWorld().getChunkAt(location).isLoaded())
 		{
@@ -156,13 +156,13 @@ class TeleportExecutor
 	private boolean isUnderMinimumDistance(final Player player, final ValidDestination validDestination)
 	{
 		// if validDestination location is empty, return false
-		if (validDestination.getLocation().isEmpty())
+		if (validDestination.location().isEmpty())
 		{
 			return false;
 		}
 
 		// unwrap optional validDestination location
-		Location location = validDestination.getLocation().get();
+		Location location = validDestination.location().get();
 
 		// check if location is within minimum proximity to player
 		return location.getWorld() != null
@@ -202,7 +202,7 @@ class TeleportExecutor
 			plugin.messageBuilder.compose(plugin.getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
 					.setMacro(Macro.TARGET_PLAYER, player)
 					.setMacro(Macro.DESTINATION, validDestination)
-					.setMacro(Macro.DESTINATION_WORLD, plugin.worldManager.getAliasOrName(validDestination.getWorldName()))
+					.setMacro(Macro.DESTINATION_WORLD, plugin.worldManager.getAliasOrName(validDestination.worldName()))
 					.send();
 		}
 	}

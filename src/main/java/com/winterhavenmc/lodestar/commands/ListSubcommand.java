@@ -18,6 +18,8 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.Destination;
+import com.winterhavenmc.lodestar.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
@@ -25,7 +27,6 @@ import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Optional;
 
 
 final class ListSubcommand extends AbstractSubcommand
@@ -109,38 +110,32 @@ final class ListSubcommand extends AbstractSubcommand
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
 		// display list header
-		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
+		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER)
+				.setMacro(Macro.PAGE_NUMBER, page)
+				.setMacro(Macro.PAGE_TOTAL, pageCount)
+				.send();
 
 		int itemNumber = startIndex;
 
 		for (String key : displayKeys)
 		{
-			Optional<ValidDestination> optionalDestination = plugin.dataStore.selectRecord(key);
+			Destination destination = plugin.dataStore.selectRecord(key);
 
-			if (optionalDestination.isPresent())
+			itemNumber++;
+
+			switch (destination)
 			{
-				// unwrap optional validDestination
-				ValidDestination validDestination = optionalDestination.get();
+				case ValidDestination validDestination -> plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
+						.setMacro(Macro.DESTINATION, validDestination.displayName())
+						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+						.setMacro(Macro.ITEM_NUMBER, itemNumber)
+						.send();
 
-				// increment item number
-				itemNumber++;
-
-				if (validDestination.isValidWorld())
-				{
-					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
-							.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
-							.setMacro(Macro.DESTINATION_LOCATION, validDestination.getLocation())
-							.setMacro(Macro.ITEM_NUMBER, itemNumber)
-							.send();
-				}
-				else
-				{
-					plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
-							.setMacro(Macro.DESTINATION, validDestination.getDisplayName())
-							.setMacro(Macro.DESTINATION_WORLD, validDestination.getWorldName())
-							.setMacro(Macro.ITEM_NUMBER, itemNumber)
-							.send();
-				}
+				case InvalidDestination invalidDestination -> plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
+						.setMacro(Macro.DESTINATION, invalidDestination.name())
+						.setMacro(Macro.DESTINATION_WORLD, "Invalid")
+						.setMacro(Macro.ITEM_NUMBER, itemNumber)
+						.send();
 			}
 		}
 

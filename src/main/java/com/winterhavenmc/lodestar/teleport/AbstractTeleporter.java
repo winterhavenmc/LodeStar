@@ -18,7 +18,6 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.destination.DestinationType;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
@@ -89,7 +88,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		String destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 
 		// return destination for player bed spawn location
-		return Destination.of(destinationName, location, DestinationType.HOME);
+		return Destination.of(destinationName, location, Destination.Type.HOME);
 	}
 
 
@@ -125,7 +124,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		String destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 
 		// return destination for player spawn
-		return Destination.of(destinationName, location, DestinationType.SPAWN);
+		return Destination.of(destinationName, location, Destination.Type.SPAWN);
 	}
 
 
