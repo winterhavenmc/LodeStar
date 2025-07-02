@@ -34,7 +34,7 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 
 
 	/**
-	 * Returns an instance of a destination of the appropriate type, or invalid if a destination could not be created
+	 * Returns a new instance of a destination of the appropriate type, or invalid if a destination could not be created
 	 *
 	 * @param type        the type of destination
 	 * @param displayName the display name of the destination
@@ -52,7 +52,7 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 
 
 	/**
-	 * Create an instance of a {@link Destination} from values retrieved from the datastore
+	 * Create a new instance of a {@link Destination} from values retrieved from the datastore
 	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
 	 */
 	static Destination of(final Type type,
