@@ -19,8 +19,11 @@ package com.winterhavenmc.lodestar.destination.location;
 
 import java.util.UUID;
 
+/**
+ * Represents a location without a valid world
+ */
 public record NoWorldLocation(String worldName,
-                              UUID Uid,
+                              UUID worldUid,
                               double x,
                               double y,
                               double z,

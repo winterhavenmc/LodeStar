@@ -19,6 +19,9 @@ package com.winterhavenmc.lodestar.destination.location;
 
 import java.util.UUID;
 
+/**
+ * Represents a world that is otherwise valid, but is not currently loaded
+ */
 public record UnloadedWorldLocation(String worldName,
                                     UUID worldUid,
                                     double x,
