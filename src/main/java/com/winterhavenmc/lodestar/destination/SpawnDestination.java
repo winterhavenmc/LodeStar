@@ -17,27 +17,18 @@
 
 package com.winterhavenmc.lodestar.destination;
 
-import org.bukkit.Location;
-
-import java.util.Objects;
 import java.util.UUID;
 
 
 /**
  * Record class that represents a Spawn destination
  */
-public record SpawnDestination(String displayName,
-                               String worldName,
-                               UUID worldUid,
-                               double x,
-                               double y,
-                               double z,
-                               float yaw,
-                               float pitch) implements ValidDestination
-{
-	public SpawnDestination(String displayName, Location location)
-	{
-		this(displayName, Objects.requireNonNull(location.getWorld()).getName(), location.getWorld().getUID(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-	}
-}
+public record SpawnDestination(
+		String displayName,
+		String worldName,
+		UUID worldUid,
+		double x,
+		double y,
+		double z,
+		float yaw,
+		float pitch) implements ValidDestination { }

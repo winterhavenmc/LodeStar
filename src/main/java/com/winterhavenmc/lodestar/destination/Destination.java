@@ -44,11 +44,15 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 		else if (location == null) return new InvalidDestination(displayName, "Destination location was null.");
 		else if (location.getWorld() == null) return new InvalidDestination(displayName, "Location world was null.");
 		else if (type == null) return new InvalidDestination(displayName, "Destination type was null.");
-		else if (type == Type.HOME) return new HomeDestination(displayName, location);
-		else if (type == Type.SPAWN) return new SpawnDestination(displayName, location);
-		else return new StoredDestination(displayName, location.getWorld().getName(),
-					location.getWorld().getUID(), location.getX(), location.getY(), location.getZ(),
-					location.getYaw(), location.getPitch());
+		else if (type == Type.HOME) return new HomeDestination(displayName,
+				location.getWorld().getName(), location.getWorld().getUID(),
+				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		else if (type == Type.SPAWN) return new SpawnDestination(displayName,
+				location.getWorld().getName(), location.getWorld().getUID(),
+				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		else return new StoredDestination(displayName,
+				location.getWorld().getName(), location.getWorld().getUID(),
+				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 	}
 
 

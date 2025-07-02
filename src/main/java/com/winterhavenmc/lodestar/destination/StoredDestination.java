@@ -23,11 +23,12 @@ import java.util.UUID;
 /**
  * Record class describing a user-created destination, which can be persisted in the datastore
  */
-public record StoredDestination(String displayName,
-                                String worldName,
-                                UUID worldUid,
-                                double x,
-                                double y,
-                                double z,
-                                float yaw,
-                                float pitch) implements ValidDestination { }
+public record StoredDestination(
+		String displayName,
+		String worldName,
+		UUID worldUid,
+		double x,
+		double y,
+		double z,
+		float yaw,
+		float pitch) implements ValidDestination { }

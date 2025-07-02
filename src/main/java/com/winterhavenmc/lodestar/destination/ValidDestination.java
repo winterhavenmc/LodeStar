@@ -30,6 +30,16 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public sealed interface ValidDestination extends Destination permits HomeDestination, SpawnDestination, StoredDestination
 {
+	String displayName();
+	String worldName();
+	UUID worldUid();
+	double x();
+	double y();
+	double z();
+	float yaw();
+	float pitch();
+
+
 	/**
 	 * Getter for destination key field
 	 *
@@ -39,14 +49,6 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 	{
 		return stripColor(translateAlternateColorCodes('&', this.displayName())).replace(' ', '_');
 	}
-
-
-	/**
-	 * Getter for destination displayName field
-	 *
-	 * @return the value of the displayName field
-	 */
-	String displayName();
 
 
 	/**
@@ -75,12 +77,4 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 		return Optional.of(new Location(world, this.x(), this.y(), this.z(), this.yaw(), this.pitch()));
 	}
 
-
-	UUID worldUid();
-	String worldName();
-	double x();
-	double y();
-	double z();
-	float yaw();
-	float pitch();
 }
