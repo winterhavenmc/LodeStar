@@ -21,12 +21,17 @@ import com.winterhavenmc.lodestar.PluginMain;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 
-public class MetricsHandler {
 
-
+/**
+ * Responsible for sending various runtime metrics to bstats.org
+ */
+public class MetricsHandler
+{
 	/**
-	 * Class constructor
+	 * Creates an instance of a MetricsHandler
+	 *
 	 * @param plugin reference to plugin main class
+	 * @see <a href="https://bstats.org/plugin/bukkit/LodeStar">https://bstats.org/LodeStar</a>
 	 */
 	public MetricsHandler(PluginMain plugin) {
 
@@ -55,7 +60,6 @@ public class MetricsHandler {
 
 		// pie chart of teleport warmup time
 		metrics.addCustomChart(new SimplePie("teleport_warmup", () -> plugin.getConfig().getString("teleport-warmup")));
-
 	}
 
 }
