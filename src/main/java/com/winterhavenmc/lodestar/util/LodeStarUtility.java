@@ -255,7 +255,7 @@ public final class LodeStarUtility
 			return switch (plugin.dataStore.selectRecord(key))
 			{
 				case ValidDestination validDestionation -> Optional.of(validDestionation.displayName());
-				case InvalidDestination invalidDestination -> Optional.of(invalidDestination.name());
+				case InvalidDestination invalidDestination -> Optional.of(invalidDestination.displayName());
 			};
 		}
 		else if (type == Destination.Type.HOME) return Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));

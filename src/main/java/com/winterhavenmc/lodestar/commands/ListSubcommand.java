@@ -109,12 +109,15 @@ final class ListSubcommand extends AbstractSubcommand
 		// get keys for items on page
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
-		// display list header
-		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER)
-				.setMacro(Macro.PAGE_NUMBER, page)
-				.setMacro(Macro.PAGE_TOTAL, pageCount)
-				.send();
+		displayListHeader(sender, page, pageCount);
+		displayListItems(sender, startIndex, displayKeys);
+		displayListFooter(sender, page, pageCount);
 
+		return true;
+	}
+
+	private void displayListItems(CommandSender sender, int startIndex, List<String> displayKeys)
+	{
 		int itemNumber = startIndex;
 
 		for (String key : displayKeys)
@@ -127,22 +130,35 @@ final class ListSubcommand extends AbstractSubcommand
 			{
 				case ValidDestination validDestination -> plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
 						.setMacro(Macro.DESTINATION, validDestination.displayName())
-						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location().toBukkitLocation())
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
 
 				case InvalidDestination invalidDestination -> plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM_INVALID)
-						.setMacro(Macro.DESTINATION, invalidDestination.name())
+						.setMacro(Macro.DESTINATION, invalidDestination.displayName())
 						.setMacro(Macro.DESTINATION_WORLD, "Invalid")
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
 			}
 		}
+	}
 
-		// display list footer
-		plugin.messageBuilder.compose(sender, MessageId.LIST_FOOTER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
 
-		return true;
+	private void displayListHeader(CommandSender sender, int page, int pageCount)
+	{
+		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER)
+				.setMacro(Macro.PAGE_NUMBER, page)
+				.setMacro(Macro.PAGE_TOTAL, pageCount)
+				.send();
+	}
+
+
+	private void displayListFooter(CommandSender sender, int page, int pageCount)
+	{
+		plugin.messageBuilder.compose(sender, MessageId.LIST_FOOTER)
+				.setMacro(Macro.PAGE_NUMBER, page)
+				.setMacro(Macro.PAGE_TOTAL, pageCount)
+				.send();
 	}
 
 }

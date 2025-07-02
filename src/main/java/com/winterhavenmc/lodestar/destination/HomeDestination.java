@@ -17,18 +17,10 @@
 
 package com.winterhavenmc.lodestar.destination;
 
-import java.util.UUID;
+import com.winterhavenmc.lodestar.destination.location.ValidLocation;
 
 
 /**
  * Record class that represents a Home destination
  */
-public record HomeDestination(
-		String displayName,
-		String worldName,
-		UUID worldUid,
-		double x,
-		double y,
-		double z,
-		float yaw,
-		float pitch) implements ValidDestination { }
+public record HomeDestination(String displayName, ValidLocation location) implements ValidDestination { }

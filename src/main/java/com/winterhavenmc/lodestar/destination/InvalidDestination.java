@@ -17,4 +17,10 @@
 
 package com.winterhavenmc.lodestar.destination;
 
-public record InvalidDestination(String name, String reason) implements Destination { }
+
+/**
+ * Record class that represents an invalid destination
+ *
+ * @param displayName
+ */
+public record InvalidDestination(String displayName, String reason) implements Destination { }

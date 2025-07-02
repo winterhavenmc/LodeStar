@@ -18,12 +18,12 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.location.ValidLocation;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.destination.ValidDestination;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -56,7 +56,7 @@ class TeleportExecutor
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// if validDestination location is empty, send invalid validDestination message and return
-		if (validDestination.location().isEmpty())
+		if (validDestination.location() == null)
 		{
 			plugin.messageBuilder.compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, validDestination.displayName())
@@ -113,7 +113,7 @@ class TeleportExecutor
 		{
 			plugin.messageBuilder.compose(player, messageId)
 					.setMacro(Macro.DESTINATION, validDestination.displayName())
-					.setMacro(Macro.DESTINATION_WORLD, validDestination.worldName())
+					.setMacro(Macro.DESTINATION_WORLD, validDestination.location().worldName())
 					.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
 					.send();
 
@@ -130,18 +130,11 @@ class TeleportExecutor
 	 */
 	private void loadDestinationChunk(final ValidDestination validDestination)
 	{
-		// if optional validDestination location is empty, do nothing and return
-		if (validDestination.location().isEmpty())
-		{
-			return;
-		}
+		ValidLocation location = validDestination.location();
 
-		// unwrap optional validDestination location
-		Location location = validDestination.location().get();
-
-		if (location.getWorld() != null && !location.getWorld().getChunkAt(location).isLoaded())
+		if (location.world() != null && !location.world().getChunkAt(location.toBukkitLocation()).isLoaded())
 		{
-			location.getWorld().getChunkAt(location).load();
+			location.world().getChunkAt(location.toBukkitLocation()).load();
 		}
 	}
 
@@ -155,19 +148,11 @@ class TeleportExecutor
 	 */
 	private boolean isUnderMinimumDistance(final Player player, final ValidDestination validDestination)
 	{
-		// if validDestination location is empty, return false
-		if (validDestination.location().isEmpty())
-		{
-			return false;
-		}
+		ValidLocation location = validDestination.location();
 
-		// unwrap optional validDestination location
-		Location location = validDestination.location().get();
-
-		// check if location is within minimum proximity to player
-		return location.getWorld() != null
-				&& player.getWorld().equals(location.getWorld())
-				&& player.getLocation().distanceSquared(location) < Math.pow(plugin.getConfig().getInt("minimum-distance"), 2);
+		return location.world() != null
+				&& player.getWorld().equals(location.world())
+				&& player.getLocation().distanceSquared(location.toBukkitLocation()) < Math.pow(plugin.getConfig().getInt("minimum-distance"), 2);
 	}
 
 
@@ -202,7 +187,7 @@ class TeleportExecutor
 			plugin.messageBuilder.compose(plugin.getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
 					.setMacro(Macro.TARGET_PLAYER, player)
 					.setMacro(Macro.DESTINATION, validDestination.displayName())
-					.setMacro(Macro.DESTINATION_WORLD, plugin.worldManager.getAliasOrName(validDestination.worldName()))
+					.setMacro(Macro.DESTINATION_WORLD, plugin.worldManager.getAliasOrName(validDestination.location().worldName()))
 					.send();
 		}
 	}

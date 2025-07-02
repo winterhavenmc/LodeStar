@@ -106,10 +106,9 @@ final class TeleportSubcommand extends AbstractSubcommand
 		// get destination from datastore
 		Destination destination = plugin.dataStore.selectRecord(destinationName);
 
-		if (destination instanceof ValidDestination validDestination && validDestination.location().isPresent())
+		if (destination instanceof ValidDestination validDestination && validDestination.location() != null)
 		{
-			// unwrap optional location
-			Location location = validDestination.location().get();
+			Location location = validDestination.location().toBukkitLocation();
 
 			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 			player.teleport(location);

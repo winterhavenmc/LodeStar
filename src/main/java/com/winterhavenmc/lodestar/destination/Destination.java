@@ -17,51 +17,51 @@
 
 package com.winterhavenmc.lodestar.destination;
 
+import com.winterhavenmc.lodestar.destination.location.*;
 import org.bukkit.Location;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
+/**
+ * Represents an immutable location and display name. Location is decomposed into validated, immutable final fields,
+ * and reconstituted into a Bukkit location on access. Static factory methods are provided to create new instances
+ * when reading from a datastore, or creating an instance manually.
+ */
 public sealed interface Destination permits ValidDestination, InvalidDestination
 {
-	enum Type { STORED, HOME, SPAWN }
+	enum Type { HOME, SPAWN, STORED }
 
 
 	/**
-	 * Returns an instance of a destination of the appropriate type, or invalid if a destination could not be created
+	 * Returns a new instance of a destination of the appropriate type, or invalid if a destination could not be created
 	 *
+	 * @param type        the type of destination
 	 * @param displayName the display name of the destination
-	 * @param location the location of the destination
-	 * @param type the type of destination
+	 * @param location    the location of the destination
 	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
 	 */
-	static Destination of(final String displayName,
-	                      final Location location,
-	                      final Type type)
+	static Destination of(final Type type,
+	                      final String displayName,
+	                      final Location location)
 	{
-		if (displayName == null) return new InvalidDestination("NULL", "Destination display name was null.");
-		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "Destination display name was blank.");
-		else if (location == null) return new InvalidDestination(displayName, "Destination location was null.");
-		else if (location.getWorld() == null) return new InvalidDestination(displayName, "Location world was null.");
-		else if (type == null) return new InvalidDestination(displayName, "Destination type was null.");
-		else if (type == Type.HOME) return new HomeDestination(displayName,
-				location.getWorld().getName(), location.getWorld().getUID(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		else if (type == Type.SPAWN) return new SpawnDestination(displayName,
-				location.getWorld().getName(), location.getWorld().getUID(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		else return new StoredDestination(displayName,
-				location.getWorld().getName(), location.getWorld().getUID(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		if (displayName == null) return new InvalidDestination("∅", "The display name was null.");
+		if (displayName.isBlank()) return new InvalidDestination("⬚", "The display name was blank.");
+		if (location == null) return new InvalidDestination(displayName, "The location was null.");
+
+		return Destination.of(type, displayName, Objects.requireNonNull(location.getWorld()).getName(),
+				location.getWorld().getUID(), location.getX(), location.getY(), location.getZ(),
+				location.getYaw(), location.getPitch());
 	}
 
 
 	/**
-	 * Create an instance of a {@link Destination} from values retrieved from the datastore
+	 * Create a new instance of a {@link Destination} from values retrieved from the datastore
 	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
 	 */
 	static Destination of(final Type type,
-						  final String displayName,
+	                      final String displayName,
 	                      final String worldName,
 	                      final UUID worldUid,
 	                      final double x,
@@ -70,15 +70,22 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	                      final float yaw,
 	                      final float pitch)
 	{
-		if (displayName == null) return new InvalidDestination("NULL", "The display name was null.");
-		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "The display name was blank.");
-		else if (type == null) return new InvalidDestination(displayName, "The destination type was null.");
-		else if (worldName == null) return new InvalidDestination(displayName, "The world name was null.");
-		else if (worldName.isBlank()) return new InvalidDestination(displayName, "The world name was blank.");
-		else if (worldUid == null) return new InvalidDestination(displayName, "The world UUID was null.");
-		else if (type == Type.HOME) return new HomeDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
-		else if (type == Type.SPAWN) return new SpawnDestination(displayName,worldName, worldUid, x, y, z, yaw, pitch);
-		else return new StoredDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
+		if (displayName == null) return new InvalidDestination("∅", "The display name was null.");
+		if (displayName.isBlank()) return new InvalidDestination("⬚", "The display name was blank.");
+		if (type == null) return new InvalidDestination(displayName, "The type was null.");
+
+		return switch (ImmutableLocation.of(worldName, worldUid, x, y, z, yaw, pitch))
+		{
+			case InvalidLocation ignored -> new InvalidDestination(displayName, "The location was invalid.");
+			case NoWorldLocation ignored -> new InvalidDestination(displayName, "The location had an invalid world.");
+			case UnloadedWorldLocation ignored -> new InvalidDestination(displayName, "The location world is unloaded.");
+			case ValidLocation validLocation -> switch (type)
+					{
+						case HOME -> new HomeDestination(displayName, validLocation);
+						case SPAWN -> new SpawnDestination(displayName, validLocation);
+						case STORED -> new StoredDestination(displayName, validLocation);
+					};
+		};
 	}
 
 }

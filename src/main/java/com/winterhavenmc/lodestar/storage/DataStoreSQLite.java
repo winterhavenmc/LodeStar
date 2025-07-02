@@ -165,7 +165,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 			final String displayName = validDestination.displayName();
 
 			// get world
-			World world = plugin.getServer().getWorld(validDestination.worldUid());
+			World world = plugin.getServer().getWorld(validDestination.location().worldUid());
 
 			// test that world in validDestination location is valid
 			if (world == null)
@@ -190,13 +190,13 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 						preparedStatement.setString(1, key);
 						preparedStatement.setString(2, displayName);
 						preparedStatement.setString(3, worldName);
-						preparedStatement.setLong(4, validDestination.worldUid().getMostSignificantBits());
-						preparedStatement.setLong(5, validDestination.worldUid().getLeastSignificantBits());
-						preparedStatement.setDouble(6, validDestination.x());
-						preparedStatement.setDouble(7, validDestination.y());
-						preparedStatement.setDouble(8, validDestination.z());
-						preparedStatement.setFloat(9, validDestination.yaw());
-						preparedStatement.setFloat(10, validDestination.pitch());
+						preparedStatement.setLong(4, validDestination.location().worldUid().getMostSignificantBits());
+						preparedStatement.setLong(5, validDestination.location().worldUid().getLeastSignificantBits());
+						preparedStatement.setDouble(6, validDestination.location().x());
+						preparedStatement.setDouble(7, validDestination.location().y());
+						preparedStatement.setDouble(8, validDestination.location().z());
+						preparedStatement.setFloat(9, validDestination.location().yaw());
+						preparedStatement.setFloat(10, validDestination.location().pitch());
 
 						// execute prepared statement
 						preparedStatement.executeUpdate();
@@ -338,7 +338,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 					}
 					else
 					{
-						// get world Uid
+						// get world worldUid
 						worldUid = world.getUID();
 					}
 
