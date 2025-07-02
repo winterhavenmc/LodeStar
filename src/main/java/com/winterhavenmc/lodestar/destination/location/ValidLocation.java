@@ -23,6 +23,12 @@ import org.bukkit.World;
 
 import java.util.UUID;
 
+/**
+ * Represents a valid Bukkit {@link Location}.
+ * <p>
+ * <strong>Note:</strong> While this type represents a Location that was valid when created, it can offer no
+ * guarantee that the location's world has not been subsequently unloaded or deleted.
+ */
 public record ValidLocation(String worldName,
                             UUID worldUid,
                             double x,
@@ -31,11 +37,23 @@ public record ValidLocation(String worldName,
                             float yaw,
                             float pitch) implements ImmutableLocation
 {
+	/**
+	 * Return the world for this location.
+	 *
+	 * @return instance of a Bukkit {@link World}, or {@code null} if the location's world has been deleted
+	 * after creation of this instance.
+	 */
 	public World world()
 	{
 		return Bukkit.getWorld(worldUid);
 	}
 
+
+	/**
+	 * Return a Bukkit {@link Location} represented by this {@link ImmutableLocation}.
+	 *
+	 * @return instance of a Bukkit {@link Location}
+	 */
 	public Location toBukkitLocation()
 	{
 		return new Location(Bukkit.getWorld(worldUid), x, y, z, yaw, pitch);
