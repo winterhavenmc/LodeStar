@@ -76,15 +76,6 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 	}
 
 
-	/**
-	 * Get string representation of destination
-	 *
-	 * @return String - destination display name
-	 */
-	@Override
-	String toString();
-
-
 	UUID worldUid();
 	String worldName();
 	double x();
