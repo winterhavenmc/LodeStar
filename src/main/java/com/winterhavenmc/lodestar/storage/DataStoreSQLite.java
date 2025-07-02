@@ -269,12 +269,9 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 				// get world
 				World world = plugin.getServer().getWorld(worldUid);
 
-				boolean worldValid = true;
-
 				// if world is null, set worldValid false and log warning
 				if (world == null)
 				{
-					worldValid = false;
 					plugin.getLogger().warning("Stored validDestination has invalid world: " + worldName);
 				}
 
@@ -332,14 +329,11 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 					// get world by name
 					World world = plugin.getServer().getWorld(worldName);
 
-					boolean worldValid = true;
-
 					UUID worldUid = null;
 
 					// if world is null, set worldValid false and log warning
 					if (world == null)
 					{
-						worldValid = false;
 						plugin.getLogger().warning("Stored validDestination has invalid world: " + worldName);
 					}
 					else
@@ -374,12 +368,9 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore
 					// get world
 					World world = plugin.getServer().getWorld(worldUid);
 
-					boolean worldValid = true;
-
 					// if world is null, set worldValid false and log warning
 					if (world == null)
 					{
-						worldValid = false;
 						plugin.getLogger().warning("Stored validDestination has invalid world: " + worldName);
 					}
 
