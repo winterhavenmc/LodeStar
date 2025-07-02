@@ -88,7 +88,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		String destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 
 		// return destination for player bed spawn location
-		return Destination.of(destinationName, location, Destination.Type.HOME);
+		return Destination.of(Destination.Type.HOME, destinationName, location);
 	}
 
 
@@ -124,7 +124,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		String destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 
 		// return destination for player spawn
-		return Destination.of(destinationName, location, Destination.Type.SPAWN);
+		return Destination.of(Destination.Type.SPAWN, destinationName, location);
 	}
 
 

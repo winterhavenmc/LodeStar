@@ -130,7 +130,7 @@ final class SetSubcommand extends AbstractSubcommand
 		}
 
 		// create validDestination object
-		switch (Destination.of(destinationName, location, Destination.Type.STORED))
+		switch (Destination.of(Destination.Type.STORED, destinationName, location))
 		{
 			case ValidDestination validDestination -> {
 				plugin.dataStore.insertRecords(Collections.singleton(validDestination));
