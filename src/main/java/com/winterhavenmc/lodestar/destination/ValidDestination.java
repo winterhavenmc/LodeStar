@@ -24,7 +24,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
 /**
- * Represents a valid destination with accessor methods for destination fields and derived values
+ * Record class that Represents a valid destination with accessor methods for destination fields and derived values
  */
 public sealed interface ValidDestination extends Destination permits HomeDestination, SpawnDestination, StoredDestination
 {

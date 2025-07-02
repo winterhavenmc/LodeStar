@@ -21,6 +21,6 @@ import com.winterhavenmc.lodestar.destination.location.ValidLocation;
 
 
 /**
- * Record class describing a user-created destination, which can be persisted in the datastore
+ * Record class that represents a user-created destination, which can be persisted in the datastore
  */
 public record StoredDestination(String displayName, ValidLocation location) implements ValidDestination { }
