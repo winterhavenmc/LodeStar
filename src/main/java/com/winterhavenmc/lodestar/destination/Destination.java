@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.destination;
 
 import org.bukkit.Location;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -30,29 +31,18 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	/**
 	 * Returns an instance of a destination of the appropriate type, or invalid if a destination could not be created
 	 *
+	 * @param type        the type of destination
 	 * @param displayName the display name of the destination
-	 * @param location the location of the destination
-	 * @param type the type of destination
+	 * @param location    the location of the destination
 	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
 	 */
-	static Destination of(final String displayName,
-	                      final Location location,
-	                      final Type type)
+	static Destination of(final Type type,
+	                      final String displayName,
+	                      final Location location)
 	{
-		if (displayName == null) return new InvalidDestination("NULL", "Destination display name was null.");
-		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "Destination display name was blank.");
-		else if (location == null) return new InvalidDestination(displayName, "Destination location was null.");
-		else if (location.getWorld() == null) return new InvalidDestination(displayName, "Location world was null.");
-		else if (type == null) return new InvalidDestination(displayName, "Destination type was null.");
-		else if (type == Type.HOME) return new HomeDestination(displayName,
-				location.getWorld().getName(), location.getWorld().getUID(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		else if (type == Type.SPAWN) return new SpawnDestination(displayName,
-				location.getWorld().getName(), location.getWorld().getUID(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		else return new StoredDestination(displayName,
-				location.getWorld().getName(), location.getWorld().getUID(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		return Destination.of(type, displayName, Objects.requireNonNull(location.getWorld()).getName(),
+				location.getWorld().getUID(), location.getX(), location.getY(), location.getZ(),
+				location.getYaw(), location.getPitch());
 	}
 
 
@@ -61,7 +51,7 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
 	 */
 	static Destination of(final Type type,
-						  final String displayName,
+	                      final String displayName,
 	                      final String worldName,
 	                      final UUID worldUid,
 	                      final double x,
@@ -72,13 +62,17 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	{
 		if (displayName == null) return new InvalidDestination("NULL", "The display name was null.");
 		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "The display name was blank.");
-		else if (type == null) return new InvalidDestination(displayName, "The destination type was null.");
 		else if (worldName == null) return new InvalidDestination(displayName, "The world name was null.");
 		else if (worldName.isBlank()) return new InvalidDestination(displayName, "The world name was blank.");
 		else if (worldUid == null) return new InvalidDestination(displayName, "The world UUID was null.");
-		else if (type == Type.HOME) return new HomeDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
-		else if (type == Type.SPAWN) return new SpawnDestination(displayName,worldName, worldUid, x, y, z, yaw, pitch);
-		else return new StoredDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
+		else if (type == null) return new InvalidDestination(displayName, "The type was null.");
+
+		return switch (type)
+		{
+			case HOME -> new HomeDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
+			case SPAWN -> new SpawnDestination(displayName,worldName, worldUid, x, y, z, yaw, pitch);
+			case STORED -> new StoredDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
+		};
 	}
 
 }
