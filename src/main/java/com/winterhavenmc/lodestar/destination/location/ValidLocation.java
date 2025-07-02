@@ -56,6 +56,8 @@ public record ValidLocation(String worldName,
 	 */
 	public Location toBukkitLocation()
 	{
-		return new Location(Bukkit.getWorld(worldUid), x, y, z, yaw, pitch);
+		return (Bukkit.getWorld(worldUid) != null)
+				? new Location(Bukkit.getWorld(worldUid), x, y, z, yaw, pitch)
+				: null;
 	}
 }
