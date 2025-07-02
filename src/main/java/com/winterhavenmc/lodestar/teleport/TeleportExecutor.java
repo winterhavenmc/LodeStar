@@ -201,7 +201,7 @@ class TeleportExecutor
 			// send message to console
 			plugin.messageBuilder.compose(plugin.getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
 					.setMacro(Macro.TARGET_PLAYER, player)
-					.setMacro(Macro.DESTINATION, validDestination)
+					.setMacro(Macro.DESTINATION, validDestination.displayName())
 					.setMacro(Macro.DESTINATION_WORLD, plugin.worldManager.getAliasOrName(validDestination.worldName()))
 					.send();
 		}
