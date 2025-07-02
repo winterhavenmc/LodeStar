@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>LodeStar</artifactId>
-	<version>1.21.0-SNAPSHOT</version>
+	<version>1.21.0</version>
 	<name>LodeStar</name>
 
 	<url>https://github.com/tim-savage/LodeStar</url>
@@ -41,7 +41,7 @@
 				<repository>
 					<id>github</id>
 					<name>GitHub winterhavenmc Apache Maven Packages</name>
-					<url>https://maven.pkg.github.com/winterhavenmc/SpawnStar/</url>
+					<url>https://maven.pkg.github.com/winterhavenmc/LodeStar/</url>
 				</repository>
 			</distributionManagement>
 		</profile>
