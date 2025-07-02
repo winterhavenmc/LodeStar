@@ -24,7 +24,7 @@ import org.bukkit.World;
 import java.util.UUID;
 
 /**
- * Represents a valid Bukkit {@link Location}.
+ * Represents a valid Bukkit {@link Location}, using only immutable fields.
  * <p>
  * <strong>Note:</strong> While this type represents a Location that was valid when created, it can offer no
  * guarantee that the location's world has not been subsequently unloaded or deleted.
