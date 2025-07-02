@@ -65,8 +65,8 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	                      final float yaw,
 	                      final float pitch)
 	{
-		if (displayName == null) return new InvalidDestination("NULL", "The display name was null.");
-		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "The display name was blank.");
+		if (displayName == null) return new InvalidDestination("�", "The display name was null.");
+		else if (displayName.isBlank()) return new InvalidDestination("⬚", "The display name was blank.");
 		else if (worldName == null) return new InvalidDestination(displayName, "The world name was null.");
 		else if (worldName.isBlank()) return new InvalidDestination(displayName, "The world name was blank.");
 		else if (worldUid == null) return new InvalidDestination(displayName, "The world UUID was null.");
