@@ -22,6 +22,7 @@ import org.bukkit.Location;
 
 import java.util.UUID;
 
+
 public sealed interface ImmutableLocation permits InvalidLocation, NoWorldLocation, UnloadedWorldLocation, ValidLocation
 {
 	static ImmutableLocation of(final Location location)
