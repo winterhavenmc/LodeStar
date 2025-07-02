@@ -46,6 +46,10 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	                      final String displayName,
 	                      final Location location)
 	{
+		if (displayName == null) return new InvalidDestination("∅", "The display name was null.");
+		if (displayName.isBlank()) return new InvalidDestination("⬚", "The display name was blank.");
+		if (location == null) return new InvalidDestination(displayName, "The location was null.");
+
 		return Destination.of(type, displayName, Objects.requireNonNull(location.getWorld()).getName(),
 				location.getWorld().getUID(), location.getX(), location.getY(), location.getZ(),
 				location.getYaw(), location.getPitch());
