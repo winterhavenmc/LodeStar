@@ -28,6 +28,9 @@ import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 
+/**
+ * Represents a valid destination with accessor methods for destination fields and derived values
+ */
 public sealed interface ValidDestination extends Destination permits HomeDestination, SpawnDestination, StoredDestination
 {
 	String displayName();
@@ -41,7 +44,7 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 
 
 	/**
-	 * Getter for derived value for destination key field
+	 * Accessor for derived value for destination key field
 	 *
 	 * @return the value of the key field
 	 */
@@ -52,7 +55,7 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 
 
 	/**
-	 * Getter for derived value for destination location
+	 * Accessor for derived value for destination location
 	 *
 	 * @return {@link Optional} Location
 	 */
