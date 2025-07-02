@@ -23,8 +23,17 @@ import org.bukkit.Location;
 import java.util.UUID;
 
 
-public sealed interface ImmutableLocation permits InvalidLocation, NoWorldLocation, UnloadedWorldLocation, ValidLocation
+/**
+ * Represents a validated, type-safe {@link Location}. Returns an appropriate subtype based on the results of validation.
+ */
+public sealed interface ImmutableLocation permits ValidLocation, InvalidLocation, NoWorldLocation, UnloadedWorldLocation
 {
+	/**
+	 * Static factory method to create an {@code ImmutableLocaltion}
+	 *
+	 * @param location a Bukkit {@link Location}
+	 * @return an instance of an {@code ImmutableLocation} of the appropriate subtype
+	 */
 	static ImmutableLocation of(final Location location)
 	{
 		if (location == null)
@@ -51,6 +60,11 @@ public sealed interface ImmutableLocation permits InvalidLocation, NoWorldLocati
 	}
 
 
+	/**
+	 * Static factory method to create an {@code ImmutableLocaltion}
+	 *
+	 * @return an instance of an {@code ImmutableLocation} of the appropriate subtype
+	 */
 	static ImmutableLocation of(String worldName, UUID worldUid, double x, double y, double z, float yaw, float pitch)
 	{
 		String checkedName = (worldName != null) ? worldName : "∅";

@@ -17,4 +17,9 @@
 
 package com.winterhavenmc.lodestar.destination.location;
 
+/**
+ * Represents an invalid {@code Location}
+ *
+ * @param reason the reason a valid location could not be derived
+ */
 public record InvalidLocation(String reason) implements ImmutableLocation { }

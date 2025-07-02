@@ -31,16 +31,19 @@ import java.util.UUID;
  */
 public sealed interface Destination permits ValidDestination, InvalidDestination
 {
+	/**
+	 * Enumerates the types of valid destinations.
+	 */
 	enum Type { HOME, SPAWN, STORED }
 
 
 	/**
-	 * Returns a new instance of a destination of the appropriate type, or invalid if a destination could not be created
+	 * Returns a new instance of a {@code Destination} of the appropriate type from the given parameters.
 	 *
 	 * @param type        the type of destination
 	 * @param displayName the display name of the destination
 	 * @param location    the location of the destination
-	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
+	 * @return a {@link ValidDestination}, or an {@link InvalidDestination} if a valid destination could not be creaated.
 	 */
 	static Destination of(final Type type,
 	                      final String displayName,
@@ -57,8 +60,9 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 
 
 	/**
-	 * Create a new instance of a {@link Destination} from values retrieved from the datastore
-	 * @return a subclass of {@link ValidDestination}, or an {@link InvalidDestination} if no destination could be creaated
+	 * Create a new instance of a {@code Destination} from values retrieved from the datastore.
+	 *
+	 * @return a {@link ValidDestination}, or an {@link InvalidDestination} if a valid destination could not be creaated.
 	 */
 	static Destination of(final Type type,
 	                      final String displayName,
