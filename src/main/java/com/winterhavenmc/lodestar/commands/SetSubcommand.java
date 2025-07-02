@@ -142,7 +142,7 @@ final class SetSubcommand extends AbstractSubcommand
 			}
 			case InvalidDestination invalidDestination -> {
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_SET_REASON)
-						.setMacro(Macro.DESTINATION, invalidDestination.name())
+						.setMacro(Macro.DESTINATION, invalidDestination.displayName())
 						.setMacro(Macro.FAIL_REASON, invalidDestination.reason())
 						.send();
 				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
