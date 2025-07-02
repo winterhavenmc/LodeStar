@@ -109,12 +109,15 @@ final class ListSubcommand extends AbstractSubcommand
 		// get keys for items on page
 		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
 
-		// display list header
-		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER)
-				.setMacro(Macro.PAGE_NUMBER, page)
-				.setMacro(Macro.PAGE_TOTAL, pageCount)
-				.send();
+		displayListHeader(sender, page, pageCount);
+		displayListItems(sender, startIndex, displayKeys);
+		displayListFooter(sender, page, pageCount);
 
+		return true;
+	}
+
+	private void displayListItems(CommandSender sender, int startIndex, List<String> displayKeys)
+	{
 		int itemNumber = startIndex;
 
 		for (String key : displayKeys)
@@ -138,11 +141,24 @@ final class ListSubcommand extends AbstractSubcommand
 						.send();
 			}
 		}
+	}
 
-		// display list footer
-		plugin.messageBuilder.compose(sender, MessageId.LIST_FOOTER).setMacro(Macro.PAGE_NUMBER, page).setMacro(Macro.PAGE_TOTAL, pageCount).send();
 
-		return true;
+	private void displayListHeader(CommandSender sender, int page, int pageCount)
+	{
+		plugin.messageBuilder.compose(sender, MessageId.LIST_HEADER)
+				.setMacro(Macro.PAGE_NUMBER, page)
+				.setMacro(Macro.PAGE_TOTAL, pageCount)
+				.send();
+	}
+
+
+	private void displayListFooter(CommandSender sender, int page, int pageCount)
+	{
+		plugin.messageBuilder.compose(sender, MessageId.LIST_FOOTER)
+				.setMacro(Macro.PAGE_NUMBER, page)
+				.setMacro(Macro.PAGE_TOTAL, pageCount)
+				.send();
 	}
 
 }
