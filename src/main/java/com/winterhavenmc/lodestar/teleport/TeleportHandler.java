@@ -175,7 +175,6 @@ public final class TeleportHandler
 	boolean isCoolingDown(final Player player)
 	{
 		return cooldownMap.isCoolingDown(player);
-
 	}
 
 }

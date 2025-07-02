@@ -18,6 +18,7 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
@@ -96,7 +97,7 @@ final class DeleteSubcommand extends AbstractSubcommand
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 		}
 		// if delete method returns valid destination, delete was successful
-		else if (plugin.dataStore.deleteRecord(key).isPresent())
+		else if (plugin.dataStore.deleteRecord(key) instanceof ValidDestination)
 		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
 					.setMacro(Macro.DESTINATION, destinationName)

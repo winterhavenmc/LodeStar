@@ -18,7 +18,10 @@
 package com.winterhavenmc.lodestar.util;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.storage.Destination;
+import com.winterhavenmc.lodestar.destination.Destination;
+import com.winterhavenmc.lodestar.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -245,12 +248,19 @@ public final class LodeStarUtility
 			return Optional.empty();
 		}
 
-		return switch (getDestinationType(key))
+		Destination.Type type = getDestinationType(key);
+
+		if (type == Destination.Type.STORED)
 		{
-			case HOME -> Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
-			case SPAWN -> Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
-			default -> plugin.dataStore.selectRecord(key).map(Destination::getDisplayName);
-		};
+			return switch (plugin.dataStore.selectRecord(key))
+			{
+				case ValidDestination validDestionation -> Optional.of(validDestionation.displayName());
+				case InvalidDestination invalidDestination -> Optional.of(invalidDestination.name());
+			};
+		}
+		else if (type == Destination.Type.HOME) return Optional.of(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+		else if (type == Destination.Type.SPAWN) return Optional.of(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+		else return Optional.empty();
 	}
 
 
@@ -407,7 +417,7 @@ public final class LodeStarUtility
 			return true;
 		}
 
-		return plugin.dataStore.selectRecord(displayName).isPresent();
+		return plugin.dataStore.selectRecord(displayName) instanceof ValidDestination;
 	}
 
 }

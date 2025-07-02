@@ -18,10 +18,11 @@
 package com.winterhavenmc.lodestar.storage;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.Destination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 
 public interface DataStore
@@ -54,16 +55,16 @@ public interface DataStore
 	 * @param destinationName the name string key of the destination to be retrieved from the datastore
 	 * @return destination object or null if no matching record
 	 */
-	Optional<Destination> selectRecord(final String destinationName);
+	Destination selectRecord(final String destinationName);
 
 
 	/**
 	 * Insert a collection of records
-	 * @param destinations a collection of records to be inserted
+	 * @param validDestinations a collection of records to be inserted
 	 *
 	 * @return count of records inserted
 	 */
-	int insertRecords(final Collection<Destination> destinations);
+	int insertRecords(final Collection<ValidDestination> validDestinations);
 
 
 	/**
@@ -79,7 +80,7 @@ public interface DataStore
 	 *
 	 * @return List of all destination records
 	 */
-	Collection<Destination> selectAllRecords();
+	Collection<ValidDestination> selectAllRecords();
 
 
 	/**
@@ -89,7 +90,7 @@ public interface DataStore
 	 * @return the destination record that was deleted
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	Optional<Destination> deleteRecord(final String destinationName);
+	Destination deleteRecord(final String destinationName);
 
 
 	/**

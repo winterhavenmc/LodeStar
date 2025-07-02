@@ -18,10 +18,11 @@
 package com.winterhavenmc.lodestar.commands;
 
 import com.winterhavenmc.lodestar.PluginMain;
+import com.winterhavenmc.lodestar.destination.Destination;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,7 +30,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -104,20 +104,17 @@ final class TeleportSubcommand extends AbstractSubcommand
 		}
 
 		// get destination from datastore
-		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
+		Destination destination = plugin.dataStore.selectRecord(destinationName);
 
-		if (optionalDestination.isPresent() && optionalDestination.get().getLocation().isPresent())
+		if (destination instanceof ValidDestination validDestination && validDestination.location().isPresent())
 		{
-			// unwrap optional destination
-			Destination destination = optionalDestination.get();
-
 			// unwrap optional location
-			Location location = destination.getLocation().get();
+			Location location = validDestination.location().get();
 
 			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 			player.teleport(location);
 			plugin.messageBuilder.compose(sender, MessageId.TELEPORT_SUCCESS)
-					.setMacro(Macro.DESTINATION, destination)
+					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
 			plugin.soundConfig.playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 			return true;

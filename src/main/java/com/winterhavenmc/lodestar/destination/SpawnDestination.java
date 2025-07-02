@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Tim Savage.
+ * Copyright (c) 2022-2025 Tim Savage.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,20 @@
  *
  */
 
-package com.winterhavenmc.lodestar.teleport;
+package com.winterhavenmc.lodestar.destination;
 
-import com.winterhavenmc.lodestar.messages.MessageId;
-import com.winterhavenmc.lodestar.destination.ValidDestination;
-
-import org.bukkit.entity.Player;
+import java.util.UUID;
 
 
-sealed interface Teleporter permits AbstractTeleporter, DestinationTeleporter, HomeTeleporter, SpawnTeleporter
-{
-	void initiate(final Player player);
-	void execute(final Player player, final ValidDestination validDestination, final MessageId messageId);
-}
+/**
+ * Record class that represents a Spawn destination
+ */
+public record SpawnDestination(
+		String displayName,
+		String worldName,
+		UUID worldUid,
+		double x,
+		double y,
+		double z,
+		float yaw,
+		float pitch) implements ValidDestination { }

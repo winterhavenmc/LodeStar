@@ -21,7 +21,9 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
+import com.winterhavenmc.lodestar.destination.Destination;
+import com.winterhavenmc.lodestar.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -52,16 +54,16 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 
 
 	/**
-	 * Execute the teleport to destination
+	 * Execute the teleport to validDestination
 	 *
 	 * @param player      the player to teleport
-	 * @param destination the destination
+	 * @param validDestination the validDestination
 	 * @param messageId   the teleport warmup message to send to player
 	 */
 	@Override
-	public void execute(final Player player, final Destination destination, final MessageId messageId)
+	public void execute(final Player player, final ValidDestination validDestination, final MessageId messageId)
 	{
-		teleportExecutor.execute(player, destination, messageId);
+		teleportExecutor.execute(player, validDestination, messageId);
 	}
 
 
@@ -71,25 +73,22 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 	 * @param player the player
 	 * @return the player bedspawn destination wrapped in an {@link Optional}
 	 */
-	final Optional<Destination> getHomeDestination(final Player player)
+	final Destination getHomeDestination(final Player player)
 	{
 		// if player is null, return empty optional
 		if (player == null)
 		{
-			return Optional.empty();
+			return new InvalidDestination("player home", "Player was null.");
 		}
 
-		// get player bed spawn location
-		Location location = player.getBedSpawnLocation();
+		// get player respawn (bed or other) location
+		Location location = player.getRespawnLocation();
 
-		// if location is null, return empty optional
-		if (location == null)
-		{
-			return Optional.empty();
-		}
+		// Get home display name
+		String destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
 
-		// return optional wrapped destination for player bed spawn location
-		return Optional.of(new Destination(plugin.messageBuilder.getHomeDisplayName().orElse("Home"), location, Destination.Type.HOME));
+		// return destination for player bed spawn location
+		return Destination.of(destinationName, location, Destination.Type.HOME);
 	}
 
 
@@ -99,12 +98,12 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 	 * @param player the player
 	 * @return the player spawn destination wrapped in an {@link Optional}
 	 */
-	final Optional<Destination> getSpawnDestination(final Player player)
+	final Destination getSpawnDestination(final Player player)
 	{
 		// if player is null, return empty optional
 		if (player == null)
 		{
-			return Optional.empty();
+			return new InvalidDestination("world spawn", "Player was null.");
 		}
 
 		// get spawn location for player
@@ -121,14 +120,11 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
 
-		// if location is null, return empty optional
-		if (location == null)
-		{
-			return Optional.empty();
-		}
+		// get destination name
+		String destinationName = plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn");
 
 		// return destination for player spawn
-		return Optional.of(new Destination(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"), location, Destination.Type.SPAWN));
+		return Destination.of(destinationName, location, Destination.Type.SPAWN);
 	}
 
 

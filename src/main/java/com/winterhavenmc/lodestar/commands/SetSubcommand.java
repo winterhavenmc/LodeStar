@@ -21,7 +21,9 @@ import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.Destination;
+import com.winterhavenmc.lodestar.destination.Destination;
+import com.winterhavenmc.lodestar.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.destination.ValidDestination;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,7 +31,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -97,7 +98,7 @@ final class SetSubcommand extends AbstractSubcommand
 		// set destinationName to passed argument
 		String destinationName = String.join(" ", args);
 
-		// check if destination name is a reserved name
+		// check if validDestination name is a reserved name
 		if (isRerservedName(destinationName))
 		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
@@ -107,11 +108,11 @@ final class SetSubcommand extends AbstractSubcommand
 			return true;
 		}
 
-		// get optional destination from data store
-		Optional<Destination> optionalDestination = plugin.dataStore.selectRecord(destinationName);
+		// get optional Destination from data store
+		Destination destination = plugin.dataStore.selectRecord(destinationName);
 
-		// check for overwrite permission if destination already exists
-		if (optionalDestination.isPresent() && sender.hasPermission(permissionNode + ".overwrite"))
+		// check for overwrite permission if validDestination already exists TODO: shouldn't this check negate permission?
+		if (destination instanceof ValidDestination && sender.hasPermission(permissionNode + ".overwrite"))
 		{
 			plugin.messageBuilder.compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
 					.setMacro(Macro.DESTINATION, destinationName)
@@ -128,17 +129,25 @@ final class SetSubcommand extends AbstractSubcommand
 					.send();
 		}
 
-		// create destination object
-		Destination destination = new Destination(destinationName, location, Destination.Type.STORED);
-
-		// store destination object
-		plugin.dataStore.insertRecords(Collections.singleton(destination));
-
-		// send success message to player
-		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_SET).setMacro(Macro.DESTINATION, destinationName).send();
-
-		// play sound effect
-		plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_SET);
+		// create validDestination object
+		switch (Destination.of(destinationName, location, Destination.Type.STORED))
+		{
+			case ValidDestination validDestination -> {
+				plugin.dataStore.insertRecords(Collections.singleton(validDestination));
+				plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_SET)
+						.setMacro(Macro.DESTINATION, validDestination.displayName())
+						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+						.send();
+				plugin.soundConfig.playSound(sender, SoundId.COMMAND_SUCCESS_SET);
+			}
+			case InvalidDestination invalidDestination -> {
+				plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_SET_REASON)
+						.setMacro(Macro.DESTINATION, invalidDestination.name())
+						.setMacro(Macro.FAIL_REASON, invalidDestination.reason())
+						.send();
+				plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
+			}
+		}
 
 		return true;
 	}

@@ -101,6 +101,10 @@ MESSAGES:
     enabled: true
     message: '&3[LodeStar]&c ¡Destino %DESTINATION% está reservado y no se puede ajustar!'
 
+  COMMAND_FAIL_SET_REASON:
+    enabled: true
+    message: '&3[LodeStar]&c No se pudo establecer el destino &6%DESTINATION%&c: %FAIL_REASON%'
+
 
   COMMAND_HELP_INVALID:
     enabled: true
@@ -299,7 +303,7 @@ MESSAGES:
 
   TELEPORT_LOG_USAGE:
     enabled: true
-    message: '&b%TARGET_PLAYER%&r usó un %ITEM%&r para &b%DESTINATION%&r en &3%WORLD%&r.'
+    message: '&b%TARGET_PLAYER%&r usó un %ITEM%&r para &b%DESTINATION%&r en &3%DESTINATION_WORLD%&r.'
 
 
   LIST_HEADER:
@@ -312,7 +316,7 @@ MESSAGES:
 
   LIST_ITEM:
     enabled: true
-    message: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%LOCATION%"
+    message: "%ITEM_NUMBER%) &a%DESTINATION% &c| &b%DESTINATION_LOCATION%"
 
   LIST_ITEM_INVALID:
     enabled: true
