@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public sealed interface Destination permits ValidDestination, InvalidDestination
 {
-	enum Type { STORED, HOME, SPAWN }
+	enum Type { HOME, SPAWN, STORED }
 
 
 	/**
