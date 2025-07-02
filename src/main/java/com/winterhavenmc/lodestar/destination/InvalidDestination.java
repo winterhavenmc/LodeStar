@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.destination;
 
+
 /**
  * Record class that represents an invalid destination
  *

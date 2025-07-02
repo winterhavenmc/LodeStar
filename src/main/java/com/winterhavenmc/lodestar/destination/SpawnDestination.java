@@ -17,18 +17,10 @@
 
 package com.winterhavenmc.lodestar.destination;
 
-import java.util.UUID;
+import com.winterhavenmc.lodestar.destination.location.ValidLocation;
 
 
 /**
  * Record class that represents a Spawn destination
  */
-public record SpawnDestination(
-		String displayName,
-		String worldName,
-		UUID worldUid,
-		double x,
-		double y,
-		double z,
-		float yaw,
-		float pitch) implements ValidDestination { }
+public record SpawnDestination(String displayName, ValidLocation location) implements ValidDestination { }

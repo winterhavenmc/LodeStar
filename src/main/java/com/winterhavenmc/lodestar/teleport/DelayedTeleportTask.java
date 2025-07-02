@@ -61,7 +61,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 		this.player = player;
 		this.validDestination = validDestination;
 		this.playerItem = playerItem;
-		this.location = validDestination.location().orElse(null);
+		this.location = validDestination.location().toBukkitLocation();
 
 		// start repeating task for generating particles at player location
 		if (plugin.getConfig().getBoolean("particle-effects"))
@@ -129,7 +129,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 			{
 				plugin.messageBuilder.compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
 						.setMacro(Macro.DESTINATION, plugin.messageBuilder.getSpawnDisplayName())
-						.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(validDestination.worldUid()))
+						.setMacro(Macro.DESTINATION_WORLD, plugin.getServer().getWorld(validDestination.location().worldUid()))
 						.send();
 			}
 			// otherwise, send regular success message

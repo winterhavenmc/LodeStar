@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.destination;
 
+import com.winterhavenmc.lodestar.destination.location.*;
 import org.bukkit.Location;
 
 import java.util.Objects;
@@ -65,18 +66,21 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	                      final float yaw,
 	                      final float pitch)
 	{
-		if (displayName == null) return new InvalidDestination("�", "The display name was null.");
-		else if (displayName.isBlank()) return new InvalidDestination("⬚", "The display name was blank.");
-		else if (worldName == null) return new InvalidDestination(displayName, "The world name was null.");
-		else if (worldName.isBlank()) return new InvalidDestination(displayName, "The world name was blank.");
-		else if (worldUid == null) return new InvalidDestination(displayName, "The world UUID was null.");
-		else if (type == null) return new InvalidDestination(displayName, "The type was null.");
+		if (displayName == null) return new InvalidDestination("∅", "The display name was null.");
+		if (displayName.isBlank()) return new InvalidDestination("⬚", "The display name was blank.");
+		if (type == null) return new InvalidDestination(displayName, "The type was null.");
 
-		return switch (type)
+		return switch (ImmutableLocation.of(worldName, worldUid, x, y, z, yaw, pitch))
 		{
-			case HOME -> new HomeDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
-			case SPAWN -> new SpawnDestination(displayName,worldName, worldUid, x, y, z, yaw, pitch);
-			case STORED -> new StoredDestination(displayName, worldName, worldUid, x, y, z, yaw, pitch);
+			case InvalidLocation ignored -> new InvalidDestination(displayName, "The location was invalid.");
+			case NoWorldLocation ignored -> new InvalidDestination(displayName, "The location had an invalid world.");
+			case UnloadedWorldLocation ignored -> new InvalidDestination(displayName, "The location world is unloaded.");
+			case ValidLocation validLocation -> switch (type)
+					{
+						case HOME -> new HomeDestination(displayName, validLocation);
+						case SPAWN -> new SpawnDestination(displayName, validLocation);
+						case STORED -> new StoredDestination(displayName, validLocation);
+					};
 		};
 	}
 

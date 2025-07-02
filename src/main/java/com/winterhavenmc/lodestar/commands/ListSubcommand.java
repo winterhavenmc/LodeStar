@@ -130,7 +130,7 @@ final class ListSubcommand extends AbstractSubcommand
 			{
 				case ValidDestination validDestination -> plugin.messageBuilder.compose(sender, MessageId.LIST_ITEM)
 						.setMacro(Macro.DESTINATION, validDestination.displayName())
-						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location().toBukkitLocation())
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
 

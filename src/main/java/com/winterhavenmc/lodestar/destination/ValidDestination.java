@@ -17,12 +17,7 @@
 
 package com.winterhavenmc.lodestar.destination;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-
-import java.util.Optional;
-import java.util.UUID;
+import com.winterhavenmc.lodestar.destination.location.ValidLocation;
 
 import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
@@ -34,13 +29,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 public sealed interface ValidDestination extends Destination permits HomeDestination, SpawnDestination, StoredDestination
 {
 	String displayName();
-	String worldName();
-	UUID worldUid();
-	double x();
-	double y();
-	double z();
-	float yaw();
-	float pitch();
+	ValidLocation location();
 
 
 	/**
@@ -51,33 +40,6 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 	default String key()
 	{
 		return stripColor(translateAlternateColorCodes('&', this.displayName())).replace(' ', '_');
-	}
-
-
-	/**
-	 * Accessor for derived value for destination location
-	 *
-	 * @return {@link Optional} Location
-	 */
-	default Optional<Location> location()
-	{
-		// if world uid is null, return empty optional
-		if (this.worldUid() == null)
-		{
-			return Optional.empty();
-		}
-
-		// get world by uid
-		World world = Bukkit.getServer().getWorld(this.worldUid());
-
-		// if world is null, return empty optional
-		if (world == null)
-		{
-			return Optional.empty();
-		}
-
-		// return new location object for destination
-		return Optional.of(new Location(world, this.x(), this.y(), this.z(), this.yaw(), this.pitch()));
 	}
 
 }
