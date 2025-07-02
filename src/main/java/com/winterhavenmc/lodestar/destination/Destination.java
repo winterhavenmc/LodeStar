@@ -23,6 +23,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 
+/**
+ * Represents an immutable location and display name. Location is decomposed into validated, immutable final fields,
+ * and reconstituted into a Bukkit location on access. Static factory methods are provided to create new instances
+ * when reading from a datastore, or creating an instance manually.
+ */
 public sealed interface Destination permits ValidDestination, InvalidDestination
 {
 	enum Type { HOME, SPAWN, STORED }
