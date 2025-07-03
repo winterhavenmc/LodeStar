@@ -39,7 +39,8 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 	 */
 	default String key()
 	{
-		return stripColor(translateAlternateColorCodes('&', this.displayName())).replace(' ', '_');
+		return stripColor(translateAlternateColorCodes('&', this.displayName()))
+				.replace(' ', '_');
 	}
 
 }
