@@ -25,6 +25,11 @@ import java.util.UUID;
 
 /**
  * Represents a validated, type-safe {@link Location}. Returns an appropriate subtype based on the results of validation.
+ * <p>
+ * <strong>Note:</strong> The server world referenced by the uuid stored in this object may still become invalid
+ * after object creation. There can be no guarantee that a world referenced by this object remains available.
+ * However, objects that implement this interface are immutable, and may still be used to create or update records
+ * in the datastore, or used to display messages.
  */
 public sealed interface ImmutableLocation permits ValidLocation, InvalidLocation, NoWorldLocation, UnloadedWorldLocation
 {
