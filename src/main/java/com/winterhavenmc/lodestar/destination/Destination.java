@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.destination;
 
 import com.winterhavenmc.lodestar.destination.location.*;
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.UUID;
