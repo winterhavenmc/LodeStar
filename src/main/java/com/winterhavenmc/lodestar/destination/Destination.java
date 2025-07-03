@@ -45,9 +45,9 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 	 * @param location    the location of the destination
 	 * @return a {@link ValidDestination}, or an {@link InvalidDestination} if a valid destination could not be creaated.
 	 */
-	static Destination of(final Type type,
-	                      final String displayName,
-	                      final Location location)
+	static Destination of(final @NotNull Type type,
+	                      final @NotNull String displayName,
+	                      final @NotNull Location location)
 	{
 		return Destination.of(type, displayName, Objects.requireNonNull(location.getWorld()).getName(),
 				location.getWorld().getUID(), location.getX(), location.getY(), location.getZ(),
