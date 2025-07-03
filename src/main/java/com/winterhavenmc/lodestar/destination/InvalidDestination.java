@@ -18,9 +18,18 @@
 package com.winterhavenmc.lodestar.destination;
 
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Record class that represents an invalid destination
  *
  * @param displayName
  */
-public record InvalidDestination(String displayName, String reason) implements Destination { }
+public record InvalidDestination(String displayName, String reason) implements Destination
+{
+	@Override
+	public @NotNull String toString()
+	{
+		return(displayName + ": " + reason);
+	}
+}

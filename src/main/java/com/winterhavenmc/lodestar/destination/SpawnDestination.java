@@ -18,9 +18,17 @@
 package com.winterhavenmc.lodestar.destination;
 
 import com.winterhavenmc.lodestar.destination.location.ValidLocation;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
  * Record class that represents a Spawn destination
  */
-public record SpawnDestination(String displayName, ValidLocation location) implements ValidDestination { }
+public record SpawnDestination(String displayName, ValidLocation location) implements ValidDestination
+{
+	@Override
+	public @NotNull String toString()
+	{
+		return(displayName + " | " + location.worldName() + " [" + location.x() + "," + location.y() + "." + location.z() + "]");
+	}
+}

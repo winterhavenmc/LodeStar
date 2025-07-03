@@ -18,9 +18,17 @@
 package com.winterhavenmc.lodestar.destination;
 
 import com.winterhavenmc.lodestar.destination.location.ValidLocation;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
  * Record class that represents a user-created destination, which can be persisted in the datastore
  */
-public record StoredDestination(String displayName, ValidLocation location) implements ValidDestination { }
+public record StoredDestination(String displayName, ValidLocation location) implements ValidDestination
+{
+	@Override
+	public @NotNull String toString()
+	{
+		return(displayName + " | " + location.worldName() + " [" + location.x() + "," + location.y() + "." + location.z() + "]");
+	}
+}
