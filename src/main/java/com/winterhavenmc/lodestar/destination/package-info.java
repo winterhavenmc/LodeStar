@@ -22,7 +22,7 @@
  * <ul>
  *     <li>{@code HomeDestination} – A player's bedspawn or other respawn location.</li>
  *     <li>{@code SpawnDestination} – A world or server spawn point.</li>
- *     <li>{@code StoredDestination} – A destination loaded from configuration or database.</li>
+ *     <li>{@code StoredDestination} – A destination persisted in a resource or datastore.</li>
  * </ul>
  * </p>
  *
