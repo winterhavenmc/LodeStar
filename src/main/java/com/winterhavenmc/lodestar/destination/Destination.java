@@ -26,9 +26,10 @@ import java.util.UUID;
 
 
 /**
- * Represents an immutable location and display name. Location is decomposed into validated, immutable final fields,
- * and reconstituted into a Bukkit location on access. Static factory methods are provided to create new instances
- * when reading from a datastore, or creating an instance manually.
+ * Represents an immutable location and a corresponding display name. A {@link Location} is decomposed into validated,
+ * immutable fields, and reconstituted into a Bukkit {@code Location} on access. Static factory methods are provided to
+ * create new instances when reading from a datastore, or creating an instance from an existing Bukkit {@code Location}
+ * and a corresponding {@code String} display name.
  */
 public sealed interface Destination permits ValidDestination, InvalidDestination
 {
