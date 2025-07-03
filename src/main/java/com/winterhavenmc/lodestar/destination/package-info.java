@@ -7,18 +7,18 @@
  * </p>
  *
  * <p>
- * There are two main categories of {@code Destination}:
+ * There are two permitted types of {@code Destination}:
  * </p>
  * <ul>
  *     <li>{@link com.winterhavenmc.lodestar.destination.ValidDestination} – Represents a fully resolved and usable destination, consisting of
  *         a {@code displayName} and a {@code location}. The {@code key()} method provides a derived
  *         identifier based on the display name.</li>
- *     <li>{@code InvalidDestination} – Represents a destination that could not be resolved, including
+ *     <li>{@link com.winterhavenmc.lodestar.destination.InvalidDestination} – Represents a destination that could not be resolved, including
  *         a display name and a human-readable reason for invalidity.</li>
  * </ul>
  *
  * <p>
- * Known implementations of {@code ValidDestination} include:
+ * Permitted implementations of {@code ValidDestination} are:
  * <ul>
  *     <li>{@code HomeDestination} – A player's bedspawn or other respawn location.</li>
  *     <li>{@code SpawnDestination} – A world or server spawn point.</li>
