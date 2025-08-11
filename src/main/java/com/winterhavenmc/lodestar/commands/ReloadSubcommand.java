@@ -81,9 +81,6 @@ final class ReloadSubcommand extends AbstractSubcommand
 		// reload messages
 		plugin.messageBuilder.reload();
 
-		// reload datastore
-//		plugin.dataStore.reload();
-
 		// send reloaded message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_RELOAD).send();
 
