@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.storage;
+package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import java.util.Properties;
 /**
  * Fetch database queries from properties file
  */
-final class Queries
+final class SqliteQueries
 {
 	private static final String propFileName = "queries.properties";
 
@@ -36,7 +36,7 @@ final class Queries
 	/**
 	 * Private class constructor to prevent instantiation
 	 */
-	private Queries()
+	private SqliteQueries()
 	{
 		throw new AssertionError();
 	}
@@ -49,7 +49,7 @@ final class Queries
 			properties = new Properties();
 			try
 			{
-				InputStream inputStream = Queries.class
+				InputStream inputStream = SqliteQueries.class
 						.getResourceAsStream("/" + propFileName);
 
 				if (inputStream == null)

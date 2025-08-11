@@ -54,7 +54,7 @@ final class TeleportSubcommand extends AbstractSubcommand
 	{
 		if (args.length == 2)
 		{
-			return plugin.dataStore.selectAllKeys().stream()
+			return plugin.dataStore.destinations().getKeys().stream()
 					.filter(string -> matchPrefix(string, args[1]))
 					.collect(Collectors.toList());
 		}
@@ -104,11 +104,12 @@ final class TeleportSubcommand extends AbstractSubcommand
 		}
 
 		// get destination from datastore
-		Destination destination = plugin.dataStore.selectRecord(destinationName);
+		Destination destination = plugin.dataStore.destinations().get(destinationName);
 
 		if (destination instanceof ValidDestination validDestination && validDestination.location() != null)
 		{
 			Location location = validDestination.location().toBukkitLocation();
+			assert location != null;
 
 			plugin.soundConfig.playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 			player.teleport(location);

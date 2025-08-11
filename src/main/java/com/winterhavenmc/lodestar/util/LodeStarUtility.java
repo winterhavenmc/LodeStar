@@ -252,7 +252,7 @@ public final class LodeStarUtility
 
 		if (type == Destination.Type.STORED)
 		{
-			return switch (plugin.dataStore.selectRecord(key))
+			return switch (plugin.dataStore.destinations().get(key))
 			{
 				case ValidDestination validDestionation -> Optional.of(validDestionation.displayName());
 				case InvalidDestination invalidDestination -> Optional.of(invalidDestination.displayName());
@@ -319,7 +319,7 @@ public final class LodeStarUtility
 	 * Get destination key encoded in item persistent meta data
 	 *
 	 * @param itemStack the item stack from which to retrieve stored key
-	 * @return String - destination key, or null if item does not have key in persistent meta data
+	 * @return String - destination key, or null if item does not have key in persistent metadata
 	 */
 	public String getKey(final ItemStack itemStack)
 	{
@@ -417,7 +417,7 @@ public final class LodeStarUtility
 			return true;
 		}
 
-		return plugin.dataStore.selectRecord(displayName) instanceof ValidDestination;
+		return plugin.dataStore.destinations().get(displayName) instanceof ValidDestination;
 	}
 
 }

@@ -20,7 +20,6 @@ package com.winterhavenmc.lodestar.commands;
 import com.winterhavenmc.lodestar.PluginMain;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
-import com.winterhavenmc.lodestar.storage.DataStore;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -83,7 +82,7 @@ final class ReloadSubcommand extends AbstractSubcommand
 		plugin.messageBuilder.reload();
 
 		// reload datastore
-		DataStore.reload(plugin);
+//		plugin.dataStore.reload();
 
 		// send reloaded message
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_RELOAD).send();

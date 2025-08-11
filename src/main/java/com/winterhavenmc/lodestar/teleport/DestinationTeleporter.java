@@ -51,7 +51,7 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 		final String key = plugin.lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
 
 		// execute teleport or send invalid destination message
-		Destination destination = plugin.dataStore.selectRecord(key);
+		Destination destination = plugin.dataStore.destinations().get(key);
 
 		switch (destination)
 		{

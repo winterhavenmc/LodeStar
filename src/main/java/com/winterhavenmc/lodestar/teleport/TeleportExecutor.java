@@ -18,12 +18,12 @@
 package com.winterhavenmc.lodestar.teleport;
 
 import com.winterhavenmc.lodestar.PluginMain;
-import com.winterhavenmc.lodestar.destination.location.ValidLocation;
 import com.winterhavenmc.lodestar.messages.Macro;
 import com.winterhavenmc.lodestar.messages.MessageId;
 import com.winterhavenmc.lodestar.sounds.SoundId;
 import com.winterhavenmc.lodestar.destination.ValidDestination;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -130,11 +130,11 @@ class TeleportExecutor
 	 */
 	private void loadDestinationChunk(final ValidDestination validDestination)
 	{
-		ValidLocation location = validDestination.location();
+		Location location = validDestination.location().toBukkitLocation();
 
-		if (location.world() != null && !location.world().getChunkAt(location.toBukkitLocation()).isLoaded())
+		if (location != null && location.getWorld() != null && !location.getWorld().getChunkAt(location).isLoaded())
 		{
-			location.world().getChunkAt(location.toBukkitLocation()).load();
+			location.getWorld().getChunkAt(location).load();
 		}
 	}
 
@@ -148,11 +148,11 @@ class TeleportExecutor
 	 */
 	private boolean isUnderMinimumDistance(final Player player, final ValidDestination validDestination)
 	{
-		ValidLocation location = validDestination.location();
+		Location location = validDestination.location().toBukkitLocation();
 
-		return location.world() != null
-				&& player.getWorld().equals(location.world())
-				&& player.getLocation().distanceSquared(location.toBukkitLocation()) < Math.pow(plugin.getConfig().getInt("minimum-distance"), 2);
+		return location != null && location.getWorld() != null
+				&& player.getWorld().equals(location.getWorld())
+				&& player.getLocation().distanceSquared(location) < Math.pow(plugin.getConfig().getInt("minimum-distance"), 2);
 	}
 
 

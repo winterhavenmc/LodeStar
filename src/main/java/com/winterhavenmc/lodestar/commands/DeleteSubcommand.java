@@ -52,7 +52,7 @@ final class DeleteSubcommand extends AbstractSubcommand
 	{
 		if (args.length == 2)
 		{
-			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
+			List<String> resultList = new ArrayList<>(plugin.dataStore.destinations().getKeys());
 			resultList.addFirst(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
 			resultList.addFirst(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
@@ -97,7 +97,7 @@ final class DeleteSubcommand extends AbstractSubcommand
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 		}
 		// if delete method returns valid destination, delete was successful
-		else if (plugin.dataStore.deleteRecord(key) instanceof ValidDestination)
+		else if (plugin.dataStore.destinations().delete(key) instanceof ValidDestination)
 		{
 			plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
 					.setMacro(Macro.DESTINATION, destinationName)

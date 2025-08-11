@@ -56,7 +56,7 @@ final class SetSubcommand extends AbstractSubcommand
 		{
 			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
 
-			return plugin.dataStore.selectAllKeys().stream()
+			return plugin.dataStore.destinations().getKeys().stream()
 					.filter(startsWith)
 					.collect(Collectors.toList());
 		}
@@ -109,7 +109,7 @@ final class SetSubcommand extends AbstractSubcommand
 		}
 
 		// get optional Destination from data store
-		Destination destination = plugin.dataStore.selectRecord(destinationName);
+		Destination destination = plugin.dataStore.destinations().get(destinationName);
 
 		// check for overwrite permission if validDestination already exists TODO: shouldn't this check negate permission?
 		if (destination instanceof ValidDestination && sender.hasPermission(permissionNode + ".overwrite"))
@@ -133,7 +133,7 @@ final class SetSubcommand extends AbstractSubcommand
 		switch (Destination.of(Destination.Type.STORED, destinationName, location))
 		{
 			case ValidDestination validDestination -> {
-				plugin.dataStore.insertRecords(Collections.singleton(validDestination));
+				plugin.dataStore.destinations().save(Collections.singleton(validDestination));
 				plugin.messageBuilder.compose(sender, MessageId.COMMAND_SUCCESS_SET)
 						.setMacro(Macro.DESTINATION, validDestination.displayName())
 						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())

@@ -60,7 +60,7 @@ final class BindSubcommand extends AbstractSubcommand
 	{
 		if (args.length == 2)
 		{
-			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
+			List<String> resultList = new ArrayList<>(plugin.dataStore.destinations().getKeys());
 			resultList.addFirst(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
 			resultList.addFirst(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
 			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());

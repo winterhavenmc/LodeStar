@@ -62,7 +62,7 @@ final class GiveSubcommand extends AbstractSubcommand
 		else if (args.length == 3)
 		{
 			// get all destination keys in list
-			List<String> resultList = new ArrayList<>(plugin.dataStore.selectAllKeys());
+			List<String> resultList = new ArrayList<>(plugin.dataStore.destinations().getKeys());
 
 			// add home and spawn destinations to list
 			resultList.addFirst(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
