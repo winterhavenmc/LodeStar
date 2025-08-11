@@ -55,8 +55,6 @@ final class SqliteDestinationRepository implements DestinationRepository
 	}
 
 
-
-
 	@Override
 	public int save(final Collection<ValidDestination> validDestinations)
 	{
@@ -76,7 +74,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 			}
 			catch (SQLException sqlException)
 			{
-				logger.warning("An error occurred while inserting a validDestination into the SQLite datastore.");
+				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getDefaultMessage());
 				logger.warning(sqlException.getLocalizedMessage());
 			}
 		}
@@ -140,7 +138,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (SQLException sqlException)
 		{
 			// output simple error message
-			logger.warning("An error occurred while fetching a validDestination from the SQLite datastore.");
+			logger.warning(SqliteMessage.SELECT_RECORD_ERROR.getDefaultMessage());
 			logger.warning(sqlException.getLocalizedMessage());
 			return new InvalidDestination(key, "Could not retrieve destination for key.");
 		}
@@ -171,7 +169,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (SQLException sqlException)
 		{
 			// output simple error message
-			logger.warning("An error occurred while trying to fetch all keys from the SQLite datastore.");
+			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage());
 			logger.warning(sqlException.getLocalizedMessage());
 		}
 
@@ -207,7 +205,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (Exception e)
 		{
 			// output simple error message
-			logger.warning("An error occurred while attempting to delete a destination from the SQLite datastore.");
+			logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getDefaultMessage());
 			logger.warning(e.getLocalizedMessage());
 		}
 

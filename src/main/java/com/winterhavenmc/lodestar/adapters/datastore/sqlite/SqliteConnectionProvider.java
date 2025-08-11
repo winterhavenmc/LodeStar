@@ -65,7 +65,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		// if data store is already initialized, do nothing and return
 		if (initialized)
 		{
-			logger.info("SQLite datastore already initialized.");
+			logger.info(SqliteMessage.DATASTORE_INITIALIZED_ERROR.getDefaultMessage());
 			return;
 		}
 
@@ -91,7 +91,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		this.destinationRepository = new SqliteDestinationRepository(plugin, connection);
 
 		// output log message
-		logger.info("Datastore initialized.");
+		logger.info(SqliteMessage.DATASTORE_INITIALIZED_NOTICE.getDefaultMessage());
 	}
 
 
@@ -104,12 +104,12 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		try
 		{
 			connection.close();
-			logger.info("SQLite datastore connection closed.");
+			logger.info(SqliteMessage.DATASTORE_CLOSED_NOTICE.getDefaultMessage());
 		}
 		catch (Exception e)
 		{
 			// output simple error message
-			logger.warning("An error occurred while closing the SQLite datastore.");
+			logger.warning(SqliteMessage.DATASTORE_CLOSE_ERROR.getDefaultMessage());
 			logger.warning(e.getMessage());
 		}
 
@@ -203,7 +203,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		}
 		catch (final SQLException e)
 		{
-			logger.warning("An error occurred while trying to select all records from the SQLite datastore.");
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getDefaultMessage());
 			logger.warning(e.getLocalizedMessage());
 		}
 
@@ -240,7 +240,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 				// if world is null, set worldValid false and log warning
 				if (world == null)
 				{
-					logger.warning("Stored validDestination has invalid world: " + worldName);
+					logger.warning("Stored destination has invalid world: " + worldName);
 				}
 
 				Destination destination = Destination.of(Destination.Type.STORED, displayName, worldName, worldUid, x, y, z, yaw, pitch);
@@ -253,7 +253,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		}
 		catch (final SQLException e)
 		{
-			logger.warning("An error occurred while trying to select all records from the SQLite datastore.");
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getDefaultMessage());
 			logger.warning(e.getLocalizedMessage());
 		}
 
