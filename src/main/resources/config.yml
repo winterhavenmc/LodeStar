@@ -1,7 +1,13 @@
 # Main configuration file for ${project.name} v${project.version}
 
-# localized language support
+# localized language file
 language: en-US
+
+# Locale (used for time and number formatting)
+locale: en-US
+
+# Timezone (uses system default if not set. valid tz identifiers listed here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
+#timezone: America/Chicago
 
 # If this list is empty, all worlds will be added to the enabled worlds list
 enabled-worlds:
