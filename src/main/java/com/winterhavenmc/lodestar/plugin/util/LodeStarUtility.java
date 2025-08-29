@@ -18,9 +18,9 @@
 package com.winterhavenmc.lodestar.plugin.util;
 
 import com.winterhavenmc.lodestar.plugin.PluginMain;
-import com.winterhavenmc.lodestar.plugin.destination.Destination;
-import com.winterhavenmc.lodestar.plugin.destination.InvalidDestination;
-import com.winterhavenmc.lodestar.plugin.destination.ValidDestination;
+import com.winterhavenmc.lodestar.plugin.models.destination.Destination;
+import com.winterhavenmc.lodestar.plugin.models.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.plugin.models.destination.ValidDestination;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

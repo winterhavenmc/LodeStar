@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Tim Savage.
+ * Copyright (c) 2022-2025 Tim Savage.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,20 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.destination.location;
+package com.winterhavenmc.lodestar.plugin.models.destination;
 
-import java.util.UUID;
+import com.winterhavenmc.lodestar.plugin.models.location.ValidLocation;
+import org.jetbrains.annotations.NotNull;
+
 
 /**
- * Represents a world that is otherwise valid, but is not currently loaded
+ * Record class that represents a Home destination
  */
-public record UnloadedWorldLocation(String worldName,
-                                    UUID worldUid,
-                                    double x,
-                                    double y,
-                                    double z,
-                                    float yaw,
-                                    float pitch) implements ImmutableLocation { }
+public record HomeDestination(String displayName, ValidLocation location) implements ValidDestination
+{
+	@Override
+	public @NotNull String toString()
+	{
+		return(displayName + " | " + location.worldName() + " [" + location.x() + "," + location.y() + "." + location.z() + "]");
+	}
+}

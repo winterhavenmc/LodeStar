@@ -15,21 +15,17 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.destination;
+package com.winterhavenmc.lodestar.plugin.models.location;
 
-
-import org.jetbrains.annotations.NotNull;
+import java.util.UUID;
 
 /**
- * Record class that represents an invalid destination
- *
- * @param displayName
+ * Represents a world that is otherwise valid, but is not currently loaded
  */
-public record InvalidDestination(String displayName, String reason) implements Destination
-{
-	@Override
-	public @NotNull String toString()
-	{
-		return(displayName + ": " + reason);
-	}
-}
+public record UnloadedWorldLocation(String worldName,
+                                    UUID worldUid,
+                                    double x,
+                                    double y,
+                                    double z,
+                                    float yaw,
+                                    float pitch) implements ImmutableLocation { }

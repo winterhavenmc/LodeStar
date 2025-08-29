@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.destination.location;
+package com.winterhavenmc.lodestar.plugin.models.location;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

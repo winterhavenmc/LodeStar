@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 Tim Savage.
+ * Copyright (c) 2025 Tim Savage.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,20 +15,11 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.destination;
-
-import com.winterhavenmc.lodestar.plugin.destination.location.ValidLocation;
-import org.jetbrains.annotations.NotNull;
-
+package com.winterhavenmc.lodestar.plugin.models.location;
 
 /**
- * Record class that represents a Spawn destination
+ * Represents an invalid {@code Location}
+ *
+ * @param reason the reason a valid location could not be derived
  */
-public record SpawnDestination(String displayName, ValidLocation location) implements ValidDestination
-{
-	@Override
-	public @NotNull String toString()
-	{
-		return(displayName + " | " + location.worldName() + " [" + location.x() + "," + location.y() + "." + location.z() + "]");
-	}
-}
+public record InvalidLocation(String reason) implements ImmutableLocation { }

@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
-import com.winterhavenmc.lodestar.plugin.destination.ValidDestination;
+import com.winterhavenmc.lodestar.plugin.models.destination.ValidDestination;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

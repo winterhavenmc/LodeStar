@@ -15,9 +15,9 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.destination;
+package com.winterhavenmc.lodestar.plugin.models.destination;
 
-import com.winterhavenmc.lodestar.plugin.destination.location.*;
+import com.winterhavenmc.lodestar.plugin.models.location.*;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 

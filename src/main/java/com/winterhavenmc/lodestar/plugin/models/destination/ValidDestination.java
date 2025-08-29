@@ -15,9 +15,9 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.destination;
+package com.winterhavenmc.lodestar.plugin.models.destination;
 
-import com.winterhavenmc.lodestar.plugin.destination.location.ValidLocation;
+import com.winterhavenmc.lodestar.plugin.models.location.ValidLocation;
 
 import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;

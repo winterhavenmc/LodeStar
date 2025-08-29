@@ -1,7 +1,7 @@
 /**
  * Provides types representing abstract in-game destinations.
  * <p>
- * The {@link com.winterhavenmc.lodestar.plugin.destination.Destination} sealed interface represents a general abstraction of a target location
+ * The {@link com.winterhavenmc.lodestar.plugin.models.destination.Destination} sealed interface represents a general abstraction of a target location
  * within the Minecraft world. It unifies concepts such as homes, spawns, stored waypoints, and invalid destinations
  * for use cases including teleportation, message display, and persistent storage.
  * </p>
@@ -10,10 +10,10 @@
  * There are two permitted types of {@code Destination}:
  * </p>
  * <ul>
- *     <li>{@link com.winterhavenmc.lodestar.plugin.destination.ValidDestination} – Represents a fully resolved and usable destination, consisting of
+ *     <li>{@link com.winterhavenmc.lodestar.plugin.models.destination.ValidDestination} – Represents a fully resolved and usable destination, consisting of
  *         a {@code displayName} and a {@code location}. The {@code key()} method provides a derived
  *         identifier based on the display name.</li>
- *     <li>{@link com.winterhavenmc.lodestar.plugin.destination.InvalidDestination} – Represents a destination that could not be resolved, including
+ *     <li>{@link com.winterhavenmc.lodestar.plugin.models.destination.InvalidDestination} – Represents a destination that could not be resolved, including
  *         a display name and a human-readable reason for invalidity.</li>
  * </ul>
  *
@@ -35,4 +35,4 @@
  * @author Tim Savage
  * @since 1.0
  */
-package com.winterhavenmc.lodestar.plugin.destination;
+package com.winterhavenmc.lodestar.plugin.models.destination;

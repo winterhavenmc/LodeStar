@@ -15,16 +15,16 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.destination;
+package com.winterhavenmc.lodestar.plugin.models.destination;
 
-import com.winterhavenmc.lodestar.plugin.destination.location.ValidLocation;
+import com.winterhavenmc.lodestar.plugin.models.location.ValidLocation;
 import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Record class that represents a user-created destination, which can be persisted in the datastore
+ * Record class that represents a Spawn destination
  */
-public record StoredDestination(String displayName, ValidLocation location) implements ValidDestination
+public record SpawnDestination(String displayName, ValidLocation location) implements ValidDestination
 {
 	@Override
 	public @NotNull String toString()

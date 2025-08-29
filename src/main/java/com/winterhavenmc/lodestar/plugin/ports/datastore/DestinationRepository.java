@@ -17,8 +17,8 @@
 
 package com.winterhavenmc.lodestar.plugin.ports.datastore;
 
-import com.winterhavenmc.lodestar.plugin.destination.Destination;
-import com.winterhavenmc.lodestar.plugin.destination.ValidDestination;
+import com.winterhavenmc.lodestar.plugin.models.destination.Destination;
+import com.winterhavenmc.lodestar.plugin.models.destination.ValidDestination;
 
 import java.util.Collection;
 import java.util.List;
