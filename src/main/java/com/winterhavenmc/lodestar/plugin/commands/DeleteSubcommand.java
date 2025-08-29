@@ -52,10 +52,10 @@ final class DeleteSubcommand extends AbstractSubcommand
 	{
 		if (args.length == 2)
 		{
-			List<String> resultList = new ArrayList<>(plugin.dataStore.destinations().names());
-			resultList.addFirst(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
-			resultList.addFirst(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
-			return resultList.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
+			List<String> destinationNames = new ArrayList<>(plugin.dataStore.destinations().names());
+			destinationNames.addFirst(plugin.messageBuilder.getSpawnDisplayName().orElse("Spawn"));
+			destinationNames.addFirst(plugin.messageBuilder.getHomeDisplayName().orElse("Home"));
+			return destinationNames.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 
 		return Collections.emptyList();

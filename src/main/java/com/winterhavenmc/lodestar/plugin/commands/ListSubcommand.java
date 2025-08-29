@@ -81,22 +81,22 @@ final class ListSubcommand extends AbstractSubcommand
 		int itemsPerPage = plugin.getConfig().getInt("list-page-size");
 
 		// get all records from datastore
-		final List<String> allKeys = plugin.dataStore.destinations().names();
+		final List<String> destinationNames = plugin.dataStore.destinations().names();
 
 		if (plugin.getConfig().getBoolean("debug"))
 		{
-			plugin.getLogger().info("Total records fetched from data store: " + allKeys.size());
+			plugin.getLogger().info("Total records fetched from data store: " + destinationNames.size());
 		}
 
 		// if display list is empty, output list empty message and return
-		if (allKeys.isEmpty())
+		if (destinationNames.isEmpty())
 		{
 			plugin.messageBuilder.compose(sender, MessageId.LIST_EMPTY).send();
 			return true;
 		}
 
 		// get page count
-		int pageCount = ((allKeys.size() - 1) / itemsPerPage) + 1;
+		int pageCount = ((destinationNames.size() - 1) / itemsPerPage) + 1;
 		if (page > pageCount)
 		{
 			page = pageCount;
@@ -104,10 +104,10 @@ final class ListSubcommand extends AbstractSubcommand
 
 		// get item range for page
 		int startIndex = ((page - 1) * itemsPerPage);
-		int endIndex = Math.min((page * itemsPerPage), allKeys.size());
+		int endIndex = Math.min((page * itemsPerPage), destinationNames.size());
 
 		// get keys for items on page
-		List<String> displayKeys = allKeys.subList(startIndex, endIndex);
+		List<String> displayKeys = destinationNames.subList(startIndex, endIndex);
 
 		displayListHeader(sender, page, pageCount);
 		displayListItems(sender, startIndex, displayKeys);
