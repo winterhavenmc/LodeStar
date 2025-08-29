@@ -82,7 +82,9 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		}
 
 		// get player respawn (bed or other) location
-		Location location = player.getRespawnLocation();
+		Location location = (player.getRespawnLocation() != null)
+				? player.getRespawnLocation()
+				: plugin.worldManager.getSpawnLocation(player.getWorld());
 
 		// Get home display name
 		String destinationName = plugin.messageBuilder.getHomeDisplayName().orElse("Home");
