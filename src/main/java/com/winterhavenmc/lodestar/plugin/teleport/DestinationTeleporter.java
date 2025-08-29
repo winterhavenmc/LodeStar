@@ -21,7 +21,7 @@ import com.winterhavenmc.lodestar.plugin.PluginMain;
 import com.winterhavenmc.lodestar.plugin.models.destination.Destination;
 import com.winterhavenmc.lodestar.plugin.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.plugin.models.destination.ValidDestination;
-import com.winterhavenmc.lodestar.plugin.messages.MessageId;
+import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.entity.Player;
 
 

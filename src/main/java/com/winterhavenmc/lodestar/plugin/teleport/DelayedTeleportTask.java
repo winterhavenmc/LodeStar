@@ -19,8 +19,8 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.lodestar.plugin.PluginMain;
 import com.winterhavenmc.lodestar.plugin.models.destination.SpawnDestination;
-import com.winterhavenmc.lodestar.plugin.messages.Macro;
-import com.winterhavenmc.lodestar.plugin.messages.MessageId;
+import com.winterhavenmc.lodestar.plugin.util.Macro;
+import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 import com.winterhavenmc.lodestar.plugin.models.destination.ValidDestination;
 import org.bukkit.Location;

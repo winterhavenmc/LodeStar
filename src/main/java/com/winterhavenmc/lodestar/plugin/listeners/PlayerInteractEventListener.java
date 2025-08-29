@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.listeners;
 
 import com.winterhavenmc.lodestar.plugin.PluginMain;
-import com.winterhavenmc.lodestar.plugin.messages.MessageId;
+import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

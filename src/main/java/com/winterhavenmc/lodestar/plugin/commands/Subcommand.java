@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
-import com.winterhavenmc.lodestar.plugin.messages.MessageId;
+import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

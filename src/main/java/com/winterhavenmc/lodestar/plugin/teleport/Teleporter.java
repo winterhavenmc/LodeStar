@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.teleport;
 
-import com.winterhavenmc.lodestar.plugin.messages.MessageId;
+import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.models.destination.ValidDestination;
 
 import org.bukkit.entity.Player;
