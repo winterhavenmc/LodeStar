@@ -81,7 +81,7 @@ final class ListSubcommand extends AbstractSubcommand
 		int itemsPerPage = plugin.getConfig().getInt("list-page-size");
 
 		// get all records from datastore
-		final List<String> allKeys = plugin.dataStore.destinations().getKeys();
+		final List<String> allKeys = plugin.dataStore.destinations().names();
 
 		if (plugin.getConfig().getBoolean("debug"))
 		{

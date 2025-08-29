@@ -153,7 +153,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 
 
 	@Override
-	public List<String> getKeys()
+	public List<String> names()
 	{
 		List<String> returnList = new ArrayList<>();
 

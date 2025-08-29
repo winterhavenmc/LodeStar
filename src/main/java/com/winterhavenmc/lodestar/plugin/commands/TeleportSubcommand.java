@@ -54,7 +54,7 @@ final class TeleportSubcommand extends AbstractSubcommand
 	{
 		if (args.length == 2)
 		{
-			return plugin.dataStore.destinations().getKeys().stream()
+			return plugin.dataStore.destinations().names().stream()
 					.filter(string -> matchPrefix(string, args[1]))
 					.collect(Collectors.toList());
 		}

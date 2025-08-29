@@ -56,7 +56,7 @@ final class SetSubcommand extends AbstractSubcommand
 		{
 			Predicate<String> startsWith = string -> string.toLowerCase().startsWith(args[1].toLowerCase());
 
-			return plugin.dataStore.destinations().getKeys().stream()
+			return plugin.dataStore.destinations().names().stream()
 					.filter(startsWith)
 					.collect(Collectors.toList());
 		}

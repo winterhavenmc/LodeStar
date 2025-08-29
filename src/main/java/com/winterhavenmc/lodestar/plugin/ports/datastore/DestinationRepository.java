@@ -49,7 +49,7 @@ public interface DestinationRepository
 	 *
 	 * @return List of all destination display name strings
 	 */
-	List<String> getKeys();
+	List<String> names();
 
 
 	/**
