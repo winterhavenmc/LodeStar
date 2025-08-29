@@ -41,27 +41,13 @@ public sealed interface ImmutableLocation permits ValidLocation, InvalidLocation
 	 */
 	static ImmutableLocation of(final Location location)
 	{
-		if (location == null)
-		{
-			return new InvalidLocation("The location was null.");
-		}
-
-		else if (location.getWorld() == null)
-		{
-			return new NoWorldLocation("∅", new UUID(0, 0),
+		if (location == null) return new InvalidLocation("The location was null.");
+		else if (location.getWorld() == null) return new NoWorldLocation("∅", new UUID(0, 0),
 					location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		}
-
-		else if (!location.isWorldLoaded())
-		{
-			return new UnloadedWorldLocation(location.getWorld().getName(), location.getWorld().getUID(),
+		else if (!location.isWorldLoaded()) return new UnloadedWorldLocation(location.getWorld().getName(), location.getWorld().getUID(),
 					location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		}
-
-		else {
-			return new ValidLocation(location.getWorld().getName(), location.getWorld().getUID(),
+		else return new ValidLocation(location.getWorld().getName(), location.getWorld().getUID(),
 					location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-		}
 	}
 
 
