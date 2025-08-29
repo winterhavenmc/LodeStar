@@ -18,8 +18,8 @@
 package com.winterhavenmc.lodestar.plugin.storage;
 
 import com.winterhavenmc.lodestar.bootstrap.Bootstrap;
-import com.winterhavenmc.lodestar.plugin.datastore.ConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.datastore.DestinationRepository;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.DestinationRepository;
 import org.bukkit.plugin.Plugin;
 
 

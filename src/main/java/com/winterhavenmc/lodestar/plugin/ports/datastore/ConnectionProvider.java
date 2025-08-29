@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.datastore;
+package com.winterhavenmc.lodestar.plugin.ports.datastore;
 
 import java.sql.SQLException;
 

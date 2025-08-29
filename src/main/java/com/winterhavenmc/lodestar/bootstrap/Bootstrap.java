@@ -1,7 +1,7 @@
 package com.winterhavenmc.lodestar.bootstrap;
 
 import com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import org.bukkit.plugin.Plugin;
 
 
