@@ -17,10 +17,10 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
-import com.winterhavenmc.lodestar.destination.Destination;
-import com.winterhavenmc.lodestar.destination.InvalidDestination;
-import com.winterhavenmc.lodestar.destination.ValidDestination;
-import com.winterhavenmc.lodestar.ports.datastore.DestinationRepository;
+import com.winterhavenmc.lodestar.plugin.destination.Destination;
+import com.winterhavenmc.lodestar.plugin.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.plugin.destination.ValidDestination;
+import com.winterhavenmc.lodestar.plugin.datastore.DestinationRepository;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
