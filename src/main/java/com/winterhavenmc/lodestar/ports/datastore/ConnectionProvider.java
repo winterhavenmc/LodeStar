@@ -28,9 +28,14 @@ public interface ConnectionProvider
 
 
 	/**
+	 * Get instance of DestinationRepository
+	 *
+	 */
+	DestinationRepository destinations();
+
+
+	/**
 	 * Close SQLite datastore connection
 	 */
 	void close();
-
-	DestinationRepository destinations();
 }
