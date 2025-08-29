@@ -18,6 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.lodestar.plugin.PluginMain;
+import com.winterhavenmc.lodestar.plugin.tasks.RemovePlayerCooldownTask;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

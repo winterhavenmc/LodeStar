@@ -160,7 +160,7 @@ public final class TeleportHandler
 	 *
 	 * @param player the player to be removed from the cooldown map
 	 */
-	void cancelPlayerCooldown(final Player player)
+	public void cancelPlayerCooldown(final Player player)
 	{
 		cooldownMap.removePlayer(player);
 	}
