@@ -21,8 +21,8 @@ import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.tasks.RemovePlayerCooldownTask;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.winterhavenmc.library.TimeUnit.SECONDS;
 
@@ -30,7 +30,7 @@ import static com.winterhavenmc.library.TimeUnit.SECONDS;
 class CooldownMap
 {
 	// hashmap to store player UUID and cooldown expire time in milliseconds
-	private final ConcurrentHashMap<UUID, Long> cooldownMap;
+	private final HashMap<UUID, Long> cooldownMap;
 	private final TeleportHandler teleportHandler;
 	private final PluginController.ContextContainer ctx;
 
@@ -39,7 +39,7 @@ class CooldownMap
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;
-		cooldownMap = new ConcurrentHashMap<>();
+		cooldownMap = new HashMap<>();
 	}
 
 
