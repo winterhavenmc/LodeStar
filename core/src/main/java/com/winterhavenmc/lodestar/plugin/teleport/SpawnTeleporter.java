@@ -48,7 +48,7 @@ final class SpawnTeleporter extends AbstractTeleporter implements Teleporter
 		switch (getSpawnDestination(player)) {
 			case ValidDestination validDestination -> execute(player, validDestination, MessageId.TELEPORT_WARMUP_SPAWN);
 			case InvalidDestination ignored -> sendInvalidDestinationMessage(player,
-					ctx.messageBuilder().getSpawnDisplayName().orElse("Spawn"));
+					ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Spawn"));
 		}
 	}
 

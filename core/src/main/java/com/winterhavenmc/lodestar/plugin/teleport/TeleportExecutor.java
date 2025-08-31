@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
-import static com.winterhavenmc.library.TimeUnit.SECONDS;
+import static com.winterhavenmc.library.time.TimeUnit.SECONDS;
 
 
 class TeleportExecutor

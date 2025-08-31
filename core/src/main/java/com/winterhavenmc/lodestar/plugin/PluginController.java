@@ -21,8 +21,6 @@ import com.winterhavenmc.lodestar.plugin.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.plugin.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.util.Macro;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.storage.DataStore;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
@@ -44,7 +42,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class PluginController
 {
-	public MessageBuilder<MessageId, Macro> messageBuilder;
+	public MessageBuilder messageBuilder;
 	public DataStore datastore;
 	public TeleportHandler teleportHandler;
 	public SoundConfiguration soundConfig;
@@ -59,7 +57,7 @@ public final class PluginController
 		plugin.saveDefaultConfig();
 
 		// instantiate message builder
-		messageBuilder = new MessageBuilder<>(plugin);
+		messageBuilder = MessageBuilder.create(plugin);
 
 		// instantiate sound configuration
 		soundConfig = new YamlSoundConfiguration(plugin);
@@ -97,6 +95,6 @@ public final class PluginController
 	}
 
 
-	public record ContextContainer(JavaPlugin plugin, MessageBuilder<MessageId, Macro> messageBuilder,
+	public record ContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
 	                               SoundConfiguration soundConfig, WorldManager worldManager, DataStore datastore, LodeStarUtility lodeStarUtility) { }
 }

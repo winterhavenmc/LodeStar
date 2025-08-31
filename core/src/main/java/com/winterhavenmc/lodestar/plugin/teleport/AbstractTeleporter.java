@@ -87,7 +87,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 				: ctx.worldManager().getSpawnLocation(player.getWorld());
 
 		// Get home display name
-		String destinationName = ctx.messageBuilder().getHomeDisplayName().orElse("Home");
+		String destinationName = ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Home");
 
 		// return destination for player bed spawn location
 		return Destination.of(Destination.Type.HOME, destinationName, location);
@@ -123,7 +123,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		}
 
 		// get destination name
-		String destinationName = ctx.messageBuilder().getSpawnDisplayName().orElse("Spawn");
+		String destinationName = ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Spawn");
 
 		// return destination for player spawn
 		return Destination.of(Destination.Type.SPAWN, destinationName, location);

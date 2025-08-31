@@ -33,7 +33,7 @@ public final class TeleportHandler
 	private final WarmupMap warmupMap;
 	private final CooldownMap cooldownMap;
 	private final TeleportExecutor teleportExecutor;
-	private final MessageBuilder<MessageId, Macro> messageBuilder;
+	private final MessageBuilder messageBuilder;
 	private final LodeStarUtility lodeStarUtility;
 	private final PluginController.ContextContainer ctx;
 

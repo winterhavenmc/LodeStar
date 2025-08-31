@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static com.winterhavenmc.library.TimeUnit.SECONDS;
+import static com.winterhavenmc.library.time.TimeUnit.SECONDS;
 
 
 class CooldownMap

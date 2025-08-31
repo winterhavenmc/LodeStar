@@ -69,7 +69,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 			{
 				case ValidDestination ignored -> spawnTeleporter.initiate(player);
 				case InvalidDestination ignored -> sendInvalidDestinationMessage(player,
-						ctx.messageBuilder().getHomeDisplayName().orElse("Home"));
+						ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Home"));
 			}
 		}
 		else

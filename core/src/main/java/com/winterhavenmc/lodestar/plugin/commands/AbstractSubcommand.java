@@ -95,8 +95,8 @@ abstract class AbstractSubcommand implements Subcommand
 
 	boolean isRerservedName(final String destinationName)
 	{
-		return destinationName.equals(ctx.messageBuilder().getSpawnDisplayName().orElse("Spawn"))
-				|| destinationName.equals(ctx.messageBuilder().getHomeDisplayName().orElse("Home"));
+		return destinationName.equals(ctx.messageBuilder().getConstantResolver().getString("LOCATION.SPAWN").orElse("Spawn"))
+				|| destinationName.equals(ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Home"));
 	}
 
 }

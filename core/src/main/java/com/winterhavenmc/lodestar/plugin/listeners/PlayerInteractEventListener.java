@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.listeners;
 
+import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -85,7 +86,7 @@ public class PlayerInteractEventListener implements Listener
 		}
 
 		// if item used is not a LodeStar, do nothing and return
-		if (!ctx.lodeStarUtility().isItem(event.getItem()))
+		if (!ItemForge.isCustomItem(event.getItem()))
 		{
 			return;
 		}

@@ -61,8 +61,8 @@ final class BindSubcommand extends AbstractSubcommand
 		if (args.length == 2)
 		{
 			List<String> destinationNames = new ArrayList<>(ctx.datastore().destinations().names());
-			destinationNames.addFirst(ctx.messageBuilder().getSpawnDisplayName().orElse("Spawn"));
-			destinationNames.addFirst(ctx.messageBuilder().getHomeDisplayName().orElse("Home"));
+			destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION.SPAWN").orElse("Spawn"));
+			destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Home"));
 			return destinationNames.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 

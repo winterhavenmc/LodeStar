@@ -134,7 +134,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 			if (validDestination instanceof SpawnDestination)
 			{
 				ctx.messageBuilder().compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
-						.setMacro(Macro.DESTINATION, ctx.messageBuilder().getSpawnDisplayName())
+						.setMacro(Macro.DESTINATION, ctx.messageBuilder().getConstantResolver().getString("LOCATION.SPAWN").orElse("Spawn"))
 						.setMacro(Macro.DESTINATION_WORLD, ctx.plugin().getServer().getWorld(validDestination.location().worldUid()))
 						.send();
 			}

@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.listeners;
 
+import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -104,7 +105,7 @@ public final class PlayerEventListener implements Listener
 		// if crafting inventory contains LodeStar item, set result item to null
 		for (ItemStack itemStack : event.getInventory())
 		{
-			if (ctx.lodeStarUtility().isItem(itemStack))
+			if (ItemForge.isCustomItem(itemStack))
 			{
 				event.getInventory().setResult(null);
 			}

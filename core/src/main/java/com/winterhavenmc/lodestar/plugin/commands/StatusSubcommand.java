@@ -17,16 +17,17 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
+import com.winterhavenmc.library.messagebuilder.resources.configuration.LocaleProvider;
 import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.time.Duration;
 import java.util.List;
-
-import static com.winterhavenmc.library.TimeUnit.SECONDS;
 
 
 /**
@@ -35,6 +36,8 @@ import static com.winterhavenmc.library.TimeUnit.SECONDS;
  */
 final class StatusSubcommand extends AbstractSubcommand
 {
+	final LocaleProvider localeProvider;
+
 	/**
 	 * Class constructor
 	 */
@@ -45,6 +48,7 @@ final class StatusSubcommand extends AbstractSubcommand
 		this.permissionNode = "lodestar.status";
 		this.usageString = "/lodestar status";
 		this.description = MessageId.COMMAND_HELP_STATUS;
+		this.localeProvider = LocaleProvider.create(ctx.plugin());
 	}
 
 
@@ -69,31 +73,43 @@ final class StatusSubcommand extends AbstractSubcommand
 		}
 
 		// output plugin info and config settings
+		displayStatusHeader(sender);
 		displayPluginVersion(sender);
 		displayDebugSetting(sender);
 		displayLanguageSetting(sender);
+		displayLocaleSetting(sender);
+		displayTimezoneSetting(sender);
 		displayDefaultMaterialSetting(sender);
 		displayMinimumDistanceSetting(sender);
 		displayTeleportWarmupSetting(sender);
 		displayTeleportCooldownSetting(sender);
 		displayShiftClickSetting(sender);
-		displayTeleportCancelSetting(sender);
+		displayCancelOnDamageSetting(sender);
+		displayCancelOnMovementSetting(sender);
+		displayCancelOnInteractionSetting(sender);
 		displayRemoveFromInventorySetting(sender);
 		displayAllowInRecipesSetting(sender);
 		displayFromNetherSetting(sender);
 		displayFromEndSetting(sender);
 		displayLightningSetting(sender);
 		displayEnabledWorlds(sender);
+		displayStatusFooter(sender);
 
 		return true;
 	}
 
 
+	private void displayStatusHeader(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_HEADER).send();
+	}
+
+
 	private void displayPluginVersion(final CommandSender sender)
 	{
-		String versionString = ctx.plugin().getDescription().getVersion();
-		sender.sendMessage(ChatColor.DARK_AQUA + "[" + ctx.plugin().getName() + "] " + ChatColor.AQUA + "Version: "
-				+ ChatColor.RESET + versionString);
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_PLUGIN_VERSION)
+				.setMacro(Macro.SETTING, ctx.plugin().getDescription().getVersion())
+				.send();
 	}
 
 
@@ -108,97 +124,142 @@ final class StatusSubcommand extends AbstractSubcommand
 
 	private void displayLanguageSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Language: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getString("language"));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_LANGUAGE)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getString("language"))
+				.send();
+	}
+
+
+	private void displayLocaleSetting(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_LOCALE)
+				.setMacro(Macro.SETTING, localeProvider.getLocale().toLanguageTag())
+				.send();
+	}
+
+
+	private void displayTimezoneSetting(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_TIMEZONE)
+				.setMacro(Macro.SETTING, localeProvider.getZoneId().getId())
+				.send();
 	}
 
 
 	private void displayDefaultMaterialSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Default material: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getString("default-material"));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_DEFAULT_MATERIAL)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getString("item-material"))
+				.send();
 	}
 
 
 	private void displayMinimumDistanceSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Minimum distance: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getInt("minimum-distance"));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_MINIMUM_DISTANCE)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getString("minimum-distance"))
+				.send();
 	}
 
 
 	private void displayTeleportWarmupSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Warmup: "
-				+ ChatColor.RESET
-				+ ctx.messageBuilder().getTimeString(SECONDS.toMillis(ctx.plugin().getConfig().getInt("teleport-warmup"))));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_TELEPORT_WARMUP)
+				.setMacro(Macro.SETTING, Duration.ofSeconds(ctx.plugin().getConfig().getInt("teleport-warmup")))
+				.send();
 	}
 
 
 	private void displayTeleportCooldownSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Cooldown: "
-				+ ChatColor.RESET
-				+ ctx.messageBuilder().getTimeString(SECONDS.toMillis(ctx.plugin().getConfig().getInt("teleport-cooldown"))));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_TELEPORT_COOLDOWN)
+				.setMacro(Macro.SETTING, Duration.ofSeconds(ctx.plugin().getConfig().getInt("teleport-cooldown")))
+				.send();
 	}
 
 
 	private void displayShiftClickSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Shift-click required: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getBoolean("shift-click"));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_SHIFT_CLICK)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getBoolean("shift-click"))
+				.send();
 	}
 
 
-	private void displayTeleportCancelSetting(final CommandSender sender)
+	private void displayCancelOnDamageSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Cancel on damage/movement/interaction: "
-				+ ChatColor.RESET + "[ "
-				+ ctx.plugin().getConfig().getBoolean("cancel-on-damage") + "/"
-				+ ctx.plugin().getConfig().getBoolean("cancel-on-movement") + "/"
-				+ ctx.plugin().getConfig().getBoolean("cancel-on-interaction") + " ]");
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_CANCEL_ON_DAMAGE)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getBoolean("cancel-on-damage"))
+				.send();
+	}
+
+	private void displayCancelOnMovementSetting(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_CANCEL_ON_MOVEMENT)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getBoolean("cancel-on-movement"))
+				.send();
+	}
+
+	private void displayCancelOnInteractionSetting(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_CANCEL_ON_INTERACTION)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getBoolean("cancel-on-interaction"))
+				.send();
 	}
 
 
 	private void displayRemoveFromInventorySetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Remove from inventory: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getString("remove-from-inventory"));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_INVENTORY_REMOVAL)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getString("remove-from-inventory"))
+				.send();
 	}
 
 
 	private void displayAllowInRecipesSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Allow in recipes: " + ChatColor.RESET
-				+ ctx.plugin().getConfig().getBoolean("allow-in-recipes"));
-	}
-
-
-	private void displayFromNetherSetting(final CommandSender sender)
-	{
-		sender.sendMessage(ChatColor.GREEN + "From nether: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getBoolean("from-nether"));
-	}
-
-
-	private void displayFromEndSetting(final CommandSender sender)
-	{
-		sender.sendMessage(ChatColor.GREEN + "From end: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getBoolean("from-end"));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_ALLOW_IN_RECIPES)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getString("allow-in-recipes"))
+				.send();
 	}
 
 
 	private void displayLightningSetting(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Lightning: "
-				+ ChatColor.RESET + ctx.plugin().getConfig().getBoolean("lightning"));
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_DISPLAY_LIGHTNING)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getString("lightning"))
+				.send();
 	}
 
 
 	private void displayEnabledWorlds(final CommandSender sender)
 	{
-		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
-				+ ChatColor.RESET + ctx.worldManager().getEnabledWorldNames().toString());
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_ENABLED_WORLDS)
+				.setMacro(Macro.SETTING, ctx.worldManager().getEnabledWorldNames().toString())
+				.send();
+	}
+
+
+	private void displayFromNetherSetting(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_FROM_NETHER)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getBoolean("from-nether"))
+				.send();
+	}
+
+
+	private void displayFromEndSetting(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_FROM_END)
+				.setMacro(Macro.SETTING, ctx.plugin().getConfig().getBoolean("from-end"))
+				.send();
+	}
+
+	private void displayStatusFooter(final CommandSender sender)
+	{
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_FOOTER)
+				.setMacro(Macro.URL, "https://github.com/winterhavenmc/LodeStar")
+				.send();
 	}
 
 }

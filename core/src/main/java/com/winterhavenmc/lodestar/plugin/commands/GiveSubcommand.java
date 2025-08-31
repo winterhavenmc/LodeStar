@@ -65,8 +65,8 @@ final class GiveSubcommand extends AbstractSubcommand
 			List<String> destinationNames = new ArrayList<>(ctx.datastore().destinations().names());
 
 			// add home and spawn destinations to list
-			destinationNames.addFirst(ctx.messageBuilder().getSpawnDisplayName().orElse("Spawn"));
-			destinationNames.addFirst(ctx.messageBuilder().getHomeDisplayName().orElse("Home"));
+			destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION.SPAWN").orElse("Spawn"));
+			destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION_HOME").orElse("Home"));
 
 			// return list filtered by matching prefix to argument
 			return destinationNames.stream().filter(destinationKey -> matchPrefix(destinationKey, args[2])).collect(Collectors.toList());
