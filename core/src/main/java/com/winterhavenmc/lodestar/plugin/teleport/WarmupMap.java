@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,13 +27,13 @@ import java.util.concurrent.ConcurrentHashMap;
 class WarmupMap
 {
 	// HashMap containing player UUID as key and warmup task id as value
-	private final ConcurrentHashMap<UUID, Integer> warmupMap;
+	private final HashMap<UUID, Integer> warmupMap;
 
 
 	WarmupMap()
 	{
 		// initialize warmup HashMap
-		warmupMap = new ConcurrentHashMap<>();
+		warmupMap = new HashMap<>();
 	}
 
 
