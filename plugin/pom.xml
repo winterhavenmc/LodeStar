@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.winterhavenmc.lodestar</groupId>
+		<artifactId>lodestar-parent</artifactId>
+		<version>1.21.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>plugin</artifactId>
+
+	<dependencies>
+		<!-- internal -->
+		<dependency>
+			<groupId>com.winterhavenmc.lodestar</groupId>
+			<artifactId>adapters</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.winterhavenmc.lodestar</groupId>
+			<artifactId>models</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.winterhavenmc.lodestar</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- external -->
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<!-- Maven shade plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<configuration>
+					<!-- Final shaded JAR name -->
+					<finalName>LodeStar-${project.version}</finalName>
+
+					<!-- Minimize to remove unused classes (optional, test carefully) -->
+					<minimizeJar>true</minimizeJar>
+
+					<!-- Do not generate a dependency-reduced POM -->
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+
+					<filters>
+						<filter>
+							<!-- Apply only to dependencies (not the plugin module itself) -->
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>META-INF/*.SF</exclude>
+								<exclude>META-INF/*.DSA</exclude>
+								<exclude>META-INF/*.RSA</exclude>
+								<!-- optionally exclude MANIFEST.MF from dependencies if not needed -->
+								<exclude>META-INF/MANIFEST.MF</exclude>
+							</excludes>
+						</filter>
+					</filters>
+
+					<!-- Only include these artifacts in the shaded JAR -->
+<!--					<artifactSet>-->
+<!--						<includes>-->
+<!--							<include>com.winterhaven-mc:message-builder-lib</include>-->
+<!--							<include>com.winterhaven-mc:sound-config-lib</include>-->
+<!--							<include>com.winterhaven-mc:world-manager-lib</include>-->
+<!--							<include>org.bstats</include>-->
+<!--						</includes>-->
+<!--					</artifactSet>-->
+
+					<!-- relocate these packages on the class path to avoid conflicts with other plugins -->
+					<relocations>
+						<relocation>
+							<pattern>com.winterhavenmc.library</pattern>
+							<shadedPattern>com.winterhavenmc.lodestar.shaded</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>org.bstats</pattern>
+							<shadedPattern>com.winterhavenmc.lodestar.shaded</shadedPattern>
+						</relocation>
+					</relocations>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
