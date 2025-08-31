@@ -1,16 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.winterhaven-mc</groupId>
-	<artifactId>LodeStar</artifactId>
-	<version>1.21.0</version>
+	<groupId>com.winterhavenmc.lodestar</groupId>
+	<artifactId>lodestar-parent</artifactId>
+	<version>1.21.1-SNAPSHOT</version>
+
 	<name>LodeStar</name>
-
-	<url>https://github.com/tim-savage/LodeStar</url>
-
 	<description>
 		A minecraft plugin that provides configurable items to be used to teleport
 		a player to configured locations, in place of the /warp command.
 	</description>
+	<url>https://github.com/tim-savage/LodeStar</url>
 
 	<properties>
 		<project.author>Tim Savage</project.author>
@@ -31,17 +30,26 @@
 		<url>https://github.com/winterhavenmc/LodeStar/issues</url>
 	</issueManagement>
 
+	<modules>
+		<module>adapters</module>
+		<module>plugin</module>
+		<module>models</module>
+		<module>core</module>
+	</modules>
+
+	<packaging>pom</packaging>
+
 	<profiles>
 		<profile>
-			<id>github</id>
+			<id>repsy</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<distributionManagement>
 				<repository>
-					<id>github</id>
-					<name>GitHub winterhavenmc Apache Maven Packages</name>
-					<url>https://maven.pkg.github.com/winterhavenmc/LodeStar/</url>
+					<id>repsy</id>
+					<name>Repsy.io winterhavenmc Maven Packages</name>
+					<url>https://repo.repsy.io/mvn/winterhavenmc/public/</url>
 				</repository>
 			</distributionManagement>
 		</profile>
@@ -52,229 +60,248 @@
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
+		<repository>
+			<id>repsy-repo</id>
+			<url>https://repo.repsy.io/mvn/winterhavenmc/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
 
+	<!-- available dependencies, must be declared in module pom -->
 	<dependencyManagement>
 		<dependencies>
+			<!-- spigot-api -->
 			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>5.8.1</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<groupId>org.spigotmc</groupId>
+				<artifactId>spigot-api</artifactId>
+				<version>1.21.8-R0.1-SNAPSHOT</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- SQLite jdbc driver -->
+			<dependency>
+				<groupId>org.xerial</groupId>
+				<artifactId>sqlite-jdbc</artifactId>
+				<version>3.50.3.0</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<!-- JetBrains Annotations -->
+			<dependency>
+				<groupId>org.jetbrains</groupId>
+				<artifactId>annotations</artifactId>
+				<version>26.0.1</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- JUnit frameworkd -->
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>5.11.3</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- JUnit parameters -->
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>5.11.3</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- Mockito Framework -->
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>5.14.2</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- Mockito/JUnit Integration Module -->
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-junit-jupiter</artifactId>
+				<version>5.14.2</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- Mockito Inline Module -->
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-inline</artifactId>
+				<version>5.2.0</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
+	<!-- global dependencies inherited by all modules, do not need to be declared in each module pom -->
 	<dependencies>
-		<!-- Spigot API -->
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.21.7-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- bStats -->
-		<dependency>
-			<groupId>org.bstats</groupId>
-			<artifactId>bstats-bukkit</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-
-		<!-- MessageBuilderLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>message-builder-lib</artifactId>
-			<version>1.21.0-SNAPSHOT</version>
-		</dependency>
-
-		<!-- SoundConfigLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>sound-config-lib</artifactId>
-			<version>1.21.0-SNAPSHOT</version>
-		</dependency>
-
-		<!-- WorldManagerLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>world-manager-lib</artifactId>
-			<version>1.21.0-SNAPSHOT</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
-		<dependency>
-			<groupId>org.xerial</groupId>
-			<artifactId>sqlite-jdbc</artifactId>
-			<version>3.46.1.2</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<!-- JUnit frameworkd -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.11.3</version>
-			<scope>test</scope>
+		</dependency>
+
+		<!-- JUnit parameters -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+		</dependency>
+
+		<!-- Mockito Framework -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+
+		<!-- Mockito/JUnit Integration Module -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+		</dependency>
+
+		<!-- Mockito Inline Module -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<!-- jar filename -->
-		<finalName>${project.name}-${project.version}</finalName>
+		<!-- available Maven plugins, must be dclared in module pom -->
+		<pluginManagement>
+			<plugins>
+				<!-- Maven Shade Plugin (version and executions defined here) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.6.0</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 
-		<!-- Resources -->
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
+				<!-- Maven enforcer plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.5.0</version>
+					<executions>
+						<execution>
+							<id>ban-bad-log4j-versions</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<bannedDependencies>
+										<excludes>
+											<exclude>org.apache.logging.log4j:log4j-core:(,2.17.0)</exclude>
+										</excludes>
+									</bannedDependencies>
+								</rules>
+								<fail>true</fail>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 
-		<!-- Test Resources -->
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
+				<!-- Maven compile plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.13.0</version>
+				</plugin>
 
+				<!-- Create Javadoc jar -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.11.2</version>
+					<configuration>
+						<doclint>none</doclint>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Maven source plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.3.1</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Maven SureFire plugin for unit testing -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.5.1</version>
+					<configuration>
+						<junitArtifactName>org.junit.jupiter:junit-jupiter</junitArtifactName>
+						<trimStackTrace>false</trimStackTrace>
+						<systemPropertyVariables>
+							<bstats.relocatecheck>false</bstats.relocatecheck>
+						</systemPropertyVariables>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<!-- global Maven plugins, not needed to be declared in module poms -->
 		<plugins>
+			<!-- Maven enforcer plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.5.0</version>
-				<executions>
-					<execution>
-						<id>ban-bad-log4j-versions</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<bannedDependencies>
-									<excludes>
-										<exclude>org.apache.logging.log4j:log4j-core:(,2.17.0)</exclude>
-									</excludes>
-								</bannedDependencies>
-							</rules>
-							<fail>true</fail>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
-			<!-- Compilation plugin -->
+			<!-- Maven compile plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
 			</plugin>
 
-			<!-- Create Shaded jar -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.6.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<minimizeJar>true</minimizeJar>
-							<filters>
-								<filter>
-									<artifact>org.bstats:bstats-*</artifact>
-									<excludes>
-										<exclude>META-INF/MANIFEST.MF</exclude>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-								<filter>
-									<artifact>com.winterhaven-mc:*-lib</artifact>
-									<excludes>
-										<exclude>META-INF/MANIFEST.MF</exclude>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-							</filters>
-							<artifactSet>
-								<includes>
-									<include>com.winterhaven-mc:message-builder-lib</include>
-									<include>com.winterhaven-mc:sound-config-lib</include>
-									<include>com.winterhaven-mc:world-manager-lib</include>
-									<include>org.bstats</include>
-								</includes>
-							</artifactSet>
-							<relocations>
-								<relocation>
-									<pattern>com.winterhavenmc.library</pattern>
-									<shadedPattern>com.winterhavenmc.lodestar.shaded</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>org.bstats</pattern>
-									<shadedPattern>com.winterhavenmc.lodestar.shaded</shadedPattern>
-								</relocation>
-							</relocations>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Create Javadoc jar -->
+			<!-- Maven Javadoc plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.11.2</version>
-				<configuration>
-					<doclint>none</doclint>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
-			<!-- Create Sources jar -->
+			<!-- Maven source plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.3.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
-			<!-- Plugin for Unit Tests -->
+			<!-- Maven SureFire plugin for unit testing -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.1</version>
-
-				<configuration>
-					<junitArtifactName>org.junit.jupiter:junit-jupiter</junitArtifactName>
-					<trimStackTrace>false</trimStackTrace>
-					<systemPropertyVariables>
-						<bstats.relocatecheck>false</bstats.relocatecheck>
-					</systemPropertyVariables>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
