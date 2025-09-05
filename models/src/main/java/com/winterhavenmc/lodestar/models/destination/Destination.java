@@ -57,6 +57,24 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 
 
 	/**
+	 * Returns a new instance of a {@code Destination} of the appropriate type from the given parameters.
+	 *
+	 * @param type        the type of destination
+	 * @param displayName the display name of the destination
+	 * @param location    the location of the destination
+	 * @return a {@link ValidDestination}, or an {@link InvalidDestination} if a valid destination could not be creaated.
+	 */
+	static Destination of(final Type type,
+	                      final String displayName,
+	                      final ValidLocation location)
+	{
+		return Destination.of(type, displayName, location.world().getName(),
+				location.world().getUID(), location.x(), location.y(), location.z(),
+				location.yaw(), location.pitch());
+	}
+
+
+	/**
 	 * Create a new instance of a {@code Destination} from values retrieved from the datastore.
 	 *
 	 * @return a {@link ValidDestination}, or an {@link InvalidDestination} if a valid destination could not be creaated.
@@ -83,7 +101,7 @@ public sealed interface Destination permits ValidDestination, InvalidDestination
 			case ValidLocation validLocation -> switch (type)
 					{
 						case HOME -> new HomeDestination(displayName, validLocation);
-						case SPAWN -> new SpawnDestination(displayName, validLocation);
+						case SPAWN -> new SpawnDestination(displayName);
 						case STORED -> new StoredDestination(displayName, validLocation);
 					};
 		};
