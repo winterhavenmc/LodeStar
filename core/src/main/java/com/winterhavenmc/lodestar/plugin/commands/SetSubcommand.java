@@ -17,6 +17,8 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
+import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
+import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -102,10 +104,10 @@ final class SetSubcommand extends AbstractSubcommand
 		// check if validDestination name is a reserved name
 		if (isRerservedName(destinationName))
 		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -115,41 +117,45 @@ final class SetSubcommand extends AbstractSubcommand
 		// check for overwrite permission if validDestination already exists TODO: shouldn't this check negate permission?
 		if (destination instanceof ValidDestination && sender.hasPermission(permissionNode + ".overwrite"))
 		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		// send warning message if name begins with a number
-		if (ctx.lodeStarUtility().deriveKey(destinationName).matches("^\\d*_.*"))
-		{
-			ctx.messageBuilder().compose(sender, MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX)
-					.setMacro(Macro.DESTINATION, destinationName)
-					.send();
-		}
+//		if (ctx.lodeStarUtility().deriveKey(destinationName).matches("^\\d*_.*"))
+//		{
+//			ctx.messageBuilder().compose(sender, MessageId.COMMAND_WARN_SET_NUMERIC_PREFIX)
+//					.setMacro(Macro.DESTINATION, destinationName)
+//					.send();
+//		}
 
 		// create validDestination object
-		switch (Destination.of(Destination.Type.STORED, destinationName, location))
+		if (ImmutableLocation.of(location) instanceof ValidLocation validLocation)
 		{
-			case ValidDestination validDestination -> {
-				ctx.datastore().destinations().save(Collections.singleton(validDestination));
-				ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_SET)
-						.setMacro(Macro.DESTINATION, validDestination.displayName())
-						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
-						.send();
-				ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_SET);
-			}
-			case InvalidDestination invalidDestination -> {
-				ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_REASON)
-						.setMacro(Macro.DESTINATION, invalidDestination.displayName())
-						.setMacro(Macro.FAIL_REASON, invalidDestination.reason())
-						.send();
-				ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
+			switch (Destination.of(Destination.Type.STORED, destinationName, validLocation))
+			{
+				case ValidDestination validDestination ->
+				{
+					ctx.datastore().destinations().save(Collections.singleton(validDestination));
+					ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_SET);
+					ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_SET)
+							.setMacro(Macro.DESTINATION, validDestination.displayName())
+							.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+							.send();
+				}
+				case InvalidDestination invalidDestination ->
+				{
+					ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
+					ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_REASON)
+							.setMacro(Macro.DESTINATION, invalidDestination.displayName())
+							.setMacro(Macro.FAIL_REASON, invalidDestination.reason())
+							.send();
+				}
 			}
 		}
-
 		return true;
 	}
 
