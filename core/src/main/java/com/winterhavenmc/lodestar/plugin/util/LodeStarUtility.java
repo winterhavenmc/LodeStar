@@ -17,7 +17,8 @@
 
 package com.winterhavenmc.lodestar.plugin.util;
 
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.library.messagebuilder.MessageBuilder;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
@@ -29,12 +30,13 @@ import java.util.Optional;
 public final class LodeStarUtility
 {
 	public static final String ITEM_KEY = "LODESTAR";
-	private final PluginController.ContextContainer ctx;
+	public static final Material DEFAULT_MATERIAL = Material.NETHER_STAR;
+	private final MessageBuilder messageBuilder;
 
 
-	public LodeStarUtility(final PluginController.ContextContainer ctx)
+	public LodeStarUtility(final MessageBuilder messageBuilder)
 	{
-		this.ctx = ctx;
+		this.messageBuilder = messageBuilder;
 	}
 
 
@@ -49,7 +51,7 @@ public final class LodeStarUtility
 		int quantity = passedQuantity;
 		quantity = Math.max(1, quantity);
 
-		Optional<ItemStack> itemStack = ctx.messageBuilder().itemForge().createItem(ITEM_KEY);
+		Optional<ItemStack> itemStack = messageBuilder.itemForge().createItem(ITEM_KEY);
 		if (itemStack.isPresent())
 		{
 			ItemStack returnItem = itemStack.get();
