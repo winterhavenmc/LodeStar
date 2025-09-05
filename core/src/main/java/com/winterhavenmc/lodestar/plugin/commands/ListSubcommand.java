@@ -130,7 +130,7 @@ final class ListSubcommand extends AbstractSubcommand
 			{
 				case ValidDestination validDestination -> ctx.messageBuilder().compose(sender, MessageId.LIST_ITEM)
 						.setMacro(Macro.DESTINATION, validDestination.displayName())
-						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location().toBukkitLocation())
+						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location().getLocation())
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
 
