@@ -35,7 +35,7 @@ public record ValidLocation(String worldName,
                             double y,
                             double z,
                             float yaw,
-                            float pitch) implements ImmutableLocation
+                            float pitch) implements ImmutableLocation, Locatable
 {
 	/**
 	 * Return the world for this location.
@@ -54,7 +54,7 @@ public record ValidLocation(String worldName,
 	 *
 	 * @return instance of a Bukkit {@link Location}
 	 */
-	public Location toBukkitLocation()
+	public Location getLocation()
 	{
 		return (Bukkit.getWorld(worldUid) != null)
 				? new Location(Bukkit.getWorld(worldUid), x, y, z, yaw, pitch)
