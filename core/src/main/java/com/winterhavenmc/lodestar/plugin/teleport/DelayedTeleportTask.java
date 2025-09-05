@@ -67,7 +67,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 		this.player = player;
 		this.validDestination = validDestination;
 		this.playerItem = playerItem;
-		this.location = validDestination.location().toBukkitLocation();
+		this.location = validDestination.location().getLocation();
 
 		// start repeating task for generating particles at player location
 		if (ctx.plugin().getConfig().getBoolean("particle-effects"))
