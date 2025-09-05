@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.models.location;
 
+import com.winterhavenmc.library.messagebuilder.pipeline.adapters.location.Locatable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
