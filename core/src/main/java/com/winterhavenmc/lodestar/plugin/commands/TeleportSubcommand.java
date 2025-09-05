@@ -93,36 +93,30 @@ final class TeleportSubcommand extends AbstractSubcommand
 		// join remaining arguments to get destination name
 		String destinationName = String.join(" ", args);
 
-		// test that destination name is valid
-		if (!ctx.lodeStarUtility().destinationExists(destinationName))
-		{
-			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, destinationName)
-					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
-			return true;
-		}
-
 		// get destination from datastore
 		Destination destination = ctx.datastore().destinations().get(destinationName);
 
 		if (destination instanceof ValidDestination validDestination && validDestination.location() != null)
 		{
-			Location location = validDestination.location().toBukkitLocation();
-			assert location != null;
-
-			ctx.soundConfig().playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
-			player.teleport(location);
-			ctx.messageBuilder().compose(sender, MessageId.TELEPORT_SUCCESS)
-					.setMacro(Macro.DESTINATION, validDestination)
-					.send();
-			ctx.soundConfig().playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
+			Location location = validDestination.location().getLocation();
+			if (location != null)
+			{
+				ctx.soundConfig().playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
+				player.teleport(location);
+				ctx.soundConfig().playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
+				ctx.messageBuilder().compose(sender, MessageId.TELEPORT_SUCCESS)
+						.setMacro(Macro.DESTINATION, validDestination)
+						.send();
+			}
+			// TODO: display invalid location message in else statement here
 			return true;
 		}
 		else
 		{
-			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION).send();
 			ctx.soundConfig().playSound(sender, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
+					.setMacro(Macro.DESTINATION, destination)
+					.send();
 		}
 
 		return true;
