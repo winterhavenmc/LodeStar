@@ -18,6 +18,8 @@
 package com.winterhavenmc.lodestar.models.destination;
 
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
+import com.winterhavenmc.library.messagebuilder.pipeline.adapters.location.Locatable;
+import org.bukkit.Location;
 
 import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
@@ -26,7 +28,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 /**
  * Record class that Represents a valid destination with accessor methods for destination fields and derived values
  */
-public sealed interface ValidDestination extends Destination permits HomeDestination, SpawnDestination, StoredDestination
+public sealed interface ValidDestination extends Destination, Locatable permits HomeDestination, SpawnDestination, StoredDestination
 {
 	String displayName();
 	ValidLocation location();
@@ -43,4 +45,9 @@ public sealed interface ValidDestination extends Destination permits HomeDestina
 				.replace(' ', '_');
 	}
 
+
+	default Location getLocation()
+	{
+		return location().getLocation();
+	}
 }
