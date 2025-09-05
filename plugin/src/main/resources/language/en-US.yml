@@ -24,7 +24,6 @@ ITEM_INFO:
       - "<yellow>to {DESTINATION}</yellow>"
 
 
-
 # Message placeholders:
 #
 # {RECIPIENT}                   message recipient name
@@ -64,7 +63,7 @@ MESSAGES:
     MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> <red>Built-in destination <aqua>{DESTINATION}</aqua> cannot be deleted!</red>"
 
   COMMAND_FAIL_GIVE_INVENTORY_FULL:
-    MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> <red>Could not give <agua>{ITEM}</aqua> to <aqua>{TARGET_PLAYER}<aqua> because their inventory is full.</red>"
+    MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> <red>Could not give <agua>{ITEM}</aqua> to <aqua>{PLAYER}<aqua> because their inventory is full.</red>"
 
   COMMAND_FAIL_INVALID_COMMAND:
     MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> <red>That is not a valid command!</red>"
@@ -141,7 +140,7 @@ MESSAGES:
     MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> <red>{ITEM} destroyed!</red>"
 
   COMMAND_SUCCESS_GIVE:
-    MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> You gave {ITEM_PLURAL} to {TARGET_PLAYER}."
+    MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> You gave {ITEM_PLURAL} to {PLAYER}."
 
   COMMAND_SUCCESS_GIVE_TARGET:
     MESSAGE_TEXT: "<dark_aqua>[LodeStar]</dark_aqua> <aqua>{PLAYER}</aqua> gave you <aqua>{ITEM_PLURAL}</aqua>."
@@ -272,7 +271,7 @@ MESSAGES:
     MESSAGE_TEXT: "<newline><gradient:blue:aqua><strikethrough>                         =</strikethrough>[</gradient> <dark_aqua>{PLUGIN}</dark_aqua> <gradient:aqua:blue>]<strikethrough>=                         </strikethrough></gradient>"
 
   COMMAND_STATUS_FOOTER:
-    MESSAGE_TEXT: "<newline><dark_aqua>Proudly built with <click:open_url:{URL}><blue><underlined>MessageBuilderLib<underlined></blue></click></dark_aqua>"
+    MESSAGE_TEXT: "<newline><click:open_url:{URL}><blue><underlined>{URL}<underlined></blue></click>"
 
   COMMAND_STATUS_PLUGIN_VERSION:
     MESSAGE_TEXT: "<green>Version:</green> {SETTING}"
@@ -318,4 +317,3 @@ MESSAGES:
 
   COMMAND_STATUS_CANCEL_ON_INTERACTION:
     MESSAGE_TEXT: "<green>Cancel on interaction:</green> {SETTING}"
-
