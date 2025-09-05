@@ -23,6 +23,10 @@
 			<artifactId>annotations</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>message-builder-lib</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
