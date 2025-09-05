@@ -132,7 +132,7 @@ class TeleportExecutor
 	 */
 	private void loadDestinationChunk(final ValidDestination validDestination)
 	{
-		Location location = validDestination.location().toBukkitLocation();
+		Location location = validDestination.location().getLocation();
 
 		if (location != null && location.getWorld() != null && !location.getWorld().getChunkAt(location).isLoaded())
 		{
@@ -150,7 +150,7 @@ class TeleportExecutor
 	 */
 	private boolean isUnderMinimumDistance(final Player player, final ValidDestination validDestination)
 	{
-		Location location = validDestination.location().toBukkitLocation();
+		Location location = validDestination.location().getLocation();
 
 		return location != null && location.getWorld() != null
 				&& player.getWorld().equals(location.getWorld())
@@ -187,7 +187,7 @@ class TeleportExecutor
 		{
 			// send message to console
 			ctx.messageBuilder().compose(ctx.plugin().getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
-					.setMacro(Macro.TARGET_PLAYER, player)
+					.setMacro(Macro.PLAYER, player)
 					.setMacro(Macro.DESTINATION, validDestination.displayName())
 					.setMacro(Macro.DESTINATION_WORLD, ctx.worldManager().getAliasOrName(validDestination.location().worldName()))
 					.send();
