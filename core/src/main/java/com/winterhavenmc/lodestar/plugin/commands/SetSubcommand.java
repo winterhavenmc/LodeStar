@@ -144,8 +144,7 @@ final class SetSubcommand extends AbstractSubcommand
 					ctx.datastore().destinations().save(Collections.singleton(validDestination));
 					ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_SET);
 					ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_SET)
-							.setMacro(Macro.DESTINATION, validDestination.displayName())
-							.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+							.setMacro(Macro.DESTINATION, validDestination)
 							.send();
 				}
 				case InvalidDestination invalidDestination ->
