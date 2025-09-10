@@ -101,6 +101,8 @@ final class SetSubcommand extends AbstractSubcommand
 		// set destinationName to passed argument
 		String destinationName = String.join(" ", args);
 
+		//TODO: get validDestination to use destination subfields in message
+
 		// check if validDestination name is a reserved name
 		if (isRerservedName(destinationName))
 		{
