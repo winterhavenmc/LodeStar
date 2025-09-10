@@ -23,9 +23,8 @@ package com.winterhavenmc.lodestar.plugin.util;
 public enum Macro
 {
 	DESTINATION,
-	DESTINATION_WORLD,
-	DESTINATION_LOCATION,
-	ITEM_QUANTITY,
+	WORLD,
+	ITEM,
 	PLAYER,
 	DURATION,
 	PAGE_NUMBER,
