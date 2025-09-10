@@ -89,6 +89,11 @@ class CooldownMap
 	}
 
 
+	/**
+	 * Remove a player from the cooldown map
+	 *
+	 * @param player the player to be removed from the cooldown map
+	 */
 	void removePlayer(final Player player)
 	{
 		cooldownMap.remove(player.getUniqueId());
