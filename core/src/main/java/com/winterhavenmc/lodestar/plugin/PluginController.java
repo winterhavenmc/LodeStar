@@ -48,7 +48,7 @@ public final class PluginController
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public CommandManager commandManager;
-//	public LodeStarUtility lodeStarUtility;
+	public LodeStarUtility lodeStarUtility;
 
 
 	public void startUp(final JavaPlugin plugin, final ConnectionProvider connectionProvider)
@@ -69,10 +69,10 @@ public final class PluginController
 		datastore = DataStore.connect(plugin, connectionProvider);
 
 		// instantiate lodestar factory
-//		lodeStarUtility = new LodeStarUtility(messageBuilder);
+		lodeStarUtility = new LodeStarUtility(plugin, messageBuilder, datastore);
 
 		// create context container
-		ContextContainer ctx = new ContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore);
+		ContextContainer ctx = new ContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
 
 		// instantiate teleport manager
 		teleportHandler = new TeleportHandler(ctx);
@@ -96,5 +96,5 @@ public final class PluginController
 
 
 	public record ContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder, SoundConfiguration soundConfig,
-	                               WorldManager worldManager, DataStore datastore) { }
+	                               WorldManager worldManager, DataStore datastore, LodeStarUtility lodeStarUtility) { }
 }
