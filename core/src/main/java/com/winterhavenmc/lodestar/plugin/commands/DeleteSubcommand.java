@@ -19,9 +19,11 @@ package com.winterhavenmc.lodestar.plugin.commands;
 
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -82,32 +84,31 @@ final class DeleteSubcommand extends AbstractSubcommand
 			return true;
 		}
 
-		// join remaining arguments into destination name
-		String destinationName = String.join(" ", args);
+		// join remaining arguments into destination key
+		String destinationKey = ctx.lodeStarUtility().deriveKey(args);
 
-		// get key for destination name
-		String key = ctx.lodeStarUtility().deriveKey(destinationName);
+		//TODO: get destination for key to use destination subfields in messages
 
 		// test that destination name is not reserved name
-		if (isRerservedName(destinationName))
+		if (isRerservedName(destinationKey))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
-					.setMacro(Macro.DESTINATION, destinationName)
+					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		}
 		// if delete method returns valid destination, delete was successful
-		else if (ctx.datastore().destinations().delete(key) instanceof ValidDestination)
+		else if (ctx.datastore().destinations().delete(destinationKey) instanceof ValidDestination)
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
-					.setMacro(Macro.DESTINATION, destinationName)
+					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
 		}
 		else
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, destinationName)
+					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		}
