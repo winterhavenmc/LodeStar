@@ -138,7 +138,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 			ResultSet resultSet = statement.executeQuery(SqliteQueries.getQuery("SelectDestinationTable"));
 			if (resultSet.next())
 			{
-				Collection<ValidDestination> existingRecords = getAll();
+				Collection<StoredDestination> existingRecords = getAll();
 				statement.executeUpdate(SqliteQueries.getQuery("DropDestinationTable"));
 				statement.executeUpdate(SqliteQueries.getQuery("CreateDestinationTable"));
 				count = destinationRepository.save(existingRecords);
@@ -154,7 +154,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	}
 
 
-	private Collection<ValidDestination> getAll()
+	private Collection<StoredDestination> getAll()
 	{
 		return (getSchemaVersion() == 0)
 				? getAll_V0()
@@ -162,9 +162,9 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	}
 
 
-	private Collection<ValidDestination> getAll_V0()
+	private Collection<StoredDestination> getAll_V0()
 	{
-		Collection<ValidDestination> returnList = new ArrayList<>();
+		Collection<StoredDestination> returnList = new ArrayList<>();
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("SelectAllRecords")))
 		{
@@ -195,11 +195,11 @@ public class SqliteConnectionProvider implements ConnectionProvider
 					worldUid = world.getUID();
 				}
 
-				Destination destination = Destination.of(Destination.Type.STORED, displayName, worldName, worldUid, x, y, z, yaw, pitch);
+				Destination destination = StoredDestination.of(displayName, worldName, worldUid, x, y, z, yaw, pitch);
 
-				if (destination instanceof ValidDestination validDestination)
+				if (destination instanceof StoredDestination storedDestination)
 				{
-					returnList.add(validDestination);
+					returnList.add(storedDestination);
 				}
 			}
 		}
@@ -213,9 +213,9 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	}
 
 
-	private Collection<ValidDestination> getAll_V1()
+	private Collection<StoredDestination> getAll_V1()
 	{
-		Collection<ValidDestination> returnList = new ArrayList<>();
+		Collection<StoredDestination> returnList = new ArrayList<>();
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("SelectAllRecords")))
 		{
@@ -245,11 +245,11 @@ public class SqliteConnectionProvider implements ConnectionProvider
 					logger.warning("Stored destination has invalid world: " + worldName);
 				}
 
-				Destination destination = Destination.of(Destination.Type.STORED, displayName, worldName, worldUid, x, y, z, yaw, pitch);
+				Destination destination = StoredDestination.of(displayName, worldName, worldUid, x, y, z, yaw, pitch);
 
-				if (destination instanceof ValidDestination validDestination)
+				if (destination instanceof StoredDestination storedDestination)
 				{
-					returnList.add(validDestination);
+					returnList.add(storedDestination);
 				}
 			}
 		}
