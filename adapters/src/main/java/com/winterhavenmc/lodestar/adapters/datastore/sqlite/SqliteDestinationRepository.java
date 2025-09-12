@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.DestinationRepository;
 
@@ -59,21 +60,21 @@ final class SqliteDestinationRepository implements DestinationRepository
 
 
 	@Override
-	public int save(final Collection<ValidDestination> validDestinations)
+	public int save(final Collection<StoredDestination> storedDestinations)
 	{
 		// if destinations is null return zero record count
-		if (validDestinations == null)
+		if (storedDestinations == null)
 		{
 			return 0;
 		}
 
 		int count = 0;
 
-		for (ValidDestination validDestination : validDestinations)
+		for (StoredDestination storedDestination : storedDestinations)
 		{
 			try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("InsertDestination")))
 			{
-				count += queryExecutor.insertRecords(validDestination, preparedStatement);
+				count += queryExecutor.insertRecords(storedDestination, preparedStatement);
 			}
 			catch (SQLException sqlException)
 			{
@@ -135,7 +136,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 				}
 
 				// create Destination object
-				destination = Destination.of(Destination.Type.STORED, displayName, worldName, worldUid, x, y, z, yaw, pitch);
+				destination = StoredDestination.of(displayName, worldName, worldUid, x, y, z, yaw, pitch);
 			}
 		}
 		catch (SQLException sqlException)
