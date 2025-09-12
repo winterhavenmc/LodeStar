@@ -17,14 +17,13 @@
 
 package com.winterhavenmc.lodestar.models.destination;
 
-import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import org.jetbrains.annotations.NotNull;
 
 
 /**
  * Record class that represents a Spawn destination
  */
-public record SpawnDestination(String displayName, ValidLocation location) implements ValidDestination
+public record SpawnDestination(String displayName) implements ValidDestination
 {
 	public static Destination of(final String displayName)
 	{
@@ -37,6 +36,6 @@ public record SpawnDestination(String displayName, ValidLocation location) imple
 	@Override
 	public @NotNull String toString()
 	{
-		return(displayName + " | " + location.worldName() + " [" + location.x() + "," + location.y() + "." + location.z() + "]");
+		return displayName;
 	}
 }
