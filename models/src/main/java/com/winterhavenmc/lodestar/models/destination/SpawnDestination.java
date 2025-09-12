@@ -26,6 +26,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public record SpawnDestination(String displayName, ValidLocation location) implements ValidDestination
 {
+	public static Destination of(final String displayName)
+	{
+		if (displayName == null) return new InvalidDestination("ø", "The displayName parameter was null.");
+		else if (displayName.isBlank()) return new InvalidDestination("⬚", "The displayName parameter was blank.");
+		else return new SpawnDestination(displayName);
+	}
+
+
 	@Override
 	public @NotNull String toString()
 	{
