@@ -31,4 +31,12 @@ public record StoredDestination(String displayName, ValidLocation location) impl
 	{
 		return(displayName + " | " + location.worldName() + " [" + location.x() + "," + location.y() + "." + location.z() + "]");
 	}
+
+
+	@Override
+	public Location getLocation()
+	{
+		return this.location.getLocation();
+	}
+
 }
