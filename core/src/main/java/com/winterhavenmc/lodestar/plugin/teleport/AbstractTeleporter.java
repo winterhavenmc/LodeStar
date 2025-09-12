@@ -17,13 +17,14 @@
 
 package com.winterhavenmc.lodestar.plugin.teleport;
 
+import com.winterhavenmc.lodestar.models.destination.*;
+import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
+import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
-import com.winterhavenmc.lodestar.models.destination.Destination;
-import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -75,22 +76,10 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 	 */
 	final Destination getHomeDestination(final Player player)
 	{
-		// if player is null, return empty optional
-		if (player == null)
-		{
-			return new InvalidDestination("player home", "Player was null.");
-		}
-
-		// get player respawn (bed or other) location
-		Location location = (player.getRespawnLocation() != null)
-				? player.getRespawnLocation()
-				: ctx.worldManager().getSpawnLocation(player.getWorld());
-
-		// Get home display name
-		String destinationName = ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Home");
-
-		// return destination for player bed spawn location
-		return Destination.of(Destination.Type.HOME, destinationName, location);
+		// if player is null, return empty optional; else return destination for player bed spawn location
+		return (player == null)
+				? new InvalidDestination("Home", "Player parameter was null.")
+				: HomeDestination.of(ctx.lodeStarUtility().homeDisplayName());
 	}
 
 
@@ -105,28 +94,32 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		// if player is null, return empty optional
 		if (player == null)
 		{
-			return new InvalidDestination("world spawn", "Player was null.");
+			return new InvalidDestination("Spawn", "Player was null.");
 		}
 
 		// get spawn location for player
 		Location location = ctx.worldManager().getSpawnLocation(player.getWorld());
 
-		// if from-nether is enabled in config and player is in nether, try to get overworld spawn location
-		if (isInNetherWorld(player) && ctx.plugin().getConfig().getBoolean("from-nether"))
+		// if from-nether or from-end is enabled in config and player is in nether or end, try to get overworld spawn location
+		if (isInNetherWorld(player) && ctx.plugin().getConfig().getBoolean("from-nether")
+				|| isInEndWorld(player) && ctx.plugin().getConfig().getBoolean("from-end"))
 		{
 			location = getOverworldSpawnLocation(player).orElse(location);
 		}
-		// if from-end is enabled in config and player is in end, try to get overworld spawn location
-		else if (isInEndWorld(player) && ctx.plugin().getConfig().getBoolean("from-end"))
-		{
-			location = getOverworldSpawnLocation(player).orElse(location);
-		}
+
+		// get checked location
+		ImmutableLocation immutableLocation = ImmutableLocation.of(location);
 
 		// get destination name
-		String destinationName = ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Spawn");
+		String destinationName = ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn");
+
+		// get spawn destination
+		Destination spawnDestination = SpawnDestination.of(destinationName);
 
 		// return destination for player spawn
-		return Destination.of(Destination.Type.SPAWN, destinationName, location);
+		return (spawnDestination instanceof ValidDestination validDestination && immutableLocation instanceof ValidLocation validLocation)
+				? TeleportDestination.of(validDestination, validLocation)
+				: new InvalidDestination(destinationName, "Invalid destination.");
 	}
 
 
