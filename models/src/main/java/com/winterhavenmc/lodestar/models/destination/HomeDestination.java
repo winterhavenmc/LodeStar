@@ -17,18 +17,24 @@
 
 package com.winterhavenmc.lodestar.models.destination;
 
-import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import org.jetbrains.annotations.NotNull;
 
 
 /**
  * Record class that represents a Home destination
  */
-public record HomeDestination(String displayName, ValidLocation location) implements ValidDestination
+public record HomeDestination(String displayName) implements ValidDestination
 {
+	public static Destination of(final String displayName)
+	{
+		if (displayName == null) return new InvalidDestination("NULL", "The displayName parameter was null.");
+		else if (displayName.isBlank()) return new InvalidDestination("BLANK", "The displayName parameter was blank.");
+		else return new HomeDestination(displayName);
+	}
+
 	@Override
 	public @NotNull String toString()
 	{
-		return(displayName + " | " + location.worldName() + " [" + location.x() + "," + location.y() + "." + location.z() + "]");
+		return(displayName);
 	}
 }
