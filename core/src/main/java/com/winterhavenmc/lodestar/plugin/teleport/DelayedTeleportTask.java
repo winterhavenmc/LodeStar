@@ -135,16 +135,16 @@ final class DelayedTeleportTask extends BukkitRunnable
 			// if validDestination is spawn, send spawn specific success message
 			if (validDestination instanceof SpawnDestination)
 			{
+				//TODO: consider using validDestination for destination subfields
 				ctx.messageBuilder().compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
-						.setMacro(Macro.DESTINATION, ctx.messageBuilder().getConstantResolver().getString("LOCATION.SPAWN").orElse("Spawn"))
-						.setMacro(Macro.DESTINATION_WORLD, ctx.plugin().getServer().getWorld(validDestination.location().worldUid()))
+						.setMacro(Macro.DESTINATION, ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn"))
 						.send();
 			}
-			// otherwise, send regular success message
+			// otherwise, send standard success message
 			else
 			{
 				ctx.messageBuilder().compose(player, MessageId.TELEPORT_SUCCESS)
-						.setMacro(Macro.DESTINATION, validDestination.displayName())
+						.setMacro(Macro.DESTINATION, validDestination)
 						.send();
 			}
 			// play post-teleport sound if sound effects are enabled
