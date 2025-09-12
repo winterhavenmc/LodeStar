@@ -17,11 +17,11 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
+import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import org.bukkit.command.CommandSender;
@@ -128,17 +128,18 @@ final class ListSubcommand extends AbstractSubcommand
 
 			switch (destination)
 			{
-				case ValidDestination validDestination -> ctx.messageBuilder().compose(sender, MessageId.LIST_ITEM)
-						.setMacro(Macro.DESTINATION, validDestination.displayName())
-						.setMacro(Macro.DESTINATION_LOCATION, validDestination.location().getLocation())
+				case StoredDestination storedDestination -> ctx.messageBuilder().compose(sender, MessageId.LIST_ITEM)
+						.setMacro(Macro.DESTINATION, storedDestination)
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
 
 				case InvalidDestination invalidDestination -> ctx.messageBuilder().compose(sender, MessageId.LIST_ITEM_INVALID)
-						.setMacro(Macro.DESTINATION, invalidDestination.displayName())
-						.setMacro(Macro.DESTINATION_WORLD, "Invalid")
+						.setMacro(Macro.DESTINATION, invalidDestination)
+						.setMacro(Macro.WORLD, "Invalid")
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
+
+				default -> { }
 			}
 		}
 	}
