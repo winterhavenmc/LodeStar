@@ -19,6 +19,7 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.models.destination.SpawnDestination;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -60,6 +61,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 	                    final PluginController.ContextContainer ctx,
 	                    final Player player,
 	                    final ValidDestination validDestination,
+						final Location location,
 	                    final ItemStack playerItem)
 	{
 		this.teleportHandler = teleportHandler;
@@ -67,7 +69,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 		this.player = player;
 		this.validDestination = validDestination;
 		this.playerItem = playerItem;
-		this.location = validDestination.location().getLocation();
+		this.location = location;
 
 		// start repeating task for generating particles at player location
 		if (ctx.plugin().getConfig().getBoolean("particle-effects"))
