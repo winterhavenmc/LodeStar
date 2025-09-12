@@ -32,7 +32,9 @@ ITEM_INFO:
 # {RECIPIENT.LOCATION.X}        message recipient location x
 # {RECIPIENT.LOCATION.Y}        message recipient location y
 # {RECIPIENT.LOCATION.Z}        message recipient location z
-# {ITEM.DISPLAY_NAME}           item display name, as defined in this file
+# {ITEM.NAME}                   item name
+# {ITEM.PLURAL_NAME}            item pluralized name, with quantity
+# {ITEM.DISPLAY_NAME}           item display name, used as inventory name
 # {ITEM.QUANTITY}               number of items (valid in give command message only)
 # {PLAYER}                      target player name
 # {DURATION}                    time duration in seconds (valid in teleport warmup/cooldown message only)
