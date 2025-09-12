@@ -53,8 +53,8 @@ final class DeleteSubcommand extends AbstractSubcommand
 		if (args.length == 2)
 		{
 			List<String> destinationNames = new ArrayList<>(ctx.datastore().destinations().names());
-			destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION.SPAWN").orElse("Spawn"));
-			destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Home"));
+			destinationNames.addFirst(ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn"));
+			destinationNames.addFirst(ctx.messageBuilder().constants().getString(LodeStarUtility.HOME_KEY).orElse("Home"));
 			return destinationNames.stream().filter(key -> matchPrefix(key, args[1])).collect(Collectors.toList());
 		}
 
