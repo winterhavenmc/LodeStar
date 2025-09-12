@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.teleport;
 
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
+import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -27,6 +27,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.time.Duration;
 
 import static com.winterhavenmc.library.time.TimeUnit.SECONDS;
 
@@ -55,46 +57,63 @@ class TeleportExecutor
 	 */
 	void execute(final Player player, final ValidDestination validDestination, final MessageId messageId)
 	{
-		ItemStack playerItem = player.getInventory().getItemInMainHand();
-
-		// if validDestination location is empty, send invalid validDestination message and return
-		if (validDestination.location() == null)
+		Location location = switch (validDestination)
 		{
+			case HomeDestination ignored -> (player.getRespawnLocation() != null)
+					? player.getRespawnLocation()
+					: ctx.worldManager().getSpawnLocation(player.getWorld());
+			case SpawnDestination ignored -> ctx.worldManager().getSpawnLocation(player.getWorld());
+			case StoredDestination stored -> stored.getLocation();
+			case TeleportDestination teleportDestination -> teleportDestination.getLocation();
+		};
+
+		if (location == null)
+		{
+			//TODO: ensure home and spawn locations have non-null location here
+			ctx.plugin().getLogger().info("location was null in TeleportExecutor.execute() method");
 			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
-					.setMacro(Macro.DESTINATION, validDestination.displayName())
-					.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
-			return;
 		}
 
-		// if player is less than configured minimum distance from validDestination, send player proximity message and return
-		if (isUnderMinimumDistance(player, validDestination))
+		// if player is less than configured minimum distance from the destination location, send player proximity message and return
+		else if (isUnderMinimumDistance(player, location))
 		{
 			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_PROXIMITY)
-					.setMacro(Macro.DESTINATION, validDestination.displayName())
-					.setMacro(Macro.DESTINATION_LOCATION, validDestination.location())
+					.setMacro(Macro.ITEM, player.getInventory().getItemInMainHand())
+					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
-			return;
 		}
+		else
+		{
+			// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
+			removeFromInventoryOnUse(player, player.getInventory().getItemInMainHand());
 
-		// if remove-from-inventory is configured on-use, take one LodeStar item from inventory now
-		removeFromInventoryOnUse(player, playerItem);
+			// initiate delayed teleport for player to final validDestination
+			BukkitTask teleportTask = new DelayedTeleportTask(teleportHandler, ctx, player, validDestination,
+					location, player.getInventory().getItemInMainHand().clone())
+					.runTaskLater(ctx.plugin(), SECONDS.toTicks(ctx.plugin().getConfig().getLong("teleport-warmup")));
 
-		// initiate delayed teleport for player to final validDestination
-		BukkitTask teleportTask = new DelayedTeleportTask(teleportHandler, ctx, player, validDestination, playerItem.clone())
-				.runTaskLater(ctx.plugin(), SECONDS.toTicks(ctx.plugin().getConfig().getLong("teleport-warmup")));
+			// if configured warmup time is greater than zero, send warmup message
+			sendWarmupMessage(player, validDestination, messageId);
 
-		// if configured warmup time is greater than zero, send warmup message
-		sendWarmupMessage(player, validDestination, messageId);
+			// insert player and taskId into warmup hashmap
+			warmupMap.startPlayerWarmUp(player, teleportTask.getTaskId());
 
-		// insert player and taskId into warmup hashmap
-		warmupMap.startPlayerWarmUp(player, teleportTask.getTaskId());
+			// load validDestination chunk if not already loaded
+			loadDestinationChunk(location);
 
-		// load validDestination chunk if not already loaded
-		loadDestinationChunk(validDestination);
+			// if log-use is enabled in config, write log entry
+			logUsage(player, validDestination);
+		}
+	}
 
-		// if log-use is enabled in config, write log entry
-		logUsage(player, validDestination);
+
+	private Location getHomeOrFallback(final Player player)
+	{
+		return (player.getRespawnLocation() != null)
+				? player.getRespawnLocation()
+				: ctx.worldManager().getSpawnLocation(player.getWorld());
 	}
 
 
@@ -108,15 +127,14 @@ class TeleportExecutor
 	private void sendWarmupMessage(final Player player, final ValidDestination validDestination, final MessageId messageId)
 	{
 		// get configured warmup time
-		long warmupTime = ctx.plugin().getConfig().getLong("teleport-warmup");
+		Duration warmupTime = Duration.ofSeconds(ctx.plugin().getConfig().getLong("teleport-warmup"));
 
 		// if warmup time is greater than zero, send player warmup message
-		if (warmupTime > 0)
+		if (warmupTime.isPositive())
 		{
 			ctx.messageBuilder().compose(player, messageId)
-					.setMacro(Macro.DESTINATION, validDestination.displayName())
-					.setMacro(Macro.DESTINATION_WORLD, validDestination.location().worldName())
-					.setMacro(Macro.DURATION, SECONDS.toMillis(warmupTime))
+					.setMacro(Macro.DESTINATION, validDestination)
+					.setMacro(Macro.DURATION, warmupTime)
 					.send();
 
 			// if enabled, play teleport warmup sound effect
@@ -128,12 +146,10 @@ class TeleportExecutor
 	/**
 	 * Preload chunk at teleport validDestination if not already loaded
 	 *
-	 * @param validDestination the validDestination location
+	 * @param location the teleport location for which to load chunk
 	 */
-	private void loadDestinationChunk(final ValidDestination validDestination)
+	private void loadDestinationChunk(final Location location)
 	{
-		Location location = validDestination.location().getLocation();
-
 		if (location != null && location.getWorld() != null && !location.getWorld().getChunkAt(location).isLoaded())
 		{
 			location.getWorld().getChunkAt(location).load();
@@ -144,14 +160,12 @@ class TeleportExecutor
 	/**
 	 * Check if player is within configured minimum distance from validDestination
 	 *
-	 * @param player      the player
-	 * @param validDestination the validDestination
+	 * @param player    the player
+	 * @param location the destination location to check for minimum distance
 	 * @return true if under minimum distance, false if not
 	 */
-	private boolean isUnderMinimumDistance(final Player player, final ValidDestination validDestination)
+	private boolean isUnderMinimumDistance(final Player player, final Location location)
 	{
-		Location location = validDestination.location().getLocation();
-
 		return location != null && location.getWorld() != null
 				&& player.getWorld().equals(location.getWorld())
 				&& player.getLocation().distanceSquared(location) < Math.pow(ctx.plugin().getConfig().getInt("minimum-distance"), 2);
@@ -176,7 +190,7 @@ class TeleportExecutor
 
 
 	/**
-	 * Log player usage of homestar item
+	 * Log player usage of lodestar item
 	 *
 	 * @param player the player being logged
 	 */
@@ -188,8 +202,8 @@ class TeleportExecutor
 			// send message to console
 			ctx.messageBuilder().compose(ctx.plugin().getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
 					.setMacro(Macro.PLAYER, player)
-					.setMacro(Macro.DESTINATION, validDestination.displayName())
-					.setMacro(Macro.DESTINATION_WORLD, ctx.worldManager().getAliasOrName(validDestination.location().worldName()))
+					.setMacro(Macro.ITEM, player.getInventory().getItemInMainHand())
+					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
 		}
 	}
