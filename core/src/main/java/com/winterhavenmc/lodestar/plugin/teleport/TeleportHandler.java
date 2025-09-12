@@ -18,6 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
+import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
@@ -74,22 +75,15 @@ public final class TeleportHandler
 			return;
 		}
 
-		// get key from player item
-		final String key = lodeStarUtility.getKey(player.getInventory().getItemInMainHand());
-
-		// if item key is null, do nothing and return
-		if (key == null)
+		// get destination from player item
+		if (lodeStarUtility.getDestination(player.getInventory().getItemInMainHand()) instanceof ValidDestination validDestination)
 		{
-			return;
-		}
-
-		// get appropriate teleporter type for destination
-		Teleporter teleporter = switch (lodeStarUtility.getDestinationType(key))
-		{
-			case HOME -> new HomeTeleporter(ctx, teleportExecutor);
-			case SPAWN -> new SpawnTeleporter(ctx, teleportExecutor);
-			default -> new DestinationTeleporter(ctx, teleportExecutor);
-		};
+			Teleporter teleporter = switch (validDestination)
+			{
+				case HomeDestination ignored -> new HomeTeleporter(ctx, teleportExecutor);
+				case SpawnDestination ignored -> new SpawnTeleporter(ctx, teleportExecutor);
+				default -> new DestinationTeleporter(ctx, teleportExecutor);
+			};
 
 			// initiate teleport
 			teleporter.initiate(player);
