@@ -17,9 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
-import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.models.destination.Destination;
-import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
@@ -27,14 +25,13 @@ import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -67,15 +64,15 @@ final class GiveSubcommand extends AbstractSubcommand
 			}
 			case 3 ->
 			{
-				// get all destination keys in list
+				// get list of all destination names
 				List<String> destinationNames = new ArrayList<>(ctx.datastore().destinations().names());
 
 				// add home and spawn destinations to list
-				destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION.SPAWN").orElse("Spawn"));
-				destinationNames.addFirst(ctx.messageBuilder().getConstantResolver().getString("LOCATION_HOME").orElse("Home"));
+				destinationNames.addFirst(ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn"));
+				destinationNames.addFirst(ctx.messageBuilder().constants().getString(LodeStarUtility.HOME_KEY).orElse("Home"));
 
 				// return list filtered by matching prefix to argument
-				return destinationNames.stream().filter(destinationKey -> matchPrefix(destinationKey, args[2])).collect(Collectors.toList());
+				return destinationNames.stream().filter(destinationName -> matchPrefix(destinationName, args[2])).collect(Collectors.toList());
 			}
 			default ->
 			{
@@ -88,7 +85,7 @@ final class GiveSubcommand extends AbstractSubcommand
 	@Override
 	public boolean onCommand(final CommandSender sender, final List<String> args)
 	{
-		// if command sender does not have permission to give LodeStars, output error message and return true
+		// if command sender does not have permission to give LodeStars, output error message and return
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
@@ -96,7 +93,7 @@ final class GiveSubcommand extends AbstractSubcommand
 			return true;
 		}
 
-		// if too few arguments, send error and usage message
+		// if too few arguments, send error and usage message and return
 		if (args.size() < getMinArgs())
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
@@ -105,13 +102,13 @@ final class GiveSubcommand extends AbstractSubcommand
 			return true;
 		}
 
-		// get required argument target player name and remove from ArrayList
+		// get required argument target player name and remove from args list
 		String targetPlayerName = args.removeFirst();
 
 		// get player by name
 		Player targetPlayer = ctx.plugin().getServer().getPlayer(targetPlayerName);
 
-		// if no match, send player not found message and return
+		// if null, send player not found message and return
 		if (targetPlayer == null)
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
@@ -121,11 +118,15 @@ final class GiveSubcommand extends AbstractSubcommand
 			return true;
 		}
 
-
-		// target player is valid; create object to give:
-		// if first arg is integer, use as quantity and remove arg
-		// if remaining args exist, try to match destination name
-		// else no remaining args, check item in hand is lodestar and create clone
+		// if not online, send player not online message and return
+		if (!targetPlayer.isOnline())
+		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_ONLINE)
+					.setMacro(Macro.PLAYER, targetPlayerName)
+					.send();
+			return true;
+		}
 
 		// get quantity if present
 		int quantity = 1;
@@ -134,87 +135,79 @@ final class GiveSubcommand extends AbstractSubcommand
 			quantity = Integer.parseInt(args.removeFirst());
 		}
 
-		// if no remaining arguments, check if item in hand is LodeStar item
+		// if no remaining arguments, give item in hand
 		if (args.isEmpty())
 		{
-			// if sender is not player, send args-count-under error message
-			if (!(sender instanceof Player player))
+			giveItemInHand(sender, quantity, targetPlayer);
+		}
+		// try to parse all remaining arguments as destinationName
+		else
+		{
+			Destination destination = ctx.lodeStarUtility().getDestination(getEnteredName(args));
+			if (destination instanceof ValidDestination validDestination)
 			{
-				ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
-				displayUsage(sender);
-				return true;
-			}
-
-			// get clone of item in player main hand
-			ItemStack giftItem = player.getInventory().getItemInMainHand().clone();
-			giftItem.setAmount(quantity);
-
-			if (ItemForge.isCustomItem(giftItem))
-			{
-				switch (giveItem(sender, targetPlayer, giftItem))
+				ItemStack giftItem = ctx.lodeStarUtility().create(quantity, validDestination.displayName());
+				switch (giveNewItem(sender, targetPlayer, quantity, validDestination))
 				{
-					case SUCCESS_GIVE_SELF -> { }
+					case SUCCESS_GIVE_SELF -> sendSuccessGiveSelfMessage(sender, giftItem);
 					case SUCCESS_GIVE_OTHER -> sendSuccessGiveOtherMessage(sender, targetPlayer, giftItem);
 					case FAIL_INVALID_ITEM -> sendInvalidItemMessage(sender);
 					case FAIL_INVALID_DESTINATION -> sendInvalidDestinationMessage(sender);
 					case FAIL_INVENTORY_FULL -> sendInventoryFullMessage(sender);
 				}
 			}
-			return true;
+			else
+			{
+				sendInvalidItemMessage(sender);
+			}
 		}
-
-		// try to parse all remaining arguments as destinationName
-		else
-		{
-			// join remaining arguments with spaces
-			String destinationName = String.join(" ", args);
-
-			//TODO: destination is spawn or home, set appropriate destination, else attempt to retrieve stored destination
-
-			switch (destinationName)
-			{
-
-			}
-			if (destinationName.equalsIgnoreCase(ctx.messageBuilder().getConstantResolver().getString("LOCATIONS.SPAWN").orElse("Spawn"))
-				|| destinationName.equalsIgnoreCase("spawn")
-			{
-
-			}
-
-
-
-			// attempt to get destination by name from datastre
-			Destination destination = ctx.datastore().destinations().get(destinationName);
-
-			// if resulting name is existing destination, get destinationName from datastore
-			if (destination instanceof ValidDestination validDestination)
-			{
-				destinationName = validDestination.displayName();
-
-				// give item to sender and return
-				ctx.messageBuilder().itemForge().createItem(destinationName).ifPresent(itemStack -> giveItem(sender, targetPlayer, itemStack));
-			}
-			return true;
-		}
+		return true;
 	}
 
 
-	private Material getMaterial(String argMaterialName)
+	private static @NotNull String getEnteredName(List<String> args)
 	{
-		Material material = LodeStarUtility.DEFAULT_MATERIAL;
-		String defaultMaterialName = ctx.plugin().getConfig().getString("default-material");
+		// join remaining arguments with spaces
+		String result = String.join(" ", args);
 
-		if (ctx.plugin().getConfig().getBoolean("default-material-only")
-			&& defaultMaterialName != null
-			&& Material.matchMaterial(defaultMaterialName) != null)
+		// strip legacy color codes from entered name
+		result = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', result));
+
+		// perform any additional string sanitization here
+
+		// return sanitized destination anme string
+		return result;
+	}
+
+
+	private void giveItemInHand(CommandSender sender, int quantity, Player targetPlayer)
+	{
+		// if sender is not player, send args-count-under error message
+		if (!(sender instanceof Player player))
 		{
-			material = Material.matchMaterial(Objects.requireNonNull(ctx.plugin().getConfig().getString("default-material")));
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
+			displayUsage(sender);
 		}
-		else if (Material.matchMaterial(argMaterialName) != null)
+		else
 		{
-			material = Material.matchMaterial(argMaterialName);
+			// get clone of item in player main hand
+			ItemStack giftItem = player.getInventory().getItemInMainHand().clone();
+
+			// get destination from item
+			Destination destination = ctx.lodeStarUtility().getDestination(giftItem);
+
+			if (destination instanceof ValidDestination validDestination)
+			{
+				switch (giveNewItem(sender, targetPlayer, quantity, validDestination))
+				{
+					case SUCCESS_GIVE_SELF -> sendSuccessGiveSelfMessage(sender, giftItem);
+					case SUCCESS_GIVE_OTHER -> sendSuccessGiveOtherMessage(sender, targetPlayer, giftItem);
+					case FAIL_INVALID_ITEM -> sendInvalidItemMessage(sender);
+					case FAIL_INVALID_DESTINATION -> sendInvalidDestinationMessage(sender);
+					case FAIL_INVENTORY_FULL -> sendInventoryFullMessage(sender);
+				}
+			}
 		}
-		return material;
 	}
 
 
@@ -223,24 +216,26 @@ final class GiveSubcommand extends AbstractSubcommand
 	 *
 	 * @param giver        the player issuing the command
 	 * @param targetPlayer the player being given item
-	 * @param itemStack    the LodeStar item being given
+	 * @param quantity     the size of the new ItemStack
 	 * @return always returns {@code true}, to prevent display of bukkit usage message
 	 */
-	@SuppressWarnings("UnusedReturnValue")
-	private GiveResult giveItem(final CommandSender giver, final Player targetPlayer, final ItemStack itemStack)
+	private GiveResult giveNewItem(final CommandSender giver,
+	                               final Player targetPlayer,
+	                               final int quantity,
+	                               final ValidDestination validDestination)
 	{
-		if (!ItemForge.isCustomItem(itemStack)) return GiveResult.FAIL_INVALID_ITEM;
-		else if (!(getDestination(itemStack) instanceof ValidDestination)) return GiveResult.FAIL_INVALID_DESTINATION;
-		else
+		ItemStack itemStack = ctx.lodeStarUtility().create(quantity, validDestination.displayName());
+
+		if (itemStack != null)
 		{
-			int quantity = itemStack.getAmount();
+			int giveQuantity = itemStack.getAmount();
 			int maxGiveAmount = ctx.plugin().getConfig().getInt("max-give-amount");
 
 			// check quantity against configured max give amount
 			if (maxGiveAmount >= 0)
 			{
-				quantity = Math.min(maxGiveAmount, quantity);
-				itemStack.setAmount(quantity);
+				giveQuantity = Math.min(maxGiveAmount, giveQuantity);
+				itemStack.setAmount(giveQuantity);
 			}
 
 			// add stack of LodeStars to target player inventory
@@ -258,25 +253,48 @@ final class GiveSubcommand extends AbstractSubcommand
 			else if (giver.getName().equals(targetPlayer.getName())) return GiveResult.SUCCESS_GIVE_SELF;
 			else return GiveResult.SUCCESS_GIVE_OTHER;
 		}
+		else
+		{
+			return GiveResult.FAIL_INVALID_ITEM;
+		}
 	}
 
 
 	private void sendSuccessGiveOtherMessage(final CommandSender sender, final Player targetPlayer, final ItemStack itemStack)
 	{
-		if (getDestination(itemStack) instanceof ValidDestination validDestination)
+		if (ctx.lodeStarUtility().getDestination(itemStack) instanceof ValidDestination validDestination)
 		{
 			// send message to command sender
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_GIVE_SENDER);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_GIVE)
-					.setMacro(Macro.DESTINATION, validDestination)
 					.setMacro(Macro.PLAYER, targetPlayer)
+					.setMacro(Macro.ITEM, itemStack)
+					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
 
 			// send message to gift recipient
 			ctx.soundConfig().playSound(targetPlayer, SoundId.COMMAND_SUCCESS_GIVE_TARGET);
 			ctx.messageBuilder().compose(targetPlayer, MessageId.COMMAND_SUCCESS_GIVE_TARGET)
-					.setMacro(Macro.DESTINATION, validDestination)
 					.setMacro(Macro.PLAYER, sender)
+					.setMacro(Macro.ITEM, itemStack)
+					.setMacro(Macro.DESTINATION, validDestination)
+					.send();
+		}
+		else
+		{
+			sendInvalidDestinationMessage(sender);
+		}
+	}
+
+
+	private void sendSuccessGiveSelfMessage(final CommandSender sender, final ItemStack itemStack)
+	{
+		if (ctx.lodeStarUtility().getDestination(itemStack) instanceof ValidDestination validDestination)
+		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_GIVE_TARGET);
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_GIVE_SELF)
+					.setMacro(Macro.ITEM, itemStack)
+					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
 		}
 		else
@@ -298,6 +316,7 @@ final class GiveSubcommand extends AbstractSubcommand
 		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION).send();
 	}
+
 
 	private void sendInvalidItemMessage(CommandSender sender)
 	{
@@ -326,35 +345,6 @@ final class GiveSubcommand extends AbstractSubcommand
 		catch (NumberFormatException e)
 		{
 			return false;
-		}
-	}
-
-
-	private ItemStack setDestination(final ItemStack itemStack, final ValidDestination validDestination)
-	{
-		NamespacedKey namespacedKey = new NamespacedKey(ctx.plugin(), "DESTINATION");
-		ItemMeta itemMeta = itemStack.getItemMeta();
-		if (itemMeta != null)
-		{
-			itemMeta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.STRING, validDestination.key());
-			itemStack.setItemMeta(itemMeta);
-		}
-		return itemStack;
-	}
-
-
-	private Destination getDestination(final ItemStack itemStack)
-	{
-		NamespacedKey namespacedKey = new NamespacedKey(ctx.plugin(), "DESTINATION");
-		ItemMeta itemMeta = itemStack.getItemMeta();
-		if (itemMeta != null)
-		{
-			String destinationName = itemMeta.getPersistentDataContainer().get(namespacedKey, PersistentDataType.STRING);
-			return ctx.datastore().destinations().get(destinationName);
-		}
-		else
-		{
-			return new InvalidDestination("UNKNOWN", "Invalid destination");
 		}
 	}
 
