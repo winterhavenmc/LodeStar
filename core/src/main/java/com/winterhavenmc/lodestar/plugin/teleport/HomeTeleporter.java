@@ -17,9 +17,11 @@
 
 package com.winterhavenmc.lodestar.plugin.teleport;
 
+import com.winterhavenmc.lodestar.models.destination.*;
+import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
+import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.PluginController;
-import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 
@@ -47,10 +49,14 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 	@Override
 	public void initiate(final Player player)
 	{
-		switch (getHomeDestination(player))
+		if (getHomeDestination(player) instanceof ValidDestination validDestination
+				&& ImmutableLocation.of(player.getRespawnLocation()) instanceof ValidLocation validLocation)
 		{
-			case ValidDestination validDestination -> execute(player, validDestination, MessageId.TELEPORT_WARMUP);
-			case InvalidDestination ignored -> fallbackToSpawn(player);
+			switch (TeleportDestination.of(validDestination, validLocation))
+			{
+				case ValidDestination destination -> execute(player, destination, MessageId.TELEPORT_WARMUP);
+				case InvalidDestination ignored -> fallbackToSpawn(player);
+			}
 		}
 	}
 
