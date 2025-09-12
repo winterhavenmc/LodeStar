@@ -13,12 +13,12 @@ CONSTANTS:
 ###########
 # Item Info
 ###########
-ITEM_INFO:
+ITEMS:
   LODESTAR:
     MATERIAL: NETHER_STAR
-    DISPLAY_NAME: "<green>LodeStar</green>"
+    NAME: "LodeStar"
     PLURAL_NAME: "<choice:'0#zero LodeStars|1#one LodeStar|1<{QUANTITY} LodeStars'>"
-    INVENTORY_NAME: "<green>LodeStar: {DESTINATION}</green>"
+    DISPLAY_NAME: "<green>LodeStar: {DESTINATION}</green>"
     LORE:
       - "<yellow>Use to teleport</yellow>"
       - "<yellow>to {DESTINATION}</yellow>"
