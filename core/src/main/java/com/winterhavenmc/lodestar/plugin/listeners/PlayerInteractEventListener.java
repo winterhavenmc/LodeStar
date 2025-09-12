@@ -88,44 +88,38 @@ public class PlayerInteractEventListener implements Listener
 		}
 
 		// if player is not warming
-		if (!teleportHandler.isWarmingUp(player))
+		// check if clicked block is not air, and player is not sneaking, and  block interaction type is allowed
+		//noinspection ConstantConditions
+		if (!teleportHandler.isWarmingUp(player)
+				&& isNotAir(event.getClickedBlock())
+				&& isNotSneaking(event.getPlayer())
+				&& allowedInteraction(event.getClickedBlock()))
 		{
-			// check if clicked block is not air, and player is not sneaking, and  block interaction type is allowed
-			//noinspection ConstantConditions
-			if (isNotAir(event.getClickedBlock())
-					&& isNotSneaking(event.getPlayer())
-					&& allowedInteraction(event.getClickedBlock()))
-			{
-				return;
-			}
+			return;
+		}
 
-			// cancel event
-			event.setCancelled(true);
+		// cancel event
+		event.setCancelled(true);
 
-			// if players current world is not enabled in config, send message and return
-			if (!ctx.worldManager().isEnabled(player.getWorld()))
-			{
-				ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_WORLD_DISABLED).send();
-				ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
-				return;
-			}
-
-			// if player does not have lodestar.use permission, send message and return
-			if (!player.hasPermission("lodestar.use"))
-			{
-				ctx.messageBuilder().compose(player, MessageId.PERMISSION_DENIED_USE).send();
-				ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
-				return;
-			}
-
-			// if shift-click configured and player is not sneaking, send teleport fail shift-click message and return
-			if (ctx.plugin().getConfig().getBoolean("shift-click") && isNotSneaking(player))
-			{
-				ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_SHIFT_CLICK).send();
-				return;
-			}
-
-			// initiate teleport
+		// if players current world is not enabled in config, send message and return
+		if (!ctx.worldManager().isEnabled(player.getWorld()))
+		{
+			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_WORLD_DISABLED).send();
+			ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
+		}
+		// if player does not have lodestar.use permission, send message and return
+		else if (!player.hasPermission("lodestar.use"))
+		{
+			ctx.messageBuilder().compose(player, MessageId.PERMISSION_DENIED_USE).send();
+			ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
+		}
+		// if shift-click configured and player is not sneaking, send teleport fail shift-click message and return
+		else if (ctx.plugin().getConfig().getBoolean("shift-click") && isNotSneaking(player))
+		{
+			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_SHIFT_CLICK).send();
+		}
+		else
+		{
 			teleportHandler.initiateTeleport(player);
 		}
 	}
