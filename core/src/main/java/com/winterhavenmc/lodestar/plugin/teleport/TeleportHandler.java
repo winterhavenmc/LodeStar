@@ -91,8 +91,10 @@ public final class TeleportHandler
 			default -> new DestinationTeleporter(ctx, teleportExecutor);
 		};
 
-		// initiate teleport
-		teleporter.initiate(player);
+			// initiate teleport
+			teleporter.initiate(player);
+		}
+		//TODO: possible invalid destination message here; alternatively, put Invalid case in switch with NoOp teleporter returned
 	}
 
 
