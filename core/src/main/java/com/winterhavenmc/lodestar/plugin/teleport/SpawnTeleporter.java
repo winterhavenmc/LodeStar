@@ -20,6 +20,7 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.entity.Player;
 
@@ -45,10 +46,11 @@ final class SpawnTeleporter extends AbstractTeleporter implements Teleporter
 	@Override
 	public void initiate(final Player player)
 	{
-		switch (getSpawnDestination(player)) {
+		switch (getSpawnDestination(player))
+		{
 			case ValidDestination validDestination -> execute(player, validDestination, MessageId.TELEPORT_WARMUP_SPAWN);
 			case InvalidDestination ignored -> sendInvalidDestinationMessage(player,
-					ctx.messageBuilder().getConstantResolver().getString("LOCATION.HOME").orElse("Spawn"));
+					ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn"));
 		}
 	}
 
