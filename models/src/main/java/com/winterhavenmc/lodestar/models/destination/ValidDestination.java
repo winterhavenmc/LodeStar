@@ -47,6 +47,11 @@ public sealed interface ValidDestination extends Destination, DisplayNameable, L
 	}
 
 
+	/**
+	 * Accessor method to fulfill DisplayNameable interface
+	 *
+	 * @return the display name of the destination
+	 */
 	default String getDisplayName()
 	{
 		return displayName();
