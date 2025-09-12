@@ -47,7 +47,7 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 	public void initiate(final Player player)
 	{
 		// get item key from player item in main hand
-		final String key = ctx.lodeStarUtility().getKey(player.getInventory().getItemInMainHand());
+		final String key = ctx.lodeStarUtility().getDestinationKey(player.getInventory().getItemInMainHand());
 
 		// execute teleport or send invalid destination message
 		Destination destination = ctx.datastore().destinations().get(key);
