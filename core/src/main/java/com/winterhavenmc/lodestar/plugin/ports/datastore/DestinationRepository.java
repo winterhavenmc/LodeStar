@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.ports.datastore;
 
 import com.winterhavenmc.lodestar.models.destination.Destination;
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
+import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,11 +37,11 @@ public interface DestinationRepository
 
 	/**
 	 * Insert a collection of records
-	 * @param validDestinations a collection of records to be inserted
+	 * @param storedDestinations a collection of records to be inserted
 	 *
 	 * @return count of records inserted
 	 */
-	int save(final Collection<ValidDestination> validDestinations);
+	int save(final Collection<StoredDestination> storedDestinations);
 
 
 	/**
