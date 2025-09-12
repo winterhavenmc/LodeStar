@@ -17,12 +17,13 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
+import com.winterhavenmc.lodestar.models.destination.Destination;
+import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
-import com.winterhavenmc.lodestar.models.destination.Destination;
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
+
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -96,16 +97,16 @@ final class TeleportSubcommand extends AbstractSubcommand
 		// get destination from datastore
 		Destination destination = ctx.datastore().destinations().get(destinationName);
 
-		if (destination instanceof ValidDestination validDestination && validDestination.location() != null)
+		if (destination instanceof StoredDestination storedDestination && storedDestination.location() != null)
 		{
-			Location location = validDestination.location().getLocation();
+			Location location = storedDestination.location().getLocation();
 			if (location != null)
 			{
 				ctx.soundConfig().playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 				player.teleport(location);
 				ctx.soundConfig().playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 				ctx.messageBuilder().compose(sender, MessageId.TELEPORT_SUCCESS)
-						.setMacro(Macro.DESTINATION, validDestination)
+						.setMacro(Macro.DESTINATION, storedDestination)
 						.send();
 			}
 			// TODO: display invalid location message in else statement here
