@@ -80,19 +80,9 @@ public class PlayerInteractEventListener implements Listener
 		final Player player = event.getPlayer();
 
 		// perform check for cancel-on-interaction
-		if (cancelTeleportOnInteraction(event))
-		{
-			return;
-		}
-
-		// if item used is not a LodeStar, do nothing and return
-		if (!ItemForge.isCustomItem(event.getItem()))
-		{
-			return;
-		}
-
-		// perform check for allowed click type
-		if (allowedClickType(event))
+		if (cancelTeleportOnInteraction(event)
+				|| !ItemForge.isCustomItem(event.getItem())
+				|| allowedClickType(event))
 		{
 			return;
 		}
