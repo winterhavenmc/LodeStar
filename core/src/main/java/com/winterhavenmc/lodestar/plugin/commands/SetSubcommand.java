@@ -17,15 +17,13 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
+import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
-import com.winterhavenmc.lodestar.models.destination.Destination;
-import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -113,7 +111,7 @@ final class SetSubcommand extends AbstractSubcommand
 			return true;
 		}
 
-		// get optional Destination from data store
+		// get Destination from data store
 		Destination destination = ctx.datastore().destinations().get(destinationName);
 
 		// check for overwrite permission if validDestination already exists TODO: shouldn't this check negate permission?
@@ -121,7 +119,7 @@ final class SetSubcommand extends AbstractSubcommand
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
-					.setMacro(Macro.DESTINATION, destinationName)
+					.setMacro(Macro.DESTINATION, destination)
 					.send();
 			return true;
 		}
@@ -137,27 +135,56 @@ final class SetSubcommand extends AbstractSubcommand
 		// create validDestination object
 		if (ImmutableLocation.of(location) instanceof ValidLocation validLocation)
 		{
-			switch (Destination.of(Destination.Type.STORED, destinationName, validLocation))
+			Destination newDestination = StoredDestination.of(destinationName, validLocation);
+
+			switch (newDestination)
 			{
-				case ValidDestination validDestination ->
-				{
-					ctx.datastore().destinations().save(Collections.singleton(validDestination));
-					ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_SET);
-					ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_SET)
-							.setMacro(Macro.DESTINATION, validDestination)
-							.send();
-				}
-				case InvalidDestination invalidDestination ->
-				{
-					ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
-					ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_REASON)
-							.setMacro(Macro.DESTINATION, invalidDestination.displayName())
-							.setMacro(Macro.FAIL_REASON, invalidDestination.reason())
-							.send();
-				}
+				case StoredDestination storedDestination -> sendSuccessMessage(sender, storedDestination);
+				case HomeDestination homeDestination -> sendFailHomeMessage(sender, homeDestination);
+				case SpawnDestination spawnDestination -> sendFailSpawnMessage(sender, spawnDestination);
+				case InvalidDestination invalidDestination -> sendFailInvalidMessage(sender, invalidDestination);
+				default -> throw new IllegalStateException("Unexpected value: " + newDestination);
 			}
 		}
 		return true;
+	}
+
+
+	private void sendSuccessMessage(CommandSender sender, StoredDestination storedDestination)
+	{
+		ctx.datastore().destinations().save(Collections.singleton(storedDestination));
+		ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_SET);
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_SET)
+				.setMacro(Macro.DESTINATION, storedDestination)
+				.send();
+	}
+
+
+	private void sendFailHomeMessage(CommandSender sender, HomeDestination homeDestination)
+	{
+		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
+				.setMacro(Macro.DESTINATION, homeDestination)
+				.send();
+	}
+
+
+	private void sendFailSpawnMessage(CommandSender sender, SpawnDestination spawnDestination)
+	{
+		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
+				.setMacro(Macro.DESTINATION, spawnDestination)
+				.send();
+	}
+
+
+	private void sendFailInvalidMessage(CommandSender sender, InvalidDestination invalidDestination)
+	{
+		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_REASON)
+				.setMacro(Macro.DESTINATION, invalidDestination.displayName())
+				.setMacro(Macro.FAIL_REASON, invalidDestination.reason())
+				.send();
 	}
 
 }
