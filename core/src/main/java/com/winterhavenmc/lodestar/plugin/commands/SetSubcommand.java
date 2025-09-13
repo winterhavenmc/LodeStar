@@ -102,7 +102,7 @@ final class SetSubcommand extends AbstractSubcommand
 		//TODO: get validDestination to use destination subfields in message
 
 		// check if validDestination name is a reserved name
-		if (isRerservedName(destinationName))
+		if (ctx.lodeStarUtility().isRerservedName(destinationName))
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
