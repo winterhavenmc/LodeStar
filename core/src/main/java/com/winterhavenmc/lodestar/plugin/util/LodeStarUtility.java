@@ -48,6 +48,10 @@ import java.util.*;
 
 /**
  * Utility class for creating and testing SpawnStar item stacks
+ * <p>
+ * A loadstar item has two persistent data objects:
+ *     1) namespaced key "ITEM_KEY" contains the item key string, corresponding to the item definition in the language file
+ *     2) namespaced key "DESTINATION" contains the item destination name, whether spawn, home or stored destination
  */
 public final class LodeStarUtility
 {
@@ -61,6 +65,13 @@ public final class LodeStarUtility
 	private final DataStore datastore;
 
 
+	/**
+	 * Class constructor
+	 *
+	 * @param plugin instance of plugin main class
+	 * @param messageBuilder instance of message builder library
+	 * @param datastore instance of datastore
+	 */
 	public LodeStarUtility(final Plugin plugin, final MessageBuilder messageBuilder, final DataStore datastore)
 	{
 		this.plugin = plugin;
@@ -108,25 +119,19 @@ public final class LodeStarUtility
 	}
 
 
-	public String displayName(final ItemStack itemStack)
+	/**
+	 * Get display name from key
+	 *
+	 * @param key the destination key for which to retrive the display name
+	 * @return the destination display name
+	 */
+	public Optional<String> getDisplayName(final String key)
 	{
-		String destinationName = getDestinationKey(itemStack);
-		if (isSpawnKey(destinationName))
-		{
-			return spawnDisplayName();
-		}
-		else if (isHomeKey(destinationName))
-		{
-			return homeDisplayName();
-		}
-		else if (datastore.destinations().get(destinationName) instanceof ValidDestination validDestination)
-		{
-				return validDestination.displayName();
-		}
-		else
-		{
-			return "unknown";
-		}
+		if (key == null) return Optional.empty();
+		else if (key.equalsIgnoreCase(homeDisplayName())) return Optional.of(homeDisplayName());
+		else if (key.equalsIgnoreCase(spawnDisplayName())) return Optional.of(spawnDisplayName());
+		else if (datastore.destinations().get(key) instanceof ValidDestination validDestination) return Optional.of(validDestination.displayName());
+		else return Optional.empty();
 	}
 
 
