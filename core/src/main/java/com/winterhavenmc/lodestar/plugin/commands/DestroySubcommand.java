@@ -17,10 +17,13 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
+import com.winterhavenmc.library.messagebuilder.ItemForge;
+import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -62,23 +65,24 @@ final class DestroySubcommand extends AbstractSubcommand
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// check that item player is holding is a LodeStar item
-		if (!ctx.lodeStarUtility().isItem(playerItem))
+		if (ItemForge.isItem("LODESTAR", playerItem))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
-			return true;
+			Destination destination = ctx.lodeStarUtility().getDestination(playerItem);
+			ItemStack destroyedItemStack = destroyItemStack(player, playerItem);
+
+			ctx.soundConfig().playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
+					.setMacro(Macro.ITEM, destroyedItemStack)
+					.setMacro(Macro.DESTINATION, destination)
+					.send();
 		}
-
-		// destroy item stack, getting number of items destroyed
-		int quantity = destroyItemStack(player, playerItem);
-
-		// send item destroyed message
-		ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
-				.setMacro(Macro.ITEM_QUANTITY, quantity)
-				.setMacro(Macro.DESTINATION, ctx.lodeStarUtility().getDisplayName(playerItem).orElse(null))
-				.send();
-		ctx.soundConfig().playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
-
+		else
+		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_ITEM)
+					.setMacro(Macro.ITEM, playerItem)
+					.send();
+		}
 		return true;
 	}
 
@@ -90,12 +94,12 @@ final class DestroySubcommand extends AbstractSubcommand
 	 * @param playerItem the itemstack to destroy
 	 * @return the number of items destroyed
 	 */
-	private int destroyItemStack(final Player player, final ItemStack playerItem)
+	private ItemStack destroyItemStack(final Player player, final ItemStack playerItem)
 	{
-		int quantity = playerItem.getAmount();
+		ItemStack destroyedItems = playerItem.clone();
 		playerItem.setAmount(0);
 		player.getInventory().setItemInMainHand(playerItem);
-		return quantity;
+		return destroyedItems;
 	}
 
 }
