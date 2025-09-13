@@ -136,14 +136,24 @@ public final class LodeStarUtility
 	}
 
 
-	public boolean isHomeKey(final String key)
-	{
-		return key.equalsIgnoreCase(homeDisplayName()) || key.equalsIgnoreCase("home");
-	}
-
 	public String spawnDisplayName()
 	{
 		return messageBuilder.constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn");
+	}
+
+
+	public boolean isRerservedName(final String destinationName)
+	{
+		return destinationName.equalsIgnoreCase(messageBuilder.constants().getString(LodeStarUtility.SPAWN_KEY).orElse("spawn"))
+				|| destinationName.equalsIgnoreCase(messageBuilder.constants().getString(LodeStarUtility.HOME_KEY).orElse("home"))
+				|| destinationName.equalsIgnoreCase("spawn")
+				|| destinationName.equalsIgnoreCase("home");
+	}
+
+
+	public boolean isHomeKey(final String key)
+	{
+		return key.equalsIgnoreCase(homeDisplayName()) || key.equalsIgnoreCase("home");
 	}
 
 

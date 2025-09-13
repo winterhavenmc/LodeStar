@@ -94,12 +94,4 @@ abstract class AbstractSubcommand implements Subcommand
 		return string.toLowerCase().startsWith(prefix.toLowerCase());
 	}
 
-	boolean isRerservedName(final String destinationName)
-	{
-		return destinationName.equalsIgnoreCase(ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("spawn"))
-				|| destinationName.equalsIgnoreCase(ctx.messageBuilder().constants().getString(LodeStarUtility.HOME_KEY).orElse("home"))
-				|| destinationName.equalsIgnoreCase("spawn")
-				|| destinationName.equalsIgnoreCase("home");
-	}
-
 }
