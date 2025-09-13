@@ -49,6 +49,31 @@ ITEM_INFO:
 #   TITLE_FADE_IN, TITLE_STAY, TITLE_FADE_OUT: integer values to override the default title fade timings (in ticks)
 
 MESSAGES:
+  ##################
+  # Command Messages
+  ##################
+  COMMAND_SUCCESS_BIND:
+    message: "<dark_aqua>[LodeStar]</dark_aqua> <aqua>Artículo en la mano ahora vinculado a <gold>{DESTINATION}</gold>.</aqua>"
+
+  COMMAND_SUCCESS_DELETE:
+    message: "<dark_aqua>[LodeStar]</dark_aqua> <red>¡<aqua>{DESTINATION}</aqua> removed!</red>"
+
+  COMMAND_SUCCESS_DESTROY:
+    message: "<dark_aqua>[LodeStar]</dark_aqua> <red>¡<aqua>{ITEM}</aqua> destruida!</red>"
+
+  COMMAND_SUCCESS_GIVE:
+    message: "<dark_aqua>[LodeStar]</dark_aqua> Usted diste {ITEM.QUANTITY} <aqua>{ITEM}</aqua> a <aqua>{PLAYER}</aqua>."
+
+  COMMAND_SUCCESS_GIVE_TARGET:
+    message: "<dark_aqua>[LodeStar]</dark_aqua> <aqua>{PLAYER}</aqua> le dio {ITEM.QUANTITY} <aqua>{ITEM}</aqua>."
+
+  COMMAND_SUCCESS_RELOAD:
+    message: "<dark_aqua>[LodeStar]</dark_aqua> <gray>Configuración vuelve a cargar.</gray>"
+
+  COMMAND_WARN_SET_NUMERIC_PREFIX:
+    message: "<dark_aqua>[LodeStar]</dark_aqua> <red>Advertencia: Destino comienza con una cantidad válida. Tenga en cuenta cuando se utiliza con el comando &ogive.</red>"
+
+
   COMMAND_FAIL_ARGS_COUNT_UNDER:
     message: "<dark_aqua>[LodeStar]</dark_aqua> <red>¡No hay suficientes parámetros!</red>"
 
@@ -91,66 +116,7 @@ MESSAGES:
   COMMAND_FAIL_SET_REASON:
     message: "<dark_aqua>[LodeStar]</dark_aqua> <red>No se pudo establecer el destino &6<aqua>{DESTINATION}</aqua>: {FAIL_REASON}</red>"
 
-
-  COMMAND_HELP_INVALID:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> <red>That is not a valid command!</red>"
-
-  COMMAND_HELP_BIND:
-    message: "<yellow>Bind a LodeStar destination to the item you are holding.</yellow>"
-
-  COMMAND_HELP_DELETE:
-    message: "<yellow>Remove a LodeStar destination.</yellow>"
-
-  COMMAND_HELP_DESTROY:
-    message: "<yellow>Destroy the stack of LodeStars you are holding.</yellow>"
-
-  COMMAND_HELP_GIVE:
-    message: "<yellow>Give a LodeStar to a player.</yellow>"
-
-  COMMAND_HELP_HELP:
-    message: "<yellow>Display help for LodeStar commands.</yellow>"
-
-  COMMAND_HELP_LIST:
-    message: "<yellow>Display a list of LodeStar destinations.</yellow>"
-
-  COMMAND_HELP_RELOAD:
-    message: "<yellow>Reloads the configuration without needing to restart the server.</yellow>"
-
-  COMMAND_HELP_SET:
-    message: "<yellow>Create a new LodeStar destination at your current location.</yellow>"
-
-  COMMAND_HELP_STATUS:
-    message: "<yellow>Display plugin configuration settings.</yellow>"
-
-  COMMAND_HELP_TELEPORT:
-    message: "<yellow>Teleport to a LodeStar destination.</yellow>"
-
-  COMMAND_HELP_USAGE_HEADER:
-    message: "<yellow>Command usage:</yellow>"
-
-
-  COMMAND_SUCCESS_BIND:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> <aqua>Artículo en la mano ahora vinculado a <gold>{DESTINATION}</gold>.</aqua>"
-
-  COMMAND_SUCCESS_DELETE:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> <red>¡<aqua>{DESTINATION}</aqua> removed!</red>"
-
-  COMMAND_SUCCESS_DESTROY:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> <red>¡<aqua>{ITEM}</aqua> destruida!</red>"
-
-  COMMAND_SUCCESS_GIVE:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> Usted diste {ITEM.QUANTITY} <aqua>{ITEM}</aqua> a <aqua>{PLAYER}</aqua>."
-
-  COMMAND_SUCCESS_GIVE_TARGET:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> <aqua>{PLAYER}</aqua> le dio {ITEM.QUANTITY} <aqua>{ITEM}</aqua>."
-
-  COMMAND_SUCCESS_RELOAD:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> <gray>Configuración vuelve a cargar.</gray>"
- 
-  COMMAND_WARN_SET_NUMERIC_PREFIX:
-    message: "<dark_aqua>[LodeStar]</dark_aqua> <red>Advertencia: Destino comienza con una cantidad válida. Tenga en cuenta cuando se utiliza con el comando &ogive.</red>"
-
-
+  COMMAND_FAIL_BIND_PERMISSION_DENIED:
   PERMISSION_DENIED_BIND:
     message: "<dark_aqua>[LodeStar]</dark_aqua> <red>¡Usted no tiene permiso para enlazar artículos LodeStar a lugares!</red>"
 
