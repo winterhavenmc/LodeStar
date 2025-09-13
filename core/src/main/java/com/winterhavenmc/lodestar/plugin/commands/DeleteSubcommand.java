@@ -43,7 +43,7 @@ final class DeleteSubcommand extends AbstractSubcommand
 		this.aliases = Set.of("unset");
 		this.permissionNode = "lodestar.delete";
 		this.usageString = "/lodestar delete <destination name>";
-		this.description = MessageId.COMMAND_HELP_DELETE;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_DELETE;
 		this.minArgs = 1;
 	}
 
@@ -70,7 +70,7 @@ final class DeleteSubcommand extends AbstractSubcommand
 		// check for permission
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_DELETE).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DELETE_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

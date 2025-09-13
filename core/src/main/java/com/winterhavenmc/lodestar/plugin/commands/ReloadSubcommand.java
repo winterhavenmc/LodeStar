@@ -40,7 +40,7 @@ final class ReloadSubcommand extends AbstractSubcommand
 		this.name = "reload";
 		this.permissionNode = "lodestar.reload";
 		this.usageString = "/lodestar reload";
-		this.description = MessageId.COMMAND_HELP_RELOAD;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_RELOAD;
 	}
 
 
@@ -50,7 +50,7 @@ final class ReloadSubcommand extends AbstractSubcommand
 		// if sender does not have permission to reload config, send error message and return true
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_RELOAD).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_RELOAD_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

@@ -54,7 +54,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 		{
 			switch (TeleportDestination.of(validDestination, validLocation))
 			{
-				case ValidDestination destination -> execute(player, destination, MessageId.TELEPORT_WARMUP);
+				case ValidDestination destination -> execute(player, destination, MessageId.EVENT_TELEPORT_WARMUP_DESTINATION);
 				case InvalidDestination ignored -> fallbackToSpawn(player);
 			}
 		}
@@ -81,7 +81,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 		}
 		else
 		{
-			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_NO_BEDSPAWN).send();
+			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_NO_BEDSPAWN).send();
 			ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
 		}
 	}

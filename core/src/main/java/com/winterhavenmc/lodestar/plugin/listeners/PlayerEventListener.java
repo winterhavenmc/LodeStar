@@ -130,7 +130,7 @@ public final class PlayerEventListener implements Listener
 			if (entity instanceof Player player && teleportHandler.isWarmingUp(player))
 			{
 				teleportHandler.cancelTeleport(player);
-				ctx.messageBuilder().compose(player, MessageId.TELEPORT_CANCELLED_DAMAGE).send();
+				ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_DAMAGE).send();
 				ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
 			}
 		}
@@ -157,7 +157,7 @@ public final class PlayerEventListener implements Listener
 		if (teleportHandler.isWarmingUp(player) && playerHasMoved(event))
 		{
 			teleportHandler.cancelTeleport(player);
-			ctx.messageBuilder().compose(player, MessageId.TELEPORT_CANCELLED_MOVEMENT).send();
+			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_MOVEMENT).send();
 			ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
 		}
 	}

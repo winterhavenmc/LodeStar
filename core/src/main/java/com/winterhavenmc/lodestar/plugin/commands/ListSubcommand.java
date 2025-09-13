@@ -37,7 +37,7 @@ final class ListSubcommand extends AbstractSubcommand
 		this.name = "list";
 		this.permissionNode = "lodestar.list";
 		this.usageString = "/lodestar list [page]";
-		this.description = MessageId.COMMAND_HELP_LIST;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_LIST;
 		this.maxArgs = 1;
 	}
 
@@ -48,7 +48,7 @@ final class ListSubcommand extends AbstractSubcommand
 		// if command sender does not have permission to list destinations, output error message and return true
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_LIST).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_LIST_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -91,7 +91,7 @@ final class ListSubcommand extends AbstractSubcommand
 		// if display list is empty, output list empty message and return
 		if (destinationNames.isEmpty())
 		{
-			ctx.messageBuilder().compose(sender, MessageId.LIST_EMPTY).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_LIST_EMPTY).send();
 			return true;
 		}
 
@@ -128,12 +128,12 @@ final class ListSubcommand extends AbstractSubcommand
 
 			switch (destination)
 			{
-				case StoredDestination storedDestination -> ctx.messageBuilder().compose(sender, MessageId.LIST_ITEM)
+				case StoredDestination storedDestination -> ctx.messageBuilder().compose(sender, MessageId.COMMAND_LIST_ITEM_VALID)
 						.setMacro(Macro.DESTINATION, storedDestination)
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
 						.send();
 
-				case InvalidDestination invalidDestination -> ctx.messageBuilder().compose(sender, MessageId.LIST_ITEM_INVALID)
+				case InvalidDestination invalidDestination -> ctx.messageBuilder().compose(sender, MessageId.COMMAND_LIST_ITEM_INVALID)
 						.setMacro(Macro.DESTINATION, invalidDestination)
 						.setMacro(Macro.WORLD, "Invalid")
 						.setMacro(Macro.ITEM_NUMBER, itemNumber)
@@ -147,7 +147,7 @@ final class ListSubcommand extends AbstractSubcommand
 
 	private void displayListHeader(CommandSender sender, int page, int pageCount)
 	{
-		ctx.messageBuilder().compose(sender, MessageId.LIST_HEADER)
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_LIST_HEADER)
 				.setMacro(Macro.PAGE_NUMBER, page)
 				.setMacro(Macro.PAGE_TOTAL, pageCount)
 				.send();
@@ -156,7 +156,7 @@ final class ListSubcommand extends AbstractSubcommand
 
 	private void displayListFooter(CommandSender sender, int page, int pageCount)
 	{
-		ctx.messageBuilder().compose(sender, MessageId.LIST_FOOTER)
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_LIST_FOOTER)
 				.setMacro(Macro.PAGE_NUMBER, page)
 				.setMacro(Macro.PAGE_TOTAL, pageCount)
 				.send();

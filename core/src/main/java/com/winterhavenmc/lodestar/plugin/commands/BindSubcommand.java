@@ -49,7 +49,7 @@ final class BindSubcommand extends AbstractSubcommand
 		this.name = "bind";
 		this.permissionNode = "lodestar.bind";
 		this.usageString = "/lodestar bind <destination name>";
-		this.description = MessageId.COMMAND_HELP_BIND;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_BIND;
 		this.minArgs = 1;
 	}
 
@@ -85,7 +85,7 @@ final class BindSubcommand extends AbstractSubcommand
 		// check sender has permission
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_BIND).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_BIND_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

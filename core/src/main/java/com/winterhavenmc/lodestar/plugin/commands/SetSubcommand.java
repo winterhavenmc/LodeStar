@@ -44,7 +44,7 @@ final class SetSubcommand extends AbstractSubcommand
 		this.name = "set";
 		this.permissionNode = "lodestar.set";
 		this.usageString = "/lodestar set <destination_name>";
-		this.description = MessageId.COMMAND_HELP_SET;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_SET;
 		this.minArgs = 1;
 	}
 
@@ -79,7 +79,7 @@ final class SetSubcommand extends AbstractSubcommand
 		// check for permission
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_SET).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -118,7 +118,7 @@ final class SetSubcommand extends AbstractSubcommand
 		if (destination instanceof ValidDestination && sender.hasPermission(permissionNode + ".overwrite"))
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_OVERWRITE)
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_OVERWRITE_PERMISSION_DENIED)
 					.setMacro(Macro.DESTINATION, destination)
 					.send();
 			return true;

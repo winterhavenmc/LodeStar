@@ -48,7 +48,7 @@ final class SpawnTeleporter extends AbstractTeleporter implements Teleporter
 	{
 		switch (getSpawnDestination(player))
 		{
-			case ValidDestination validDestination -> execute(player, validDestination, MessageId.TELEPORT_WARMUP_SPAWN);
+			case ValidDestination validDestination -> execute(player, validDestination, MessageId.EVENT_TELEPORT_WARMUP_SPAWN);
 			case InvalidDestination ignored -> sendInvalidDestinationMessage(player,
 					ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn"));
 		}

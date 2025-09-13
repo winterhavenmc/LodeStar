@@ -39,7 +39,7 @@ final class DestroySubcommand extends AbstractSubcommand
 		this.name = "destroy";
 		this.permissionNode = "lodestar.destroy";
 		this.usageString = "/lodestar destroy";
-		this.description = MessageId.COMMAND_HELP_DESTROY;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_DESTROY;
 	}
 
 
@@ -56,7 +56,7 @@ final class DestroySubcommand extends AbstractSubcommand
 		// check that sender has permission
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_DESTROY).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DESTROY_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

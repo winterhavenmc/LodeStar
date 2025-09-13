@@ -71,7 +71,7 @@ class TeleportExecutor
 		{
 			//TODO: ensure home and spawn locations have non-null location here
 			ctx.plugin().getLogger().info("location was null in TeleportExecutor.execute() method");
-			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
+			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
 		}
@@ -79,7 +79,7 @@ class TeleportExecutor
 		// if player is less than configured minimum distance from the destination location, send player proximity message and return
 		else if (isUnderMinimumDistance(player, location))
 		{
-			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_PROXIMITY)
+			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_PROXIMITY)
 					.setMacro(Macro.ITEM, player.getInventory().getItemInMainHand())
 					.setMacro(Macro.DESTINATION, validDestination)
 					.send();
@@ -200,7 +200,7 @@ class TeleportExecutor
 		if (ctx.plugin().getConfig().getBoolean("log-use"))
 		{
 			// send message to console
-			ctx.messageBuilder().compose(ctx.plugin().getServer().getConsoleSender(), MessageId.TELEPORT_LOG_USAGE)
+			ctx.messageBuilder().compose(ctx.plugin().getServer().getConsoleSender(), MessageId.EVENT_ITEM_USE_LOG)
 					.setMacro(Macro.PLAYER, player)
 					.setMacro(Macro.ITEM, player.getInventory().getItemInMainHand())
 					.setMacro(Macro.DESTINATION, validDestination)

@@ -64,20 +64,20 @@ MESSAGES:
   COMMAND_SUCCESS_DESTROY:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>{ITEM} destroyed!</red>"
 
-  COMMAND_SUCCESS_GIVE:
+  COMMAND_SUCCESS_GIVE_SELF:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> You gave yourself <aqua>{ITEM.PLURAL_NAME}</aqua>."
+
+  COMMAND_SUCCESS_GIVE_OTHER:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> You gave {ITEM.PLURAL_NAME} to {PLAYER}."
 
   COMMAND_SUCCESS_GIVE_TARGET:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>{PLAYER}</aqua> gave you <aqua>{ITEM.PLURAL_NAME}</aqua>."
 
-  COMMAND_SUCCESS_GIVE_SELF:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> You gave yourself <aqua>{ITEM.PLURAL_NAME}</aqua>."
-
   COMMAND_SUCCESS_RELOAD:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <gray>Plugin configuration reloaded.</gray>"
 
   COMMAND_SUCCESS_SET:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>destination <dark_green>{DESTINATION}</dark_green> set.</aqua>"
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>Destination <dark_aqua>{DESTINATION}</dark_aqua> set.</aqua>"
 
   COMMAND_WARN_SET_NUMERIC_PREFIX:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Warning:</red> destination name begins with a valid quantity. Be mindful when using with the <gold><italic>give</italic></gold> command!</red>"
@@ -110,8 +110,8 @@ MESSAGES:
   COMMAND_FAIL_INVALID_MATERIAL:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>The item you are holding is not a valid material!<red>"
 
-  COMMAND_FAIL_INVALID_QUANTITY:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Invalid quantity!</red>"
+#  COMMAND_FAIL_INVALID_QUANTITY:
+#    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Invalid quantity!</red>"
 
   COMMAND_FAIL_PLAYER_NOT_FOUND:
     MESSAGE_TEXT: "'<dark_green>[LodeStar]</dark_green> <red>That player could not be found.</red>;"
@@ -119,8 +119,8 @@ MESSAGES:
   COMMAND_FAIL_PLAYER_NOT_ONLINE:
     MESSAGE_TEXT: "'<dark_green>[LodeStar]</dark_green> <red>That player is not online.</red>;"
 
-  COMMAND_FAIL_SET_OVERWRITE:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>ValidDestination cannot be overwritten!"
+#  COMMAND_FAIL_SET_OVERWRITE:
+#    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>ValidDestination cannot be overwritten!"
 
   COMMAND_FAIL_SET_RESERVED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>destination <dark_aqua>{DESTINATION}</dark_aqua> is reserved and cannot be set!</red>"
@@ -129,78 +129,79 @@ MESSAGES:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Destination <dark_aqua>{DESTINATION}</dark_aqua> could not be set: <dark_purple>{FAIL_REASON}</dark_purple></red>"
 
 
-  PERMISSION_DENIED_BIND:
+  COMMAND_FAIL_BIND_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to bind LodeStar items to locations!</red>"
 
-  PERMISSION_DENIED_DELETE:
+  COMMAND_FAIL_DELETE_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to delete LodeStar locations!</red>"
 
-  PERMISSION_DENIED_DESTROY:
+  COMMAND_FAIL_DESTROY_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to destroy LodeStar items!</red>"
 
-  PERMISSION_DENIED_GIVE:
+  COMMAND_FAIL_GIVE_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to give LodeStar items!</red>"
 
-  PERMISSION_DENIED_HELP:
+  COMMAND_FAIL_HELP_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to view LodeStar help!</red>"
 
-  PERMISSION_DENIED_LIST:
+  COMMAND_FAIL_LIST_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to list LodeStar locations!</red>"
 
-  PERMISSION_DENIED_OVERWRITE:
+  COMMAND_FAIL_OVERWRITE_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to overwrite LodeStar locations!</red>"
 
-  PERMISSION_DENIED_RELOAD:
+  COMMAND_FAIL_RELOAD_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to reload the configuration!</red>"
 
-  PERMISSION_DENIED_SET:
+  COMMAND_FAIL_SET_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to set LodeStar locations!</red>"
 
-  PERMISSION_DENIED_STATUS:
+  COMMAND_FAIL_STATUS_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to view LodeStar settings!</red>"
 
-  PERMISSION_DENIED_TELEPORT:
+  COMMAND_FAIL_TELEPORT_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to teleport to LodeStar locations!</red>"
 
-  PERMISSION_DENIED_USE:
+
+  EVENT_ITEM_USE_PERMISSION_DENIED:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have permission to use a <aqua>{ITEM}</aqua> in <aqua>{RECIPIENT.LOCATION.WORLD}.</red>"
     REPEAT_DELAY: 1
 
 
-  COMMAND_HELP_INVALID:
+  COMMAND_FAIL_HELP_INVALID_COMMAND:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>That is not a valid command!"
 
-  COMMAND_HELP_BIND:
+  COMMAND_SUCCESS_HELP_BIND:
     MESSAGE_TEXT: "<yellow>Bind a LodeStar destination to the item you are holding.</yellow>"
 
-  COMMAND_HELP_DELETE:
+  COMMAND_SUCCESS_HELP_DELETE:
     MESSAGE_TEXT: "<yellow>Remove a LodeStar destination.</yellow>"
 
-  COMMAND_HELP_DESTROY:
+  COMMAND_SUCCESS_HELP_DESTROY:
     MESSAGE_TEXT: "<yellow>Destroy the stack of LodeStars you are holding.</yellow>"
 
-  COMMAND_HELP_GIVE:
+  COMMAND_SUCCESS_HELP_GIVE:
     MESSAGE_TEXT: "<yellow>Give a LodeStar to a player.</yellow>"
 
-  COMMAND_HELP_HELP:
+  COMMAND_SUCCESS_HELP_HELP:
     MESSAGE_TEXT: "<yellow>Display help for LodeStar commands.</yellow>"
 
-  COMMAND_HELP_LIST:
+  COMMAND_SUCCESS_HELP_LIST:
     MESSAGE_TEXT: "<yellow>Display a list of LodeStar destinations.</yellow>"
 
-  COMMAND_HELP_RELOAD:
+  COMMAND_SUCCESS_HELP_RELOAD:
     MESSAGE_TEXT: "<yellow>Reloads the configuration without needing to restart the server.</yellow>"
 
-  COMMAND_HELP_SET:
+  COMMAND_SUCCESS_HELP_SET:
     MESSAGE_TEXT: "<yellow>Create a new LodeStar destination at your current location.</yellow>"
 
-  COMMAND_HELP_STATUS:
+  COMMAND_SUCCESS_HELP_STATUS:
     MESSAGE_TEXT: "<yellow>Display plugin configuration settings.</yellow>"
 
-  COMMAND_HELP_TELEPORT:
+  COMMAND_SUCCESS_HELP_TELEPORT:
     MESSAGE_TEXT: "<yellow>Teleport to a LodeStar destination.</yellow>"
 
-  COMMAND_HELP_USAGE_HEADER:
+  COMMAND_SUCCESS_HELP_USAGE_HEADER:
     MESSAGE_TEXT: "<white>Command usage:</white>"
 
 
@@ -225,13 +226,13 @@ MESSAGES:
   COMMAND_STATUS_TIMEZONE:
     MESSAGE_TEXT: "<green>Timezone:</green> {SETTING}"
 
-  COMMAND_STATUS_MATERIAL:
-    MESSAGE_TEXT: "<green>Material:</green> {SETTING}"
+#  COMMAND_STATUS_MATERIAL:
+#    MESSAGE_TEXT: "<green>Material:</green> {SETTING}"
 
   COMMAND_STATUS_MINIMUM_DISTANCE:
     MESSAGE_TEXT: "<green>Minimum distance:</green> {SETTING}"
 
-  COMMAND_STATUS_TELEPORT_DISTANCE:
+  COMMAND_STATUS_TELEPORT_WARMUP_DURATION:
     MESSAGE_TEXT: "<green>Teleport warmup:</green> {SETTING}"
 
   COMMAND_STATUS_SHIFT_CLICK:
@@ -259,75 +260,75 @@ MESSAGES:
     MESSAGE_TEXT: "<green>Cancel on interaction:</green> {SETTING}"
 
 
-  LIST_HEADER:
+  COMMAND_LIST_HEADER:
     MESSAGE_TEXT: "<aqua>Page <green>{PAGE_NUMBER}</green> of <green>{PAGE_TOTAL}</green>"
 
-  LIST_FOOTER:
+  COMMAND_LIST_FOOTER:
     ENABLED: false
     MESSAGE_TEXT: "<dark_aqua>Page <aqua>{PAGE_NUMBER}</aqua> of <aqua>{PAGE_TOTAL}</aqua></dark_aqua>"
 
-  LIST_ITEM:
+  COMMAND_LIST_ITEM_VALID:
     MESSAGE_TEXT: "{ITEM_NUMBER}) <green>{DESTINATION} <dark_red>|</dark_red> {DESTINATION.LOCATION}</green>"
 
-  LIST_ITEM_INVALID:
+  COMMAND_LIST_ITEM_INVALID:
     MESSAGE_TEXT: "{ITEM_NUMBER}) <gray>{DESTINATION} <dark_red>|</dark_red> <aqua>[ <yellow>Invalid World: {WORLD}</yellow> ]</aqua></gray>"
 
-  LIST_EMPTY:
+  COMMAND_LIST_EMPTY:
     MESSAGE_TEXT: "<aqua>There are no destinations to list!</aqua>"
 
 
 ################
 # Event Messages
 ################
-  TELEPORT_CANCELLED_DAMAGE:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Teleport cancelled by damage!</red>"
-
-  TELEPORT_CANCELLED_INTERACTION:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Teleport cancelled by interaction!</red>"
-
-  TELEPORT_CANCELLED_MOVEMENT:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Teleport cancelled by movement!</red>"
-
-  TELEPORT_CANCELLED_NO_ITEM:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You no longer have a <dark_aqua>{ITEM}</dark_aqua>!</red>"
-
-  TELEPORT_FAIL_INVALID_DESTINATION:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>That destination does not exist!</red>"
-    REPEAT_DELAY: 1
-
-  TELEPORT_FAIL_NO_BEDSPAWN:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have a bed home set!</red>"
-    REPEAT_DELAY: 1
-
-  TELEPORT_FAIL_PROXIMITY:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You are too close to <dark_aqua>{DESTINATION}</dark_aqua> to use a <dark_aqua>{ITEM}</darK_aqua>.</red>"
-    REPEAT_DELAY: 1
-
-  TELEPORT_FAIL_SHIFT_CLICK:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You must shift-click to use a <dark_aqua>{ITEM}</dark_aqua>.</red>"
-    REPEAT_DELAY: 5
-
-  TELEPORT_FAIL_WORLD_DISABLED:
-    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red><aqua>{ITEM}</aqua> use is not enabled in <aqua>{RECIPIENT.LOCATION.WORLD}</aqua>.</red>"
-    REPEAT_DELAY: 1
-
-  TELEPORT_SUCCESS:
+  EVENT_TELEPORT_SUCCESS_DESTINATION:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>Successfully teleported to <dark_aqua>{DESTINATION}</dark_aqua>.</aqua>"
     SUBTITLE_TEXT: "<aqua>{DESTINATION}</aqua>"
 
-  TELEPORT_SUCCESS_SPAWN:
+  EVENT_TELEPORT_SUCCESS_SPAWN:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>Returned to <gold>{DESTINATION.LOCATION.WORLD} spawn</gold>.</aqua>"
     SUBTITLE_TEXT: "<aqua>{DESTINATION}</aqua>"
 
-  TELEPORT_COOLDOWN:
+  EVENT_TELEPORT_CANCELLED_DAMAGE:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Teleport cancelled by damage!</red>"
+
+  EVENT_TELEPORT_CANCELLED_INTERACTION:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Teleport cancelled by interaction!</red>"
+
+  EVENT_TELEPORT_CANCELLED_MOVEMENT:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>Teleport cancelled by movement!</red>"
+
+  EVENT_TELEPORT_CANCELLED_NO_ITEM:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You no longer have a <dark_aqua>{ITEM}</dark_aqua>!</red>"
+
+  EVENT_TELEPORT_FAIL_INVALID_DESTINATION:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>That destination does not exist!</red>"
+    REPEAT_DELAY: 1
+
+  EVENT_TELEPORT_FAIL_NO_BEDSPAWN:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You do not have a bed home set!</red>"
+    REPEAT_DELAY: 1
+
+  EVENT_TELEPORT_FAIL_PROXIMITY:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You are too close to <dark_aqua>{DESTINATION}</dark_aqua> to use a <dark_aqua>{ITEM}</darK_aqua>.</red>"
+    REPEAT_DELAY: 1
+
+  EVENT_TELEPORT_FAIL_SHIFT_CLICK:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red>You must shift-click to use a <dark_aqua>{ITEM}</dark_aqua>.</red>"
+    REPEAT_DELAY: 5
+
+  EVENT_TELEPORT_FAIL_WORLD_DISABLED:
+    MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <red><aqua>{ITEM}</aqua> use is not enabled in <aqua>{RECIPIENT.LOCATION.WORLD}</aqua>.</red>"
+    REPEAT_DELAY: 1
+
+  EVENT_TELEPORT_COOLDOWN:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>You need to wait <dark_aqua>{DURATION}</dark_aqua> to use another <dark_aqua>{ITEM}</dark_aqua>.</aqua>"
     REPEAT_DELAY: 1
 
-  TELEPORT_WARMUP:
+  EVENT_TELEPORT_WARMUP_DESTINATION:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>Teleporting to <dark_aqua>{DESTINATION}</dark_aqua> in <dark_aqua>{DURATION}</dark_aqua>...</aqua>"
 
-  TELEPORT_WARMUP_SPAWN:
+  EVENT_TELEPORT_WARMUP_SPAWN:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>Teleporting to <dark_aqua>{DESTINATION}</dark_aqua> in <dark_aqua>{DURATION}</dark_aqua>...</aqua>"
 
-  TELEPORT_LOG_USAGE:
+  EVENT_ITEM_USE_LOG:
     MESSAGE_TEXT: "<dark_green>[LodeStar]</dark_green> <aqua>{PLAYER}</aqua> used a <aqua>{ITEM}</aqua> to <aqua>{DESTINATION}</aqua> in <aqua>{DESTINATION.LOCATION.WORLD}</aqua>."

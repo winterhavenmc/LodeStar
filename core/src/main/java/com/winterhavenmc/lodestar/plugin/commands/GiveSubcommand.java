@@ -45,7 +45,7 @@ final class GiveSubcommand extends AbstractSubcommand
 		this.name = "give";
 		this.permissionNode = "lodestar.give";
 		this.usageString = "/lodestar give <player> [quantity] [destination_name]";
-		this.description = MessageId.COMMAND_HELP_GIVE;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_GIVE;
 		this.minArgs = 1;
 	}
 
@@ -89,7 +89,7 @@ final class GiveSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_GIVE).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_GIVE_PERMISSION_DENIED).send();
 			return true;
 		}
 
@@ -266,7 +266,7 @@ final class GiveSubcommand extends AbstractSubcommand
 		{
 			// send message to command sender
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_GIVE_SENDER);
-			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_GIVE)
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_GIVE_OTHER)
 					.setMacro(Macro.PLAYER, targetPlayer)
 					.setMacro(Macro.ITEM, itemStack)
 					.setMacro(Macro.DESTINATION, validDestination)

@@ -203,7 +203,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 	 */
 	final void sendInvalidDestinationMessage(final Player player, final String destinationName)
 	{
-		ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_INVALID_DESTINATION)
+		ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_INVALID_DESTINATION)
 				.setMacro(Macro.DESTINATION, destinationName)
 				.send();
 		ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);

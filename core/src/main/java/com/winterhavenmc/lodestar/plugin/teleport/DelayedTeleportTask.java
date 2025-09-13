@@ -119,7 +119,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 				// if one LodeStar item could not be removed from inventory, send message, set cooldown and return
 				if (!wasRemoved)
 				{
-					ctx.messageBuilder().compose(player, MessageId.TELEPORT_CANCELLED_NO_ITEM).send();
+					ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_NO_ITEM).send();
 					ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
 					teleportHandler.startPlayerCooldown(player);
 					return;
@@ -134,14 +134,14 @@ final class DelayedTeleportTask extends BukkitRunnable
 			// if validDestination is spawn, send spawn specific success message
 			if (validDestination instanceof SpawnDestination)
 			{
-				ctx.messageBuilder().compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
+				ctx.messageBuilder().compose(player, MessageId.  EVENT_TELEPORT_SUCCESS_SPAWN)
 						.setMacro(Macro.DESTINATION, validDestination)
 						.send();
 			}
 			// otherwise, send standard success message
 			else
 			{
-				ctx.messageBuilder().compose(player, MessageId.TELEPORT_SUCCESS)
+				ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_SUCCESS_DESTINATION)
 						.setMacro(Macro.DESTINATION, validDestination)
 						.send();
 			}

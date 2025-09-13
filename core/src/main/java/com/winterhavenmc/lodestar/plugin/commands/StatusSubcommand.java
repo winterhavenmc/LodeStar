@@ -48,7 +48,7 @@ final class StatusSubcommand extends AbstractSubcommand
 		this.name = "status";
 		this.permissionNode = "lodestar.status";
 		this.usageString = "/lodestar status";
-		this.description = MessageId.COMMAND_HELP_STATUS;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_STATUS;
 		this.localeProvider = LocaleProvider.create(ctx.plugin());
 	}
 
@@ -59,7 +59,7 @@ final class StatusSubcommand extends AbstractSubcommand
 		// if command sender does not have permission to view status, output error message and return true
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_STATUS).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_STATUS_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

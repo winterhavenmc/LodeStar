@@ -54,7 +54,7 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 
 		switch (destination)
 		{
-			case ValidDestination validDestination -> execute(player, validDestination, MessageId.TELEPORT_WARMUP);
+			case ValidDestination validDestination -> execute(player, validDestination, MessageId.EVENT_TELEPORT_WARMUP_DESTINATION);
 			case InvalidDestination ignored -> sendInvalidDestinationMessage(player, key);
 		}
 	}

@@ -104,19 +104,19 @@ public class PlayerInteractEventListener implements Listener
 		// if players current world is not enabled in config, send message and return
 		if (!ctx.worldManager().isEnabled(player.getWorld()))
 		{
-			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_WORLD_DISABLED).send();
+			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_WORLD_DISABLED).send();
 			ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 		}
 		// if player does not have lodestar.use permission, send message and return
 		else if (!player.hasPermission("lodestar.use"))
 		{
-			ctx.messageBuilder().compose(player, MessageId.PERMISSION_DENIED_USE).send();
+			ctx.messageBuilder().compose(player, MessageId.EVENT_ITEM_USE_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
 		}
 		// if shift-click configured and player is not sneaking, send teleport fail shift-click message and return
 		else if (ctx.plugin().getConfig().getBoolean("shift-click") && isNotSneaking(player))
 		{
-			ctx.messageBuilder().compose(player, MessageId.TELEPORT_FAIL_SHIFT_CLICK).send();
+			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_SHIFT_CLICK).send();
 		}
 		else
 		{
@@ -151,7 +151,7 @@ public class PlayerInteractEventListener implements Listener
 
 			// cancel teleport and send message, play sound
 			teleportHandler.cancelTeleport(player);
-			ctx.messageBuilder().compose(player, MessageId.TELEPORT_CANCELLED_INTERACTION).send();
+			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_INTERACTION).send();
 			ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
 			return true;
 		}

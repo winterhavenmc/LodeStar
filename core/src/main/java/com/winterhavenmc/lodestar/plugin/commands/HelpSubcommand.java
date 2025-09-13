@@ -46,7 +46,7 @@ final class HelpSubcommand extends AbstractSubcommand
 		this.name = "help";
 		this.permissionNode = "lodestar.help";
 		this.usageString = "/lodestar help [command]";
-		this.description = MessageId.COMMAND_HELP_HELP;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_HELP;
 	}
 
 
@@ -75,7 +75,7 @@ final class HelpSubcommand extends AbstractSubcommand
 		// if command sender does not have permission to display help, output error message and return true
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_HELP).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_HELP_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -113,7 +113,7 @@ final class HelpSubcommand extends AbstractSubcommand
 		}
 		else
 		{
-			ctx.messageBuilder().compose(sender, MessageId.COMMAND_HELP_INVALID).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_HELP_INVALID_COMMAND).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_INVALID);
 		}
 	}
@@ -126,7 +126,7 @@ final class HelpSubcommand extends AbstractSubcommand
 	 */
 	private void sendCommandInvalidMessage(final CommandSender sender)
 	{
-		ctx.messageBuilder().compose(sender, MessageId.COMMAND_HELP_INVALID).send();
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_HELP_INVALID_COMMAND).send();
 		ctx.soundConfig().playSound(sender, SoundId.COMMAND_INVALID);
 		displayUsageAll(sender);
 	}
@@ -139,7 +139,7 @@ final class HelpSubcommand extends AbstractSubcommand
 	 */
 	void displayUsageAll(final CommandSender sender)
 	{
-		ctx.messageBuilder().compose(sender, MessageId.COMMAND_HELP_USAGE_HEADER).send();
+		ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_HELP_USAGE_HEADER).send();
 
 		subcommandRegistry.getKeys().stream()
 				.map(subcommandRegistry::getSubcommand)

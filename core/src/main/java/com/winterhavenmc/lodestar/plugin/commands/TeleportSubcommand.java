@@ -44,7 +44,7 @@ final class TeleportSubcommand extends AbstractSubcommand
 		this.aliases = Set.of("tp");
 		this.permissionNode = "lodestar.teleport";
 		this.usageString = "/lodestar teleport <destination name>";
-		this.description = MessageId.COMMAND_HELP_TELEPORT;
+		this.description = MessageId.COMMAND_SUCCESS_HELP_TELEPORT;
 		this.minArgs = 1;
 	}
 
@@ -70,7 +70,7 @@ final class TeleportSubcommand extends AbstractSubcommand
 		// check for permission
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.messageBuilder().compose(sender, MessageId.PERMISSION_DENIED_TELEPORT).send();
+			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_TELEPORT_PERMISSION_DENIED).send();
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -105,7 +105,7 @@ final class TeleportSubcommand extends AbstractSubcommand
 				ctx.soundConfig().playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 				player.teleport(location);
 				ctx.soundConfig().playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
-				ctx.messageBuilder().compose(sender, MessageId.TELEPORT_SUCCESS)
+				ctx.messageBuilder().compose(sender, MessageId.EVENT_TELEPORT_SUCCESS_DESTINATION)
 						.setMacro(Macro.DESTINATION, storedDestination)
 						.send();
 			}
