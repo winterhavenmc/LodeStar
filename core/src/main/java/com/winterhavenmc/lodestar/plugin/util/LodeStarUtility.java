@@ -40,9 +40,6 @@ import org.bukkit.plugin.Plugin;
 import java.util.*;
 
 
-// A loadstar item has two persistent data objects:
-//    1) namespaced key "ITEM_KEY" contains the item key string, corresponding to the item definition in the language file
-//    2) namespaced key "DESTINATION" contains the item destination name, whether spawn, home or stored destination
 
 
 
