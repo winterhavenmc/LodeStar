@@ -129,6 +129,7 @@ final class BindSubcommand extends AbstractSubcommand
 
 		// send success message
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_BIND)
+				.setMacro(Macro.ITEM, player.getInventory().getItemInMainHand())
 				.setMacro(Macro.DESTINATION, formattedName)
 				.send();
 
