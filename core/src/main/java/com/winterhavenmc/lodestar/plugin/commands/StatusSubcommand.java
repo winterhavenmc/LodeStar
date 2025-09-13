@@ -18,12 +18,13 @@
 package com.winterhavenmc.lodestar.plugin.commands;
 
 import com.winterhavenmc.library.messagebuilder.resources.configuration.LocaleProvider;
+import com.winterhavenmc.library.messagebuilder.shaded.net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import com.winterhavenmc.library.messagebuilder.shaded.net.kyori.adventure.text.Component;
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.time.Duration;
@@ -117,7 +118,11 @@ final class StatusSubcommand extends AbstractSubcommand
 	{
 		if (ctx.plugin().getConfig().getBoolean("debug"))
 		{
-			sender.sendMessage(ChatColor.DARK_RED + "DEBUG: true");
+			Component component = Component.text("<dark_red>DEBUG: true</dark_red>");
+			try (BukkitAudiences audiences = BukkitAudiences.create(ctx.plugin()))
+			{
+				audiences.sender(sender).sendMessage(component);
+			}
 		}
 	}
 
