@@ -92,26 +92,27 @@ final class DeleteSubcommand extends AbstractSubcommand
 		// test that destination name is not reserved name
 		if (isRerservedName(destinationKey))
 		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		}
 		// if delete method returns valid destination, delete was successful
 		else if (ctx.datastore().destinations().delete(destinationKey) instanceof ValidDestination)
 		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
 					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
 		}
 		else
 		{
+			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		}
+
 		return true;
 	}
 
