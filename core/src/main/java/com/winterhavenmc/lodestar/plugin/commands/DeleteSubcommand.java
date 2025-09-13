@@ -88,7 +88,7 @@ final class DeleteSubcommand extends AbstractSubcommand
 		String destinationKey = ctx.lodeStarUtility().deriveKey(args);
 
 		// test that destination name is not reserved name
-		if (isRerservedName(destinationKey))
+		if (ctx.lodeStarUtility().isRerservedName(destinationKey))
 		{
 			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
