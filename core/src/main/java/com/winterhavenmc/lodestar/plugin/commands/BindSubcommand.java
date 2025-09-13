@@ -101,6 +101,8 @@ final class BindSubcommand extends AbstractSubcommand
 		// join remaining arguments into destination name
 		String suppliedName = String.join(" ", args);
 
+		//TODO: get valid destination from supplied name, to use destination subfields in message
+
 		// check if destination exists
 		if (!ctx.lodeStarUtility().destinationExists(suppliedName))
 		{
