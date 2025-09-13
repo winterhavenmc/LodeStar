@@ -87,8 +87,6 @@ final class DeleteSubcommand extends AbstractSubcommand
 		// join remaining arguments into destination key
 		String destinationKey = ctx.lodeStarUtility().deriveKey(args);
 
-		//TODO: get destination for key to use destination subfields in messages
-
 		// test that destination name is not reserved name
 		if (isRerservedName(destinationKey))
 		{
