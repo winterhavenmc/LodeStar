@@ -21,6 +21,7 @@ import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -137,12 +138,14 @@ final class BindSubcommand extends AbstractSubcommand
 		return true;
 	}
 
+
 	private boolean notRequiredDefaultItem(final Player player)
 	{
 		return ctx.plugin().getConfig().getBoolean("default-material-only")
 				&& !player.hasPermission("lodestar.default-override")
 				&& !ctx.lodeStarUtility().isDefaultItem(player.getInventory().getItemInMainHand());
 	}
+
 
 	private boolean notValidItem(final Player player)
 	{
