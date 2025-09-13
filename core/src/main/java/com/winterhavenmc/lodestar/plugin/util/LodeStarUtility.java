@@ -171,6 +171,15 @@ public final class LodeStarUtility
 	}
 
 
+	public boolean destinationExists(final String key)
+	{
+		return key != null && !key.isBlank()
+				&& (isHomeKey(key)
+				|| isSpawnKey(key)
+				|| datastore.destinations().get(key) instanceof ValidDestination);
+	}
+
+
 	public Destination getDestination(final String destinationName)
 	{
 		if (isHomeKey(destinationName)) return HomeDestination.of(messageBuilder.constants().getString(HOME_KEY).orElse("Home"));
