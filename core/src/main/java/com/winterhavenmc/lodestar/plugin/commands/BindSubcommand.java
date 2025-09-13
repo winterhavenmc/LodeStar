@@ -146,7 +146,7 @@ final class BindSubcommand extends AbstractSubcommand
 	{
 		return ctx.plugin().getConfig().getBoolean("default-material-only")
 				&& !player.hasPermission("lodestar.default-override")
-				&& !ctx.lodeStarUtility().isDefaultItem(player.getInventory().getItemInMainHand());
+				&& !ctx.lodeStarUtility().isDefaultMaterial(player.getInventory().getItemInMainHand());
 	}
 
 
