@@ -18,6 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.commands;
 
 import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -126,8 +127,9 @@ final class BindSubcommand extends AbstractSubcommand
 		// get formatted destination name
 		String formattedName = ctx.lodeStarUtility().getDisplayName(suppliedName).orElse(suppliedName);
 
-		// set destination in item lore
-		ctx.lodeStarUtility().setMetaData(player.getInventory().getItemInMainHand(), formattedName);
+		// set item metadata
+		ctx.lodeStarUtility().setItemMetadata(player.getInventory().getItemInMainHand(), formattedName);
+		ctx.lodeStarUtility().setPersistentDestination(player.getInventory().getItemInMainHand(), formattedName);
 
 		// send success message
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_BIND)
