@@ -54,7 +54,6 @@ public final class LodeStarUtility
 {
 	public static final ValidConstantKey HOME_KEY = ConstantKey.of("LOCATION.HOME").isValid().orElseThrow();
 	public static final ValidConstantKey SPAWN_KEY = ConstantKey.of("LOCATION.SPAWN").isValid().orElseThrow();
-	public static final Material DEFAULT_MATERIAL = Material.NETHER_STAR;
 	private final Plugin plugin;
 	private final MessageBuilder messageBuilder;
 	private final NamespacedKey ITEM_KEY;
