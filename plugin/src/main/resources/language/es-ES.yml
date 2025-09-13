@@ -16,7 +16,7 @@ CONSTANTS:
 ITEM_INFO:
   LODESTAR:
     MATERIAL: NETHER_STAR
-    DISPLAY_NAME: "<green>Estrella de Guía</green>"
+    DISPLAY_NAME: "Estrella de Guía"
     PLURAL_NAME: "<choice:'0#cero Estrellas de Guía|1#one Estrella de Guía|1<{QUANTITY} Estrellas de Guía'>"
     INVENTORY_NAME: "<green>Estrella de Guía: {DESTINATION}</green>"
     LORE:
