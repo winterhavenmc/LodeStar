@@ -19,7 +19,6 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.lodestar.plugin.PluginController;
 import com.winterhavenmc.lodestar.models.destination.SpawnDestination;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -135,9 +134,8 @@ final class DelayedTeleportTask extends BukkitRunnable
 			// if validDestination is spawn, send spawn specific success message
 			if (validDestination instanceof SpawnDestination)
 			{
-				//TODO: consider using validDestination for destination subfields
 				ctx.messageBuilder().compose(player, MessageId.TELEPORT_SUCCESS_SPAWN)
-						.setMacro(Macro.DESTINATION, ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn"))
+						.setMacro(Macro.DESTINATION, validDestination)
 						.send();
 			}
 			// otherwise, send standard success message
