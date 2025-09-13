@@ -87,10 +87,10 @@ public final class LodeStarUtility
 	public ItemStack create(final int passedQuantity, final String destinationName)
 	{
 		int quantity = Math.max(1, passedQuantity);
-		Map<String, String> replacements = new HashMap<>();
-		replacements.put("DESTINATION", destinationName);
+		ValidItemKey validItemKey = ItemKey.of("LODESTAR").isValid().orElseThrow();
+		Map<String, String> replacements = Collections.singletonMap("DESTINATION", destinationName);
 
-		Optional<ItemStack> itemStack = messageBuilder.itemForge().createItem("LODESTAR", quantity, replacements);
+		Optional<ItemStack> itemStack = messageBuilder.itemForge().createItem(validItemKey, quantity, replacements);
 		if (itemStack.isPresent())
 		{
 			ItemStack returnItem = itemStack.get();
