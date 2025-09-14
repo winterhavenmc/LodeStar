@@ -39,21 +39,13 @@
 
 	<packaging>pom</packaging>
 
-	<profiles>
-		<profile>
+	<distributionManagement>
+		<repository>
 			<id>repsy</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<id>repsy</id>
-					<name>Repsy.io winterhavenmc Maven Packages</name>
-					<url>https://repo.repsy.io/mvn/winterhavenmc/public/</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-	</profiles>
+			<name>Repsy.io winterhavenmc Maven Packages</name>
+			<url>https://repo.repsy.io/mvn/winterhavenmc/public/</url>
+		</repository>
+	</distributionManagement>
 
 	<repositories>
 		<repository>
