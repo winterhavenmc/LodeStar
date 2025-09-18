@@ -32,9 +32,9 @@
 
 	<modules>
 		<module>adapters</module>
-		<module>plugin</module>
-		<module>models</module>
 		<module>core</module>
+		<module>models</module>
+		<module>plugin</module>
 	</modules>
 
 	<packaging>pom</packaging>
@@ -160,6 +160,12 @@
 
 	<!-- global dependencies inherited by all modules, do not need to be declared in each module pom -->
 	<dependencies>
+		<!-- spigot api -->
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+		</dependency>
+
 		<!-- JUnit frameworkd -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -192,10 +198,26 @@
 	</dependencies>
 
 	<build>
+		<!-- Resources -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<!-- Test Resources -->
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+
 		<!-- available Maven plugins, must be dclared in module pom -->
 		<pluginManagement>
 			<plugins>
-				<!-- Maven Shade Plugin (version and executions defined here) -->
+				<!-- Maven shade plugin (version and executions defined here) -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
