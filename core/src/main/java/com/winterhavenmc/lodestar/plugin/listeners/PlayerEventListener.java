@@ -46,13 +46,13 @@ import java.util.Objects;
 public final class PlayerEventListener implements Listener
 {
 	private final TeleportHandler teleportHandler;
-	private final LodeStarPluginController.ContextContainer ctx;
+	private final LodeStarPluginController.ListenerContextContainer ctx;
 
 
 	/**
 	 * constructor method for PlayerEventListener class
 	 */
-	public PlayerEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ContextContainer ctx)
+	public PlayerEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ListenerContextContainer ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;

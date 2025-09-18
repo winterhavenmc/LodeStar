@@ -71,22 +71,23 @@ public final class LodeStarPluginController implements PluginController
 		// instantiate lodestar factory
 		lodeStarUtility = new LodeStarUtility(plugin, messageBuilder, datastore);
 
-		// instantiate context containers
-		CommandContextContainer commandCtx = new CommandContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
-		ContextContainer ctx = new ContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
-
-		// instantiate teleport manager
-		teleportHandler = new TeleportHandler(ctx);
-
-		// instantiate command manager
-		commandManager = new CommandManager(ctx);
-
-		// instantiate event listeners
-		new PlayerEventListener(teleportHandler, ctx);
-		new PlayerInteractEventListener(teleportHandler, ctx);
-
 		// instantiate metrics handler
 		new MetricsHandler(plugin);
+
+		// instantiate context containers
+		CommandContextContainer commandCtx = new CommandContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
+		ListenerContextContainer listenerCtx = new ListenerContextContainer(plugin, messageBuilder, soundConfig);
+		TeleporterContextContainer teleporterCtx = new TeleporterContextContainer(plugin, messageBuilder, soundConfig, worldManager, lodeStarUtility);
+
+		// instantiate teleport manager
+		teleportHandler = new TeleportHandler(teleporterCtx);
+
+		// instantiate command manager
+		commandManager = new CommandManager(commandCtx);
+
+		// instantiate event listeners
+		new PlayerEventListener(teleportHandler, listenerCtx);
+		new PlayerInteractEventListener(teleportHandler, listenerCtx);
 	}
 
 
@@ -97,10 +98,16 @@ public final class LodeStarPluginController implements PluginController
 	}
 
 
-	public record CommandContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder, SoundConfiguration soundConfig,
-	                                       WorldManager worldManager, ConnectionProvider datastore, LodeStarUtility lodeStarUtility) { }
+	public record CommandContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
+	                                      SoundConfiguration soundConfig, WorldManager worldManager,
+	                                      ConnectionProvider datastore, LodeStarUtility lodeStarUtility) { }
 
 
-	public record ContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder, SoundConfiguration soundConfig,
-	                               WorldManager worldManager, ConnectionProvider datastore, LodeStarUtility lodeStarUtility) { }
+	public record ListenerContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
+	                                       SoundConfiguration soundConfig) { }
+
+
+	public record TeleporterContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
+	                                         SoundConfiguration soundConfiguration, WorldManager worldManager,
+	                                         LodeStarUtility lodeStarUtility) { }
 }

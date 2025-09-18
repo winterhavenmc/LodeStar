@@ -34,10 +34,10 @@ class CooldownMap
 	// hashmap to store player UUID and cooldown expire instant
 	private final HashMap<UUID, Instant> cooldownMap;
 	private final TeleportHandler teleportHandler;
-	private final LodeStarPluginController.ContextContainer ctx;
+	private final LodeStarPluginController.TeleporterContextContainer ctx;
 
 
-	CooldownMap(final TeleportHandler teleportHandler, LodeStarPluginController.ContextContainer ctx)
+	CooldownMap(final TeleportHandler teleportHandler, LodeStarPluginController.TeleporterContextContainer ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;

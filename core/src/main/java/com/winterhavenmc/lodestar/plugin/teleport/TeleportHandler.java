@@ -36,13 +36,13 @@ public final class TeleportHandler
 	private final TeleportExecutor teleportExecutor;
 	private final MessageBuilder messageBuilder;
 	private final LodeStarUtility lodeStarUtility;
-	private final LodeStarPluginController.ContextContainer ctx;
+	private final LodeStarPluginController.TeleporterContextContainer ctx;
 
 
 	/**
 	 * Class constructor
 	 */
-	public TeleportHandler(final LodeStarPluginController.ContextContainer ctx)
+	public TeleportHandler(final LodeStarPluginController.TeleporterContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.warmupMap = new WarmupMap();

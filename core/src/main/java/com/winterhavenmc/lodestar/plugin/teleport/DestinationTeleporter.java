@@ -32,7 +32,7 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	DestinationTeleporter(final LodeStarPluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
+	DestinationTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}

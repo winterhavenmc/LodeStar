@@ -35,7 +35,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	HomeTeleporter(final LodeStarPluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
+	HomeTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}

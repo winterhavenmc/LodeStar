@@ -43,11 +43,11 @@ import java.util.Optional;
  */
 abstract non-sealed class AbstractTeleporter implements Teleporter
 {
-	protected final LodeStarPluginController.ContextContainer ctx;
+	protected final LodeStarPluginController.TeleporterContextContainer ctx;
 	protected final TeleportExecutor teleportExecutor;
 
 
-	AbstractTeleporter(final LodeStarPluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
+	AbstractTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		this.ctx = ctx;
 		this.teleportExecutor = teleportExecutor;

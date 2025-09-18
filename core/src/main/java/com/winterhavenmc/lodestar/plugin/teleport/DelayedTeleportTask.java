@@ -40,7 +40,7 @@ import java.util.Objects;
 final class DelayedTeleportTask extends BukkitRunnable
 {
 
-	private final LodeStarPluginController.ContextContainer ctx;
+	private final LodeStarPluginController.TeleporterContextContainer ctx;
 	private final Player player;
 	private final ValidDestination validDestination;
 	private final ItemStack playerItem;
@@ -57,7 +57,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 	 * @param playerItem  the item used to initiate teleport
 	 */
 	DelayedTeleportTask(final TeleportHandler teleportHandler,
-	                    final LodeStarPluginController.ContextContainer ctx,
+	                    final LodeStarPluginController.TeleporterContextContainer ctx,
 	                    final Player player,
 	                    final ValidDestination validDestination,
 						final Location location,

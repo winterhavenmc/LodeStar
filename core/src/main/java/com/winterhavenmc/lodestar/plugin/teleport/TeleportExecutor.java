@@ -35,12 +35,12 @@ import static com.winterhavenmc.library.time.TimeUnit.SECONDS;
 
 class TeleportExecutor
 {
-	private final LodeStarPluginController.ContextContainer ctx;
+	private final LodeStarPluginController.TeleporterContextContainer ctx;
 	private final TeleportHandler teleportHandler;
 	protected final WarmupMap warmupMap;
 
 
-	TeleportExecutor(final TeleportHandler teleportHandler, final LodeStarPluginController.ContextContainer ctx, final WarmupMap warmupMap)
+	TeleportExecutor(final TeleportHandler teleportHandler, final LodeStarPluginController.TeleporterContextContainer ctx, final WarmupMap warmupMap)
 	{
 		this.ctx = ctx;
 		this.teleportHandler = teleportHandler;

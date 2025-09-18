@@ -32,7 +32,7 @@ final class SpawnTeleporter extends AbstractTeleporter implements Teleporter
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	SpawnTeleporter(final LodeStarPluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
+	SpawnTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}

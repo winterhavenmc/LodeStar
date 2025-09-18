@@ -41,7 +41,7 @@ import java.util.Set;
 public class PlayerInteractEventListener implements Listener
 {
 	private final TeleportHandler teleportHandler;
-	private final LodeStarPluginController.ContextContainer ctx;
+	private final LodeStarPluginController.ListenerContextContainer ctx;
 
 	// set to hold craft table materials
 	private final Set<Material> craftTables = Set.of(
@@ -56,7 +56,7 @@ public class PlayerInteractEventListener implements Listener
 	/**
 	 * constructor method for PlayerInteractEventListener class
 	 */
-	public PlayerInteractEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ContextContainer ctx)
+	public PlayerInteractEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ListenerContextContainer ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;
