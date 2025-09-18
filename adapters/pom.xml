@@ -26,13 +26,7 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- External -->
-		<!-- spigot-api -->
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-		</dependency>
-
+		<!-- external -->
 		<!-- sqlite-jdbc -->
 		<dependency>
 			<groupId>org.xerial</groupId>
