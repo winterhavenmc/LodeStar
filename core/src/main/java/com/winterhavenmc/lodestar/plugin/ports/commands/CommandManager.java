@@ -15,15 +15,11 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin;
+package com.winterhavenmc.lodestar.plugin.ports.commands;
 
-import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 
-public interface PluginController
+public interface CommandManager
 {
-	void startUp(JavaPlugin plugin, ConnectionProvider connectionProvider);
-
-	void shutDown();
+	CommandManager init(LodeStarPluginController.CommandContextContainer ctx);
 }

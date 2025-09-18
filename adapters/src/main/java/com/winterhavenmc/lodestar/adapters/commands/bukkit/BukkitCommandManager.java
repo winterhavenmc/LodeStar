@@ -18,7 +18,6 @@
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
-import com.winterhavenmc.lodestar.plugin.commands.*;
 import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
@@ -40,10 +39,15 @@ public final class BukkitCommandManager implements TabExecutor, CommandManager
 	private final LodeStarPluginController.CommandContextContainer ctx;
 
 
+	public BukkitCommandManager()
+	{
+		ctx = null;
+	}
+
 	/**
 	 * constructor method for CommandManager class
 	 */
-	public BukkitCommandManager(final LodeStarPluginController.CommandContextContainer ctx)
+	private BukkitCommandManager(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 
@@ -58,6 +62,13 @@ public final class BukkitCommandManager implements TabExecutor, CommandManager
 
 		// register help command
 		subcommandRegistry.register(new HelpSubcommand(ctx, subcommandRegistry));
+	}
+
+
+	@Override
+	public CommandManager init(final LodeStarPluginController.CommandContextContainer ctx)
+	{
+		return new BukkitCommandManager(ctx);
 	}
 
 
