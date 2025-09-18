@@ -17,14 +17,19 @@
 
 package com.winterhavenmc.lodestar.plugin.ports.datastore;
 
-import java.sql.SQLException;
 
 public interface ConnectionProvider
 {
 	/**
 	 * Initialize datastore
 	 */
-	void connect() throws SQLException, ClassNotFoundException;
+	ConnectionProvider connect();
+
+
+	/**
+	 * Close SQLite datastore connection
+	 */
+	void close();
 
 
 	/**
@@ -32,10 +37,4 @@ public interface ConnectionProvider
 	 *
 	 */
 	DestinationRepository destinations();
-
-
-	/**
-	 * Close SQLite datastore connection
-	 */
-	void close();
 }
