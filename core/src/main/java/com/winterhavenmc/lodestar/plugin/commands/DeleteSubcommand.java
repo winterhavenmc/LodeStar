@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 final class DeleteSubcommand extends AbstractSubcommand
 {
-	DeleteSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	DeleteSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "delete";

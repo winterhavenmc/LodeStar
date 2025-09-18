@@ -39,7 +39,7 @@ final class HelpSubcommand extends AbstractSubcommand
 	 *
 	 * @param subcommandRegistry reference to subcommand map
 	 */
-	HelpSubcommand(final LodeStarPluginController.ContextContainer ctx, final SubcommandRegistry subcommandRegistry)
+	HelpSubcommand(final LodeStarPluginController.CommandContextContainer ctx, final SubcommandRegistry subcommandRegistry)
 	{
 		this.ctx = ctx;
 		this.subcommandRegistry = subcommandRegistry;

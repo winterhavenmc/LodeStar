@@ -35,13 +35,13 @@ import java.util.stream.Collectors;
 public final class CommandManager implements TabExecutor
 {
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
-	private final LodeStarPluginController.ContextContainer ctx;
+	private final LodeStarPluginController.CommandContextContainer ctx;
 
 
 	/**
 	 * constructor method for CommandManager class
 	 */
-	public CommandManager(final LodeStarPluginController.ContextContainer ctx)
+	public CommandManager(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 

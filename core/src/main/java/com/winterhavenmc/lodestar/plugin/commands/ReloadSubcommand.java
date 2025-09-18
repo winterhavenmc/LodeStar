@@ -34,7 +34,7 @@ final class ReloadSubcommand extends AbstractSubcommand
 	/**
 	 * Class constructor
 	 */
-	ReloadSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	ReloadSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "reload";

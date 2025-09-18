@@ -43,7 +43,7 @@ final class BindSubcommand extends AbstractSubcommand
 			Material.VOID_AIR));
 
 
-	BindSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	BindSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "bind";

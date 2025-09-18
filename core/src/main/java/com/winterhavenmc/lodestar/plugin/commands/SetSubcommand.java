@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 final class SetSubcommand extends AbstractSubcommand
 {
-	SetSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	SetSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "set";

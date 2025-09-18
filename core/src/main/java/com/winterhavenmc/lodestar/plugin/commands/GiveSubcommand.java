@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 final class GiveSubcommand extends AbstractSubcommand
 {
-	GiveSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	GiveSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "give";

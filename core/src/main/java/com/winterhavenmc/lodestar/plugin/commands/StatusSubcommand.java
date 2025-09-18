@@ -42,7 +42,7 @@ final class StatusSubcommand extends AbstractSubcommand
 	/**
 	 * Class constructor
 	 */
-	StatusSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	StatusSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "status";

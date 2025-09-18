@@ -71,7 +71,8 @@ public final class LodeStarPluginController implements PluginController
 		// instantiate lodestar factory
 		lodeStarUtility = new LodeStarUtility(plugin, messageBuilder, datastore);
 
-		// create context container
+		// instantiate context containers
+		CommandContextContainer commandCtx = new CommandContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
 		ContextContainer ctx = new ContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
 
 		// instantiate teleport manager
@@ -94,6 +95,10 @@ public final class LodeStarPluginController implements PluginController
 	{
 		datastore.close();
 	}
+
+
+	public record CommandContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder, SoundConfiguration soundConfig,
+	                                       WorldManager worldManager, ConnectionProvider datastore, LodeStarUtility lodeStarUtility) { }
 
 
 	public record ContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder, SoundConfiguration soundConfig,

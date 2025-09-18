@@ -33,7 +33,7 @@ import java.util.List;
 
 final class DestroySubcommand extends AbstractSubcommand
 {
-	DestroySubcommand(final LodeStarPluginController.ContextContainer ctx)
+	DestroySubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "destroy";

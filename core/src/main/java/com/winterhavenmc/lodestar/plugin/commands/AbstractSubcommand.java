@@ -29,7 +29,7 @@ import java.util.List;
 
 abstract class AbstractSubcommand implements Subcommand
 {
-	protected LodeStarPluginController.ContextContainer ctx;
+	protected LodeStarPluginController.CommandContextContainer ctx;
 	protected String name;
 	protected Collection<String> aliases = Collections.emptySet();
 	protected String permissionNode = "";

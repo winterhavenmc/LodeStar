@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 final class TeleportSubcommand extends AbstractSubcommand
 {
-	TeleportSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	TeleportSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "teleport";

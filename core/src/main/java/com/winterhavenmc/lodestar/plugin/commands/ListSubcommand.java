@@ -31,7 +31,7 @@ import java.util.List;
 
 final class ListSubcommand extends AbstractSubcommand
 {
-	ListSubcommand(final LodeStarPluginController.ContextContainer ctx)
+	ListSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "list";
