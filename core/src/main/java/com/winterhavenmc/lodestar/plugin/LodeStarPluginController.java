@@ -61,19 +61,19 @@ public final class LodeStarPluginController implements PluginController
 		plugin.saveDefaultConfig();
 
 		// instantiate message builder
-		messageBuilder = MessageBuilder.create(plugin);
+		this.messageBuilder = MessageBuilder.create(plugin);
 
 		// instantiate sound configuration
-		soundConfig = new YamlSoundConfiguration(plugin);
+		this.soundConfig = new YamlSoundConfiguration(plugin);
 
 		// instantiate world manager
-		worldManager = new WorldManager(plugin);
+		this.worldManager = new WorldManager(plugin);
 
 		// get initialized destination storage object
-		datastore = connectionProvider.connect();
+		this.datastore = connectionProvider.connect();
 
 		// instantiate lodestar factory
-		lodeStarUtility = new LodeStarUtility(plugin, messageBuilder, datastore);
+		this.lodeStarUtility = new LodeStarUtility(plugin, messageBuilder, datastore);
 
 		// instantiate metrics handler
 		new MetricsHandler(plugin);
@@ -84,7 +84,7 @@ public final class LodeStarPluginController implements PluginController
 		TeleporterContextContainer teleporterCtx = new TeleporterContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
 
 		// instantiate teleport manager
-		teleportHandler = new TeleportHandler(teleporterCtx);
+		this.teleportHandler = new TeleportHandler(teleporterCtx);
 
 		// instantiate command manager
 		this.commandManager = commandManager.init(commandCtx);
