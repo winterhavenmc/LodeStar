@@ -12,12 +12,6 @@
 	<artifactId>models</artifactId>
 
 	<dependencies>
-		<!-- external -->
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
