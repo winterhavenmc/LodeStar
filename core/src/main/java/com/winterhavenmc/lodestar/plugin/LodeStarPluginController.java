@@ -86,8 +86,8 @@ public final class LodeStarPluginController implements PluginController
 		this.commandManager = commandManager.init(commandCtx);
 
 		// instantiate event listeners
-		new PlayerEventListener(teleportHandler, listenerCtx);
-		new PlayerInteractEventListener(teleportHandler, listenerCtx);
+		this.playerEventListener = playerEventListener.init(teleportHandler, teleporterCtx);
+		this.playerInteractEventListener = playerInteractEventListener.init(teleportHandler, listenerCtx);
 	}
 
 
