@@ -20,13 +20,7 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- External -->
-		<!-- spigot-api -->
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-		</dependency>
-
+		<!-- external -->
 		<!-- JetBrains Annotations -->
 		<dependency>
 			<groupId>org.jetbrains</groupId>
