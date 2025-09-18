@@ -28,5 +28,4 @@
 			<artifactId>message-builder-lib</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>
