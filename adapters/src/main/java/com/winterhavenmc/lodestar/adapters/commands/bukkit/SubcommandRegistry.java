@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.commands;
+package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
 import java.util.*;
 

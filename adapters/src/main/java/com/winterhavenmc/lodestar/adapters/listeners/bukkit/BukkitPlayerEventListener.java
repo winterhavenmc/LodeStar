@@ -15,10 +15,11 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.listeners;
+package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
 import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
@@ -26,7 +27,6 @@ import com.winterhavenmc.lodestar.plugin.util.SoundId;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -43,16 +43,32 @@ import java.util.Objects;
  * @author Tim Savage
  * @version 1.0
  */
-public final class PlayerEventListener implements Listener
+public final class BukkitPlayerEventListener implements PlayerEventListener
 {
 	private final TeleportHandler teleportHandler;
-	private final LodeStarPluginController.ListenerContextContainer ctx;
+	private final LodeStarPluginController.TeleporterContextContainer ctx;
 
 
 	/**
 	 * constructor method for PlayerEventListener class
 	 */
-	public PlayerEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ListenerContextContainer ctx)
+	public BukkitPlayerEventListener()
+	{
+		this.teleportHandler = null;
+		this.ctx = null;
+	}
+
+
+	public BukkitPlayerEventListener init(final TeleportHandler teleportHandler, final LodeStarPluginController.TeleporterContextContainer ctx)
+	{
+		return new BukkitPlayerEventListener(teleportHandler, ctx);
+	}
+
+
+	/**
+	 * constructor method for PlayerEventListener class
+	 */
+	public BukkitPlayerEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.TeleporterContextContainer ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;
@@ -68,7 +84,8 @@ public final class PlayerEventListener implements Listener
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerDeath(final PlayerDeathEvent event)
+	@Override
+	public void onPlayerDeath(final PlayerDeathEvent event)
 	{
 		// cancel any pending teleport for player
 		teleportHandler.cancelTeleport(event.getEntity());
@@ -81,7 +98,8 @@ public final class PlayerEventListener implements Listener
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerQuit(final PlayerQuitEvent event)
+	@Override
+	public void onPlayerQuit(final PlayerQuitEvent event)
 	{
 		// cancel any pending teleport for player
 		teleportHandler.cancelTeleport(event.getPlayer());
@@ -94,7 +112,8 @@ public final class PlayerEventListener implements Listener
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onCraftPrepare(final PrepareItemCraftEvent event)
+	@Override
+	public void onCraftPrepare(final PrepareItemCraftEvent event)
 	{
 		// if allow-in-recipes is true in configuration, do nothing and return
 		if (ctx.plugin().getConfig().getBoolean("allow-in-recipes"))
@@ -119,7 +138,8 @@ public final class PlayerEventListener implements Listener
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler(ignoreCancelled = true)
-	void onEntityDamage(final EntityDamageEvent event)
+	@Override
+	public void onEntityDamage(final EntityDamageEvent event)
 	{
 		// if cancel-on-damage configuration is true, check if damaged entity is player
 		if (ctx.plugin().getConfig().getBoolean("cancel-on-damage"))
@@ -143,7 +163,8 @@ public final class PlayerEventListener implements Listener
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerMovement(final PlayerMoveEvent event)
+	@Override
+	public void onPlayerMovement(final PlayerMoveEvent event)
 	{
 		// if cancel-on-movement configuration is false, do nothing and return
 		if (!ctx.plugin().getConfig().getBoolean("cancel-on-movement"))

@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.commands;
+package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
 import com.winterhavenmc.library.messagebuilder.resources.configuration.LocaleProvider;
 import com.winterhavenmc.library.messagebuilder.shaded.net.kyori.adventure.platform.bukkit.BukkitAudiences;

@@ -15,13 +15,14 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.listeners;
+package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
-import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
+import com.winterhavenmc.library.messagebuilder.ItemForge;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,7 +31,6 @@ import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Switch;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -38,7 +38,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import java.util.Set;
 
 
-public class PlayerInteractEventListener implements Listener
+public class BukkitPlayerInteractEventListener implements PlayerInteractEventListener
 {
 	private final TeleportHandler teleportHandler;
 	private final LodeStarPluginController.ListenerContextContainer ctx;
@@ -53,16 +53,31 @@ public class PlayerInteractEventListener implements Listener
 			Material.STONECUTTER);
 
 
+	public BukkitPlayerInteractEventListener()
+	{
+		this.teleportHandler = null;
+		this.ctx = null;
+	}
+
+
 	/**
 	 * constructor method for PlayerInteractEventListener class
 	 */
-	public PlayerInteractEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ListenerContextContainer ctx)
+	public BukkitPlayerInteractEventListener(final TeleportHandler teleportHandler,
+	                                         final LodeStarPluginController.ListenerContextContainer ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;
 
 		// register events in this class
 		ctx.plugin().getServer().getPluginManager().registerEvents(this, ctx.plugin());
+	}
+
+
+	public BukkitPlayerInteractEventListener init(final TeleportHandler teleportHandler,
+	                                              final LodeStarPluginController.ListenerContextContainer ctx)
+	{
+		return new BukkitPlayerInteractEventListener(teleportHandler, ctx);
 	}
 
 
@@ -74,7 +89,8 @@ public class PlayerInteractEventListener implements Listener
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
-	void onPlayerInteract(final PlayerInteractEvent event)
+	@Override
+	public void onPlayerInteract(final PlayerInteractEvent event)
 	{
 		// get event player
 		final Player player = event.getPlayer();
@@ -131,7 +147,8 @@ public class PlayerInteractEventListener implements Listener
 	 * @param event the event to check for player/block interaction
 	 * @return true if cancellable interaction occurred, false if not
 	 */
-	boolean cancelTeleportOnInteraction(final PlayerInteractEvent event)
+	@Override
+	public boolean cancelTeleportOnInteraction(final PlayerInteractEvent event)
 	{
 		final Player player = event.getPlayer();
 		final Action action = event.getAction();
@@ -165,7 +182,7 @@ public class PlayerInteractEventListener implements Listener
 	 * @param block the block being interacted with
 	 * @return true if block type is allowed for interaction, false if not
 	 */
-	boolean allowedInteraction(Block block)
+	boolean allowedInteraction(final Block block)
 	{
 		// allow use of doors, gates and trap doors with item in hand
 		if (block.getBlockData() instanceof Openable)
@@ -196,7 +213,7 @@ public class PlayerInteractEventListener implements Listener
 	 * @param event the event whose action to test
 	 * @return true if action is allowed, false if action would cancel the event
 	 */
-	boolean allowedClickType(PlayerInteractEvent event)
+	boolean allowedClickType(final PlayerInteractEvent event)
 	{
 		// if event action is PHYSICAL (not left-click or right click), do nothing and return
 		if (event.getAction().equals(Action.PHYSICAL))

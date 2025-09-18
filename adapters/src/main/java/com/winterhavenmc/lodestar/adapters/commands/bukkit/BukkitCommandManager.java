@@ -15,9 +15,11 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.commands;
+package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.commands.*;
+import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
 import org.bukkit.command.Command;
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * Implements command executor for LodeStar commands.
  */
-public final class CommandManager implements TabExecutor
+public final class BukkitCommandManager implements TabExecutor, CommandManager
 {
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
 	private final LodeStarPluginController.CommandContextContainer ctx;
@@ -41,7 +43,7 @@ public final class CommandManager implements TabExecutor
 	/**
 	 * constructor method for CommandManager class
 	 */
-	public CommandManager(final LodeStarPluginController.CommandContextContainer ctx)
+	public BukkitCommandManager(final LodeStarPluginController.CommandContextContainer ctx)
 	{
 		this.ctx = ctx;
 
