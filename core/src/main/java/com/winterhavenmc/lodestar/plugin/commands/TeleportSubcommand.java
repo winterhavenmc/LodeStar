@@ -19,7 +19,7 @@ package com.winterhavenmc.lodestar.plugin.commands;
 
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.StoredDestination;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 final class TeleportSubcommand extends AbstractSubcommand
 {
-	TeleportSubcommand(final PluginController.ContextContainer ctx)
+	TeleportSubcommand(final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "teleport";

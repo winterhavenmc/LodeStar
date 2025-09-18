@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 import org.bukkit.command.Command;
@@ -39,7 +39,7 @@ final class HelpSubcommand extends AbstractSubcommand
 	 *
 	 * @param subcommandRegistry reference to subcommand map
 	 */
-	HelpSubcommand(final PluginController.ContextContainer ctx, final SubcommandRegistry subcommandRegistry)
+	HelpSubcommand(final LodeStarPluginController.ContextContainer ctx, final SubcommandRegistry subcommandRegistry)
 	{
 		this.ctx = ctx;
 		this.subcommandRegistry = subcommandRegistry;

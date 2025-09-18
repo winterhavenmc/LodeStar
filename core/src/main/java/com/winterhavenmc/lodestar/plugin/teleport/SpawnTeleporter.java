@@ -19,7 +19,7 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ final class SpawnTeleporter extends AbstractTeleporter implements Teleporter
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	SpawnTeleporter(final PluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
+	SpawnTeleporter(final LodeStarPluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}

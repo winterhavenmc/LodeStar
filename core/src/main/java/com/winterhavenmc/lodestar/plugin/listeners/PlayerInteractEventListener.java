@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.listeners;
 
 import com.winterhavenmc.library.messagebuilder.ItemForge;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -41,7 +41,7 @@ import java.util.Set;
 public class PlayerInteractEventListener implements Listener
 {
 	private final TeleportHandler teleportHandler;
-	private final PluginController.ContextContainer ctx;
+	private final LodeStarPluginController.ContextContainer ctx;
 
 	// set to hold craft table materials
 	private final Set<Material> craftTables = Set.of(
@@ -56,7 +56,7 @@ public class PlayerInteractEventListener implements Listener
 	/**
 	 * constructor method for PlayerInteractEventListener class
 	 */
-	public PlayerInteractEventListener(final TeleportHandler teleportHandler, final PluginController.ContextContainer ctx)
+	public PlayerInteractEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;

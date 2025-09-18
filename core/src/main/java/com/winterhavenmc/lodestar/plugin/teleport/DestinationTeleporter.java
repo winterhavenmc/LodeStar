@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.teleport;
 
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
@@ -32,7 +32,7 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	DestinationTeleporter(final PluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
+	DestinationTeleporter(final LodeStarPluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}

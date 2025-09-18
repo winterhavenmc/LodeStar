@@ -20,7 +20,7 @@ package com.winterhavenmc.lodestar.plugin.commands;
 import com.winterhavenmc.library.messagebuilder.resources.configuration.LocaleProvider;
 import com.winterhavenmc.library.messagebuilder.shaded.net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import com.winterhavenmc.library.messagebuilder.shaded.net.kyori.adventure.text.Component;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -42,7 +42,7 @@ final class StatusSubcommand extends AbstractSubcommand
 	/**
 	 * Class constructor
 	 */
-	StatusSubcommand(final PluginController.ContextContainer ctx)
+	StatusSubcommand(final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "status";

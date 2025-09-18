@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 import org.bukkit.command.Command;
@@ -35,13 +35,13 @@ import java.util.stream.Collectors;
 public final class CommandManager implements TabExecutor
 {
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
-	private final PluginController.ContextContainer ctx;
+	private final LodeStarPluginController.ContextContainer ctx;
 
 
 	/**
 	 * constructor method for CommandManager class
 	 */
-	public CommandManager(final PluginController.ContextContainer ctx)
+	public CommandManager(final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.ctx = ctx;
 

@@ -19,7 +19,7 @@ package com.winterhavenmc.lodestar.plugin.commands;
 
 import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.models.destination.Destination;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -33,7 +33,7 @@ import java.util.List;
 
 final class DestroySubcommand extends AbstractSubcommand
 {
-	DestroySubcommand(final PluginController.ContextContainer ctx)
+	DestroySubcommand(final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "destroy";

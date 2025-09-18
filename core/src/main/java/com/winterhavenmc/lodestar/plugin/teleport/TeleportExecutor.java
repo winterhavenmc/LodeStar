@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -35,12 +35,12 @@ import static com.winterhavenmc.library.time.TimeUnit.SECONDS;
 
 class TeleportExecutor
 {
-	private final PluginController.ContextContainer ctx;
+	private final LodeStarPluginController.ContextContainer ctx;
 	private final TeleportHandler teleportHandler;
 	protected final WarmupMap warmupMap;
 
 
-	TeleportExecutor(final TeleportHandler teleportHandler, final PluginController.ContextContainer ctx, final WarmupMap warmupMap)
+	TeleportExecutor(final TeleportHandler teleportHandler, final LodeStarPluginController.ContextContainer ctx, final WarmupMap warmupMap)
 	{
 		this.ctx = ctx;
 		this.teleportHandler = teleportHandler;

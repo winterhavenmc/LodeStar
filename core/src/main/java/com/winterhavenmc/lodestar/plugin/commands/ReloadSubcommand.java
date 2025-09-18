@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.plugin.commands;
 
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
 import org.bukkit.command.CommandSender;
@@ -34,7 +34,7 @@ final class ReloadSubcommand extends AbstractSubcommand
 	/**
 	 * Class constructor
 	 */
-	ReloadSubcommand(final PluginController.ContextContainer ctx)
+	ReloadSubcommand(final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.name = "reload";

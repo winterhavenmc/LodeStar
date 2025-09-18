@@ -20,7 +20,7 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -35,7 +35,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	HomeTeleporter(final PluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
+	HomeTeleporter(final LodeStarPluginController.ContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}

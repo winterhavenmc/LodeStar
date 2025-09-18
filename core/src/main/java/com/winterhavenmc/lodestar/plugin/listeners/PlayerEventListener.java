@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.plugin.listeners;
 
 import com.winterhavenmc.library.messagebuilder.ItemForge;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
@@ -46,13 +46,13 @@ import java.util.Objects;
 public final class PlayerEventListener implements Listener
 {
 	private final TeleportHandler teleportHandler;
-	private final PluginController.ContextContainer ctx;
+	private final LodeStarPluginController.ContextContainer ctx;
 
 
 	/**
 	 * constructor method for PlayerEventListener class
 	 */
-	public PlayerEventListener(final TeleportHandler teleportHandler, final PluginController.ContextContainer ctx)
+	public PlayerEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;

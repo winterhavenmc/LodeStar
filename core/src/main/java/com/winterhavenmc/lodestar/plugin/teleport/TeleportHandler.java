@@ -19,7 +19,7 @@ package com.winterhavenmc.lodestar.plugin.teleport;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.plugin.PluginController;
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -36,13 +36,13 @@ public final class TeleportHandler
 	private final TeleportExecutor teleportExecutor;
 	private final MessageBuilder messageBuilder;
 	private final LodeStarUtility lodeStarUtility;
-	private final PluginController.ContextContainer ctx;
+	private final LodeStarPluginController.ContextContainer ctx;
 
 
 	/**
 	 * Class constructor
 	 */
-	public TeleportHandler(final PluginController.ContextContainer ctx)
+	public TeleportHandler(final LodeStarPluginController.ContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.warmupMap = new WarmupMap();
