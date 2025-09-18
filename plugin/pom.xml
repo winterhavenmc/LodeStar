@@ -29,12 +29,6 @@
 			<artifactId>core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<!-- external -->
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>
