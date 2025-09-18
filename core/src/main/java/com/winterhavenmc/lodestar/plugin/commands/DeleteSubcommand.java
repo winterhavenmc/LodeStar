@@ -22,7 +22,7 @@ import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
+import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

@@ -21,7 +21,7 @@ import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.sounds.SoundId;
+import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;

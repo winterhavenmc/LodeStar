@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.sounds;
+package com.winterhavenmc.lodestar.plugin.util;
 
 /**
  * Enum that contains entries for configured sounds
