@@ -76,8 +76,8 @@ public final class LodeStarPluginController implements PluginController
 
 		// instantiate context containers
 		CommandContextContainer commandCtx = new CommandContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
-		ListenerContextContainer listenerCtx = new ListenerContextContainer(plugin, messageBuilder, soundConfig);
-		TeleporterContextContainer teleporterCtx = new TeleporterContextContainer(plugin, messageBuilder, soundConfig, worldManager, lodeStarUtility);
+		ListenerContextContainer listenerCtx = new ListenerContextContainer(plugin, messageBuilder, soundConfig, worldManager);
+		TeleporterContextContainer teleporterCtx = new TeleporterContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
 
 		// instantiate teleport manager
 		teleportHandler = new TeleportHandler(teleporterCtx);
@@ -104,10 +104,10 @@ public final class LodeStarPluginController implements PluginController
 
 
 	public record ListenerContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
-	                                       SoundConfiguration soundConfig) { }
+	                                       SoundConfiguration soundConfig, WorldManager worldManager) { }
 
 
 	public record TeleporterContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
-	                                         SoundConfiguration soundConfiguration, WorldManager worldManager,
-	                                         LodeStarUtility lodeStarUtility) { }
+	                                         SoundConfiguration soundConfig, WorldManager worldManager,
+	                                         ConnectionProvider datastore, LodeStarUtility lodeStarUtility) { }
 }
