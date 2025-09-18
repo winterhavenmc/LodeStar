@@ -19,11 +19,16 @@ package com.winterhavenmc.lodestar.plugin;
 
 import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
+import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public interface PluginController
 {
-	void startUp(JavaPlugin plugin, ConnectionProvider connectionProvider);
+	void startUp(JavaPlugin plugin, ConnectionProvider connectionProvider,
+	             CommandManager commandManager,
+	             PlayerEventListener playerEventListener,
+	             PlayerInteractEventListener playerInteractEventListener);
 
 	void shutDown();
 }

@@ -51,7 +51,11 @@ public final class LodeStarPluginController implements PluginController
 
 
 	@Override
-	public void startUp(final JavaPlugin plugin, final ConnectionProvider connectionProvider)
+	public void startUp(final JavaPlugin plugin,
+	                    final ConnectionProvider connectionProvider,
+						final CommandManager commandManager,
+	                    final PlayerEventListener playerEventListener,
+	                    final PlayerInteractEventListener playerInteractEventListener)
 	{
 		// install default config.yml if not present
 		plugin.saveDefaultConfig();
