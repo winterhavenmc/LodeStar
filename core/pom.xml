@@ -51,5 +51,4 @@
 			<artifactId>bstats-bukkit</artifactId>
 		</dependency>
 	</dependencies>
-
 </project>
