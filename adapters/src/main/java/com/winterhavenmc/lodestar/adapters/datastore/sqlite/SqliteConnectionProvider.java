@@ -58,11 +58,28 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	}
 
 
+	public ConnectionProvider connect()
+	{
+		// initialize data store
+		try
+		{
+			this.initialize();
+		}
+		catch (Exception exception)
+		{
+			plugin.getLogger().severe("Could not initialize the datastore!");
+			plugin.getLogger().severe(exception.getLocalizedMessage());
+		}
+
+		// return initialized data store
+		return this;
+	}
+
+
 	/**
 	 * Initialize datastore
 	 */
-	@Override
-	public void connect() throws SQLException, ClassNotFoundException
+	private void initialize() throws SQLException, ClassNotFoundException
 	{
 		// if data store is already initialized, do nothing and return
 		if (initialized)

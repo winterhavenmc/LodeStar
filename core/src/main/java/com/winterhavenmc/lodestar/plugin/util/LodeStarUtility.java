@@ -27,7 +27,7 @@ import com.winterhavenmc.library.messagebuilder.model.language.InvalidRecordReas
 import com.winterhavenmc.library.messagebuilder.model.language.ItemRecord;
 import com.winterhavenmc.library.messagebuilder.model.language.ValidItemRecord;
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.plugin.storage.DataStore;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,7 +58,7 @@ public final class LodeStarUtility
 	private final MessageBuilder messageBuilder;
 	private final NamespacedKey ITEM_KEY;
 	private final NamespacedKey DESTINATION_KEY;
-	private final DataStore datastore;
+	private final ConnectionProvider datastore;
 
 
 	/**
@@ -68,7 +68,7 @@ public final class LodeStarUtility
 	 * @param messageBuilder instance of message builder library
 	 * @param datastore instance of datastore
 	 */
-	public LodeStarUtility(final Plugin plugin, final MessageBuilder messageBuilder, final DataStore datastore)
+	public LodeStarUtility(final Plugin plugin, final MessageBuilder messageBuilder, final ConnectionProvider datastore)
 	{
 		this.plugin = plugin;
 		this.messageBuilder = messageBuilder;
