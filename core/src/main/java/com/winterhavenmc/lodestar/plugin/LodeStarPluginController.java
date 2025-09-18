@@ -17,10 +17,10 @@
 
 package com.winterhavenmc.lodestar.plugin;
 
-import com.winterhavenmc.lodestar.plugin.commands.CommandManager;
-import com.winterhavenmc.lodestar.plugin.listeners.PlayerEventListener;
-import com.winterhavenmc.lodestar.plugin.listeners.PlayerInteractEventListener;
+import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
+import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MetricsHandler;
@@ -48,6 +48,8 @@ public final class LodeStarPluginController implements PluginController
 	public WorldManager worldManager;
 	public CommandManager commandManager;
 	public LodeStarUtility lodeStarUtility;
+	public PlayerEventListener playerEventListener;
+	public PlayerInteractEventListener playerInteractEventListener;
 
 
 	@Override
