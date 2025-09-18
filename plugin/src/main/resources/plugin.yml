@@ -1,5 +1,5 @@
 name: 'LodeStar'
-main: com.winterhavenmc.lodestar.plugin.LodeStar
+main: com.winterhavenmc.lodestar.plugin.Bootstrap
 author: '${project.author}'
 version: '${project.version}'
 api-version: 1.18
