@@ -18,19 +18,20 @@
 package com.winterhavenmc.lodestar.plugin;
 
 import com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public final class LodeStar extends JavaPlugin
+public final class Bootstrap extends JavaPlugin
 {
 	PluginController pluginController;
-	SqliteConnectionProvider connectionProvider;
+	ConnectionProvider connectionProvider;
 
 
 	@Override
 	public void onEnable()
 	{
-		pluginController = new PluginController();
+		pluginController = new LodeStarPluginController();
 		connectionProvider = new SqliteConnectionProvider(this);
 		pluginController.startUp(this, connectionProvider);
 	}
