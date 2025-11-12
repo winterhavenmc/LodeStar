@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -36,12 +36,12 @@ import static com.winterhavenmc.library.messagebuilder.models.time.TimeUnit.SECO
 
 class TeleportExecutor
 {
-	private final LodeStarPluginController.TeleporterContextContainer ctx;
+	private final TeleportCtx ctx;
 	private final TeleportHandler teleportHandler;
 	protected final WarmupMap warmupMap;
 
 
-	TeleportExecutor(final TeleportHandler teleportHandler, final LodeStarPluginController.TeleporterContextContainer ctx, final WarmupMap warmupMap)
+	TeleportExecutor(final TeleportHandler teleportHandler, final TeleportCtx ctx, final WarmupMap warmupMap)
 	{
 		this.ctx = ctx;
 		this.teleportHandler = teleportHandler;

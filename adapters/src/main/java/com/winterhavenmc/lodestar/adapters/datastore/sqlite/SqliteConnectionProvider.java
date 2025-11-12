@@ -61,6 +61,17 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		this.server = plugin.getServer();
 		this.dataFilePath = plugin.getDataFolder() + File.separator + "destinations.db";
 		this.configRepository = BukkitConfigRepository.create(plugin);
+
+		// initialize data store
+		try
+		{
+			this.initialize();
+		}
+		catch (Exception exception)
+		{
+			plugin.getLogger().severe("Could not initialize the datastore!");
+			plugin.getLogger().severe(exception.getLocalizedMessage());
+		}
 	}
 
 

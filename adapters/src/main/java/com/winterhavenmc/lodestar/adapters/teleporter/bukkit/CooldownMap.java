@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.tasks.RemovePlayerCooldownTask;
 import org.bukkit.entity.Player;
@@ -35,10 +35,10 @@ class CooldownMap
 	// hashmap to store player UUID and cooldown expire instant
 	private final HashMap<UUID, Instant> cooldownMap;
 	private final TeleportHandler teleportHandler;
-	private final LodeStarPluginController.TeleporterContextContainer ctx;
+	private final TeleportCtx ctx;
 
 
-	CooldownMap(final TeleportHandler teleportHandler, LodeStarPluginController.TeleporterContextContainer ctx)
+	CooldownMap(final TeleportHandler teleportHandler, TeleportCtx ctx)
 	{
 		this.teleportHandler = teleportHandler;
 		this.ctx = ctx;

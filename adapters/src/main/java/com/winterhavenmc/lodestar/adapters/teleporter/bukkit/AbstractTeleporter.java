@@ -20,7 +20,7 @@ package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -43,11 +43,11 @@ import java.util.Optional;
  */
 abstract non-sealed class AbstractTeleporter implements Teleporter
 {
-	protected final LodeStarPluginController.TeleporterContextContainer ctx;
+	protected final TeleportCtx ctx;
 	protected final TeleportExecutor teleportExecutor;
 
 
-	AbstractTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
+	AbstractTeleporter(final TeleportCtx ctx, final TeleportExecutor teleportExecutor)
 	{
 		this.ctx = ctx;
 		this.teleportExecutor = teleportExecutor;

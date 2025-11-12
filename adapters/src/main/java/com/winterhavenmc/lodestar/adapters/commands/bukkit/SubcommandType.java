@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
 
 
 enum SubcommandType
@@ -25,7 +25,7 @@ enum SubcommandType
 	BIND()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new BindSubcommand(ctx);
 				}
@@ -34,7 +34,7 @@ enum SubcommandType
 	DELETE()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new DeleteSubcommand(ctx);
 				}
@@ -43,7 +43,7 @@ enum SubcommandType
 	DESTROY()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new DestroySubcommand(ctx);
 				}
@@ -52,7 +52,7 @@ enum SubcommandType
 	GIVE()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new GiveSubcommand(ctx);
 				}
@@ -61,7 +61,7 @@ enum SubcommandType
 	LIST()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new ListSubcommand(ctx);
 				}
@@ -70,7 +70,7 @@ enum SubcommandType
 	RELOAD()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new ReloadSubcommand(ctx);
 				}
@@ -79,7 +79,7 @@ enum SubcommandType
 	SET()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new SetSubcommand(ctx);
 				}
@@ -88,7 +88,7 @@ enum SubcommandType
 	STATUS()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new StatusSubcommand(ctx);
 				}
@@ -97,13 +97,13 @@ enum SubcommandType
 	TELEPORT()
 			{
 				@Override
-				Subcommand create(final LodeStarPluginController.CommandContextContainer ctx)
+				Subcommand create(final CommandCtx ctx)
 				{
 					return new TeleportSubcommand(ctx);
 				}
 			};
 
 
-	abstract Subcommand create(final LodeStarPluginController.CommandContextContainer ctx);
+	abstract Subcommand create(final CommandCtx ctx);
 
 }

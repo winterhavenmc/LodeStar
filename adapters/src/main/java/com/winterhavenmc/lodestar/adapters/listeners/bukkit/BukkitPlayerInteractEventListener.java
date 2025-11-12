@@ -17,11 +17,12 @@
 
 package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
+
+import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,14 +34,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Set;
 
 
 public class BukkitPlayerInteractEventListener implements PlayerInteractEventListener
 {
+	private final Plugin plugin;
+	private final MessageBuilder messageBuilder;
 	private final TeleportHandler teleportHandler;
-	private final LodeStarPluginController.ListenerContextContainer ctx;
 
 	// set to hold craft table materials
 	private final Set<Material> craftTables = Set.of(
@@ -52,31 +55,14 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 			Material.STONECUTTER);
 
 
-	public BukkitPlayerInteractEventListener()
+	public BukkitPlayerInteractEventListener(final Plugin plugin, final MessageBuilder messageBuilder, final TeleportHandler teleportHandler)
 	{
-		this.teleportHandler = null;
-		this.ctx = null;
-	}
-
-
-	/**
-	 * constructor method for PlayerInteractEventListener class
-	 */
-	public BukkitPlayerInteractEventListener(final TeleportHandler teleportHandler,
-	                                         final LodeStarPluginController.ListenerContextContainer ctx)
-	{
+		this.plugin = plugin;
+		this.messageBuilder = messageBuilder;
 		this.teleportHandler = teleportHandler;
-		this.ctx = ctx;
 
 		// register events in this class
-		ctx.plugin().getServer().getPluginManager().registerEvents(this, ctx.plugin());
-	}
-
-
-	public BukkitPlayerInteractEventListener init(final TeleportHandler teleportHandler,
-	                                              final LodeStarPluginController.ListenerContextContainer ctx)
-	{
-		return new BukkitPlayerInteractEventListener(teleportHandler, ctx);
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 
@@ -96,7 +82,7 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 
 		// perform check for cancel-on-interaction
 		if (cancelTeleportOnInteraction(event)
-				|| !ctx.messageBuilder().items().isItem(event.getItem())
+				|| !messageBuilder.items().isItem(event.getItem())
 				|| allowedClickType(event))
 		{
 			return;
@@ -117,21 +103,21 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 		event.setCancelled(true);
 
 		// if players current world is not enabled in config, send message and return
-		if (!ctx.messageBuilder().worlds().isEnabled(player.getWorld().getUID()))
+		if (!messageBuilder.worlds().isEnabled(player.getWorld().getUID()))
 		{
-			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_WORLD_DISABLED).send();
-			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
+			messageBuilder.compose(player, MessageId.EVENT_TELEPORT_FAIL_WORLD_DISABLED).send();
+			messageBuilder.sounds().play(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 		}
 		// if player does not have lodestar.use permission, send message and return
 		else if (!player.hasPermission("lodestar.use"))
 		{
-			ctx.messageBuilder().compose(player, MessageId.EVENT_ITEM_USE_PERMISSION_DENIED).send();
-			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_DENIED_PERMISSION);
+			messageBuilder.compose(player, MessageId.EVENT_ITEM_USE_PERMISSION_DENIED).send();
+			messageBuilder.sounds().play(player, SoundId.TELEPORT_DENIED_PERMISSION);
 		}
 		// if shift-click configured and player is not sneaking, send teleport fail shift-click message and return
-		else if (ctx.plugin().getConfig().getBoolean("shift-click") && isNotSneaking(player))
+		else if (plugin.getConfig().getBoolean("shift-click") && isNotSneaking(player))
 		{
-			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_SHIFT_CLICK).send();
+			messageBuilder.compose(player, MessageId.EVENT_TELEPORT_FAIL_SHIFT_CLICK).send();
 		}
 		else
 		{
@@ -155,7 +141,7 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 
 		// if cancel-on-interaction is configured true, and player is in warmup hashmap,
 		// and player is interacting with a block (not air) then cancel teleport, output message and return
-		if (ctx.plugin().getConfig().getBoolean("cancel-on-interaction")
+		if (plugin.getConfig().getBoolean("cancel-on-interaction")
 				&& teleportHandler.isWarmingUp(player)
 				&& (Action.LEFT_CLICK_BLOCK.equals(action) || Action.RIGHT_CLICK_BLOCK.equals(action)))
 		{
@@ -167,8 +153,8 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 
 			// cancel teleport and send message, play sound
 			teleportHandler.cancelTeleport(player);
-			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_INTERACTION).send();
-			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_CANCELLED);
+			messageBuilder.compose(player, MessageId.EVENT_TELEPORT_CANCELLED_INTERACTION).send();
+			messageBuilder.sounds().play(player, SoundId.TELEPORT_CANCELLED);
 			return true;
 		}
 		return false;
@@ -223,7 +209,7 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 		// if event action is left-click, and left-click is config disabled, do nothing and return
 		return event.getAction().equals(Action.LEFT_CLICK_BLOCK)
 				|| event.getAction().equals(Action.LEFT_CLICK_AIR)
-				&& !ctx.plugin().getConfig().getBoolean("left-click");
+				&& !plugin.getConfig().getBoolean("left-click");
 	}
 
 

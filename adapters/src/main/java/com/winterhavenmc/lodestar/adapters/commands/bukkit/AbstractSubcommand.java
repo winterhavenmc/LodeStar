@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,7 +29,7 @@ import java.util.List;
 
 abstract class AbstractSubcommand implements Subcommand
 {
-	protected LodeStarPluginController.CommandContextContainer ctx;
+	protected CommandCtx ctx;
 	protected String name;
 	protected Collection<String> aliases = Collections.emptySet();
 	protected String permissionNode = "";

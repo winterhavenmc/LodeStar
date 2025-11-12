@@ -17,13 +17,11 @@
 
 package com.winterhavenmc.lodestar.plugin.ports.teleporter;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import org.bukkit.entity.Player;
+
 
 public interface TeleportHandler
 {
-	TeleportHandler init(LodeStarPluginController.TeleporterContextContainer ctx);
-
 	/**
 	 * Start the player teleport
 	 *

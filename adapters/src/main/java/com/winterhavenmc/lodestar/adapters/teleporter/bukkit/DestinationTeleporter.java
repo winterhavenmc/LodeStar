@@ -17,10 +17,10 @@
 
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.entity.Player;
 
@@ -32,7 +32,7 @@ final class DestinationTeleporter extends AbstractTeleporter implements Teleport
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	DestinationTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
+	DestinationTeleporter(final TeleportCtx ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}

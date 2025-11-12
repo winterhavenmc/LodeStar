@@ -20,7 +20,7 @@ package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 final class SetSubcommand extends AbstractSubcommand
 {
-	SetSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
+	SetSubcommand(final CommandCtx ctx)
 	{
 		this.ctx = ctx;
 		this.name = "set";

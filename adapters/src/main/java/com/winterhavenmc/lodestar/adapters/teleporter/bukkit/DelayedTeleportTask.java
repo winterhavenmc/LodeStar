@@ -17,8 +17,8 @@
 
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.models.destination.SpawnDestination;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -39,7 +39,7 @@ import org.bukkit.scheduler.BukkitTask;
 final class DelayedTeleportTask extends BukkitRunnable
 {
 
-	private final LodeStarPluginController.TeleporterContextContainer ctx;
+	private final TeleportCtx ctx;
 	private final Player player;
 	private final ValidDestination validDestination;
 	private final ItemStack playerItem;
@@ -56,7 +56,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 	 * @param playerItem  the item used to initiate teleport
 	 */
 	DelayedTeleportTask(final TeleportHandler teleportHandler,
-	                    final LodeStarPluginController.TeleporterContextContainer ctx,
+	                    final TeleportCtx ctx,
 	                    final Player player,
 	                    final ValidDestination validDestination,
 						final Location location,

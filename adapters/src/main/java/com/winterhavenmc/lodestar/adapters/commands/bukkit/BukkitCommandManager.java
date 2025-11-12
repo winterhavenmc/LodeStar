@@ -17,13 +17,17 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
-import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
+import com.winterhavenmc.library.messagebuilder.MessageBuilder;
+import com.winterhavenmc.lodestar.plugin.ports.commands.CommandDispatcher;
+import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -33,42 +37,35 @@ import java.util.stream.Collectors;
 /**
  * Implements command executor for LodeStar commands.
  */
-public final class BukkitCommandManager implements TabExecutor, CommandManager
+public final class BukkitCommandManager implements TabExecutor, CommandDispatcher
 {
+	private final MessageBuilder messageBuilder;
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
-	private final LodeStarPluginController.CommandContextContainer ctx;
 
-
-	public BukkitCommandManager()
-	{
-		ctx = null;
-	}
 
 	/**
-	 * constructor method for CommandManager class
+	 * class constructor
 	 */
-	private BukkitCommandManager(final LodeStarPluginController.CommandContextContainer ctx)
+	public BukkitCommandManager(final JavaPlugin plugin,
+	                            final MessageBuilder messageBuilder,
+	                            final ConnectionProvider connectionProvider,
+	                            final LodeStarUtility lodeStarUtility)
 	{
-		this.ctx = ctx;
+		this.messageBuilder = messageBuilder;
 
 		// register this class as command executor
-		Objects.requireNonNull(ctx.plugin().getCommand("lodestar")).setExecutor(this);
+		Objects.requireNonNull(plugin.getCommand("lodestar")).setExecutor(this);
+
+		CommandCtx commandCtx = new CommandCtx(plugin, messageBuilder, connectionProvider, lodeStarUtility);
 
 		// register subcommands
 		for (SubcommandType subcommandType : SubcommandType.values())
 		{
-			subcommandRegistry.register(subcommandType.create(ctx));
+			subcommandRegistry.register(subcommandType.create(commandCtx));
 		}
 
 		// register help command
-		subcommandRegistry.register(new HelpSubcommand(ctx, subcommandRegistry));
-	}
-
-
-	@Override
-	public CommandManager init(final LodeStarPluginController.CommandContextContainer ctx)
-	{
-		return new BukkitCommandManager(ctx);
+		subcommandRegistry.register(new HelpSubcommand(commandCtx, subcommandRegistry));
 	}
 
 
@@ -134,8 +131,8 @@ public final class BukkitCommandManager implements TabExecutor, CommandManager
 		if (optionalSubcommand.isEmpty())
 		{
 			optionalSubcommand = subcommandRegistry.getSubcommand("help");
-			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_COMMAND).send();
-			ctx.messageBuilder().sounds().play(sender, SoundId.COMMAND_INVALID);
+			messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_COMMAND).send();
+			messageBuilder.sounds().play(sender, SoundId.COMMAND_INVALID);
 		}
 
 		// execute subcommand

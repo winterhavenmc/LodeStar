@@ -17,8 +17,6 @@
 
 package com.winterhavenmc.lodestar.plugin.ports.listeners;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -27,10 +25,9 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+
 public interface PlayerEventListener extends Listener
 {
-	PlayerEventListener init(TeleportHandler teleportHandler, LodeStarPluginController.TeleporterContextContainer ctx);
-
 	/**
 	 * cancel any pending teleports on player death
 	 *

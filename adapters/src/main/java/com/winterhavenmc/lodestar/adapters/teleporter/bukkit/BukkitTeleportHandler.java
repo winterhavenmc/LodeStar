@@ -19,12 +19,15 @@ package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.entity.Player;
+
+import org.bukkit.plugin.java.JavaPlugin;
 
 
 /**
@@ -37,37 +40,23 @@ public final class BukkitTeleportHandler implements TeleportHandler
 	private final TeleportExecutor teleportExecutor;
 	private final MessageBuilder messageBuilder;
 	private final LodeStarUtility lodeStarUtility;
-	private final LodeStarPluginController.TeleporterContextContainer ctx;
-
-
-	public BukkitTeleportHandler()
-	{
-		warmupMap = null;
-		cooldownMap = null;
-		teleportExecutor = null;
-		messageBuilder = null;
-		lodeStarUtility = null;
-		ctx = null;
-	}
-
-
-	public BukkitTeleportHandler init(LodeStarPluginController.TeleporterContextContainer ctx)
-	{
-		return new BukkitTeleportHandler( ctx);
-	}
+	private final TeleportCtx ctx;
 
 
 	/**
 	 * Class constructor
 	 */
-	private BukkitTeleportHandler(final LodeStarPluginController.TeleporterContextContainer ctx)
+	public BukkitTeleportHandler(final JavaPlugin plugin,
+	                             final MessageBuilder messageBuilder,
+	                             final ConnectionProvider connectionProvider,
+	                             final LodeStarUtility lodeStarUtility)
 	{
-		this.ctx = ctx;
+		this.ctx = new TeleportCtx(plugin, messageBuilder, connectionProvider, lodeStarUtility);
 		this.warmupMap = new WarmupMap();
 		this.cooldownMap = new CooldownMap(this, ctx);
 		this.teleportExecutor = new TeleportExecutor(this, ctx, warmupMap);
-		this.messageBuilder = ctx.messageBuilder();
-		this.lodeStarUtility = ctx.lodeStarUtility();
+		this.messageBuilder = messageBuilder;
+		this.lodeStarUtility = lodeStarUtility;
 	}
 
 

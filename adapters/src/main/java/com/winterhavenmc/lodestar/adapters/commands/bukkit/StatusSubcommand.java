@@ -20,7 +20,7 @@ package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 import com.winterhavenmc.library.messagebuilder.adapters.resources.configuration.BukkitConfigRepository;
 import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 
@@ -43,7 +43,7 @@ final class StatusSubcommand extends AbstractSubcommand
 	/**
 	 * Class constructor
 	 */
-	StatusSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
+	StatusSubcommand(final CommandCtx ctx)
 	{
 		this.ctx = ctx;
 		this.name = "status";

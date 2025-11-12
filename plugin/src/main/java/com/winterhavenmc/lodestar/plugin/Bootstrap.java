@@ -17,44 +17,49 @@
 
 package com.winterhavenmc.lodestar.plugin;
 
+import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 import com.winterhavenmc.lodestar.adapters.commands.bukkit.BukkitCommandManager;
 import com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteConnectionProvider;
 import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerEventListener;
 import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerInteractEventListener;
 import com.winterhavenmc.lodestar.adapters.teleporter.bukkit.BukkitTeleportHandler;
 
-import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
-import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.plugin.util.MetricsHandler;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 public final class Bootstrap extends JavaPlugin
 {
-	PluginController pluginController;
+	private ConnectionProvider connectionProvider;
 
 
 	@Override
 	public void onEnable()
 	{
-		ConnectionProvider connectionProvider = new SqliteConnectionProvider(this);
-		CommandManager commandManager = new BukkitCommandManager();
-		TeleportHandler teleportHandler = new BukkitTeleportHandler();
-		PlayerEventListener playerEventListener = new BukkitPlayerEventListener();
-		PlayerInteractEventListener playerInteractEventListener = new BukkitPlayerInteractEventListener();
-		pluginController = new LodeStarPluginController();
+		saveDefaultConfig();
 
-		pluginController.startUp(this, connectionProvider, commandManager, teleportHandler, playerEventListener, playerInteractEventListener);
+		final MessageBuilder messageBuilder = MessageBuilder.create(this);
+		this.connectionProvider = new SqliteConnectionProvider(this);
+		final LodeStarUtility lodeStarUtility = new LodeStarUtility(this, messageBuilder, connectionProvider);
+		final TeleportHandler teleportHandler = new BukkitTeleportHandler(this, messageBuilder, connectionProvider, lodeStarUtility);
+
+		new BukkitPlayerEventListener(this, messageBuilder, connectionProvider, lodeStarUtility, teleportHandler);
+		new BukkitCommandManager(this, messageBuilder, connectionProvider, lodeStarUtility);
+		new BukkitPlayerInteractEventListener(this, messageBuilder, teleportHandler);
+		new MetricsHandler(this);
 	}
 
 
 	@Override
 	public void onDisable()
 	{
-		pluginController.shutDown();
+		connectionProvider.close();
 	}
 
 }

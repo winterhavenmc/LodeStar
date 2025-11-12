@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 final class DeleteSubcommand extends AbstractSubcommand
 {
-	DeleteSubcommand(final LodeStarPluginController.CommandContextContainer ctx)
+	DeleteSubcommand(final CommandCtx ctx)
 	{
 		this.ctx = ctx;
 		this.name = "delete";

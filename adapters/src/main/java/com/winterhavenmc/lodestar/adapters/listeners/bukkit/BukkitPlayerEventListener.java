@@ -17,7 +17,10 @@
 
 package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.library.messagebuilder.MessageBuilder;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -32,6 +35,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
@@ -45,35 +49,23 @@ import java.util.Objects;
 public final class BukkitPlayerEventListener implements PlayerEventListener
 {
 	private final TeleportHandler teleportHandler;
-	private final LodeStarPluginController.TeleporterContextContainer ctx;
+	private final TeleportCtx ctx;
 
 
 	/**
-	 * constructor method for PlayerEventListener class
+	 * class constructor
 	 */
-	public BukkitPlayerEventListener()
-	{
-		this.teleportHandler = null;
-		this.ctx = null;
-	}
-
-
-	public BukkitPlayerEventListener init(final TeleportHandler teleportHandler, final LodeStarPluginController.TeleporterContextContainer ctx)
-	{
-		return new BukkitPlayerEventListener(teleportHandler, ctx);
-	}
-
-
-	/**
-	 * constructor method for PlayerEventListener class
-	 */
-	public BukkitPlayerEventListener(final TeleportHandler teleportHandler, final LodeStarPluginController.TeleporterContextContainer ctx)
+	public BukkitPlayerEventListener(final JavaPlugin plugin,
+	                                 final MessageBuilder messageBuilder,
+	                                 final ConnectionProvider connectionProvider,
+	                                 final LodeStarUtility lodeStarUtility,
+	                                 final TeleportHandler teleportHandler)
 	{
 		this.teleportHandler = teleportHandler;
-		this.ctx = ctx;
+		this.ctx = new TeleportCtx(plugin, messageBuilder, connectionProvider, lodeStarUtility);
 
 		// register events in this class
-		ctx.plugin().getServer().getPluginManager().registerEvents(this, ctx.plugin());
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 
