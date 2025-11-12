@@ -17,11 +17,10 @@
 
 package com.winterhavenmc.lodestar.models.destination;
 
-import com.winterhavenmc.library.messagebuilder.pipeline.adapters.location.Locatable;
+import com.winterhavenmc.library.messagebuilder.core.ports.pipeline.accessors.location.Locatable;
 import com.winterhavenmc.lodestar.models.location.*;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
 
 

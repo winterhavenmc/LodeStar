@@ -135,7 +135,7 @@ public final class BukkitCommandManager implements TabExecutor, CommandManager
 		{
 			optionalSubcommand = subcommandRegistry.getSubcommand("help");
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_COMMAND).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_INVALID);
+			ctx.messageBuilder().sounds().play(sender, SoundId.COMMAND_INVALID);
 		}
 
 		// execute subcommand

@@ -17,12 +17,10 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -57,7 +55,6 @@ final class DestroySubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DESTROY_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -65,12 +62,11 @@ final class DestroySubcommand extends AbstractSubcommand
 		ItemStack playerItem = player.getInventory().getItemInMainHand();
 
 		// check that item player is holding is a LodeStar item
-		if (ItemForge.isItem("LODESTAR", playerItem))
+				if (ctx.messageBuilder().items().isItem(playerItem))
 		{
 			Destination destination = ctx.lodeStarUtility().getDestination(playerItem);
 			ItemStack destroyedItemStack = destroyItemStack(player, playerItem);
 
-			ctx.soundConfig().playSound(player, SoundId.COMMAND_SUCCESS_DESTROY);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_DESTROY)
 					.setMacro(Macro.ITEM, destroyedItemStack)
 					.setMacro(Macro.DESTINATION, destination)
@@ -78,7 +74,6 @@ final class DestroySubcommand extends AbstractSubcommand
 		}
 		else
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_ITEM)
 					.setMacro(Macro.ITEM, playerItem)
 					.send();

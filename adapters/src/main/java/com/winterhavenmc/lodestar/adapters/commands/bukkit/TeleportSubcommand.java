@@ -71,7 +71,6 @@ final class TeleportSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_TELEPORT_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -87,7 +86,6 @@ final class TeleportSubcommand extends AbstractSubcommand
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			displayUsage(sender);
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -102,9 +100,9 @@ final class TeleportSubcommand extends AbstractSubcommand
 			Location location = storedDestination.location().getLocation();
 			if (location != null)
 			{
-				ctx.soundConfig().playSound(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
+				ctx.messageBuilder().sounds().play(player.getLocation(), SoundId.TELEPORT_SUCCESS_DEPARTURE);
 				player.teleport(location);
-				ctx.soundConfig().playSound(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
+				ctx.messageBuilder().sounds().play(location, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 				ctx.messageBuilder().compose(sender, MessageId.EVENT_TELEPORT_SUCCESS_DESTINATION)
 						.setMacro(Macro.DESTINATION, storedDestination)
 						.send();
@@ -114,7 +112,7 @@ final class TeleportSubcommand extends AbstractSubcommand
 		}
 		else
 		{
-			ctx.soundConfig().playSound(sender, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
+			ctx.messageBuilder().sounds().play(sender, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destination)
 					.send();

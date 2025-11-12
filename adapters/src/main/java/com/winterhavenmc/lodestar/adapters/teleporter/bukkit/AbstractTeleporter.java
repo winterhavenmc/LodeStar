@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.teleport;
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
@@ -98,7 +98,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		}
 
 		// get spawn location for player
-		Location location = ctx.worldManager().getSpawnLocation(player.getWorld());
+		Location location = ctx.messageBuilder().worlds().spawnLocation(player.getWorld().getUID()).orElse(player.getRespawnLocation());
 
 		// if from-nether or from-end is enabled in config and player is in nether or end, try to get overworld spawn location
 		if (isInNetherWorld(player) && ctx.plugin().getConfig().getBoolean("from-nether")
@@ -152,7 +152,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 				// check if normal world matches passed world minus nether/end suffix
 				if (checkWorld.getName().equals(player.getWorld().getName().replaceFirst("(_nether$|_the_end$)", "")))
 				{
-					return Optional.of(ctx.worldManager().getSpawnLocation(checkWorld));
+					return ctx.messageBuilder().worlds().spawnLocation(checkWorld.getUID());
 				}
 
 				// if no match, add to list of normal worlds
@@ -163,11 +163,11 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		// if only one normal world exists, return that world
 		if (normalWorlds.size() == 1)
 		{
-			return Optional.of(ctx.worldManager().getSpawnLocation(normalWorlds.getFirst()));
+			return ctx.messageBuilder().worlds().spawnLocation(normalWorlds.getFirst().getUID());
 		}
 
 		// if no matching normal world found and more than one normal world exists, return passed world spawn location
-		return Optional.of(ctx.worldManager().getSpawnLocation(player.getWorld()));
+		return ctx.messageBuilder().worlds().spawnLocation(player.getWorld().getUID());
 	}
 
 
@@ -206,7 +206,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_INVALID_DESTINATION)
 				.setMacro(Macro.DESTINATION, destinationName)
 				.send();
-		ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
+		ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_CANCELLED);
 	}
 
 }

@@ -19,10 +19,9 @@ package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
-import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
-import com.winterhavenmc.library.messagebuilder.ItemForge;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -97,7 +96,7 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 
 		// perform check for cancel-on-interaction
 		if (cancelTeleportOnInteraction(event)
-				|| !ItemForge.isCustomItem(event.getItem())
+				|| !ctx.messageBuilder().items().isItem(event.getItem())
 				|| allowedClickType(event))
 		{
 			return;
@@ -118,16 +117,16 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 		event.setCancelled(true);
 
 		// if players current world is not enabled in config, send message and return
-		if (!ctx.worldManager().isEnabled(player.getWorld()))
+		if (!ctx.messageBuilder().worlds().isEnabled(player.getWorld().getUID()))
 		{
 			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_WORLD_DISABLED).send();
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_DENIED_WORLD_DISABLED);
 		}
 		// if player does not have lodestar.use permission, send message and return
 		else if (!player.hasPermission("lodestar.use"))
 		{
 			ctx.messageBuilder().compose(player, MessageId.EVENT_ITEM_USE_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_DENIED_PERMISSION);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_DENIED_PERMISSION);
 		}
 		// if shift-click configured and player is not sneaking, send teleport fail shift-click message and return
 		else if (ctx.plugin().getConfig().getBoolean("shift-click") && isNotSneaking(player))
@@ -169,7 +168,7 @@ public class BukkitPlayerInteractEventListener implements PlayerInteractEventLis
 			// cancel teleport and send message, play sound
 			teleportHandler.cancelTeleport(player);
 			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_INTERACTION).send();
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_CANCELLED);
 			return true;
 		}
 		return false;

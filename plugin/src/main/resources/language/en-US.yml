@@ -209,10 +209,10 @@ MESSAGES:
   # Status command messages
   #########################
   COMMAND_STATUS_HEADER:
-    MESSAGE_TEXT: "<newline><gradient:blue:aqua><strikethrough>                         =</strikethrough>[</gradient> <dark_aqua>{PLUGIN}</dark_aqua> <gradient:aqua:blue>]<strikethrough>=                         </strikethrough></gradient>"
+    MESSAGE_TEXT: "<newline><gradient:blue:aqua><strikethrough>                         =</strikethrough>[</gradient> <dark_aqua>{PLUGIN}</dark_aqua> <gradient:aqua:blue>]<strikethrough>=                         </strikethrough></gradient></newline>"
 
   COMMAND_STATUS_FOOTER:
-    MESSAGE_TEXT: "<newline><click:open_url:{URL}><blue><underlined>{URL}<underlined></blue></click>"
+    MESSAGE_TEXT: "<newline><click:open_url:{URL}><blue><underlined>{URL}<underlined></blue></click><newline>"
 
   COMMAND_STATUS_PLUGIN_VERSION:
     MESSAGE_TEXT: "<green>Version:</green> {SETTING}"

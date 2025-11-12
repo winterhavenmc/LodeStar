@@ -17,14 +17,15 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.library.messagebuilder.resources.configuration.LocaleProvider;
-import com.winterhavenmc.library.messagebuilder.shaded.net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import com.winterhavenmc.library.messagebuilder.shaded.net.kyori.adventure.text.Component;
+import com.winterhavenmc.library.messagebuilder.adapters.resources.configuration.BukkitConfigRepository;
+import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
+
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
 import java.time.Duration;
@@ -37,7 +38,7 @@ import java.util.List;
  */
 final class StatusSubcommand extends AbstractSubcommand
 {
-	final LocaleProvider localeProvider;
+	final ConfigRepository configRepository;
 
 	/**
 	 * Class constructor
@@ -49,7 +50,7 @@ final class StatusSubcommand extends AbstractSubcommand
 		this.permissionNode = "lodestar.status";
 		this.usageString = "/lodestar status";
 		this.description = MessageId.COMMAND_SUCCESS_HELP_STATUS;
-		this.localeProvider = LocaleProvider.create(ctx.plugin());
+		this.configRepository = BukkitConfigRepository.create(ctx.plugin());
 	}
 
 
@@ -60,7 +61,6 @@ final class StatusSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_STATUS_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -68,7 +68,6 @@ final class StatusSubcommand extends AbstractSubcommand
 		if (args.size() > getMaxArgs())
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}
@@ -138,7 +137,7 @@ final class StatusSubcommand extends AbstractSubcommand
 	private void displayLocaleSetting(final CommandSender sender)
 	{
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_LOCALE)
-				.setMacro(Macro.SETTING, localeProvider.getLocale().toLanguageTag())
+				.setMacro(Macro.SETTING, configRepository.locale().toLanguageTag())
 				.send();
 	}
 
@@ -146,7 +145,7 @@ final class StatusSubcommand extends AbstractSubcommand
 	private void displayTimezoneSetting(final CommandSender sender)
 	{
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_TIMEZONE)
-				.setMacro(Macro.SETTING, localeProvider.getZoneId().getId())
+				.setMacro(Macro.SETTING, configRepository.zoneId().getId())
 				.send();
 	}
 
@@ -240,7 +239,7 @@ final class StatusSubcommand extends AbstractSubcommand
 	private void displayEnabledWorlds(final CommandSender sender)
 	{
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_STATUS_ENABLED_WORLDS)
-				.setMacro(Macro.SETTING, ctx.worldManager().getEnabledWorldNames().toString())
+				.setMacro(Macro.SETTING, ctx.messageBuilder().worlds().enabledNames().toString())
 				.send();
 	}
 

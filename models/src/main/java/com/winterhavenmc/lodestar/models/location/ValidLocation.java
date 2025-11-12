@@ -17,12 +17,14 @@
 
 package com.winterhavenmc.lodestar.models.location;
 
-import com.winterhavenmc.library.messagebuilder.pipeline.adapters.location.Locatable;
+import com.winterhavenmc.library.messagebuilder.core.ports.pipeline.accessors.location.Locatable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.UUID;
+
 
 /**
  * Represents a valid Bukkit {@link Location}, using only immutable fields.

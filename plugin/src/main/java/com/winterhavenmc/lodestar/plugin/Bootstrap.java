@@ -21,31 +21,33 @@ import com.winterhavenmc.lodestar.adapters.commands.bukkit.BukkitCommandManager;
 import com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteConnectionProvider;
 import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerEventListener;
 import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerInteractEventListener;
+import com.winterhavenmc.lodestar.adapters.teleporter.bukkit.BukkitTeleportHandler;
+
 import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 public final class Bootstrap extends JavaPlugin
 {
 	PluginController pluginController;
-	ConnectionProvider connectionProvider;
-	CommandManager commandManager;
-	PlayerEventListener playerEventListener;
-	PlayerInteractEventListener playerInteractEventListener;
 
 
 	@Override
 	public void onEnable()
 	{
+		ConnectionProvider connectionProvider = new SqliteConnectionProvider(this);
+		CommandManager commandManager = new BukkitCommandManager();
+		TeleportHandler teleportHandler = new BukkitTeleportHandler();
+		PlayerEventListener playerEventListener = new BukkitPlayerEventListener();
+		PlayerInteractEventListener playerInteractEventListener = new BukkitPlayerInteractEventListener();
 		pluginController = new LodeStarPluginController();
-		connectionProvider = new SqliteConnectionProvider(this);
-		commandManager = new BukkitCommandManager();
-		playerEventListener = new BukkitPlayerEventListener();
-		playerInteractEventListener = new BukkitPlayerInteractEventListener();
-		pluginController.startUp(this, connectionProvider, commandManager, playerEventListener, playerInteractEventListener);
+
+		pluginController.startUp(this, connectionProvider, commandManager, teleportHandler, playerEventListener, playerInteractEventListener);
 	}
 
 

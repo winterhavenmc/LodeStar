@@ -15,19 +15,12 @@ COMMAND_INVALID:
   pitch: 1
 
 
-COMMAND_SUCCESS_GIVE_SENDER:
+COMMAND_SUCCESS_BIND:
   enabled: true
   player-only: true
-  sound: minecraft:entity.arrow.shoot
+  sound: minecraft:block.anvil.land
   volume: 1
-  pitch: 0.5
-
-COMMAND_SUCCESS_GIVE_TARGET:
-  enabled: true
-  player-only: true
-  sound: minecraft:entity.item.pickup
-  volume: 1
-  pitch: 1
+  pitch: 1.75
 
 COMMAND_SUCCESS_DELETE:
   enabled: true
@@ -43,6 +36,20 @@ COMMAND_SUCCESS_DESTROY:
   volume: 1
   pitch: 1
 
+COMMAND_SUCCESS_GIVE_SENDER:
+  enabled: true
+  player-only: true
+  sound: minecraft:entity.arrow.shoot
+  volume: 1
+  pitch: 0.5
+
+COMMAND_SUCCESS_GIVE_TARGET:
+  enabled: true
+  player-only: true
+  sound: minecraft:entity.item.pickup
+  volume: 1
+  pitch: 1
+
 COMMAND_SUCCESS_SET:
   enabled: true
   player-only: true
@@ -50,12 +57,12 @@ COMMAND_SUCCESS_SET:
   volume: 1
   pitch: 1.5
 
-COMMAND_SUCCESS_BIND:
-  enabled: true
-  player-only: true
-  sound: minecraft:block.anvil.land
-  volume: 1
-  pitch: 1.75
+COMMAND_SUCCESS_RELOAD:
+  ENABLED: true
+  PLAYER_ONLY: true
+  SOUND_NAME: minecraft:block.note_block.chime
+  VOLUME: 1
+  PITCH: 1
 
 TELEPORT_DENIED_PERMISSION:
   enabled: true

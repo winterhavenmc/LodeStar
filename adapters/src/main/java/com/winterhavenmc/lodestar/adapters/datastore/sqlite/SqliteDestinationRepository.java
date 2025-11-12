@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
+import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.StoredDestination;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteMessage.datastoreName;
+
 
 final class SqliteDestinationRepository implements DestinationRepository
 {
@@ -43,6 +46,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 	private final Server server;
 	private final FileConfiguration config;
 	private final Connection connection;
+	private final ConfigRepository configRepository;
 	private final SqliteDestinationQueryExecutor queryExecutor = new SqliteDestinationQueryExecutor();
 
 
@@ -50,12 +54,13 @@ final class SqliteDestinationRepository implements DestinationRepository
 	 * Class constructor
 	 *
 	 */
-	SqliteDestinationRepository(final Plugin plugin, final Connection connection)
+	SqliteDestinationRepository(final Plugin plugin, final Connection connection, final ConfigRepository configRepository)
 	{
 		this.logger = plugin.getLogger();
 		this.server = plugin.getServer();
 		this.config = plugin.getConfig();
 		this.connection = connection;
+		this.configRepository = configRepository;
 	}
 
 
@@ -78,7 +83,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 			}
 			catch (SQLException sqlException)
 			{
-				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getDefaultMessage());
+				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 				logger.warning(sqlException.getLocalizedMessage());
 			}
 		}
@@ -173,7 +178,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (SQLException sqlException)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage());
+			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage(configRepository.locale()));
 			logger.warning(sqlException.getLocalizedMessage());
 		}
 
@@ -209,7 +214,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (Exception e)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 

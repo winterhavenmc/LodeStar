@@ -21,14 +21,11 @@ import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
-import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MetricsHandler;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
-import com.winterhavenmc.library.soundconfig.SoundConfiguration;
-import com.winterhavenmc.library.soundconfig.YamlSoundConfiguration;
-import com.winterhavenmc.library.worldmanager.WorldManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,8 +41,6 @@ public final class LodeStarPluginController implements PluginController
 	public MessageBuilder messageBuilder;
 	public ConnectionProvider datastore;
 	public TeleportHandler teleportHandler;
-	public SoundConfiguration soundConfig;
-	public WorldManager worldManager;
 	public CommandManager commandManager;
 	public LodeStarUtility lodeStarUtility;
 	public PlayerEventListener playerEventListener;
@@ -56,6 +51,7 @@ public final class LodeStarPluginController implements PluginController
 	public void startUp(final JavaPlugin plugin,
 	                    final ConnectionProvider connectionProvider,
 						final CommandManager commandManager,
+						final TeleportHandler teleportHandler,
 	                    final PlayerEventListener playerEventListener,
 	                    final PlayerInteractEventListener playerInteractEventListener)
 	{
@@ -64,12 +60,6 @@ public final class LodeStarPluginController implements PluginController
 
 		// instantiate message builder
 		this.messageBuilder = MessageBuilder.create(plugin);
-
-		// instantiate sound configuration
-		this.soundConfig = new YamlSoundConfiguration(plugin);
-
-		// instantiate world manager
-		this.worldManager = new WorldManager(plugin);
 
 		// get initialized destination storage object
 		this.datastore = connectionProvider.connect();
@@ -81,12 +71,12 @@ public final class LodeStarPluginController implements PluginController
 		new MetricsHandler(plugin);
 
 		// instantiate context containers
-		CommandContextContainer commandCtx = new CommandContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
-		ListenerContextContainer listenerCtx = new ListenerContextContainer(plugin, messageBuilder, soundConfig, worldManager);
-		TeleporterContextContainer teleporterCtx = new TeleporterContextContainer(plugin, messageBuilder, soundConfig, worldManager, datastore, lodeStarUtility);
+		CommandContextContainer commandCtx = new CommandContextContainer(plugin, messageBuilder, datastore, lodeStarUtility);
+		ListenerContextContainer listenerCtx = new ListenerContextContainer(plugin, messageBuilder);
+		TeleporterContextContainer teleporterCtx = new TeleporterContextContainer(plugin, messageBuilder, datastore, lodeStarUtility);
 
 		// instantiate teleport manager
-		this.teleportHandler = new TeleportHandler(teleporterCtx);
+		this.teleportHandler = teleportHandler.init(teleporterCtx);
 
 		// instantiate command manager
 		this.commandManager = commandManager.init(commandCtx);
@@ -105,15 +95,12 @@ public final class LodeStarPluginController implements PluginController
 
 
 	public record CommandContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
-	                                      SoundConfiguration soundConfig, WorldManager worldManager,
 	                                      ConnectionProvider datastore, LodeStarUtility lodeStarUtility) { }
 
 
-	public record ListenerContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
-	                                       SoundConfiguration soundConfig, WorldManager worldManager) { }
+	public record ListenerContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder) { }
 
 
 	public record TeleporterContextContainer(JavaPlugin plugin, MessageBuilder messageBuilder,
-	                                         SoundConfiguration soundConfig, WorldManager worldManager,
 	                                         ConnectionProvider datastore, LodeStarUtility lodeStarUtility) { }
 }

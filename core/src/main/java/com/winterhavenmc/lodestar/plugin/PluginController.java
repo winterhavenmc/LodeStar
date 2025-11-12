@@ -21,12 +21,15 @@ import com.winterhavenmc.lodestar.plugin.ports.commands.CommandManager;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 public interface PluginController
 {
 	void startUp(JavaPlugin plugin, ConnectionProvider connectionProvider,
 	             CommandManager commandManager,
+				 TeleportHandler teleportHandler,
 	             PlayerEventListener playerEventListener,
 	             PlayerInteractEventListener playerInteractEventListener);
 

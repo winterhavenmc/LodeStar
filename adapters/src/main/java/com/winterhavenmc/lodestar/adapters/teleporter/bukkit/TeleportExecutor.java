@@ -15,10 +15,11 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.teleport;
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
@@ -30,7 +31,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.time.Duration;
 
-import static com.winterhavenmc.library.time.TimeUnit.SECONDS;
+import static com.winterhavenmc.library.messagebuilder.models.time.TimeUnit.SECONDS;
 
 
 class TeleportExecutor
@@ -61,8 +62,8 @@ class TeleportExecutor
 		{
 			case HomeDestination ignored -> (player.getRespawnLocation() != null)
 					? player.getRespawnLocation()
-					: ctx.worldManager().getSpawnLocation(player.getWorld());
-			case SpawnDestination ignored -> ctx.worldManager().getSpawnLocation(player.getWorld());
+					: ctx.messageBuilder().worlds().spawnLocation(player.getWorld().getUID()).orElse(player.getWorld().getSpawnLocation());
+			case SpawnDestination ignored -> ctx.messageBuilder().worlds().spawnLocation(player.getWorld().getUID()).orElse(player.getWorld().getSpawnLocation());
 			case StoredDestination stored -> stored.getLocation();
 			case TeleportDestination teleportDestination -> teleportDestination.getLocation();
 		};
@@ -113,7 +114,7 @@ class TeleportExecutor
 	{
 		return (player.getRespawnLocation() != null)
 				? player.getRespawnLocation()
-				: ctx.worldManager().getSpawnLocation(player.getWorld());
+				: ctx.messageBuilder().worlds().spawnLocation(player.getWorld().getUID()).orElse(player.getWorld().getSpawnLocation());
 	}
 
 
@@ -138,7 +139,7 @@ class TeleportExecutor
 					.send();
 
 			// if enabled, play teleport warmup sound effect
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_WARMUP);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_WARMUP);
 		}
 	}
 

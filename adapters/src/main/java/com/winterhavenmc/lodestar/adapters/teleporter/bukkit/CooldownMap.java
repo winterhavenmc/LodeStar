@@ -15,9 +15,10 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.teleport;
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.tasks.RemovePlayerCooldownTask;
 import org.bukkit.entity.Player;
 
@@ -26,7 +27,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static com.winterhavenmc.library.time.TimeUnit.SECONDS;
+import static com.winterhavenmc.library.messagebuilder.models.time.TimeUnit.SECONDS;
 
 
 class CooldownMap

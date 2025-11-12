@@ -88,7 +88,6 @@ final class GiveSubcommand extends AbstractSubcommand
 		// if command sender does not have permission to give LodeStars, output error message and return
 		if (!sender.hasPermission(permissionNode))
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_GIVE_PERMISSION_DENIED).send();
 			return true;
 		}
@@ -96,7 +95,6 @@ final class GiveSubcommand extends AbstractSubcommand
 		// if too few arguments, send error and usage message and return
 		if (args.size() < getMinArgs())
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
 			displayUsage(sender);
 			return true;
@@ -111,7 +109,6 @@ final class GiveSubcommand extends AbstractSubcommand
 		// if null, send player not found message and return
 		if (targetPlayer == null)
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_FOUND)
 					.setMacro(Macro.PLAYER, targetPlayerName)
 					.send();
@@ -121,7 +118,6 @@ final class GiveSubcommand extends AbstractSubcommand
 		// if not online, send player not online message and return
 		if (!targetPlayer.isOnline())
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_PLAYER_NOT_ONLINE)
 					.setMacro(Macro.PLAYER, targetPlayerName)
 					.send();
@@ -265,7 +261,7 @@ final class GiveSubcommand extends AbstractSubcommand
 		if (ctx.lodeStarUtility().getDestination(itemStack) instanceof ValidDestination validDestination)
 		{
 			// send message to command sender
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_GIVE_SENDER);
+			ctx.messageBuilder().sounds().play(sender, SoundId.COMMAND_SUCCESS_GIVE_SENDER);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_GIVE_OTHER)
 					.setMacro(Macro.PLAYER, targetPlayer)
 					.setMacro(Macro.ITEM, itemStack)
@@ -273,7 +269,6 @@ final class GiveSubcommand extends AbstractSubcommand
 					.send();
 
 			// send message to gift recipient
-			ctx.soundConfig().playSound(targetPlayer, SoundId.COMMAND_SUCCESS_GIVE_TARGET);
 			ctx.messageBuilder().compose(targetPlayer, MessageId.COMMAND_SUCCESS_GIVE_TARGET)
 					.setMacro(Macro.PLAYER, sender)
 					.setMacro(Macro.ITEM, itemStack)
@@ -291,7 +286,7 @@ final class GiveSubcommand extends AbstractSubcommand
 	{
 		if (ctx.lodeStarUtility().getDestination(itemStack) instanceof ValidDestination validDestination)
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_GIVE_TARGET);
+			ctx.messageBuilder().sounds().play(sender, SoundId.COMMAND_SUCCESS_GIVE_TARGET);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_GIVE_SELF)
 					.setMacro(Macro.ITEM, itemStack)
 					.setMacro(Macro.DESTINATION, validDestination)
@@ -306,21 +301,18 @@ final class GiveSubcommand extends AbstractSubcommand
 
 	private void sendInventoryFullMessage(CommandSender sender)
 	{
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_GIVE_INVENTORY_FULL).send();
 	}
 
 
 	private void sendInvalidDestinationMessage(CommandSender sender)
 	{
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION).send();
 	}
 
 
 	private void sendInvalidItemMessage(CommandSender sender)
 	{
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_ITEM).send();
 	}
 

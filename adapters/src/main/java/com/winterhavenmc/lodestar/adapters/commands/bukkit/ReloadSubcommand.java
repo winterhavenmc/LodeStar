@@ -51,7 +51,6 @@ final class ReloadSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_RELOAD_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -59,7 +58,6 @@ final class ReloadSubcommand extends AbstractSubcommand
 		if (args.size() > getMaxArgs())
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}
@@ -69,12 +67,6 @@ final class ReloadSubcommand extends AbstractSubcommand
 
 		// reload main configuration
 		ctx.plugin().reloadConfig();
-
-		// reload enabled worlds list
-		ctx.worldManager().reload();
-
-		// reload sounds
-		ctx.soundConfig().reload();
 
 		// reload messages
 		ctx.messageBuilder().reload();

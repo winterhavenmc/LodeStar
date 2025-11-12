@@ -76,7 +76,6 @@ final class HelpSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_HELP_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -114,7 +113,7 @@ final class HelpSubcommand extends AbstractSubcommand
 		else
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_HELP_INVALID_COMMAND).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_INVALID);
+			ctx.messageBuilder().sounds().play(sender, SoundId.COMMAND_INVALID);
 		}
 	}
 
@@ -127,7 +126,7 @@ final class HelpSubcommand extends AbstractSubcommand
 	private void sendCommandInvalidMessage(final CommandSender sender)
 	{
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_HELP_INVALID_COMMAND).send();
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_INVALID);
+		ctx.messageBuilder().sounds().play(sender, SoundId.COMMAND_INVALID);
 		displayUsageAll(sender);
 	}
 

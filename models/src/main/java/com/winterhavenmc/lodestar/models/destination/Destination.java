@@ -17,7 +17,8 @@
 
 package com.winterhavenmc.lodestar.models.destination;
 
-import com.winterhavenmc.library.messagebuilder.pipeline.adapters.displayname.DisplayNameable;
+import com.winterhavenmc.library.messagebuilder.core.ports.pipeline.accessors.displayname.DisplayNameable;
+
 
 /**
  * Represents an immutable location and a corresponding display name. A location is decomposed into validated,

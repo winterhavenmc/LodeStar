@@ -15,42 +15,47 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.teleport;
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
+import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
-import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import org.bukkit.entity.Player;
 
 
-final class SpawnTeleporter extends AbstractTeleporter implements Teleporter
+final class DestinationTeleporter extends AbstractTeleporter implements Teleporter
 {
 	/**
 	 * Class constructor
 	 *
 	 * @param teleportExecutor the teleport executor
 	 */
-	SpawnTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
+	DestinationTeleporter(final LodeStarPluginController.TeleporterContextContainer ctx, final TeleportExecutor teleportExecutor)
 	{
 		super(ctx, teleportExecutor);
 	}
 
 
 	/**
-	 * Begin teleport to world spawn destination
+	 * Begin teleport to destination determined by LodeStar item key
 	 *
 	 * @param player the player to teleport
 	 */
 	@Override
 	public void initiate(final Player player)
 	{
-		switch (getSpawnDestination(player))
+		// get item key from player item in main hand
+		final String key = ctx.lodeStarUtility().getDestinationKey(player.getInventory().getItemInMainHand());
+
+		// execute teleport or send invalid destination message
+		Destination destination = ctx.datastore().destinations().get(key);
+
+		switch (destination)
 		{
-			case ValidDestination validDestination -> execute(player, validDestination, MessageId.EVENT_TELEPORT_WARMUP_SPAWN);
-			case InvalidDestination ignored -> sendInvalidDestinationMessage(player,
-					ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn"));
+			case ValidDestination validDestination -> execute(player, validDestination, MessageId.EVENT_TELEPORT_WARMUP_DESTINATION);
+			case InvalidDestination ignored -> sendInvalidDestinationMessage(player, key);
 		}
 	}
 

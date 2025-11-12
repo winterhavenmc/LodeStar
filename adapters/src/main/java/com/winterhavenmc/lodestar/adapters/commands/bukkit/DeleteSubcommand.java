@@ -22,7 +22,6 @@ import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -71,7 +70,6 @@ final class DeleteSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DELETE_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -79,7 +77,6 @@ final class DeleteSubcommand extends AbstractSubcommand
 		if (args.size() < getMinArgs())
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}
@@ -90,7 +87,6 @@ final class DeleteSubcommand extends AbstractSubcommand
 		// test that destination name is not reserved name
 		if (ctx.lodeStarUtility().isRerservedName(destinationKey))
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_DELETE_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
@@ -98,14 +94,12 @@ final class DeleteSubcommand extends AbstractSubcommand
 		// if delete method returns valid destination, delete was successful
 		else if (ctx.datastore().destinations().delete(destinationKey) instanceof ValidDestination)
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_DELETE);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_DELETE)
 					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();
 		}
 		else
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, destinationKey)
 					.send();

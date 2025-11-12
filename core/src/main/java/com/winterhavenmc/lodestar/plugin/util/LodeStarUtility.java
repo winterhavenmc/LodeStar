@@ -18,14 +18,15 @@
 package com.winterhavenmc.lodestar.plugin.util;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
-import com.winterhavenmc.library.messagebuilder.keys.ConstantKey;
-import com.winterhavenmc.library.messagebuilder.keys.ItemKey;
-import com.winterhavenmc.library.messagebuilder.keys.ValidConstantKey;
-import com.winterhavenmc.library.messagebuilder.keys.ValidItemKey;
-import com.winterhavenmc.library.messagebuilder.model.language.InvalidItemRecord;
-import com.winterhavenmc.library.messagebuilder.model.language.InvalidRecordReason;
-import com.winterhavenmc.library.messagebuilder.model.language.ItemRecord;
-import com.winterhavenmc.library.messagebuilder.model.language.ValidItemRecord;
+import com.winterhavenmc.library.messagebuilder.models.keys.ConstantKey;
+import com.winterhavenmc.library.messagebuilder.models.keys.ItemKey;
+import com.winterhavenmc.library.messagebuilder.models.keys.ValidConstantKey;
+import com.winterhavenmc.library.messagebuilder.models.keys.ValidItemKey;
+import com.winterhavenmc.library.messagebuilder.models.language.InvalidItemRecord;
+import com.winterhavenmc.library.messagebuilder.models.language.InvalidRecordReason;
+import com.winterhavenmc.library.messagebuilder.models.language.ItemRecord;
+import com.winterhavenmc.library.messagebuilder.models.language.ValidItemRecord;
+
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 
@@ -90,7 +91,7 @@ public final class LodeStarUtility
 		ValidItemKey validItemKey = ItemKey.of("LODESTAR").isValid().orElseThrow();
 		Map<String, String> replacements = Collections.singletonMap("DESTINATION", destinationName);
 
-		Optional<ItemStack> itemStack = messageBuilder.itemForge().createItem(validItemKey, quantity, replacements);
+		Optional<ItemStack> itemStack = messageBuilder.items().createItem(validItemKey, quantity, replacements);
 		if (itemStack.isPresent())
 		{
 			ItemStack returnItem = itemStack.get();
@@ -239,7 +240,7 @@ public final class LodeStarUtility
 		ItemKey itemKey = ItemKey.of(key);
 		if (itemKey instanceof ValidItemKey validItemKey)
 		{
-			return messageBuilder.items().getItemRecord(validItemKey);
+			return messageBuilder.items().getRecord(validItemKey);
 		}
 		else
 		{

@@ -17,6 +17,8 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
+import com.winterhavenmc.library.messagebuilder.adapters.resources.configuration.BukkitConfigRepository;
+import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.*;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
@@ -33,6 +35,8 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteMessage.datastoreName;
+
 
 public class SqliteConnectionProvider implements ConnectionProvider
 {
@@ -40,6 +44,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	private final Server server;
 	private final Logger logger;
 	private final String dataFilePath;
+	private final ConfigRepository configRepository;
 	private Connection connection;
 	private boolean initialized;
 	private DestinationRepository destinationRepository;
@@ -55,6 +60,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		this.logger = plugin.getLogger();
 		this.server = plugin.getServer();
 		this.dataFilePath = plugin.getDataFolder() + File.separator + "destinations.db";
+		this.configRepository = BukkitConfigRepository.create(plugin);
 	}
 
 
@@ -84,7 +90,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		// if data store is already initialized, do nothing and return
 		if (initialized)
 		{
-			logger.info(SqliteMessage.DATASTORE_INITIALIZED_ERROR.getDefaultMessage());
+			logger.info(SqliteMessage.DATASTORE_INITIALIZED_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			return;
 		}
 
@@ -107,10 +113,10 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		initialized = true;
 
 		// instantiate datastore adapters
-		this.destinationRepository = new SqliteDestinationRepository(plugin, connection);
+		this.destinationRepository = new SqliteDestinationRepository(plugin, connection, configRepository);
 
 		// output log message
-		logger.info(SqliteMessage.DATASTORE_INITIALIZED_NOTICE.getDefaultMessage());
+		logger.info(SqliteMessage.DATASTORE_INITIALIZED_NOTICE.getLocalizedMessage(configRepository.locale(), datastoreName));
 	}
 
 
@@ -123,12 +129,12 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		try
 		{
 			connection.close();
-			logger.info(SqliteMessage.DATASTORE_CLOSED_NOTICE.getDefaultMessage());
+			logger.info(SqliteMessage.DATASTORE_CLOSED_NOTICE.getLocalizedMessage(configRepository.locale(), datastoreName));
 		}
 		catch (Exception e)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.DATASTORE_CLOSE_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.DATASTORE_CLOSE_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getMessage());
 		}
 
@@ -222,7 +228,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		}
 		catch (final SQLException e)
 		{
-			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 
@@ -272,7 +278,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		}
 		catch (final SQLException e)
 		{
-			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 

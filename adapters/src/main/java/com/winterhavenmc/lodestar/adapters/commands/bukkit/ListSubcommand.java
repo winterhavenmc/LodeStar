@@ -21,9 +21,9 @@ import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
+
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -49,14 +49,12 @@ final class ListSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_LIST_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
 		if (args.size() > getMaxArgs())
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_OVER).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}

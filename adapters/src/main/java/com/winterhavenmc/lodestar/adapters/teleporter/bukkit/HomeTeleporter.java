@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.teleport;
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
@@ -82,7 +82,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 		else
 		{
 			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_FAIL_NO_BEDSPAWN).send();
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_CANCELLED);
 		}
 	}
 

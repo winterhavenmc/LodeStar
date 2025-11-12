@@ -15,11 +15,12 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.teleport;
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
@@ -29,7 +30,7 @@ import org.bukkit.entity.Player;
 /**
  * Class that manages player teleportation, including warmup and cooldown.
  */
-public final class TeleportHandler
+public final class BukkitTeleportHandler implements TeleportHandler
 {
 	private final WarmupMap warmupMap;
 	private final CooldownMap cooldownMap;
@@ -39,10 +40,27 @@ public final class TeleportHandler
 	private final LodeStarPluginController.TeleporterContextContainer ctx;
 
 
+	public BukkitTeleportHandler()
+	{
+		warmupMap = null;
+		cooldownMap = null;
+		teleportExecutor = null;
+		messageBuilder = null;
+		lodeStarUtility = null;
+		ctx = null;
+	}
+
+
+	public BukkitTeleportHandler init(LodeStarPluginController.TeleporterContextContainer ctx)
+	{
+		return new BukkitTeleportHandler( ctx);
+	}
+
+
 	/**
 	 * Class constructor
 	 */
-	public TeleportHandler(final LodeStarPluginController.TeleporterContextContainer ctx)
+	private BukkitTeleportHandler(final LodeStarPluginController.TeleporterContextContainer ctx)
 	{
 		this.ctx = ctx;
 		this.warmupMap = new WarmupMap();
@@ -58,7 +76,7 @@ public final class TeleportHandler
 	 *
 	 * @param player the player being teleported
 	 */
-	public void initiateTeleport(final Player player)
+	@Override public void initiateTeleport(final Player player)
 	{
 		// if player is warming up, do nothing and return
 		if (isWarmingUp(player))
@@ -97,7 +115,7 @@ public final class TeleportHandler
 	 *
 	 * @param player the player to cancel teleport
 	 */
-	public void cancelTeleport(final Player player)
+	@Override public void cancelTeleport(final Player player)
 	{
 		// if player is in warmup hashmap, cancel delayed teleport task and remove player from warmup hashmap
 		if (warmupMap.containsPlayer(player))
@@ -120,7 +138,7 @@ public final class TeleportHandler
 	 * @param player the player to test if in warmup map
 	 * @return {@code true} if player is in warmup map, {@code false} if not
 	 */
-	public boolean isWarmingUp(final Player player)
+	@Override public boolean isWarmingUp(final Player player)
 	{
 		return warmupMap.isWarmingUp(player);
 	}
@@ -131,7 +149,7 @@ public final class TeleportHandler
 	 *
 	 * @param player the player to remove from the warmup map
 	 */
-	public void removeWarmingUpPlayer(final Player player)
+	@Override public void removeWarmingUpPlayer(final Player player)
 	{
 		warmupMap.removePlayer(player);
 	}
@@ -142,7 +160,7 @@ public final class TeleportHandler
 	 *
 	 * @param player the player being inserted into the cooldown map
 	 */
-	void startPlayerCooldown(final Player player)
+	@Override public void startPlayerCooldown(final Player player)
 	{
 		cooldownMap.startPlayerCooldown(player);
 	}
@@ -153,7 +171,7 @@ public final class TeleportHandler
 	 *
 	 * @param player the player to be removed from the cooldown map
 	 */
-	public void cancelPlayerCooldown(final Player player)
+	@Override public void cancelPlayerCooldown(final Player player)
 	{
 		cooldownMap.removePlayer(player);
 	}
@@ -165,7 +183,7 @@ public final class TeleportHandler
 	 * @param player the player to check
 	 * @return true if player is currently in the cooldown map, false if not
 	 */
-	boolean isCoolingDown(final Player player)
+	@Override public boolean isCoolingDown(final Player player)
 	{
 		return cooldownMap.isCoolingDown(player);
 	}

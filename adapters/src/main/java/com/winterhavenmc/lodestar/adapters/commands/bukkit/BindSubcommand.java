@@ -21,7 +21,6 @@ import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -86,7 +85,6 @@ final class BindSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_BIND_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -94,7 +92,6 @@ final class BindSubcommand extends AbstractSubcommand
 		if (args.size() < getMinArgs())
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}
@@ -110,7 +107,6 @@ final class BindSubcommand extends AbstractSubcommand
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_DESTINATION)
 					.setMacro(Macro.DESTINATION, suppliedName)
 					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -120,7 +116,6 @@ final class BindSubcommand extends AbstractSubcommand
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_INVALID_MATERIAL)
 					.setMacro(Macro.DESTINATION, suppliedName)
 					.send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -136,10 +131,6 @@ final class BindSubcommand extends AbstractSubcommand
 				.setMacro(Macro.ITEM, player.getInventory().getItemInMainHand())
 				.setMacro(Macro.DESTINATION, formattedName)
 				.send();
-
-		// play sound effect
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_BIND);
-
 		return true;
 	}
 

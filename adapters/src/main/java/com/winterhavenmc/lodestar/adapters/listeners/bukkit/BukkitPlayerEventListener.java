@@ -17,10 +17,9 @@
 
 package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
-import com.winterhavenmc.library.messagebuilder.ItemForge;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
-import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
@@ -124,7 +123,7 @@ public final class BukkitPlayerEventListener implements PlayerEventListener
 		// if crafting inventory contains LodeStar item, set result item to null
 		for (ItemStack itemStack : event.getInventory())
 		{
-			if (ItemForge.isCustomItem(itemStack))
+			if (ctx.messageBuilder().items().isItem(itemStack))
 			{
 				event.getInventory().setResult(null);
 			}
@@ -151,7 +150,7 @@ public final class BukkitPlayerEventListener implements PlayerEventListener
 			{
 				teleportHandler.cancelTeleport(player);
 				ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_DAMAGE).send();
-				ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
+				ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_CANCELLED);
 			}
 		}
 	}
@@ -179,7 +178,7 @@ public final class BukkitPlayerEventListener implements PlayerEventListener
 		{
 			teleportHandler.cancelTeleport(player);
 			ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_MOVEMENT).send();
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_CANCELLED);
 		}
 	}
 

@@ -23,7 +23,6 @@ import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -80,7 +79,6 @@ final class SetSubcommand extends AbstractSubcommand
 		if (!sender.hasPermission(permissionNode))
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_PERMISSION_DENIED).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
 
@@ -88,7 +86,6 @@ final class SetSubcommand extends AbstractSubcommand
 		if (args.size() < getMinArgs())
 		{
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_ARGS_COUNT_UNDER).send();
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			displayUsage(sender);
 			return true;
 		}
@@ -104,7 +101,6 @@ final class SetSubcommand extends AbstractSubcommand
 		// check if validDestination name is a reserved name
 		if (ctx.lodeStarUtility().isRerservedName(destinationName))
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
 					.setMacro(Macro.DESTINATION, destinationName)
 					.send();
@@ -117,7 +113,6 @@ final class SetSubcommand extends AbstractSubcommand
 		// check for overwrite permission if validDestination already exists TODO: shouldn't this check negate permission?
 		if (destination instanceof ValidDestination && sender.hasPermission(permissionNode + ".overwrite"))
 		{
-			ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 			ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_OVERWRITE_PERMISSION_DENIED)
 					.setMacro(Macro.DESTINATION, destination)
 					.send();
@@ -153,7 +148,6 @@ final class SetSubcommand extends AbstractSubcommand
 	private void sendSuccessMessage(CommandSender sender, StoredDestination storedDestination)
 	{
 		ctx.datastore().destinations().save(Collections.singleton(storedDestination));
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_SUCCESS_SET);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_SUCCESS_SET)
 				.setMacro(Macro.DESTINATION, storedDestination)
 				.send();
@@ -162,7 +156,6 @@ final class SetSubcommand extends AbstractSubcommand
 
 	private void sendFailHomeMessage(CommandSender sender, HomeDestination homeDestination)
 	{
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
 				.setMacro(Macro.DESTINATION, homeDestination)
 				.send();
@@ -171,7 +164,6 @@ final class SetSubcommand extends AbstractSubcommand
 
 	private void sendFailSpawnMessage(CommandSender sender, SpawnDestination spawnDestination)
 	{
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_RESERVED)
 				.setMacro(Macro.DESTINATION, spawnDestination)
 				.send();
@@ -180,7 +172,6 @@ final class SetSubcommand extends AbstractSubcommand
 
 	private void sendFailInvalidMessage(CommandSender sender, InvalidDestination invalidDestination)
 	{
-		ctx.soundConfig().playSound(sender, SoundId.COMMAND_FAIL);
 		ctx.messageBuilder().compose(sender, MessageId.COMMAND_FAIL_SET_REASON)
 				.setMacro(Macro.DESTINATION, invalidDestination.displayName())
 				.setMacro(Macro.FAIL_REASON, invalidDestination.reason())

@@ -18,13 +18,12 @@
 package com.winterhavenmc.lodestar.plugin.ports.listeners;
 
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
-import com.winterhavenmc.lodestar.plugin.teleport.TeleportHandler;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 

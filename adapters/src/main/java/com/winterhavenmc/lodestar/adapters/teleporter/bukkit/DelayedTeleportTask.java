@@ -15,10 +15,11 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.teleport;
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.plugin.LodeStarPluginController;
 import com.winterhavenmc.lodestar.models.destination.SpawnDestination;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
 import com.winterhavenmc.lodestar.plugin.util.MessageId;
 import com.winterhavenmc.lodestar.plugin.util.SoundId;
@@ -29,8 +30,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.Objects;
 
 
 /**
@@ -96,7 +95,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 			// if validDestination is spawn, get spawn location from world manager
 			if (validDestination instanceof SpawnDestination)
 			{
-				location = ctx.worldManager().getSpawnLocation(Objects.requireNonNull(location.getWorld()));
+				location = ctx.messageBuilder().worlds().spawnLocation(player.getWorld().getUID()).orElse(player.getRespawnLocation());
 			}
 
 			// if remove-from-inventory is configured on-success, take one LodeStar item from inventory now
@@ -120,13 +119,13 @@ final class DelayedTeleportTask extends BukkitRunnable
 				if (!wasRemoved)
 				{
 					ctx.messageBuilder().compose(player, MessageId.EVENT_TELEPORT_CANCELLED_NO_ITEM).send();
-					ctx.soundConfig().playSound(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
+					ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_CANCELLED_NO_ITEM);
 					teleportHandler.startPlayerCooldown(player);
 					return;
 				}
 			}
 			// play pre-teleport sound if sound effects are enabled
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_SUCCESS_DEPARTURE);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_SUCCESS_DEPARTURE);
 
 			// teleport player to location
 			player.teleport(location);
@@ -146,7 +145,7 @@ final class DelayedTeleportTask extends BukkitRunnable
 						.send();
 			}
 			// play post-teleport sound if sound effects are enabled
-			ctx.soundConfig().playSound(player, SoundId.TELEPORT_SUCCESS_ARRIVAL);
+			ctx.messageBuilder().sounds().play(player, SoundId.TELEPORT_SUCCESS_ARRIVAL);
 
 			// if lightning is enabled in config, strike lightning at teleport validDestination
 			if (ctx.plugin().getConfig().getBoolean("lightning"))

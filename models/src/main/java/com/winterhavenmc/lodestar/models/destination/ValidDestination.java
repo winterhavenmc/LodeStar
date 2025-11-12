@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.models.destination;
 
-import com.winterhavenmc.library.messagebuilder.pipeline.adapters.displayname.DisplayNameable;
+import com.winterhavenmc.library.messagebuilder.core.ports.pipeline.accessors.displayname.DisplayNameable;
 
 import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
