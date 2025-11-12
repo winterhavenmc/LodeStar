@@ -25,12 +25,10 @@ import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerInteract
 import com.winterhavenmc.lodestar.adapters.teleporter.bukkit.BukkitTeleportHandler;
 
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
 import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
 
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
 import com.winterhavenmc.lodestar.plugin.util.MetricsHandler;
-import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
