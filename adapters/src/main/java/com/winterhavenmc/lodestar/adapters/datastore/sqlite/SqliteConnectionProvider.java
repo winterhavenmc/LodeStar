@@ -20,7 +20,6 @@ package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 import com.winterhavenmc.library.messagebuilder.adapters.resources.configuration.BukkitConfigRepository;
 import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.models.location.*;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.DestinationRepository;
 
