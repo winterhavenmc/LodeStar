@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
+import com.winterhavenmc.lodestar.models.location.ConfirmedLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
 import com.winterhavenmc.lodestar.plugin.util.Macro;
@@ -128,7 +128,7 @@ final class SetSubcommand extends AbstractSubcommand
 //		}
 
 		// create validDestination object
-		if (ImmutableLocation.of(location) instanceof ValidLocation validLocation)
+		if (ConfirmedLocation.of(location) instanceof ValidLocation validLocation)
 		{
 			Destination newDestination = StoredDestination.of(destinationName, validLocation);
 

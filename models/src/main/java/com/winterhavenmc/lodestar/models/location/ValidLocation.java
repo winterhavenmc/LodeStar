@@ -38,7 +38,7 @@ public record ValidLocation(String worldName,
                             double y,
                             double z,
                             float yaw,
-                            float pitch) implements ImmutableLocation, Locatable
+                            float pitch) implements ConfirmedLocation, Locatable
 {
 	/**
 	 * Return the world for this location.
@@ -53,7 +53,7 @@ public record ValidLocation(String worldName,
 
 
 	/**
-	 * Return a Bukkit {@link Location} represented by this {@link ImmutableLocation}.
+	 * Return a Bukkit {@link Location} represented by this {@link ConfirmedLocation}.
 	 *
 	 * @return instance of a Bukkit {@link Location}
 	 */

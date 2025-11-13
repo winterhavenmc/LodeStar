@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
+import com.winterhavenmc.lodestar.models.location.ConfirmedLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
@@ -50,7 +50,7 @@ final class HomeTeleporter extends AbstractTeleporter implements Teleporter
 	public void initiate(final Player player)
 	{
 		if (getHomeDestination(player) instanceof ValidDestination validDestination
-				&& ImmutableLocation.of(player.getRespawnLocation()) instanceof ValidLocation validLocation)
+				&& ConfirmedLocation.of(player.getRespawnLocation()) instanceof ValidLocation validLocation)
 		{
 			switch (TeleportDestination.of(validDestination, validLocation))
 			{

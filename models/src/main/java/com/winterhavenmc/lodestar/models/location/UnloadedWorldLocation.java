@@ -28,4 +28,5 @@ public record UnloadedWorldLocation(String worldName,
                                     double y,
                                     double z,
                                     float yaw,
-                                    float pitch) implements ImmutableLocation { }
+                                    float pitch) implements ConfirmedLocation
+{ }

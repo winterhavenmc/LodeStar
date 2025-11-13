@@ -53,7 +53,7 @@ public record StoredDestination(String displayName, ValidLocation location) impl
 	{
 		if (displayName == null) return new InvalidDestination("∅", "The display name was null.");
 		else if (displayName.isBlank()) return new InvalidDestination("⬚", "The display name was blank.");
-		else return switch (ImmutableLocation.of(worldName, worldUid, x, y, z, yaw, pitch))
+		else return switch (ConfirmedLocation.of(worldName, worldUid, x, y, z, yaw, pitch))
 		{
 			case InvalidLocation ignored -> new InvalidDestination(displayName, "The location was invalid.");
 			case NoWorldLocation ignored -> new InvalidDestination(displayName, "The location had an invalid world.");
