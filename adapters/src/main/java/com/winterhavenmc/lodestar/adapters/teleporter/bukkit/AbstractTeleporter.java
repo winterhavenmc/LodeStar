@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.models.location.ImmutableLocation;
+import com.winterhavenmc.lodestar.models.location.ConfirmedLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
 import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
 import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
@@ -108,7 +108,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		}
 
 		// get checked location
-		ImmutableLocation immutableLocation = ImmutableLocation.of(location);
+		ConfirmedLocation confirmedLocation = ConfirmedLocation.of(location);
 
 		// get destination name
 		String destinationName = ctx.messageBuilder().constants().getString(LodeStarUtility.SPAWN_KEY).orElse("Spawn");
@@ -117,7 +117,7 @@ abstract non-sealed class AbstractTeleporter implements Teleporter
 		Destination spawnDestination = SpawnDestination.of(destinationName);
 
 		// return destination for player spawn
-		return (spawnDestination instanceof ValidDestination validDestination && immutableLocation instanceof ValidLocation validLocation)
+		return (spawnDestination instanceof ValidDestination validDestination && confirmedLocation instanceof ValidLocation validLocation)
 				? TeleportDestination.of(validDestination, validLocation)
 				: new InvalidDestination(destinationName, "Invalid destination.");
 	}

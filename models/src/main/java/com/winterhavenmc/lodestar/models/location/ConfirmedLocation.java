@@ -31,15 +31,15 @@ import java.util.UUID;
  * However, objects that implement this interface are immutable, and may still be used to create or update records
  * in the datastore, or used to display messages.
  */
-public sealed interface ImmutableLocation permits ValidLocation, InvalidLocation, NoWorldLocation, UnloadedWorldLocation
+public sealed interface ConfirmedLocation permits ValidLocation, InvalidLocation, NoWorldLocation, UnloadedWorldLocation
 {
 	/**
 	 * Static factory method to create an {@code ImmutableLocaltion}
 	 *
 	 * @param location a Bukkit {@link Location}
-	 * @return an instance of an {@code ImmutableLocation} of the appropriate subtype
+	 * @return an instance of an {@code ConfirmedLocation} of the appropriate subtype
 	 */
-	static ImmutableLocation of(final Location location)
+	static ConfirmedLocation of(final Location location)
 	{
 		if (location == null) return new InvalidLocation("The location was null.");
 		else if (location.getWorld() == null) return new NoWorldLocation("∅", new UUID(0, 0),
@@ -54,9 +54,9 @@ public sealed interface ImmutableLocation permits ValidLocation, InvalidLocation
 	/**
 	 * Static factory method to create an {@code ImmutableLocaltion}
 	 *
-	 * @return an instance of an {@code ImmutableLocation} of the appropriate subtype
+	 * @return an instance of an {@code ConfirmedLocation} of the appropriate subtype
 	 */
-	static ImmutableLocation of(String worldName, UUID worldUid, double x, double y, double z, float yaw, float pitch)
+	static ConfirmedLocation of(String worldName, UUID worldUid, double x, double y, double z, float yaw, float pitch)
 	{
 		String checkedName = (worldName != null) ? worldName : "∅";
 		checkedName = (!checkedName.isBlank()) ? checkedName : "⬚";

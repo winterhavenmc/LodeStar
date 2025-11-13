@@ -22,4 +22,5 @@ package com.winterhavenmc.lodestar.models.location;
  *
  * @param reason the reason a valid location could not be derived
  */
-public record InvalidLocation(String reason) implements ImmutableLocation { }
+public record InvalidLocation(String reason) implements ConfirmedLocation
+{ }
