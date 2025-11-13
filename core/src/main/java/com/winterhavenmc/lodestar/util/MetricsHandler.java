@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.util;
+package com.winterhavenmc.lodestar.util;
 
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;

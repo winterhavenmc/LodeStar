@@ -18,11 +18,11 @@
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.SpawnDestination;
-import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
-import com.winterhavenmc.lodestar.plugin.util.Macro;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
+import com.winterhavenmc.lodestar.util.TeleportCtx;
+import com.winterhavenmc.lodestar.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.util.Macro;
+import com.winterhavenmc.lodestar.util.MessageId;
+import com.winterhavenmc.lodestar.util.SoundId;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 
 import org.bukkit.Location;

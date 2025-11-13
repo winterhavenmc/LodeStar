@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin;
+package com.winterhavenmc.lodestar;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 import com.winterhavenmc.lodestar.adapters.commands.bukkit.BukkitCommandManager;
@@ -24,11 +24,11 @@ import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerEventLis
 import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerInteractEventListener;
 import com.winterhavenmc.lodestar.adapters.teleporter.bukkit.BukkitTeleportHandler;
 
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.ports.teleporter.TeleportHandler;
 
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
-import com.winterhavenmc.lodestar.plugin.util.MetricsHandler;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.MetricsHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 

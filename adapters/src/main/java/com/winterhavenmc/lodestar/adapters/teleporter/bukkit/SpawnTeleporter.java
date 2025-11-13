@@ -19,9 +19,9 @@ package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
-import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
+import com.winterhavenmc.lodestar.util.TeleportCtx;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.MessageId;
 import org.bukkit.entity.Player;
 
 

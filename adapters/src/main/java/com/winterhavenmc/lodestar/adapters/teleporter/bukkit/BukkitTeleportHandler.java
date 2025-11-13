@@ -19,12 +19,12 @@ package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
-import com.winterhavenmc.lodestar.plugin.util.Macro;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
+import com.winterhavenmc.lodestar.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.util.TeleportCtx;
+import com.winterhavenmc.lodestar.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.Macro;
+import com.winterhavenmc.lodestar.util.MessageId;
 import org.bukkit.entity.Player;
 
 import org.bukkit.plugin.java.JavaPlugin;

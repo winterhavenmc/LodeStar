@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Tim Savage.
+ * Copyright (c) 2022-2025 Tim Savage.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,26 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.util;
+package com.winterhavenmc.lodestar.util;
 
-import com.winterhavenmc.library.messagebuilder.MessageBuilder;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import org.bukkit.plugin.java.JavaPlugin;
-
-public record CommandCtx(JavaPlugin plugin, MessageBuilder messageBuilder,
-                         ConnectionProvider datastore, LodeStarUtility lodeStarUtility)
+/**
+ * Enum that contains entries for configured sounds
+ */
+public enum SoundId
 {
+	COMMAND_FAIL,
+	COMMAND_INVALID,
+	COMMAND_SUCCESS_GIVE_SENDER,
+	COMMAND_SUCCESS_GIVE_TARGET,
+	COMMAND_SUCCESS_DELETE,
+	COMMAND_SUCCESS_DESTROY,
+	COMMAND_SUCCESS_SET,
+	COMMAND_SUCCESS_BIND,
+	TELEPORT_DENIED_PERMISSION,
+	TELEPORT_DENIED_WORLD_DISABLED,
+	TELEPORT_CANCELLED,
+	TELEPORT_CANCELLED_NO_ITEM,
+	TELEPORT_WARMUP,
+	TELEPORT_SUCCESS_DEPARTURE,
+	TELEPORT_SUCCESS_ARRIVAL,
 }

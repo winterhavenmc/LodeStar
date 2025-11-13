@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.util;
+package com.winterhavenmc.lodestar.util;
 
 /**
  * Enum with entries for custom message string replacement placeholders

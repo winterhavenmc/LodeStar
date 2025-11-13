@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.ports.datastore;
+package com.winterhavenmc.lodestar.ports.datastore;
 
 
 public interface ConnectionProvider

@@ -1,5 +1,5 @@
 name: 'LodeStar'
-main: com.winterhavenmc.lodestar.plugin.Bootstrap
+main: com.winterhavenmc.lodestar.Bootstrap
 author: '${project.author}'
 version: '${project.version}'
 website: '${project.url}'

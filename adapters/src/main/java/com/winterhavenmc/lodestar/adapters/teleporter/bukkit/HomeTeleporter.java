@@ -20,10 +20,10 @@ package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ConfirmedLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
-import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
+import com.winterhavenmc.lodestar.util.TeleportCtx;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.MessageId;
+import com.winterhavenmc.lodestar.util.SoundId;
 
 import org.bukkit.entity.Player;
 

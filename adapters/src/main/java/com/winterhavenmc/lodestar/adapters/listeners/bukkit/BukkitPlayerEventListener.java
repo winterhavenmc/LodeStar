@@ -18,13 +18,13 @@
 package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
-import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
-import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerEventListener;
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
+import com.winterhavenmc.lodestar.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.TeleportCtx;
+import com.winterhavenmc.lodestar.ports.listeners.PlayerEventListener;
+import com.winterhavenmc.lodestar.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.util.MessageId;
+import com.winterhavenmc.lodestar.util.SoundId;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

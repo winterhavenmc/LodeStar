@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
+import com.winterhavenmc.lodestar.util.CommandCtx;
 
 
 enum SubcommandType

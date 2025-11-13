@@ -15,13 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.util;
+package com.winterhavenmc.lodestar.ports.commands;
 
-import com.winterhavenmc.library.messagebuilder.MessageBuilder;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public record TeleportCtx(JavaPlugin plugin, MessageBuilder messageBuilder,
-                          ConnectionProvider datastore, LodeStarUtility lodeStarUtility)
-{
-}
+public interface CommandDispatcher { }
