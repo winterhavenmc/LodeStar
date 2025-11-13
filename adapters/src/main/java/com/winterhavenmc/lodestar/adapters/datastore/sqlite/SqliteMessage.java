@@ -17,6 +17,11 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 public enum SqliteMessage
 {
 	DATASTORE_INITIALIZED_NOTICE("SQLite datastore initialized."),
@@ -34,6 +39,7 @@ public enum SqliteMessage
 	;
 
 	private final String defaultMessage;
+	final static String datastoreName = "SQLite";
 
 
 	SqliteMessage(final String defaultMessage)
@@ -44,12 +50,43 @@ public enum SqliteMessage
 
 	public String getDefaultMessage()
 	{
-		return this.defaultMessage;
+		return defaultMessage;
 	}
 
 
-	public String getLocalizedMessage()
+	public String getLocalizedMessage(final Locale locale)
+	{
+		try
+		{
+			final ResourceBundle bundle = ResourceBundle.getBundle(getClass().getSimpleName(), locale);
+			return bundle.getString(name());
+		}
+		catch (MissingResourceException exception)
+		{
+			return this.defaultMessage;
+		}
+	}
+
+
+	public String getLocalizedMessage(final Locale locale, final Object... objects)
+	{
+		try
+		{
+			final ResourceBundle bundle = ResourceBundle.getBundle(getClass().getSimpleName(), locale);
+			final String pattern = bundle.getString(name());
+			return MessageFormat.format(pattern, objects);
+		}
+		catch (MissingResourceException exception)
+		{
+			return MessageFormat.format(this.defaultMessage, objects);
+		}
+	}
+
+
+	@Override
+	public String toString()
 	{
 		return this.defaultMessage;
 	}
+
 }

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.winterhavenmc.lodestar</groupId>
 		<artifactId>lodestar-parent</artifactId>
-		<version>1.21.1-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>core</artifactId>
@@ -20,46 +20,11 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- External -->
-		<!-- spigot-api -->
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-		</dependency>
-
-		<!-- JetBrains Annotations -->
-		<dependency>
-			<groupId>org.jetbrains</groupId>
-			<artifactId>annotations</artifactId>
-		</dependency>
-
-		<!-- MessageBuilderLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>message-builder-lib</artifactId>
-			<version>1.21.0-SNAPSHOT</version>
-		</dependency>
-
-		<!-- SoundConfigLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>sound-config-lib</artifactId>
-			<version>1.21.0-SNAPSHOT</version>
-		</dependency>
-
-		<!-- WorldManagerLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>world-manager-lib</artifactId>
-			<version>1.21.0-SNAPSHOT</version>
-		</dependency>
-
+		<!-- external -->
 		<!-- bStats -->
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>3.1.0</version>
 		</dependency>
 	</dependencies>
-
 </project>

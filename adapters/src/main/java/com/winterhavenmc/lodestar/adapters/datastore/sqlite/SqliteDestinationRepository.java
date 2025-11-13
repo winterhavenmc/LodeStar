@@ -17,8 +17,10 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
+import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
+import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.DestinationRepository;
 
@@ -35,6 +37,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteMessage.datastoreName;
+
 
 final class SqliteDestinationRepository implements DestinationRepository
 {
@@ -42,6 +46,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 	private final Server server;
 	private final FileConfiguration config;
 	private final Connection connection;
+	private final ConfigRepository configRepository;
 	private final SqliteDestinationQueryExecutor queryExecutor = new SqliteDestinationQueryExecutor();
 
 
@@ -49,35 +54,36 @@ final class SqliteDestinationRepository implements DestinationRepository
 	 * Class constructor
 	 *
 	 */
-	SqliteDestinationRepository(final Plugin plugin, final Connection connection)
+	SqliteDestinationRepository(final Plugin plugin, final Connection connection, final ConfigRepository configRepository)
 	{
 		this.logger = plugin.getLogger();
 		this.server = plugin.getServer();
 		this.config = plugin.getConfig();
 		this.connection = connection;
+		this.configRepository = configRepository;
 	}
 
 
 	@Override
-	public int save(final Collection<ValidDestination> validDestinations)
+	public int save(final Collection<StoredDestination> storedDestinations)
 	{
 		// if destinations is null return zero record count
-		if (validDestinations == null)
+		if (storedDestinations == null)
 		{
 			return 0;
 		}
 
 		int count = 0;
 
-		for (ValidDestination validDestination : validDestinations)
+		for (StoredDestination storedDestination : storedDestinations)
 		{
 			try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("InsertDestination")))
 			{
-				count += queryExecutor.insertRecords(validDestination, preparedStatement);
+				count += queryExecutor.insertRecords(storedDestination, preparedStatement);
 			}
 			catch (SQLException sqlException)
 			{
-				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getDefaultMessage());
+				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 				logger.warning(sqlException.getLocalizedMessage());
 			}
 		}
@@ -135,7 +141,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 				}
 
 				// create Destination object
-				destination = Destination.of(Destination.Type.STORED, displayName, worldName, worldUid, x, y, z, yaw, pitch);
+				destination = StoredDestination.of(displayName, worldName, worldUid, x, y, z, yaw, pitch);
 			}
 		}
 		catch (SQLException sqlException)
@@ -172,7 +178,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (SQLException sqlException)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage());
+			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage(configRepository.locale()));
 			logger.warning(sqlException.getLocalizedMessage());
 		}
 
@@ -208,7 +214,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (Exception e)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 

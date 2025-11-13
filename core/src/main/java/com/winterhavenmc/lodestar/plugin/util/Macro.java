@@ -23,13 +23,14 @@ package com.winterhavenmc.lodestar.plugin.util;
 public enum Macro
 {
 	DESTINATION,
-	ITEM_QUANTITY,
-	TARGET_PLAYER,
+	WORLD,
+	ITEM,
+	PLAYER,
 	DURATION,
-	DESTINATION_WORLD,
 	PAGE_NUMBER,
 	PAGE_TOTAL,
 	ITEM_NUMBER,
-	DESTINATION_LOCATION,
 	FAIL_REASON,
+	SETTING,
+	URL,
 }

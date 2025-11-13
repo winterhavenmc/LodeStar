@@ -17,8 +17,9 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
+import com.winterhavenmc.library.messagebuilder.adapters.resources.configuration.BukkitConfigRepository;
+import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.models.location.*;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
 import com.winterhavenmc.lodestar.plugin.ports.datastore.DestinationRepository;
 
@@ -33,6 +34,8 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteMessage.datastoreName;
+
 
 public class SqliteConnectionProvider implements ConnectionProvider
 {
@@ -40,6 +43,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	private final Server server;
 	private final Logger logger;
 	private final String dataFilePath;
+	private final ConfigRepository configRepository;
 	private Connection connection;
 	private boolean initialized;
 	private DestinationRepository destinationRepository;
@@ -55,19 +59,48 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		this.logger = plugin.getLogger();
 		this.server = plugin.getServer();
 		this.dataFilePath = plugin.getDataFolder() + File.separator + "destinations.db";
+		this.configRepository = BukkitConfigRepository.create(plugin);
+
+		// initialize data store
+		try
+		{
+			this.initialize();
+		}
+		catch (Exception exception)
+		{
+			plugin.getLogger().severe("Could not initialize the datastore!");
+			plugin.getLogger().severe(exception.getLocalizedMessage());
+		}
+	}
+
+
+	public ConnectionProvider connect()
+	{
+		// initialize data store
+		try
+		{
+			this.initialize();
+		}
+		catch (Exception exception)
+		{
+			plugin.getLogger().severe("Could not initialize the datastore!");
+			plugin.getLogger().severe(exception.getLocalizedMessage());
+		}
+
+		// return initialized data store
+		return this;
 	}
 
 
 	/**
 	 * Initialize datastore
 	 */
-	@Override
-	public void connect() throws SQLException, ClassNotFoundException
+	private void initialize() throws SQLException, ClassNotFoundException
 	{
 		// if data store is already initialized, do nothing and return
 		if (initialized)
 		{
-			logger.info(SqliteMessage.DATASTORE_INITIALIZED_ERROR.getDefaultMessage());
+			logger.info(SqliteMessage.DATASTORE_INITIALIZED_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			return;
 		}
 
@@ -90,10 +123,10 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		initialized = true;
 
 		// instantiate datastore adapters
-		this.destinationRepository = new SqliteDestinationRepository(plugin, connection);
+		this.destinationRepository = new SqliteDestinationRepository(plugin, connection, configRepository);
 
 		// output log message
-		logger.info(SqliteMessage.DATASTORE_INITIALIZED_NOTICE.getDefaultMessage());
+		logger.info(SqliteMessage.DATASTORE_INITIALIZED_NOTICE.getLocalizedMessage(configRepository.locale(), datastoreName));
 	}
 
 
@@ -106,12 +139,12 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		try
 		{
 			connection.close();
-			logger.info(SqliteMessage.DATASTORE_CLOSED_NOTICE.getDefaultMessage());
+			logger.info(SqliteMessage.DATASTORE_CLOSED_NOTICE.getLocalizedMessage(configRepository.locale(), datastoreName));
 		}
 		catch (Exception e)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.DATASTORE_CLOSE_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.DATASTORE_CLOSE_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getMessage());
 		}
 
@@ -138,7 +171,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 			ResultSet resultSet = statement.executeQuery(SqliteQueries.getQuery("SelectDestinationTable"));
 			if (resultSet.next())
 			{
-				Collection<ValidDestination> existingRecords = getAll();
+				Collection<StoredDestination> existingRecords = getAll();
 				statement.executeUpdate(SqliteQueries.getQuery("DropDestinationTable"));
 				statement.executeUpdate(SqliteQueries.getQuery("CreateDestinationTable"));
 				count = destinationRepository.save(existingRecords);
@@ -154,7 +187,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	}
 
 
-	private Collection<ValidDestination> getAll()
+	private Collection<StoredDestination> getAll()
 	{
 		return (getSchemaVersion() == 0)
 				? getAll_V0()
@@ -162,9 +195,9 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	}
 
 
-	private Collection<ValidDestination> getAll_V0()
+	private Collection<StoredDestination> getAll_V0()
 	{
-		Collection<ValidDestination> returnList = new ArrayList<>();
+		Collection<StoredDestination> returnList = new ArrayList<>();
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("SelectAllRecords")))
 		{
@@ -195,17 +228,17 @@ public class SqliteConnectionProvider implements ConnectionProvider
 					worldUid = world.getUID();
 				}
 
-				Destination destination = Destination.of(Destination.Type.STORED, displayName, worldName, worldUid, x, y, z, yaw, pitch);
+				Destination destination = StoredDestination.of(displayName, worldName, worldUid, x, y, z, yaw, pitch);
 
-				if (destination instanceof ValidDestination validDestination)
+				if (destination instanceof StoredDestination storedDestination)
 				{
-					returnList.add(validDestination);
+					returnList.add(storedDestination);
 				}
 			}
 		}
 		catch (final SQLException e)
 		{
-			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 
@@ -213,9 +246,9 @@ public class SqliteConnectionProvider implements ConnectionProvider
 	}
 
 
-	private Collection<ValidDestination> getAll_V1()
+	private Collection<StoredDestination> getAll_V1()
 	{
-		Collection<ValidDestination> returnList = new ArrayList<>();
+		Collection<StoredDestination> returnList = new ArrayList<>();
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("SelectAllRecords")))
 		{
@@ -245,17 +278,17 @@ public class SqliteConnectionProvider implements ConnectionProvider
 					logger.warning("Stored destination has invalid world: " + worldName);
 				}
 
-				Destination destination = Destination.of(Destination.Type.STORED, displayName, worldName, worldUid, x, y, z, yaw, pitch);
+				Destination destination = StoredDestination.of(displayName, worldName, worldUid, x, y, z, yaw, pitch);
 
-				if (destination instanceof ValidDestination validDestination)
+				if (destination instanceof StoredDestination storedDestination)
 				{
-					returnList.add(validDestination);
+					returnList.add(storedDestination);
 				}
 			}
 		}
 		catch (final SQLException e)
 		{
-			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getDefaultMessage());
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 

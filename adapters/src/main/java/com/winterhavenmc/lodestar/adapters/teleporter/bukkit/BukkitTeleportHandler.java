@@ -1,0 +1,180 @@
+/*
+ * Copyright (c) 2022-2025 Tim Savage.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
+
+import com.winterhavenmc.library.messagebuilder.MessageBuilder;
+import com.winterhavenmc.lodestar.models.destination.*;
+import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
+import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.plugin.util.Macro;
+import com.winterhavenmc.lodestar.plugin.util.MessageId;
+import org.bukkit.entity.Player;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+
+/**
+ * Class that manages player teleportation, including warmup and cooldown.
+ */
+public final class BukkitTeleportHandler implements TeleportHandler
+{
+	private final WarmupMap warmupMap;
+	private final CooldownMap cooldownMap;
+	private final TeleportExecutor teleportExecutor;
+	private final MessageBuilder messageBuilder;
+	private final LodeStarUtility lodeStarUtility;
+	private final TeleportCtx ctx;
+
+
+	/**
+	 * Class constructor
+	 */
+	public BukkitTeleportHandler(final JavaPlugin plugin,
+	                             final MessageBuilder messageBuilder,
+	                             final ConnectionProvider connectionProvider,
+	                             final LodeStarUtility lodeStarUtility)
+	{
+		this.ctx = new TeleportCtx(plugin, messageBuilder, connectionProvider, lodeStarUtility);
+		this.warmupMap = new WarmupMap();
+		this.cooldownMap = new CooldownMap(this, ctx);
+		this.teleportExecutor = new TeleportExecutor(this, ctx, warmupMap);
+		this.messageBuilder = messageBuilder;
+		this.lodeStarUtility = lodeStarUtility;
+	}
+
+
+	/**
+	 * Start the player teleport
+	 *
+	 * @param player the player being teleported
+	 */
+	@Override public void initiateTeleport(final Player player)
+	{
+		// if player is warming up, do nothing and return
+		if (isWarmingUp(player))
+		{
+			return;
+		}
+
+		// if player cooldown has not expired, send player cooldown message and return
+		if (isCoolingDown(player))
+		{
+			messageBuilder.compose(player, MessageId.EVENT_TELEPORT_COOLDOWN)
+					.setMacro(Macro.DURATION, cooldownMap.getCooldownTimeRemaining(player))
+					.send();
+			return;
+		}
+
+		// get destination from player item
+		if (lodeStarUtility.getDestination(player.getInventory().getItemInMainHand()) instanceof ValidDestination validDestination)
+		{
+			Teleporter teleporter = switch (validDestination)
+			{
+				case HomeDestination ignored -> new HomeTeleporter(ctx, teleportExecutor);
+				case SpawnDestination ignored -> new SpawnTeleporter(ctx, teleportExecutor);
+				default -> new DestinationTeleporter(ctx, teleportExecutor);
+			};
+
+			// initiate teleport
+			teleporter.initiate(player);
+		}
+		//TODO: possible invalid destination message here; alternatively, put Invalid case in switch with NoOp teleporter returned
+	}
+
+
+	/**
+	 * Cancel pending teleport for player
+	 *
+	 * @param player the player to cancel teleport
+	 */
+	@Override public void cancelTeleport(final Player player)
+	{
+		// if player is in warmup hashmap, cancel delayed teleport task and remove player from warmup hashmap
+		if (warmupMap.containsPlayer(player))
+		{
+			// get delayed teleport task id
+			int taskId = warmupMap.getTaskId(player);
+
+			// cancel delayed teleport task
+			ctx.plugin().getServer().getScheduler().cancelTask(taskId);
+
+			// remove player from warmup hashmap
+			warmupMap.removePlayer(player);
+		}
+	}
+
+
+	/**
+	 * Test if player uuid is in warmup map
+	 *
+	 * @param player the player to test if in warmup map
+	 * @return {@code true} if player is in warmup map, {@code false} if not
+	 */
+	@Override public boolean isWarmingUp(final Player player)
+	{
+		return warmupMap.isWarmingUp(player);
+	}
+
+
+	/**
+	 * Remove player uuid from warmup map
+	 *
+	 * @param player the player to remove from the warmup map
+	 */
+	@Override public void removeWarmingUpPlayer(final Player player)
+	{
+		warmupMap.removePlayer(player);
+	}
+
+
+	/**
+	 * Insert player into cooldown map
+	 *
+	 * @param player the player being inserted into the cooldown map
+	 */
+	@Override public void startPlayerCooldown(final Player player)
+	{
+		cooldownMap.startPlayerCooldown(player);
+	}
+
+
+	/**
+	 * Remove player from cooldown map
+	 *
+	 * @param player the player to be removed from the cooldown map
+	 */
+	@Override public void cancelPlayerCooldown(final Player player)
+	{
+		cooldownMap.removePlayer(player);
+	}
+
+
+	/**
+	 * Test if a player is currently in the cooldown map
+	 *
+	 * @param player the player to check
+	 * @return true if player is currently in the cooldown map, false if not
+	 */
+	@Override public boolean isCoolingDown(final Player player)
+	{
+		return cooldownMap.isCoolingDown(player);
+	}
+
+}

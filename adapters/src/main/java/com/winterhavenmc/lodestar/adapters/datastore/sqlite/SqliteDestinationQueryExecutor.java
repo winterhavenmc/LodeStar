@@ -17,7 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
-import com.winterhavenmc.lodestar.models.destination.ValidDestination;
+import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,18 +26,18 @@ import java.sql.SQLException;
 
 public class SqliteDestinationQueryExecutor
 {
-	int insertRecords(final ValidDestination validDestination, final PreparedStatement preparedStatement) throws SQLException
+	int insertRecords(final StoredDestination storedDestination, final PreparedStatement preparedStatement) throws SQLException
 	{
-		preparedStatement.setString(1, validDestination.key());
-		preparedStatement.setString(2, validDestination.displayName());
-		preparedStatement.setString(3, validDestination.location().worldName());
-		preparedStatement.setLong(  4, validDestination.location().worldUid().getMostSignificantBits());
-		preparedStatement.setLong(  5, validDestination.location().worldUid().getLeastSignificantBits());
-		preparedStatement.setDouble(6, validDestination.location().x());
-		preparedStatement.setDouble(7, validDestination.location().y());
-		preparedStatement.setDouble(8, validDestination.location().z());
-		preparedStatement.setFloat( 9, validDestination.location().yaw());
-		preparedStatement.setFloat(10, validDestination.location().pitch());
+		preparedStatement.setString(1, storedDestination.key());
+		preparedStatement.setString(2, storedDestination.displayName());
+		preparedStatement.setString(3, storedDestination.location().worldName());
+		preparedStatement.setLong(  4, storedDestination.location().worldUid().getMostSignificantBits());
+		preparedStatement.setLong(  5, storedDestination.location().worldUid().getLeastSignificantBits());
+		preparedStatement.setDouble(6, storedDestination.location().x());
+		preparedStatement.setDouble(7, storedDestination.location().y());
+		preparedStatement.setDouble(8, storedDestination.location().z());
+		preparedStatement.setFloat( 9, storedDestination.location().yaw());
+		preparedStatement.setFloat(10, storedDestination.location().pitch());
 		return preparedStatement.executeUpdate();
 	}
 

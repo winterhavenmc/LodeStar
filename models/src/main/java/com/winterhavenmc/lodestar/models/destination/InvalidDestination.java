@@ -28,6 +28,13 @@ import org.jetbrains.annotations.NotNull;
 public record InvalidDestination(String displayName, String reason) implements Destination
 {
 	@Override
+	public String getDisplayName()
+	{
+		return this.displayName;
+	}
+
+
+	@Override
 	public @NotNull String toString()
 	{
 		return(displayName + ": " + reason);
