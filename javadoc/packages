@@ -1,0 +1,13 @@
+com.winterhavenmc.lodestar.adapters.commands.bukkit
+com.winterhavenmc.lodestar.adapters.datastore.sqlite
+com.winterhavenmc.lodestar.adapters.teleporter.bukkit
+com.winterhavenmc.lodestar.adapters.listeners.bukkit
+com.winterhavenmc.lodestar.tasks
+com.winterhavenmc.lodestar.ports.commands
+com.winterhavenmc.lodestar.ports.datastore
+com.winterhavenmc.lodestar.ports.teleporter
+com.winterhavenmc.lodestar.ports.listeners
+com.winterhavenmc.lodestar.util
+com.winterhavenmc.lodestar.models.destination
+com.winterhavenmc.lodestar.models.location
+com.winterhavenmc.lodestar
