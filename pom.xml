@@ -298,13 +298,16 @@
 					<version>3.13.0</version>
 				</plugin>
 
-				<!-- Create Javadoc jar -->
+				<!-- maven Javadoc plugin -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.11.2</version>
 					<configuration>
-						<doclint>none</doclint>
+						<source>21</source>
+						<encoding>UTF-8</encoding>
+						<failOnError>false</failOnError>
+						<doclint>all,-missing</doclint>
 					</configuration>
 					<executions>
 						<execution>
