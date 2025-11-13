@@ -18,12 +18,12 @@
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
-import com.winterhavenmc.lodestar.plugin.ports.commands.CommandDispatcher;
-import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
+import com.winterhavenmc.lodestar.ports.commands.CommandDispatcher;
+import com.winterhavenmc.lodestar.util.CommandCtx;
+import com.winterhavenmc.lodestar.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.MessageId;
+import com.winterhavenmc.lodestar.util.SoundId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;

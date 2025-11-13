@@ -17,9 +17,9 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
+import com.winterhavenmc.lodestar.util.CommandCtx;
+import com.winterhavenmc.lodestar.util.MessageId;
+import com.winterhavenmc.lodestar.util.SoundId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

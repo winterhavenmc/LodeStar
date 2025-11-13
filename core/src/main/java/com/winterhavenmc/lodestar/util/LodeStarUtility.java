@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.util;
+package com.winterhavenmc.lodestar.util;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 import com.winterhavenmc.library.messagebuilder.models.keys.ConstantKey;
@@ -28,7 +28,7 @@ import com.winterhavenmc.library.messagebuilder.models.language.ItemRecord;
 import com.winterhavenmc.library.messagebuilder.models.language.ValidItemRecord;
 
 import com.winterhavenmc.lodestar.models.destination.*;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.ConnectionProvider;
+import com.winterhavenmc.lodestar.ports.datastore.ConnectionProvider;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

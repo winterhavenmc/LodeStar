@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.ports.datastore;
+package com.winterhavenmc.lodestar.ports.datastore;
 
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.StoredDestination;

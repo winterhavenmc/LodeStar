@@ -298,13 +298,16 @@
 					<version>3.13.0</version>
 				</plugin>
 
-				<!-- Create Javadoc jar -->
+				<!-- maven Javadoc plugin -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.11.2</version>
 					<configuration>
-						<doclint>none</doclint>
+						<source>21</source>
+						<encoding>UTF-8</encoding>
+						<failOnError>false</failOnError>
+						<doclint>all,-missing</doclint>
 					</configuration>
 					<executions>
 						<execution>
@@ -344,6 +347,50 @@
 						</systemPropertyVariables>
 					</configuration>
 				</plugin>
+
+				<!-- kover plugin -->
+				<plugin>
+					<groupId>org.jetbrains.kotlinx</groupId>
+					<artifactId>kover-maven-plugin</artifactId>
+					<version>0.9.1</version>
+					<executions>
+						<!-- instrument test tasks -->
+						<execution>
+							<id>instr</id>
+							<goals>
+								<goal>instrumentation</goal>
+							</goals>
+						</execution>
+
+						<!-- generate XML report in verify phase -->
+						<execution>
+							<id>kover-xml</id>
+							<goals>
+								<goal>report-xml</goal>
+							</goals>
+						</execution>
+
+						<!-- generate HTML report in verify phase -->
+						<!--						<execution>-->
+						<!--							<id>kover-html</id>-->
+						<!--							<goals>-->
+						<!--								<goal>report-html</goal>-->
+						<!--							</goals>-->
+						<!--						</execution>-->
+
+						<!-- check coverage rules in verify phase -->
+						<!--						<execution>-->
+						<!--							<id>kover-verify</id>-->
+						<!--							<goals>-->
+						<!--								<goal>verify</goal>-->
+						<!--							</goals>-->
+						<!--						</execution>-->
+					</executions>
+					<configuration>
+						<aggregate>true</aggregate>
+						<xmlFile>${session.executionRootDirectory}/target/site/kover/report.xml</xmlFile>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -377,6 +424,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+
+			<!-- kover plugin -->
+			<plugin>
+				<groupId>org.jetbrains.kotlinx</groupId>
+				<artifactId>kover-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

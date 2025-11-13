@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.ports.teleporter;
+package com.winterhavenmc.lodestar.ports.teleporter;
 
 import org.bukkit.entity.Player;
 

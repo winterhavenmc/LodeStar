@@ -17,10 +17,10 @@
 
 package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
-import com.winterhavenmc.lodestar.plugin.util.LodeStarUtility;
-import com.winterhavenmc.lodestar.plugin.util.Macro;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
+import com.winterhavenmc.lodestar.util.CommandCtx;
+import com.winterhavenmc.lodestar.util.LodeStarUtility;
+import com.winterhavenmc.lodestar.util.Macro;
+import com.winterhavenmc.lodestar.util.MessageId;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;

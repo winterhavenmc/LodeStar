@@ -22,7 +22,7 @@ import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
 import com.winterhavenmc.lodestar.models.destination.StoredDestination;
 import com.winterhavenmc.lodestar.models.destination.ValidDestination;
-import com.winterhavenmc.lodestar.plugin.ports.datastore.DestinationRepository;
+import com.winterhavenmc.lodestar.ports.datastore.DestinationRepository;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;

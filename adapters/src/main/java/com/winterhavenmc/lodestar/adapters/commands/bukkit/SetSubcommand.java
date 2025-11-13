@@ -20,9 +20,9 @@ package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 import com.winterhavenmc.lodestar.models.destination.*;
 import com.winterhavenmc.lodestar.models.location.ConfirmedLocation;
 import com.winterhavenmc.lodestar.models.location.ValidLocation;
-import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
-import com.winterhavenmc.lodestar.plugin.util.Macro;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
+import com.winterhavenmc.lodestar.util.CommandCtx;
+import com.winterhavenmc.lodestar.util.Macro;
+import com.winterhavenmc.lodestar.util.MessageId;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;

@@ -15,9 +15,9 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.tasks;
+package com.winterhavenmc.lodestar.tasks;
 
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.ports.teleporter.TeleportHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

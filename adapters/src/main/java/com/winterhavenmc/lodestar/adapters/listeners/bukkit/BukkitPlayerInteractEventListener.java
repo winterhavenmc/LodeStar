@@ -17,10 +17,10 @@
 
 package com.winterhavenmc.lodestar.adapters.listeners.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.ports.listeners.PlayerInteractEventListener;
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
-import com.winterhavenmc.lodestar.plugin.util.SoundId;
+import com.winterhavenmc.lodestar.ports.listeners.PlayerInteractEventListener;
+import com.winterhavenmc.lodestar.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.util.MessageId;
+import com.winterhavenmc.lodestar.util.SoundId;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
 

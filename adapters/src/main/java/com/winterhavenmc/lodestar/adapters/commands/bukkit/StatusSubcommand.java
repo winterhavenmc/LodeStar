@@ -20,9 +20,9 @@ package com.winterhavenmc.lodestar.adapters.commands.bukkit;
 import com.winterhavenmc.library.messagebuilder.adapters.resources.configuration.BukkitConfigRepository;
 import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 
-import com.winterhavenmc.lodestar.plugin.util.CommandCtx;
-import com.winterhavenmc.lodestar.plugin.util.Macro;
-import com.winterhavenmc.lodestar.plugin.util.MessageId;
+import com.winterhavenmc.lodestar.util.CommandCtx;
+import com.winterhavenmc.lodestar.util.Macro;
+import com.winterhavenmc.lodestar.util.MessageId;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;

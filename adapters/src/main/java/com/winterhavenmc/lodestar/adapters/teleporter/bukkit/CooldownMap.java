@@ -17,9 +17,9 @@
 
 package com.winterhavenmc.lodestar.adapters.teleporter.bukkit;
 
-import com.winterhavenmc.lodestar.plugin.util.TeleportCtx;
-import com.winterhavenmc.lodestar.plugin.ports.teleporter.TeleportHandler;
-import com.winterhavenmc.lodestar.plugin.tasks.RemovePlayerCooldownTask;
+import com.winterhavenmc.lodestar.util.TeleportCtx;
+import com.winterhavenmc.lodestar.ports.teleporter.TeleportHandler;
+import com.winterhavenmc.lodestar.tasks.RemovePlayerCooldownTask;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;

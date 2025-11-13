@@ -15,7 +15,7 @@
  *
  */
 
-package com.winterhavenmc.lodestar.plugin.ports.listeners;
+package com.winterhavenmc.lodestar.ports.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
