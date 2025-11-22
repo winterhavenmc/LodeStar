@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * Implements command executor for LodeStar commands.
  */
-public final class BukkitCommandManager implements TabExecutor, CommandDispatcher
+public final class BukkitCommandDispatcher implements TabExecutor, CommandDispatcher
 {
 	private final MessageBuilder messageBuilder;
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
@@ -46,10 +46,10 @@ public final class BukkitCommandManager implements TabExecutor, CommandDispatche
 	/**
 	 * class constructor
 	 */
-	public BukkitCommandManager(final JavaPlugin plugin,
-	                            final MessageBuilder messageBuilder,
-	                            final ConnectionProvider connectionProvider,
-	                            final LodeStarUtility lodeStarUtility)
+	public BukkitCommandDispatcher(final JavaPlugin plugin,
+	                               final MessageBuilder messageBuilder,
+	                               final ConnectionProvider connectionProvider,
+	                               final LodeStarUtility lodeStarUtility)
 	{
 		this.messageBuilder = messageBuilder;
 
