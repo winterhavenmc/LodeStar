@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
+import com.winterhavenmc.library.messagebuilder.models.DefaultSymbol;
 import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
@@ -83,7 +84,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 			}
 			catch (SQLException sqlException)
 			{
-				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
+				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 				logger.warning(sqlException.getLocalizedMessage());
 			}
 		}
@@ -178,7 +179,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (SQLException sqlException)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage(configRepository.locale()));
+			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage(configRepository.logLocale()));
 			logger.warning(sqlException.getLocalizedMessage());
 		}
 
@@ -212,7 +213,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 			catch (Exception e)
 			{
 				// output simple error message
-				logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
+				logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 				logger.warning(e.getLocalizedMessage());
 			}
 			return deletedDestination;
