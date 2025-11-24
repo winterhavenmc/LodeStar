@@ -17,8 +17,6 @@
 
 package com.winterhavenmc.lodestar.models.destination;
 
-import com.winterhavenmc.library.messagebuilder.core.ports.pipeline.accessors.displayname.DisplayNameable;
-
 import static org.bukkit.ChatColor.stripColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
@@ -26,7 +24,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 /**
  * Record class that Represents a valid destination with accessor methods for destination fields and derived values
  */
-public sealed interface ValidDestination extends Destination, DisplayNameable permits HomeDestination, SpawnDestination, StoredDestination, TeleportDestination
+public sealed interface ValidDestination extends Destination permits HomeDestination, SpawnDestination, StoredDestination, TeleportDestination
 {
 	String displayName();
 
