@@ -1,0 +1,331 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": true,
+    "cutInterfaceStructures": true,
+    "cutDataStructures": true,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 4,
+    "backwardDepth": 3,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "DelayedTeleportTask",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": false, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "com.winterhavenmc.lodestar.models.destination.ValidDestination",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1655488073 { 
+   	label=winterhavenmc
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_231618541 { 
+   	label=lodestar
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   ConfirmedLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)ConfirmedLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ of(location: Location): ConfirmedLocation</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(worldName: String, worldUid: UUID, x: double, y: double, z: double, yaw: float, pitch: float): ConfirmedLocation</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+Destination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)Destination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getDisplayName(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+HomeDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)HomeDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+InvalidDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)InvalidDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   reason: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ reason(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+InvalidLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)InvalidLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   reason: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ reason(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+NoWorldLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)NoWorldLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   pitch: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldUid: UUID [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   x: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   y: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   yaw: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   z: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ pitch(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldUid(): UUID</TD></TR>
+<TR><TD ALIGN="LEFT" >+ x(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ y(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ yaw(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ z(): double</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+SpawnDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)SpawnDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StoredDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StoredDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   location: ValidLocation [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ location(): ValidLocation</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String, validLocation: ValidLocation): Destination</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String, worldName: String, worldUid: UUID, x: double, y: double, z: double, yaw: float, pitch: float): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TeleportDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TeleportDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   location: ValidLocation [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ location(): ValidLocation</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(validDestination: ValidDestination, validLocation: ValidLocation): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+UnloadedWorldLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)UnloadedWorldLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   pitch: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldUid: UUID [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   x: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   y: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   yaw: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   z: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ pitch(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldUid(): UUID</TD></TR>
+<TR><TD ALIGN="LEFT" >+ x(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ y(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ yaw(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ z(): double</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ValidDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)ValidDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getDisplayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ key(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+ValidLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ValidLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   pitch: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldUid: UUID [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   x: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   y: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   yaw: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   z: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ pitch(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ world(): World</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldUid(): UUID</TD></TR>
+<TR><TD ALIGN="LEFT" >+ x(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ y(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ yaw(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ z(): double</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+'edges    
+ConfirmedLocation2053834693 -> InvalidLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+ConfirmedLocation2053834693 -> NoWorldLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+ConfirmedLocation2053834693 -> UnloadedWorldLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+ConfirmedLocation2053834693 -> ValidLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+Destination1998135806 -> InvalidDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+Destination1998135806 -> ValidDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+StoredDestination1998135806 -> ConfirmedLocation2053834693[label="of() -> of()"];
+StoredDestination1998135806 -> ValidLocation2053834693[label="location
+[0..1]"];
+TeleportDestination1998135806 -> ValidLocation2053834693[label="location
+[0..1]"];
+ValidDestination1998135806 -> HomeDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+ValidDestination1998135806 -> SpawnDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+ValidDestination1998135806 -> StoredDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+ValidDestination1998135806 -> TeleportDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+    
+}
+@enduml

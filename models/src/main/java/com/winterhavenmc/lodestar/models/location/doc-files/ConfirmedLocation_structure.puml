@@ -1,0 +1,213 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": true,
+    "cutInterfaceStructures": true,
+    "cutDataStructures": true,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 3,
+    "backwardDepth": 3,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": false, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "com.winterhavenmc.lodestar.models.location.ConfirmedLocation",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1655488073 { 
+   	label=winterhavenmc
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_231618541 { 
+   	label=lodestar
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   ConfirmedLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)ConfirmedLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ of(location: Location): ConfirmedLocation</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(worldName: String, worldUid: UUID, x: double, y: double, z: double, yaw: float, pitch: float): ConfirmedLocation</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+InvalidLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)InvalidLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   reason: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ reason(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+NoWorldLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)NoWorldLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   pitch: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldUid: UUID [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   x: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   y: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   yaw: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   z: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ pitch(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldUid(): UUID</TD></TR>
+<TR><TD ALIGN="LEFT" >+ x(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ y(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ yaw(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ z(): double</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+UnloadedWorldLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)UnloadedWorldLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   pitch: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldUid: UUID [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   x: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   y: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   yaw: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   z: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ pitch(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldUid(): UUID</TD></TR>
+<TR><TD ALIGN="LEFT" >+ x(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ y(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ yaw(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ z(): double</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ValidLocation2053834693[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ValidLocation</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   pitch: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   worldUid: UUID [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   x: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   y: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   yaw: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   z: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ pitch(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ world(): World</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ worldUid(): UUID</TD></TR>
+<TR><TD ALIGN="LEFT" >+ x(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ y(): double</TD></TR>
+<TR><TD ALIGN="LEFT" >+ yaw(): float</TD></TR>
+<TR><TD ALIGN="LEFT" >+ z(): double</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+'edges    
+ConfirmedLocation2053834693 -> InvalidLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+ConfirmedLocation2053834693 -> NoWorldLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+ConfirmedLocation2053834693 -> UnloadedWorldLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+ConfirmedLocation2053834693 -> ValidLocation2053834693[arrowhead=none, arrowtail=empty, dir=both];
+    
+}
+@enduml

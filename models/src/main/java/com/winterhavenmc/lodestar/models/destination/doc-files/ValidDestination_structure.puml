@@ -1,0 +1,221 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": true,
+    "cutInterfaceStructures": true,
+    "cutDataStructures": true,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 1,
+    "backwardDepth": 1,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": false, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "com.winterhavenmc.lodestar.models.destination.ValidDestination",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1655488073 { 
+   	label=winterhavenmc
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_231618541 { 
+   	label=lodestar
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   DelayedTeleportTask700003842[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DelayedTeleportTask</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   ctx: TeleportCtx [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   location: Location [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   particleTask: BukkitTask [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   player: Player [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   playerItem: ItemStack [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   teleportHandler: TeleportHandler [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   validDestination: ValidDestination [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ run()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Destination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)Destination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getDisplayName(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+
+HomeDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)HomeDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+SpawnDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)SpawnDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StoredDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StoredDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   location: ValidLocation [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ location(): ValidLocation</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String, validLocation: ValidLocation): Destination</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(displayName: String, worldName: String, worldUid: UUID, x: double, y: double, z: double, yaw: float, pitch: float): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TeleportDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TeleportDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   displayName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   location: ValidLocation [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ location(): ValidLocation</TD></TR>
+<TR><TD ALIGN="LEFT" >+ of(validDestination: ValidDestination, validLocation: ValidLocation): Destination</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ValidDestination1998135806[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(I)ValidDestination</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ displayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getDisplayName(): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ key(): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#F1E5FD"
+];
+} 
+} 
+
+'edges    
+DelayedTeleportTask700003842 -> ValidDestination1998135806[label="validDestination
+[0..1]"];
+Destination1998135806 -> ValidDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+ValidDestination1998135806 -> HomeDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+ValidDestination1998135806 -> SpawnDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+ValidDestination1998135806 -> StoredDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+ValidDestination1998135806 -> TeleportDestination1998135806[arrowhead=none, arrowtail=empty, dir=both];
+    
+}
+@enduml
