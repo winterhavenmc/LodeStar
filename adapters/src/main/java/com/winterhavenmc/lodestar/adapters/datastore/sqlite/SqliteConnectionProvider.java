@@ -100,7 +100,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		// if data store is already initialized, do nothing and return
 		if (initialized)
 		{
-			logger.info(SqliteMessage.DATASTORE_INITIALIZED_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
+			logger.info(SqliteMessage.DATASTORE_INITIALIZED_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 			return;
 		}
 
@@ -126,7 +126,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		this.destinationRepository = new SqliteDestinationRepository(plugin, connection, configRepository);
 
 		// output log message
-		logger.info(SqliteMessage.DATASTORE_INITIALIZED_NOTICE.getLocalizedMessage(configRepository.locale(), datastoreName));
+		logger.info(SqliteMessage.DATASTORE_INITIALIZED_NOTICE.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 	}
 
 
@@ -139,12 +139,12 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		try
 		{
 			connection.close();
-			logger.info(SqliteMessage.DATASTORE_CLOSED_NOTICE.getLocalizedMessage(configRepository.locale(), datastoreName));
+			logger.info(SqliteMessage.DATASTORE_CLOSED_NOTICE.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 		}
 		catch (Exception e)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.DATASTORE_CLOSE_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
+			logger.warning(SqliteMessage.DATASTORE_CLOSE_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 			logger.warning(e.getMessage());
 		}
 
@@ -238,7 +238,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		}
 		catch (final SQLException e)
 		{
-			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 
@@ -288,7 +288,7 @@ public class SqliteConnectionProvider implements ConnectionProvider
 		}
 		catch (final SQLException e)
 		{
-			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
+			logger.warning(SqliteMessage.SELECT_ALL_RECORDS_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 			logger.warning(e.getLocalizedMessage());
 		}
 

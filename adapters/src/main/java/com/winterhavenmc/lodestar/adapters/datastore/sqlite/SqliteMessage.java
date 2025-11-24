@@ -31,6 +31,7 @@ public enum SqliteMessage
 
 	SELECT_ALL_KEYS_ERROR("An error occurred while trying to fetch all keys from the SQLite datastore."),
 	SELECT_ALL_RECORDS_ERROR("An error occurred while trying to select all records from the SQLite datastore."),
+
 	SELECT_RECORD_ERROR("An error occurred while selecting a destination record from the SQLite datastore."),
 
 	INSERT_RECORD_ERROR("An error occurred while inserting a destination record into the SQLite datastore."),

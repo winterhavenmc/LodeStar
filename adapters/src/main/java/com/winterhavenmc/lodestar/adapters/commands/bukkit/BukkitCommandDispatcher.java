@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * Implements command executor for LodeStar commands.
  */
-public final class BukkitCommandManager implements TabExecutor, CommandDispatcher
+public final class BukkitCommandDispatcher implements TabExecutor, CommandDispatcher
 {
 	private final MessageBuilder messageBuilder;
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
@@ -46,10 +46,10 @@ public final class BukkitCommandManager implements TabExecutor, CommandDispatche
 	/**
 	 * class constructor
 	 */
-	public BukkitCommandManager(final JavaPlugin plugin,
-	                            final MessageBuilder messageBuilder,
-	                            final ConnectionProvider connectionProvider,
-	                            final LodeStarUtility lodeStarUtility)
+	public BukkitCommandDispatcher(final JavaPlugin plugin,
+	                               final MessageBuilder messageBuilder,
+	                               final ConnectionProvider connectionProvider,
+	                               final LodeStarUtility lodeStarUtility)
 	{
 		this.messageBuilder = messageBuilder;
 
@@ -59,12 +59,15 @@ public final class BukkitCommandManager implements TabExecutor, CommandDispatche
 		CommandCtx commandCtx = new CommandCtx(plugin, messageBuilder, connectionProvider, lodeStarUtility);
 
 		// register subcommands
-		for (SubcommandType subcommandType : SubcommandType.values())
-		{
-			subcommandRegistry.register(subcommandType.create(commandCtx));
-		}
-
-		// register help command
+		subcommandRegistry.register(new BindSubcommand(commandCtx));
+		subcommandRegistry.register(new DeleteSubcommand(commandCtx));
+		subcommandRegistry.register(new DestroySubcommand(commandCtx));
+		subcommandRegistry.register(new GiveSubcommand(commandCtx));
+		subcommandRegistry.register(new ListSubcommand(commandCtx));
+		subcommandRegistry.register(new ReloadSubcommand(commandCtx));
+		subcommandRegistry.register(new SetSubcommand(commandCtx));
+		subcommandRegistry.register(new StatusSubcommand(commandCtx));
+		subcommandRegistry.register(new TeleportSubcommand(commandCtx));
 		subcommandRegistry.register(new HelpSubcommand(commandCtx, subcommandRegistry));
 	}
 

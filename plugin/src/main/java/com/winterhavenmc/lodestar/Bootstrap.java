@@ -18,7 +18,7 @@
 package com.winterhavenmc.lodestar;
 
 import com.winterhavenmc.library.messagebuilder.MessageBuilder;
-import com.winterhavenmc.lodestar.adapters.commands.bukkit.BukkitCommandManager;
+import com.winterhavenmc.lodestar.adapters.commands.bukkit.BukkitCommandDispatcher;
 import com.winterhavenmc.lodestar.adapters.datastore.sqlite.SqliteConnectionProvider;
 import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerEventListener;
 import com.winterhavenmc.lodestar.adapters.listeners.bukkit.BukkitPlayerInteractEventListener;
@@ -47,8 +47,8 @@ public final class Bootstrap extends JavaPlugin
 		final LodeStarUtility lodeStarUtility = new LodeStarUtility(this, messageBuilder, connectionProvider);
 		final TeleportHandler teleportHandler = new BukkitTeleportHandler(this, messageBuilder, connectionProvider, lodeStarUtility);
 
+		new BukkitCommandDispatcher(this, messageBuilder, connectionProvider, lodeStarUtility);
 		new BukkitPlayerEventListener(this, messageBuilder, connectionProvider, lodeStarUtility, teleportHandler);
-		new BukkitCommandManager(this, messageBuilder, connectionProvider, lodeStarUtility);
 		new BukkitPlayerInteractEventListener(this, messageBuilder, teleportHandler);
 		new MetricsHandler(this);
 	}

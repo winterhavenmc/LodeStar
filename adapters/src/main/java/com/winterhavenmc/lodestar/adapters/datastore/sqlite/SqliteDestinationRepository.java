@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.lodestar.adapters.datastore.sqlite;
 
+import com.winterhavenmc.library.messagebuilder.models.DefaultSymbol;
 import com.winterhavenmc.library.messagebuilder.models.configuration.ConfigRepository;
 import com.winterhavenmc.lodestar.models.destination.Destination;
 import com.winterhavenmc.lodestar.models.destination.InvalidDestination;
@@ -83,7 +84,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 			}
 			catch (SQLException sqlException)
 			{
-				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
+				logger.warning(SqliteMessage.INSERT_RECORD_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
 				logger.warning(sqlException.getLocalizedMessage());
 			}
 		}
@@ -178,7 +179,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 		catch (SQLException sqlException)
 		{
 			// output simple error message
-			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage(configRepository.locale()));
+			logger.warning(SqliteMessage.SELECT_ALL_KEYS_ERROR.getLocalizedMessage(configRepository.logLocale()));
 			logger.warning(sqlException.getLocalizedMessage());
 		}
 
@@ -189,36 +190,34 @@ final class SqliteDestinationRepository implements DestinationRepository
 	@Override
 	public Destination delete(final String passedKey)
 	{
-		// if key is null return null record
-		if (passedKey == null)
+		// if key is null return invalid destination
+		if (passedKey == null) { return new InvalidDestination(DefaultSymbol.NULL.symbol(), "Key was null."); }
+		else
 		{
-			return new InvalidDestination("NULL", "Key was null.");
-		}
+			// derive key in case destination name was passed
+			String key = deriveKey(passedKey);
 
-		// derive key in case destination name was passed
-		String key = deriveKey(passedKey);
+			// get destination record to be deleted, for return
+			Destination deletedDestination = this.get(key);
 
-		// get destination record to be deleted, for return
-		Destination destination = this.get(key);
-
-		try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("DeleteDestination")))
-		{
-			int rowsAffected = queryExecutor.deleteRecords(key, preparedStatement);
-
-			// output debugging information
-			if (config.getBoolean("debug"))
+			try (PreparedStatement preparedStatement = connection.prepareStatement(SqliteQueries.getQuery("DeleteDestination")))
 			{
-				logger.info(rowsAffected + " rows deleted.");
-			}
-		}
-		catch (Exception e)
-		{
-			// output simple error message
-			logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getLocalizedMessage(configRepository.locale(), datastoreName));
-			logger.warning(e.getLocalizedMessage());
-		}
+				int rowsAffected = queryExecutor.deleteRecords(key, preparedStatement);
 
-		return destination;
+				// output debugging information
+				if (config.getBoolean("debug"))
+				{
+					logger.info(rowsAffected + " rows deleted.");
+				}
+			}
+			catch (Exception e)
+			{
+				// output simple error message
+				logger.warning(SqliteMessage.DELETE_RECORD_ERROR.getLocalizedMessage(configRepository.logLocale(), datastoreName));
+				logger.warning(e.getLocalizedMessage());
+			}
+			return deletedDestination;
+		}
 	}
 
 
