@@ -59,12 +59,15 @@ public final class BukkitCommandDispatcher implements TabExecutor, CommandDispat
 		CommandCtx commandCtx = new CommandCtx(plugin, messageBuilder, connectionProvider, lodeStarUtility);
 
 		// register subcommands
-		for (SubcommandType subcommandType : SubcommandType.values())
-		{
-			subcommandRegistry.register(subcommandType.create(commandCtx));
-		}
-
-		// register help command
+		subcommandRegistry.register(new BindSubcommand(commandCtx));
+		subcommandRegistry.register(new DeleteSubcommand(commandCtx));
+		subcommandRegistry.register(new DestroySubcommand(commandCtx));
+		subcommandRegistry.register(new GiveSubcommand(commandCtx));
+		subcommandRegistry.register(new ListSubcommand(commandCtx));
+		subcommandRegistry.register(new ReloadSubcommand(commandCtx));
+		subcommandRegistry.register(new SetSubcommand(commandCtx));
+		subcommandRegistry.register(new StatusSubcommand(commandCtx));
+		subcommandRegistry.register(new TeleportSubcommand(commandCtx));
 		subcommandRegistry.register(new HelpSubcommand(commandCtx, subcommandRegistry));
 	}
 
