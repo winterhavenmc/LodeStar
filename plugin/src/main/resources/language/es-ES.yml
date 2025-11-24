@@ -226,16 +226,24 @@ MESSAGES:
     MESSAGE_TEXT: "<newline><gradient:blue:aqua><strikethrough>                         =</strikethrough>[</gradient> <dark_aqua>{PLUGIN}</dark_aqua> <gradient:aqua:blue>]<strikethrough>=                         </strikethrough></gradient>"
 
   COMMAND_STATUS_FOOTER:
-    MESSAGE_TEXT: "<newline><click:open_url:{URL}><blue><underlined>{URL}<underlined></blue></click>"
+    MESSAGE_TEXT: "<newline><click:open_url:{PLUGIN.URL}><blue><underlined>{PLUGIN.URL}<underlined></blue></click>"
 
   COMMAND_STATUS_PLUGIN_VERSION:
-    MESSAGE_TEXT: "<green>Version:</green> {SETTING}"
+    MESSAGE_TEXT: "<green>Version:</green> {PLUGIN.VERSION}"
 
   COMMAND_STATUS_LANGUAGE:
     MESSAGE_TEXT: "<green>Language:</green> {SETTING}"
 
   COMMAND_STATUS_LOCALE:
     MESSAGE_TEXT: "<green>Locale:</green> {SETTING}"
+
+  COMMAND_STATUS_LOCALE_DETAIL:
+    MESSAGE_TEXT: |-
+      <green>Locale:</green>
+          <green>Numbers:</green> {NUMBER_LOCALE}
+          <green>Dates:</green> {DATE_LOCALE}
+          <green>Time:</green> {TIME_LOCALE}
+          <green>Logs:</green> {LOG_LOCALE}
 
   COMMAND_STATUS_TIMEZONE:
     MESSAGE_TEXT: "<green>Timezone:</green> {SETTING}"
