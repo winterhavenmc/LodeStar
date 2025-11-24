@@ -191,7 +191,7 @@ final class SqliteDestinationRepository implements DestinationRepository
 	public Destination delete(final String passedKey)
 	{
 		// if key is null return invalid destination
-		if (passedKey == null) { return new InvalidDestination("NULL", "Key was null."); }
+		if (passedKey == null) { return new InvalidDestination(DefaultSymbol.NULL.symbol(), "Key was null."); }
 		else
 		{
 			// derive key in case destination name was passed
